@@ -35,3 +35,4 @@
 (deffunction unshift$ (?list ?item) (insert$ ?list 1 ?item))
 (deffunction match (?str ?pattern) (php_call "clips_str_match" ?str ?pattern))
 (deffunction php-get (?inst ?field) (php_call "clips_get_property" ?inst ?field))
+(deffunction php-require-once (?file) (php_call "clips_php_require_once" ?file))

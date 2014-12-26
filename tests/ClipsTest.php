@@ -1,6 +1,4 @@
 <?php
-require_once(dirname(__FILE__).'/../core/clips.php');
-
 class User {
 	/** @ClipsSymbol */
 	public $name;

@@ -1,4 +1,10 @@
 {
 	"version": "1.0.0",
-	"author": "Jack <guitarpoet@gmail.com>"
+	"author": "Jack <guitarpoet@gmail.com>",
+	"subclass_prefix": ["my_"],
+	"core_dir": ["core"],
+	"helper_dir": ["helpers"],
+	"command_dir": ["commands"],
+	"model_dir": ["models"],
+	"library_dir": ["libraries"]
 }

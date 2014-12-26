@@ -1,0 +1,36 @@
+;===============================================================================
+;
+; The rules for loading the class
+; 
+; @version 1.0
+; @author Jack <guitarpoet@gmail.com>
+; @date Fri Dec 26 12:29:16 2014
+;
+;===============================================================================
+
+;===============================================================================
+;
+; Rules for loading the classes
+;
+;===============================================================================
+
+(defrule try-php-files-using-load-config
+	?try <- (try-load-php ?file&~nil)
+	?config <- (Load_Config (dirs $?dirs) (suffix ?suffix) (prefix ?prefix))
+	=>
+	(foreach ?dir $?dirs 
+		(foreach ?w (create$ (cwd) (clips-path "/.."))
+			(assert (try-load-php-file (str-cat ?w "/" ?dir "/" (php_call "process_file_name" ?prefix ?file ?suffix) ".php"))))
+	)
+	(retract ?try)
+	(retract ?config)
+)
+
+(defrule try-load-the-php-file-if-exists
+	?try <- (try-load-php-file ?file)
+	(test (file-exists ?file))
+	(test (not (php_call "file_load" ?file)))
+	=>
+	(php-require-once ?file)
+	(retract ?try)
+)

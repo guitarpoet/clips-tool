@@ -2,15 +2,59 @@
 
 define('CLIPS_TOOL_PATH', dirname(__FILE__));
 
+require_once(CLIPS_TOOL_PATH.'/core/clips.php'); // Require the clips
+
 function get_clips_tool() {
-	if(!isset(Clips_Tool::$instance)) {
-		Clips_Tool::$instance = new Clips_Tool();
-	}
-	return Clips_Tool::$instance;
+	return Clips_Tool::get_instance();
 }
 
 function clips_tool_path($path) {
 	return CLIPS_TOOL_PATH.$path;
+}
+
+function record_file_load($file) {
+	if($file) {
+		$tool = get_clips_tool();
+		$tool->fileLoaded($file);
+		return true;
+	}
+	return false;
+}
+
+function file_load($file) {
+	if($file) {
+		$tool = get_clips_tool();
+		return $tool->isFileLoaded($file);
+	}
+	return false;
+}
+
+function process_file_name($prefix, $file, $suffix) {
+	$arr = explode('/', $file);
+	$tail = array_pop($arr);
+	$arr []= $prefix.$tail.$suffix;
+	return implode('/', $arr);
+}
+
+function clips_php_require_once($file) {
+	if(require_once($file)) {
+		record_file_load($file);
+		return true;
+	}
+	return false;
+}
+
+class Load_Config {
+	/** @ClipsMulti */
+	public $dirs = array();
+	public $suffix = "";
+	public $prefix = "";
+
+	public function __construct($dirs = array(), $suffix = "", $prefix = "") {
+		$this->dirs = $dirs;
+		$this->suffix = $suffix;
+		$this->prefix = $prefix;
+	}
 }
 
 class Clips_Config {
@@ -28,38 +72,175 @@ class Clips_Config {
 				$arr []= (array) $c;
 			}
 		}
-		$this->config = call_user_func_array('array_merge', $arr);
+		$this->config = $arr;
+	}
+
+	public function getLoadConfig() {
+		return new Load_Config(array_merge($this->core_dir, 
+			$this->helper_dir, 
+			$this->command_dir, 
+			$this->model_dir, 
+			$this->library_dir));
 	}
 
 	public function __get($property) {
 		if(isset($this->config)) {
-			return $this->config->$property;
+			$ret = array();
+			foreach($this->config as $c) {
+				if(isset($c[$property])) {
+					if(is_array($c[$property])) {
+						$ret = array_merge($ret, $c[$property]);
+					}
+					else
+						$ret []= $c[$property];
+				}
+			}
+			return $ret;
 		}
 		return false;
 	}
 }
 
 class Clips_Tool {
-	public static $instance;
+	private $_loaded_files = array();
+	private $_loaded_classes = array();
 
-	public function __construct() {
+	private function __construct() {
 		$this->clips = new Clips();
-		$this->init();
+	}
+
+	public static function get_instance() {
+		static $instance;
+		if(!isset($instance)) {
+			$instance = new Clips_Tool();
+			$instance->init();
+		}
+		return $instance;
+	}
+
+	public function isFileLoaded($file) {
+		return in_array($file, $this->_loaded_files);
+	}
+
+	public function fileLoaded($file) {
+		$this->_loaded_files []= $file;
 	}
 
 	private function init() {
 		$this->clips->runWithEnv(CLIPS_CORE_ENV, function($clips){
-			// Load additional rules into core env to support configuration and loading
 			$clips->reset();
 			$clips->assertFacts(new Clips_Config());
-			$clips->load(
+			$clips->template('Load_Config');
+			$clips->load(array(
 				CLIPS_TOOL_PATH.'/config/rules/config.rules',
 				CLIPS_TOOL_PATH.'/core/rules/load.rules'
-			);
+			));
+
 			$clips->run();
 			$this->config = $clips->queryfacts('Clips_Config');
 			$this->config = $this->config[0];
 		});
-		$this->config->load();
+		$this->config->load(); // Load the configurations
+		$this->helper('core'); // Load the core helpers
+		$this->load_class('command', false, new Load_Config(array('core'))); // Load the command base class
+	}
+
+	public function helper() {
+		return $this->load_php(func_get_args(), new Load_Config($this->config->helper_dir, "_helper"));
+	}
+
+	/**
+	 * Loading the php script using load config
+	 */
+	public function load_php($file, $loadConfig = null) {
+		if(!is_array($file)) {
+			$file = array($file);
+		}
+		if(!isset($loadConfig)) {
+			$loadConfig = $this->config->getLoadConfig();
+		}
+		$facts = array($loadConfig); 
+		foreach($file as $f) {
+			$facts []= array('try-load-php', $f);
+		}
+		$this->clips->runWithEnv(CLIPS_CORE_ENV, function($clips, $facts){
+			$clips->reset(); // Reset the environment
+			$clips->assertFacts($facts);
+			$clips->run();
+		}, $facts);
+	}
+
+	private function _init_class($class, $init, $name) {
+		if(class_exists($class)) { // Yes we have found it
+			// We got the class
+			if($init) {
+				$this->$name = new $class();
+				$this->_loaded_classes[$name] = $class;
+				return $this->$class;	
+			}
+			return $class;
+		}
+		return false;
+	}
+
+	public function load_class($class, $init = false, $loadConfig = null) {
+		$the_class = explode("/", $class);
+		$the_class = array_pop($the_class); // The last one is the class name
+		if(isset($this->_loaded_classes[$the_class])) { // If this class is loaded
+			if($init)
+				return $this->$the_class;
+			return $this->_loaded_classes[$the_class];
+		}
+
+		// Let's load this class
+		if(!isset($loadConfig)) {
+			$loadConfig = $this->config->getLoadConfig();
+		}
+
+		$loadConfig->prefix = 'clips_';
+		$clips_class_name = $loadConfig->prefix.$the_class.$loadConfig->suffix;
+		if(!class_exists($clips_class_name)) {
+			// Try to load clips class first if class is not defined
+			$this->load_php($class, $loadConfig); 
+		}
+
+		// Let's try loading the class without prefix
+		$loadConfig->prefix = '';
+		$class_name = $loadConfig->prefix.$the_class.$loadConfig->suffix;
+		if(!class_exists($class_name)) {
+			$this->load_php($class, $loadConfig); 
+		}
+
+		$result = $this->_init_class($class_name, $init, $class);
+		if($result)
+			return $result;
+
+		// Finally, try load the subclass
+		foreach($this->config->subclass_prefix as $prefix) {
+			$loadConfig->prefix = $prefix;
+			$class_name = $loadConfig->prefix.$the_class.$loadConfig->suffix;
+			if(!class_exists($class_name)) {
+				$this->load_php($class, $loadConfig);
+			}
+			$result = $this->_init_class($class_name, $init, $class);
+			if($result)
+				return $result;
+		}
+
+		// We didn't get any customized class, try the clips ones
+		$result = $this->_init_class($clips_class_name, $init, $class);
+		if($result)
+			return $result;
+		return false;
+	}
+
+	public function command($command) {
+		$class = $this->load_class($command, false, new Load_Config($this->config->command_dir, "_command"));
+		if($class)
+			return new $class();
+		return null;
+	}
+
+	public function library($library) {
 	}
 }

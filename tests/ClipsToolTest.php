@@ -9,6 +9,9 @@ class ClipsToolTest extends Clips_TestCase {
 	public function doTearDown() {
     }
 
-	public function testLoad() {
+	public function testLoadPHP() {
+		$command = $this->tool->command('version');
+		$this->assertNotNull($command);
+		$command->execute();
 	}
 }
