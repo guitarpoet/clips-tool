@@ -135,6 +135,14 @@ class Clips_Tool {
 		$this->_loaded_files []= $file;
 	}
 
+	public function loadRule($file) {
+		$this->clips->load($file);
+	}
+
+	public function ruleConsole() {
+		$this->clips->console();
+	}
+
 	private function init() {
 		$this->clips->runWithEnv(CLIPS_CORE_ENV, function($clips){
 			$clips->reset();

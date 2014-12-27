@@ -13,6 +13,6 @@
 		"username": "root",
 		"password": "",
 		"database": "mysql"
-	}
+	},
 	"template_dir": ["templates"]
 }
