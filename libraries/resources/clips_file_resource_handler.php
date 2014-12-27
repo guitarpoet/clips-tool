@@ -6,7 +6,7 @@ class Clips_File_Resource_Handler extends Clips_Resource_Handler {
 	}
 
 	public function openStream($uri) {
-		return fopen($uri);
+		return fopen($uri, 'r');
 	}
 
 	public function contents($uri) {

@@ -5,7 +5,10 @@
  */
 class Clips_Usage_Command extends Clips_Command {
 	public function execute($args) {
-		print_r($args);
-		echo "This is usage.\n";
+		if($args) {
+			$script = array_shift($args);
+			$tool = get_clips_tool();
+			echo $tool->template("tpl://usage", array('script' => $script));
+		}
 	}
 }

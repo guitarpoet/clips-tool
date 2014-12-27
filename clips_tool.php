@@ -80,6 +80,7 @@ class Clips_Config {
 			$this->helper_dir, 
 			$this->command_dir, 
 			$this->model_dir, 
+			$this->template_dir,
 			$this->library_dir));
 	}
 

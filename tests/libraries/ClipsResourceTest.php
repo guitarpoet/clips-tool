@@ -13,6 +13,13 @@ class ClipsResourceTest extends Clips_TestCase {
 		$this->assertNotNull($r->contents());
 	}
 
+	public function testTplResource() {
+		$r = new Clips_Resource('tpl://usage');
+		$this->assertNotNull($r);
+		$this->assertNotNull($r->handler);
+		$this->assertNotNull($r->contents());
+	}
+
 	public function doTearDown() {
 	}
 }

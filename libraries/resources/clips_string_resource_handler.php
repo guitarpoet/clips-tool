@@ -6,11 +6,10 @@ class Clips_String_Resource_Handler extends Clips_Resource_Handler {
 	}
 
 	public function openStream($uri) {
-		return fopen(str_replace("string://", "str:", $uri));
+		return fopen(str_replace("string://", "str:", $uri), 'r');
 	}
 
 	public function contents($uri) {
 		return str_replace("string://", "", $uri);
-		return file_get_contents($uri);
 	}
 }
