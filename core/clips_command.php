@@ -9,6 +9,6 @@
  * @date Fri Dec 26 15:07:51 2014
  */
 class Clips_Command {
-	public function execute() {
+	public function execute($args) {
 	}
 }

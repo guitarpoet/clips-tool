@@ -467,7 +467,7 @@ class Clips {
 		$line = readline('pclips$ ')."\n";
 		while(true) {
 			if(clips_is_command_complete($line)) {
-				$this->command($line);
+				$this->command($line, true);
 				readline_add_history($line);
 				$line = readline('pclips$ ')."\n";
 			}
@@ -531,14 +531,14 @@ class Clips {
 	/**
 	 * Execute the clips command
 	 */
-	public function command($command) {
+	public function command($command, $debug = false) {
 		if(is_array($command)) {
 			foreach($command as $c) {
 				$this->command($c);
 			}
 			return;
 		}
-		clips_exec($command."\n"); // Add \n automaticly
+		clips_exec($command."\n", $debug); // Add \n automaticly
 	}
 
 	public function queryFacts($name = null) {

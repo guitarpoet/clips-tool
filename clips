@@ -1,0 +1,14 @@
+#! /usr/bin/env php
+<?php
+
+require_once(dirname(__FILE__).'/clips_tool.php');
+
+$tool = get_clips_tool();
+
+$command = 'usage';
+
+if(count($argv) > 2) { // We have the command
+	$command = $argv[1];
+}
+
+$tool->execute($command, $argv);

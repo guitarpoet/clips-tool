@@ -44,6 +44,14 @@ function clips_php_require_once($file) {
 	return false;
 }
 
+function clips_out($template, $args) {
+	$tool = get_clips_tool();
+	if(strpos($template, "://"))
+		echo $tool->template($template, $args);
+	else
+		echo $tool->template("tpl://".$template, $args);
+}
+
 class Load_Config {
 	/** @ClipsMulti */
 	public $dirs = array();
@@ -80,6 +88,7 @@ class Clips_Config {
 			$this->helper_dir, 
 			$this->command_dir, 
 			$this->model_dir, 
+			$this->template_dir,
 			$this->library_dir));
 	}
 
@@ -142,7 +151,12 @@ class Clips_Tool {
 		});
 		$this->config->load(); // Load the configurations
 		$this->helper('core'); // Load the core helpers
-		$this->load_class('command', false, new Load_Config(array('core'))); // Load the command base class
+		$this->load_class(array('resource', 'command'), false, new Load_Config(array('core'))); // Load the base classes
+		$this->load_class(array('template'), true, new Load_Config(array('core'))); // Load the template
+	}
+
+	public function template() {
+		return call_user_func_array(array($this->template, "render"), func_get_args());
 	}
 
 	public function helper() {
@@ -176,7 +190,7 @@ class Clips_Tool {
 			if($init) {
 				$this->$name = new $class();
 				$this->_loaded_classes[$name] = $class;
-				return $this->$class;	
+				return $this->$name;	
 			}
 			return $class;
 		}
@@ -184,17 +198,24 @@ class Clips_Tool {
 	}
 
 	public function load_class($class, $init = false, $loadConfig = null) {
+		// Let's load this class
+		if(!isset($loadConfig)) {
+			$loadConfig = $this->config->getLoadConfig();
+		}
+
+		if(is_array($class)) {
+			foreach($class as $c) {
+				$this->load_class($c, $init, $loadConfig);
+			}
+			return true;
+		}
+
 		$the_class = explode("/", $class);
 		$the_class = array_pop($the_class); // The last one is the class name
 		if(isset($this->_loaded_classes[$the_class])) { // If this class is loaded
 			if($init)
 				return $this->$the_class;
 			return $this->_loaded_classes[$the_class];
-		}
-
-		// Let's load this class
-		if(!isset($loadConfig)) {
-			$loadConfig = $this->config->getLoadConfig();
 		}
 
 		$loadConfig->prefix = 'clips_';
@@ -211,7 +232,7 @@ class Clips_Tool {
 			$this->load_php($class, $loadConfig); 
 		}
 
-		$result = $this->_init_class($class_name, $init, $class);
+		$result = $this->_init_class($class_name, $init, $the_class);
 		if($result)
 			return $result;
 
@@ -222,16 +243,24 @@ class Clips_Tool {
 			if(!class_exists($class_name)) {
 				$this->load_php($class, $loadConfig);
 			}
-			$result = $this->_init_class($class_name, $init, $class);
+			$result = $this->_init_class($class_name, $init, $the_class);
 			if($result)
 				return $result;
 		}
 
 		// We didn't get any customized class, try the clips ones
-		$result = $this->_init_class($clips_class_name, $init, $class);
+		$result = $this->_init_class($clips_class_name, $init, $the_class);
 		if($result)
 			return $result;
 		return false;
+	}
+
+	public function execute($command, $args) {
+		$command = $this->command($command);
+		if($command) {
+			return $command->execute($args);
+		}
+		trigger_error('No command named '.$command.' found!');
 	}
 
 	public function command($command) {
@@ -241,6 +270,7 @@ class Clips_Tool {
 		return null;
 	}
 
-	public function library($library) {
+	public function library($library, $init = true, $suffix = "") {
+		return $this->load_class($library, $init, new Load_Config($this->config->library_dir, $suffix));
 	}
 }
