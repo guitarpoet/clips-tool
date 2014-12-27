@@ -4,4 +4,11 @@
 require_once(dirname(__FILE__).'/clips_tool.php');
 
 $tool = get_clips_tool();
-$script = array_shift($argv);
+
+$command = 'usage';
+
+if(count($argv) > 2) { // We have the command
+	$command = $argv[1];
+}
+
+$tool->execute($command, $argv);

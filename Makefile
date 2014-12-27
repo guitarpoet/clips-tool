@@ -1,2 +1,2 @@
 test:
-	phpunit .
+	phpunit -c tests/phpunit.xml tests/
