@@ -9,6 +9,10 @@ class ClipsToolTest extends Clips_TestCase {
 	public function doTearDown() {
     }
 
+	public function testTemplate() {
+		$this->assertEquals("Hello Jack", $this->tool->template("string://Hello {{name}}", array('name' => 'Jack')));
+	}
+
 	public function testLoadPHP() {
 		$command = $this->tool->command('version');
 		$this->assertNotNull($command);

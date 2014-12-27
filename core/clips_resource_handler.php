@@ -9,7 +9,7 @@ class Clips_Resource_Handler {
 	}
 
 	public function closeStream($stream) {
-		return false;
+		return fclose($stream);
 	}
 
 	public function contents($uri) {

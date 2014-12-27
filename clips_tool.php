@@ -143,6 +143,11 @@ class Clips_Tool {
 		$this->config->load(); // Load the configurations
 		$this->helper('core'); // Load the core helpers
 		$this->load_class(array('resource', 'command'), false, new Load_Config(array('core'))); // Load the base classes
+		$this->load_class(array('template'), true, new Load_Config(array('core'))); // Load the template
+	}
+
+	public function template() {
+		return call_user_func_array(array($this->template, "render"), func_get_args());
 	}
 
 	public function helper() {
