@@ -228,6 +228,7 @@ class Clips_Tool {
 
 		$loadConfig->prefix = 'clips_';
 		$clips_class_name = $loadConfig->prefix.$the_class.$loadConfig->suffix;
+
 		if(!class_exists($clips_class_name)) {
 			// Try to load clips class first if class is not defined
 			$this->load_php($class, $loadConfig); 
