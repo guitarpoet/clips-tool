@@ -44,6 +44,14 @@ function clips_php_require_once($file) {
 	return false;
 }
 
+function clips_out($template, $args) {
+	$tool = get_clips_tool();
+	if(strpos($template, "://"))
+		echo $tool->template($template, $args);
+	else
+		echo $tool->template("tpl://".$template, $args);
+}
+
 class Load_Config {
 	/** @ClipsMulti */
 	public $dirs = array();

@@ -7,8 +7,7 @@ class Clips_Usage_Command extends Clips_Command {
 	public function execute($args) {
 		if($args) {
 			$script = array_shift($args);
-			$tool = get_clips_tool();
-			echo $tool->template("tpl://usage", array('script' => $script));
+			clips_out('usage', array('script' => $script));
 		}
 	}
 }
