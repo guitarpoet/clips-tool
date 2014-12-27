@@ -6,5 +6,12 @@
 	"helper_dir": ["helpers"],
 	"command_dir": ["commands"],
 	"model_dir": ["models"],
-	"library_dir": ["libraries"]
+	"library_dir": ["libraries"],
+	"database": {
+		"type": "mysqli",
+		"host": "localhost",
+		"username": "root",
+		"password": "",
+		"database": "mysql"
+	}
 }
