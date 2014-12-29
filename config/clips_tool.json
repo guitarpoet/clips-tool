@@ -7,12 +7,14 @@
 	"command_dir": ["commands"],
 	"model_dir": ["models"],
 	"library_dir": ["libraries"],
-	"database": {
-		"type": "mysqli",
-		"host": "localhost",
-		"username": "root",
-		"password": "",
-		"database": "mysql"
+	"datasources": {
+		"mysql": {
+			"type": "mysqli",
+			"host": "localhost",
+			"username": "root",
+			"password": "",
+			"database": "mysql"
+		}
 	},
 	"template_dir": ["templates"]
 }

@@ -65,6 +65,12 @@ class Load_Config {
 	}
 }
 
+function clips_config($name, $default = null) {
+	$tool = get_clips_tool();
+	return get_default($tool->config, $name, $default);
+}
+
+
 class Clips_Config {
 
 	/** @ClipsMulti */
