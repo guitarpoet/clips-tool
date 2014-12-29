@@ -25,7 +25,8 @@ class Clips_Datasource {
 
 		if(isset($config) && isset($config->type)) {
 			$tool = get_clips_tool();
-			$this->$name = $tool->library('datasources/'.$config->type, true, '_datasource');
+			$type = $tool->library('datasources/'.$config->type, false, '_datasource');
+			$this->$name = new $type($config);
 			return $this->$name;
 		}
 		else {

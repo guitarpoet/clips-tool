@@ -7,6 +7,7 @@ class ClipsDataSourceTest extends Clips_TestCase {
 
 	public function testDataSource() {
 		$this->assertNotNull($this->tool->datasource);
+		$this->assertNotNull($this->tool->datasource->get('mysql'));
 	}
 
 	public function doTearDown() {
