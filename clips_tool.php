@@ -67,9 +67,11 @@ class Load_Config {
 
 function clips_config($name, $default = null) {
 	$tool = get_clips_tool();
-	return get_default($tool->config, $name, $default);
+	$ret = $tool->config->$name;
+	if($ret)
+		return $ret;
+	return $default;
 }
-
 
 class Clips_Config {
 
@@ -80,9 +82,14 @@ class Clips_Config {
 
 	public function load() {
 		$arr = array();
+		$loaded = array();
 		foreach($this->files as $config) {
+			$p = realpath($config);
+			if(in_array($p, $loaded))
+				continue;
 			$c = json_decode(file_get_contents($config));
 			if(isset($c)) {
+				$loaded []= $p;
 				$arr []= (array) $c;
 			}
 		}
@@ -167,7 +174,7 @@ class Clips_Tool {
 		$this->helper('core'); // Load the core helpers
 		$this->load_class(array('resource', 'command'), false, new Load_Config(array('core'))); // Load the base classes
 		$this->load_class(array('template'), true, new Load_Config(array('core'))); // Load the template
-		$this->library('progress_manager');
+		$this->library(array('progress_manager', 'datasource'));
 	}
 
 	public function template() {

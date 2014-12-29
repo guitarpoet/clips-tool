@@ -14,7 +14,7 @@ class ClipsToolTest extends Clips_TestCase {
 	}
 
 	public function testLoadPHP() {
-		$command = $this->tool->command('version');
+		$command = $this->tool->command('usage');
 		$this->assertNotNull($command);
 		$command->execute(array());
 	}
