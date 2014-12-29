@@ -13,8 +13,6 @@ class Clips_Datasource {
 			return $this->$name;
 
 		$tool = get_clips_tool();
-
-		$tool = get_clips_tool();
 		$ds = clips_config('datasources');
 		foreach($ds as $d) {
 			if(isset($d->$name)) {
@@ -24,8 +22,8 @@ class Clips_Datasource {
 		}
 
 		if(isset($config) && isset($config->type)) {
-			$tool = get_clips_tool();
-			$this->$name = $tool->library('datasources/'.$config->type, true, '_datasource');
+			$type = $tool->library('datasources/'.$config->type, false, '_datasource');
+			$this->$name = new $type($config);
 			return $this->$name;
 		}
 		else {
@@ -46,7 +44,13 @@ class Clips_Datasource {
 	protected function doUpdate($id, $args) {
 	}
 
-	public function doDelete($id) {
+	protected function doDelete($id) {
+	}
+
+	protected function doFetch($args) {
+	}
+
+	protected function doIterate($query, $args, $callback, $context = array()) {
 	}
 
 	public function beginBatch() {
@@ -59,17 +63,26 @@ class Clips_Datasource {
 		return $this->doLoad($id);
 	}
 
+	public function fetch() {
+	}
+
+	public function iterate($query, $callback, $args = array(), $context = array()) {
+		return $this->doIterate($query, $args, $callback, $context);
+	}
+
 	public function update($id, $args) {
 		if(is_array($id)) {
-			return $this->doBatch(function($ids){
+			return $this->doBatch(function($context){
+				$ids = $context['ids'];
+				$args = $context['args'];
 				foreach($ids as $id) {
-					$this->doUpdate($d);
+					$this->doUpdate($id, $args);
 				}
 				return true;
-			}, $id);
+			}, array('ids' => $id, 'args' => $args));
 		}
 
-		return $this->doUpdate($id);
+		return $this->doUpdate($id, $args);
 	}
 
 	public function doBatch($callback, $context) {
@@ -107,7 +120,7 @@ class Clips_Datasource {
 			$args = func_get_args();
 			$query = array_shift($args);
 		case 2:
-			if(is_array($args[0])) { // If we got only 2 args, maybe just is query and args call
+			if($args && is_array($args[0])) { // If we got only 2 args, maybe just is query and args call
 				$args = $args[0];
 			}
 		default:
