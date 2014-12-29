@@ -2,6 +2,13 @@
 
 class Clips_Version_Command extends Clips_Command {
 	public function execute($args) {
+		$this->start(5);
+
+		for($i = 1; $i <= 5; $i++) {
+			$this->progress($i);
+			sleep(1);
+		}
+
 		echo get_clips_tool()->config->version[0];
 	}
 }

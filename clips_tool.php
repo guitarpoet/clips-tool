@@ -161,6 +161,7 @@ class Clips_Tool {
 		$this->helper('core'); // Load the core helpers
 		$this->load_class(array('resource', 'command'), false, new Load_Config(array('core'))); // Load the base classes
 		$this->load_class(array('template'), true, new Load_Config(array('core'))); // Load the template
+		$this->library('progress_manager');
 	}
 
 	public function template() {
