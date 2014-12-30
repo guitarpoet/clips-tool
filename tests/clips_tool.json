@@ -1,0 +1,8 @@
+{
+	"datasources": {
+		"mysql": {
+			"type": "mysqli",
+			"database": "mysql"
+		}
+	}
+}
