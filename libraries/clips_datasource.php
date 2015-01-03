@@ -128,13 +128,13 @@ class Clips_Datasource {
 
 	public function doBatch($callback, $context) {
 		if(isset($callback) && is_callable($callback)) {
+			$this->beginBatch();
 			try {
-				$this->beginBatch();
-				return $callback($context);	
+				$callback($context);	
 			}
-			finally {
-				$this->endBatch();
+			catch(Exception $ex) {
 			}
+			$this->endBatch();
 		}
 	}
 

@@ -28,15 +28,13 @@ class Clips_Resource {
 
 	public function run($callback) {
 		if($callback && is_callable($callback)) {
-			try {
-				$stream = $this->openStream();
-				if($stream) {
-					return $callback($stream);
-				}
+			$stream = $this->openStream();
+			$ret = null;
+			if($stream) {
+				$ret = $callback($stream);
 			}
-			finally {
-				$this->closeStream();
-			}
+			$this->closeStream();
+			return $ret;
 		}
 	}
 

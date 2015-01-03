@@ -125,12 +125,15 @@ class Clips {
 	public function runWithEnv($name, $callback, $args = array()) {
 		$env = $this->current_env;
 		if($this->switchEnv($name)) {
-			try{
-				return call_user_func_array($callback, array($this, $args));
+			$ret = false;
+			try {
+				$ret = call_user_func_array($callback, array($this, $args));
 			}
-			finally {
-				$this->switchEnv($env);
+			catch(Exception $ex) {
 			}
+
+			$this->switchEnv($env);
+			return $ret;
 		}
 		return false;
 	}
