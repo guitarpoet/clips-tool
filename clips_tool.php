@@ -44,6 +44,11 @@ function clips_php_require_once($file) {
 	return false;
 }
 
+function clips_library($library, $init = true, $suffix = "") {
+	$tool = get_clips_tool();
+	return $tool->library($library, $init, $suffix);
+}
+
 function clips_out($template, $args) {
 	$tool = get_clips_tool();
 	if(strpos($template, "://"))
@@ -291,6 +296,11 @@ class Clips_Tool {
 		if($class)
 			return new $class();
 		return null;
+	}
+
+	public function model($model) {
+		$this->load_class(array('model'), false, new Load_Config(array('core')));
+		return $this->load_class($model, true, new Load_Config($this->config->model_dir, '_model'));
 	}
 
 	public function library($library, $init = true, $suffix = "") {

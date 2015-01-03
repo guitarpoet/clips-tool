@@ -15,6 +15,21 @@ class Clips_Datasource {
 		$this->destroy();
 	}
 
+	public function datasources() {
+		if(isset($this->_datasources))
+			return $this->_datasources;
+
+		$ret = array();
+		foreach(clips_config('datasources') as $d) {
+			foreach($d as $k => $v) {
+				$ret []= $k;
+			}
+		}
+
+		$this->_datasources = $ret;
+		return $ret;
+	}
+
 	public function get($name) {
 		if(isset($this->$name))
 			return $this->$name;

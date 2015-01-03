@@ -1,4 +1,4 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
-class Clips_Database {
+class Clips_Demo_Model extends Clips_Model {
 }
