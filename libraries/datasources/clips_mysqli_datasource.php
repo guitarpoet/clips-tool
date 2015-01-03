@@ -26,6 +26,16 @@ class Clips_Mysqli_Datasource extends Clips_Datasource {
 		if($this->db->connect_error) {
 			throw new Exception($this->db->connect_error);
 		}
+
+		$tool = get_clips_tool();
+		$sql = $tool->library('sql', false);
+		$this->sql = new $sql();
+		if(isset($config->table_prefix))
+			$this->sql->table_prefix = $config->table_prefix;
+	}
+
+	protected function destroy() {
+		$this->db->close();
 	}
 
 	public function fetchResult($stmt, $callback = null, $context = array()) {
@@ -132,13 +142,21 @@ class Clips_Mysqli_Datasource extends Clips_Datasource {
 		return $ret;
 	}
 
-	protected function doLoad($id) {
-	}
-
 	protected function doUpdate($id, $args) {
 	}
 
+	protected function doFetch($args) {
+		if(isset($this->sql) && isset($this->context)) {
+			$sql = $this->sql->select('*')->from($this->context)
+				->where($args)->sql();
+			print_r($sql);
+		}
+	}
+
 	public function doDelete($id) {
+		if(isset($this->context)) {
+			$this->doQuery('delete from '.$this->context.' where '.$this->idField().' = ?', $id);
+		}
 	}
 
 	/**

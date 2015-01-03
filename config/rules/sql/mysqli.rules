@@ -124,7 +124,7 @@
 
 (defrule process-table-prefix
 	(table-prefix ?prefix)
-	?t <- (SqlTable (name ?name &: (neq (str-index ?prefix ?name) 1)) (alias ?alias))
+	?t <- (SqlTable (name ?name &: (and (neq ?name (str-cat ?prefix ?name)) (neq (str-index ?prefix ?name) 1))) (alias ?alias))
 	=>
 	(if (eq ?alias nil)
 		then
@@ -132,4 +132,10 @@
 		else
 			(modify ?t (name (str-cat ?prefix ?name)))
 	)
+)
+
+(defrule assign-table-alias-if-no-alias-is-there
+	?t <- (SqlTable (name ?name&~nil) (alias nil))
+	=>
+	(modify ?t (alias ?name))
 )

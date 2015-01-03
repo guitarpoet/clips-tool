@@ -1,7 +1,9 @@
 {
-	"table_prefix": "demo_",
+	"table_prefix":"demo_",
 	"datasources": {
 		"mysql": {
+			"table_prefix":"",
+			"context": "user",
 			"type": "mysqli",
 			"database": "mysql"
 		}

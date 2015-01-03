@@ -1,11 +1,18 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
 class Clips_Datasource {
+
+	public $context;
+
 	public function __construct($config = null) {
 		if(isset($config)) {
 			$this->config = $config;
 			$this->init($config);
 		}
+	}
+
+	public function __destruct() {
+		$this->destroy();
 	}
 
 	public function get($name) {
@@ -33,13 +40,17 @@ class Clips_Datasource {
 		return null;
 	}
 
+	protected function idField() {
+		return get_default($this->config, 'id_field', 'id');
+	}
+
 	protected function init($config) {
 	}
 
-	protected function doQuery($query, $args = array()) {
+	protected function destroy() {
 	}
 
-	protected function doLoad($id) {
+	protected function doQuery($query, $args = array()) {
 	}
 
 	protected function doUpdate($id, $args) {
@@ -61,10 +72,32 @@ class Clips_Datasource {
 	}
 
 	public function load($id) {
-		return $this->doLoad($id);
+		$result = $this->fetch($this->idField(), $id);
+		if($result && is_array($result))
+			return $result[0];
+		return $result;
 	}
 
+	/**
+	 * Fetch the result using args, supporting query like this:
+	 *
+	 * 1. field, value: Querying the entity using one field
+	 * 2. Array: Querying the entity using the fields (All by and)
+	 * 3. Where_Operator: Only support the sql this version, you can using the syntax of sql generator
+	 */
 	public function fetch() {
+		if(isset($this->context)) {
+			if(func_num_args() == 1) {
+				$args = func_get_args();
+				return $this->doFetch($args[0]);
+			}
+			if(func_num_args() == 2) {
+				$args = func_get_args();
+				return $this->doFetch(array($args[0] => $args[1]));
+			}
+			throw new Exception('The args must be set for the fetch.');
+		}
+		throw new Exception('No context set for this datasource');
 	}
 
 	public function iterate($query, $callback, $args = array(), $context = array()) {
@@ -72,17 +105,6 @@ class Clips_Datasource {
 	}
 
 	public function update($id, $args) {
-		if(is_array($id)) {
-			return $this->doBatch(function($context){
-				$ids = $context['ids'];
-				$args = $context['args'];
-				foreach($ids as $id) {
-					$this->doUpdate($id, $args);
-				}
-				return true;
-			}, array('ids' => $id, 'args' => $args));
-		}
-
 		return $this->doUpdate($id, $args);
 	}
 
@@ -101,8 +123,8 @@ class Clips_Datasource {
 	public function delete($id) {
 		if(is_array($id)) {
 			return $this->doBatch(function($ids){
-				foreach($ids as $id) {
-					$this->doDelete($d);
+				foreach($ids as $i) {
+					$this->doDelete($i);
 				}
 				return true;
 			}, $id);

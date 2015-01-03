@@ -5,6 +5,12 @@ class ClipsDataSourceTest extends Clips_TestCase {
 		$this->tool = get_clips_tool();
 	}
 
+	public function testFetch() {
+		$mysql = $this->tool->datasource->get('mysql');
+		$mysql->load(1);
+		$mysql->fetch('shit', 1);
+	}
+
 	public function testDataSourceIterate() {
 		$mysql = $this->tool->datasource->get('mysql');
 		$this->assertTrue(count($mysql->query('select * from user')) > 0);

@@ -295,10 +295,6 @@ class Clips_Sql {
 		$this->clips->clear();
 		$this->clips->template(array('Select', 'From', 'Join', 'Where', 'GroupBy', 'OrderBy', 'Limit', 'Limit', 'SqlTable', 'SqlResult'));
 
-		$prefix = clips_config('table_prefix', null);
-		if(isset($prefix)) {
-			$this->clips->assertFacts(array('table-prefix', $prefix[0]));
-		}
 		if(isset($type)) {
 			$this->type = $type;
 			$this->clips->load('/config/rules/sql/'.$type.'.rules');
@@ -369,8 +365,18 @@ class Clips_Sql {
 	}
 
 	public function sql() {
+		if(isset($this->table_prefix)) // Honor the prefix in sql
+			$prefix = array($this->table_prefix);
+		else
+			$prefix = clips_config('table_prefix', null);
+
+		if(isset($prefix)) {
+			$this->clips->assertFacts(array('table-prefix', $prefix[0]));
+		}
+
 		$this->clips->run();
 		$result = $this->clips->queryFacts('SqlResult');
+
 		$this->clips->reset(); // Reset the assertions
 		if($result) {
 			if(isset($this->args)) {
