@@ -18,6 +18,9 @@ class Clips_Mysqli_Datasource extends Clips_Datasource {
 		foreach($config as $k => $v) {
 			$this->$k = $v;
 		}
+		if(isset($config->table_prefix) && isset($config->context)) {
+			$this->context = $config->table_prefix.$config->context;
+		}
 		$this->db = new mysqli($this->host, 
 			$this->username, $this->password, $this->database, $this->port);
 
@@ -142,15 +145,58 @@ class Clips_Mysqli_Datasource extends Clips_Datasource {
 		return $ret;
 	}
 
+	protected function doInsert($args) {
+		$sql = array('insert', 'into', $this->context, '(');
+		$keys = array();
+		$values = array();
+		$data = array();
+		foreach($args as $k => $v) {
+			$keys []= $k;
+			$values []= '?';
+			$data []= $v;
+		}
+		$sql []= implode(', ', $keys);
+		$sql []= ') values (';
+		$sql []= implode(', ', $values);
+		$sql []= ');';
+		$sql []= 'select last_insert_id()';
+		$sql = implode(' ', $sql);
+		return $this->doQuery($sql, $data);
+	}
+
 	protected function doUpdate($id, $args) {
+		$sql = array('update', $this->context, 'set');
+		$keys = array();
+		$values = array();
+		foreach($args as $k => $v) {
+			$keys []= $k.' = ?';
+			$values []= $v;
+		}
+		$sql []= implode(', ', $keys);
+		$sql []= 'where';
+		$sql []= $this->idField(); 
+		$sql []= '='; 
+		$sql []= '?'; 
+		$values []= $id;
+		$sql = implode(' ', $sql);
+		$this->doQuery($sql, $values);
+		return true;
 	}
 
 	protected function doFetch($args) {
 		if(isset($this->sql) && isset($this->context)) {
 			$sql = $this->sql->select('*')->from($this->context)
 				->where($args)->sql();
-			print_r($sql);
+			switch(count($sql)) {
+			case 0:
+				throw new Exception('Can\'t do the query since no query generated!');
+			case 1:
+				return $this->doQuery($sql[0]);
+			default:
+				return $this->doQuery($sql[0], $sql[1]);
+			}
 		}
+		throw new Exception('No context is set!');
 	}
 
 	public function doDelete($id) {

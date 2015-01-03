@@ -65,6 +65,9 @@ class Clips_Datasource {
 	protected function doIterate($query, $args, $callback, $context = array()) {
 	}
 
+	protected function doInsert($args) {
+	}
+
 	public function beginBatch() {
 	}
 
@@ -118,6 +121,21 @@ class Clips_Datasource {
 				$this->endBatch();
 			}
 		}
+	}
+
+	public function insert($args) {
+		if(isset($this->context)) {
+			if(is_array($args) && isset($args[0])) {
+				return $this->doBatch(function($args){
+					foreach($args as $a) {
+						$this->doInsert($a);
+					}
+					return true;
+				}, $args);
+			}
+			return $this->doInsert($args);
+		}
+		throw new Exception('No context set for this datasource');
 	}
 
 	public function delete($id) {
