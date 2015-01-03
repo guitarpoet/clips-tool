@@ -1,0 +1,135 @@
+;===============================================================================
+;
+; Rules for mysqli sql generation
+;
+; The rules for mysqli sql generation
+; 
+; @version 1.0
+; @author Jack <guitarpoet@gmail.com>
+; @date Fri Jan  2 13:38:30 2015
+;
+;===============================================================================
+
+(deffunction get-table-name (?name)
+	(nth$ 1 (explode$ ?name))
+)
+
+(deffunction get-from-tables ()
+	(bind ?ret (create$))
+	(do-for-all-facts ((?fact SqlTable)) (eq ?fact:type "from")
+		(bind ?ret (insert$ ?ret (+ 1 (length$ ?ret)) (str-cat ?fact:name " as " ?fact:alias)))
+		(retract ?fact)
+	)
+	(implode ", " ?ret)
+)
+
+(deffunction get-join-tables ()
+	(bind ?ret (create$))
+	(do-for-all-facts ((?fact SqlTable)) (eq ?fact:type "join")
+		(bind ?ret (insert$ ?ret (+ 1 (length$ ?ret)) 
+			(str-cat " join " ?fact:name " as " ?fact:alias
+				" on " ?fact:join_condition)))
+		(retract ?fact)
+	)
+	(implode "" ?ret)
+)
+
+(deffunction get-table-alias (?name)
+	(if (= (length$ (explode$ ?name)) 3)
+		then
+	 		(nth$ 3 (explode$ ?name))
+		else
+	 		(nth$ 2 (explode$ ?name))
+	)
+)
+
+(defrule add-from-table-to-sql
+	(declare (salience 10))
+	?r <- (SqlResult (sql ?sql&~nil))
+	(test (any-factp ((?fact SqlTable)) (eq ?fact:type "from")))
+	=>
+	(modify ?r (sql (str-cat ?sql (get-from-tables))))
+)
+
+(defrule add-join-table-to-sql
+	(declare (salience 9))
+	?r <- (SqlResult (sql ?sql&~nil))
+	(test (any-factp ((?fact SqlTable)) (eq ?fact:type "join")))
+	=>
+	(modify ?r (sql (str-cat ?sql (get-join-tables))))
+)
+
+(defrule add-where-to-sql
+	(declare (salience 8))
+	?r <- (SqlResult (sql ?sql&~nil))
+	?w <- (fact_where ?where)
+	=>
+	(retract ?w)
+	(modify ?r (sql (str-cat ?sql " where " ?where)))
+)
+
+(defrule add-group-by-to-sql
+	(declare (salience 7))
+	?r <- (SqlResult (sql ?sql&~nil))
+	?g <- (fact_group_by $?fields)
+	=>
+	(retract ?g)
+	(modify ?r (sql (str-cat ?sql " group by " (implode ", " $?fields))))
+)
+
+(defrule add-order-by-to-sql
+	(declare (salience 6))
+	?r <- (SqlResult (sql ?sql&~nil))
+	?o <- (fact_order_by $?fields)
+	=>
+	(retract ?o)
+	(modify ?r (sql (str-cat ?sql " order by " (implode ", " $?fields))))
+)
+
+(defrule add-limit-to-sql
+	(declare (salience 5))
+	?r <- (SqlResult (sql ?sql&~nil))
+	?l <- (fact_limit ?offset ?count)
+	=>
+	(retract ?l)
+	(modify ?r (sql (str-cat ?sql " limit " ?offset ", " ?count)))
+)
+
+(defrule gen-sql-from-select
+	?s <- (fact_select $?fields)
+	=>
+	(retract ?s)
+	(assert (SqlResult (sql (str-cat "select " (implode ", " $?fields) " from "))))
+)
+
+(defrule get-table-names-from-from-clause
+	?f <- (fact_from $?tables)
+	=>
+	(retract ?f)
+	(foreach ?table $?tables (assert (SqlTable (name ?table) (type "from"))))
+)
+
+(defrule get-table-names-from-join-clause
+	?f <- (fact_join ?table ?join_type ?join_condition)
+	=>
+	(retract ?f)
+	(assert (SqlTable (name ?table) (type "join") (join_type ?join_type) (join_condition ?join_condition)))
+)
+
+(defrule process-the-alias-if-the-table-has-one
+	?t <- (SqlTable (name ?name &: (str-index " " ?name)))
+	=>
+	(modify ?t (name (get-table-name ?name)) (alias (get-table-alias ?name)))
+)
+
+(defrule process-table-prefix
+	(table-prefix ?prefix)
+	?t <- (SqlTable (name ?name &: (neq (str-index ?prefix ?name) 1)) (alias ?alias))
+	=>
+	(if (eq ?alias nil)
+		then
+			(modify ?t (name (str-cat ?prefix ?name)) (alias ?name)) ; If this table don't have any alias, using the default name as alias
+		else
+			(modify ?t (name (str-cat ?prefix ?name)))
+	)
+)

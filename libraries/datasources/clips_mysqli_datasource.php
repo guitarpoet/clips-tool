@@ -8,6 +8,7 @@ class Clips_Mysqli_Datasource extends Clips_Datasource {
 	public $database = 'test';
 	public $port = 3306;
 	public $encoding = 'utf8';
+	public $in_transaction = false;
 
 	public function __construct($config = null) {
 		parent::__construct($config);
@@ -140,9 +141,19 @@ class Clips_Mysqli_Datasource extends Clips_Datasource {
 	public function doDelete($id) {
 	}
 
+	/**
+	 * Start the batch execution using mysql's transaction support.
+	 * Only start the transaction when the transaction is not opened, or
+	 * just let the transaction handle all of this
+	 */
 	public function beginBatch() {
+		if(isset($this->db) && !$this->in_transaction)
+			$this->in_transaction = $this->db->begin_transaction();
 	}
 
 	public function endBatch() {
+		if(isset($this->db) && $this->in_transaction) {
+			$this->db->commit(); // If we are in the transaction, let's commit it
+		}
 	}
 }

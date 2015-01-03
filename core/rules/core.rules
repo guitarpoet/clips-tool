@@ -16,6 +16,7 @@
 ; Core Rules for loading
 ;
 ;===============================================================================
+(deffunction clips-tool-path (?path) (php_call "clips_tool_path" ?path))
 
 (defrule if-the-load-begin-with-ci-load-using-ci
 	?l <- (load_arg ?file)
@@ -25,7 +26,34 @@
 	(assert (ci_load_arg (sub-string 6 (str-length ?file) ?file)))
 )
 
+(defrule if-file-exists-in-clips-path-then-load-it
+    (declare (salience ?*low*))
+	?a <- (load_arg ?file)
+	(test (file-exists (clips-path ?file)))
+	=>
+	(assert (command (file-contents (clips-path ?file))))
+	(retract ?a)
+)
+
+(defrule if-file-exists-in-clips-tool-path-then-load-it
+    (declare (salience ?*low*))
+	?a <- (load_arg ?file)
+	(test (file-exists (clips-tool-path ?file)))
+	=>
+	(assert (command (file-contents (clips-tool-path ?file))))
+	(retract ?a)
+)
+
+(defrule if-file-exists-in-cwd-then-load-it
+	?a <- (load_arg ?file)
+	(test (file-exists (str-cat (cwd) ?file)))
+	=>
+	(assert (command (file-contents (str-cat (cwd) ?file))))
+	(retract ?a)
+)
+
 (defrule if-file-exists-then-load-it
+    (declare (salience ?*high*))
 	?a <- (load_arg ?file)
 	(test (file-exists ?file))
 	=>

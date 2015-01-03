@@ -13,6 +13,19 @@
 
 ;===============================================================================
 ;
+; Constants
+;
+;===============================================================================
+
+(defglobal ?*low* = -100) 
+(defglobal ?*lower* = -500) 
+(defglobal ?*lowest* = -1000) 
+(defglobal ?*high* = 100) 
+(defglobal ?*higher* = 500) 
+(defglobal ?*highest* = 1000) 
+
+;===============================================================================
+;
 ; Classes
 ;
 ;===============================================================================
@@ -30,6 +43,8 @@
 (deffunction file-exists (?file) (php_call "file_exists" ?file))
 (deffunction file-contents (?file) (php_call "file_get_contents" ?file))
 (deffunction cwd () (php_call "getcwd"))
+(deffunction explode (?sep ?str) (php_call "explode" ?sep ?str))
+(deffunction implode (?sep $?str) (php_call "implode" ?sep $?str))
 (deffunction clips-path (?path) (php_call "clips_path" ?path))
 (deffunction push$ (?list ?item) (insert$ ?list (+ 1 (length$ ?list)) ?item))
 (deffunction unshift$ (?list ?item) (insert$ ?list 1 ?item))

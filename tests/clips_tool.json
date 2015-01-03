@@ -1,4 +1,5 @@
 {
+	"table_prefix": "demo_",
 	"datasources": {
 		"mysql": {
 			"type": "mysqli",
