@@ -286,6 +286,10 @@ class Clips_Tool {
 	public function execute($command, $args) {
 		$command = $this->command($command);
 		if($command) {
+			$deps = $command->getDepends();
+			foreach($deps as $dep) {
+				$this->execute($dep, $args);
+			}
 			return $command->execute($args);
 		}
 		trigger_error('No command named '.$command.' found!');

@@ -1,5 +1,9 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+class DependsOn extends Annotation {
+	public $value;
+}
+
 /**
  *
  * The base class for all the commands
@@ -10,6 +14,16 @@
  */
 class Clips_Command {
 	public function execute($args) {
+	}
+
+	public function getDepends() {
+		$name = get_class($this);
+		$reflection = new ReflectionAnnotatedClass($name);
+		if($reflection->hasAnnotation('DependsOn')) {
+			$a = $reflection->getAnnotation('DependsOn');
+			return $a->value;
+		}
+		return array();
 	}
 
 	public function incre($value = 1) {
