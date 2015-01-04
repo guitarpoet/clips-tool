@@ -162,7 +162,7 @@ class Clips_Tool {
 	}
 
 	private function init() {
-		$this->clips->runWithEnv(CLIPS_CORE_ENV, function($clips){
+		$this->config = $this->clips->runWithEnv(CLIPS_CORE_ENV, function($clips){
 			$clips->reset();
 			$clips->assertFacts(new Clips_Config());
 			$clips->template('Load_Config');
@@ -172,9 +172,9 @@ class Clips_Tool {
 			));
 
 			$clips->run();
-			$this->config = $clips->queryfacts('Clips_Config');
-			$this->config = $this->config[0];
+			return $clips->queryfacts('Clips_Config');
 		});
+		$this->config = $this->config[0];
 		$this->config->load(); // Load the configurations
 		$this->helper('core'); // Load the core helpers
 		$this->load_class(array('resource', 'command'), false, new Load_Config(array('core'))); // Load the base classes
