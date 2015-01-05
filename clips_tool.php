@@ -283,10 +283,39 @@ class Clips_Tool {
 		return false;
 	}
 
+	public function descCommand($command) {
+		$c = $this->command($command);
+		if($c) {
+			$deps = $c->getDepends();
+			if($deps) {
+				if(!is_array($deps)) {
+					$deps = array($deps);
+				}
+				return 'depends on '.implode(', ', $deps);
+			}
+		}
+		return null;
+	}
+
+	public function listLoadDirs() {
+		return $this->clips->runWithEnv(CLIPS_CORE_ENV, function($clips, $dir){
+			$clips->reset(); // Reset the environment
+			$clips->assertFacts(array('try-load-php', '$$'), new Load_Config($dir));
+			$clips->run();
+			return array_unique(array_map(function($item){
+				return realpath(dirname($item[0]));
+			}, $clips->queryFacts('try-load-php-file')));
+		}, $this->config->command_dir);
+	}
+
 	public function execute($command, $args) {
 		$command = $this->command($command);
 		if($command) {
 			$deps = $command->getDepends();
+			if(!is_array($deps)) {
+				$deps = array($deps);
+			}
+
 			foreach($deps as $dep) {
 				$this->execute($dep, $args);
 			}
