@@ -91,11 +91,11 @@ class Clips {
 	}
 
 	private function _init_base_support() {
+		$path = dirname(__FILE__).'/rules/clips.rules'; // Load the default functions
+		$this->load($path);
 		if(function_exists('get_instance')) {
 			$this->ci = get_instance(); // Add the ci object to the context, if function get_instance is exists
 		}
-		$path = dirname(__FILE__).'/rules/clips.rules'; // Load the default functions
-		$this->load($path);
 	}
 
 	private function translate($var) {
