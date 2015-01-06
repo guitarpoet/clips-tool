@@ -1,6 +1,6 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
-require_once(dirname(__FILE__).'/../clips_tool.php');
+require_once(dirname(__FILE__).'/../tool.php');
 
 class Clips_TestCase extends PHPUnit_Framework_TestCase {
     public function setUp() {
