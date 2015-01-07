@@ -46,6 +46,7 @@
 (deffunction explode (?sep ?str) (php_call "explode" ?sep ?str))
 (deffunction implode (?sep $?str) (php_call "implode" ?sep $?str))
 (deffunction clips-path (?path) (php_call "clips_path" ?path))
+(deffunction constant (?name) (php_call "constant" ?name))
 (deffunction push$ (?list ?item) (insert$ ?list (+ 1 (length$ ?list)) ?item))
 (deffunction unshift$ (?list ?item) (insert$ ?list 1 ?item))
 (deffunction match (?str ?pattern) (php_call "clips_str_match" ?str ?pattern))

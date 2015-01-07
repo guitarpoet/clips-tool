@@ -92,7 +92,8 @@ class Clips {
 
 	private function _init_base_support() {
 		$path = dirname(__FILE__).'/rules/clips.rules'; // Load the default functions
-		$this->load($path);
+		if(!$this->classExists('PHP-OBJECT'))
+			$this->load($path);
 		if(function_exists('get_instance')) {
 			$this->ci = get_instance(); // Add the ci object to the context, if function get_instance is exists
 		}
@@ -208,6 +209,9 @@ class Clips {
 
 	public function defineFact($data) {
 		$ret = array();
+		if(is_string($data)) {
+			$data = array($data);
+		}
 		if(is_array($data))  {
 			if(!isset($data['__template__'])) { // This is a static fact
 				$name = array_shift($data);
@@ -503,7 +507,7 @@ class Clips {
 			return $this->assertFacts(func_get_args());
 		}
 
-		if(!$data || !(is_object($data) || is_array($data))) { // The data must be array or object
+		if(!$data || !(is_object($data) || is_string($data) || is_array($data))) { // The data must be array or object or string
 			return false;
 		}
 

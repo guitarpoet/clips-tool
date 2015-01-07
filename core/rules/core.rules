@@ -23,7 +23,14 @@
 	(test (str-index "ci://" ?file))
 	=>
 	(retract ?l)
-	(assert (ci_load_arg (sub-string 6 (str-length ?file) ?file)))
+	(assert (ci_load_arg ?file))
+)
+
+(defrule if-use-ci-to-load-the-commands
+	?arg <- (ci_load_arg ?file)
+	=>
+	(retract ?arg)
+	(assert (command (file-contents ?file)))
 )
 
 (defrule if-file-exists-in-clips-path-then-load-it
@@ -59,15 +66,6 @@
 	=>
 	(assert (command (file-contents ?file)))
 	(retract ?a)
-)
-
-(defrule if-use-ci-to-load-the-commands
-	?arg <- (ci_load_arg ?file)
-	(test (php_call "function_exists" "ci_paths"))
-	=>
-	(retract ?arg)
-	; For each ci path, try to find the rule file in config/rules/
-	(foreach ?rule (php_call "ci_paths" (str-cat "config/rules/" ?file)) (assert (load_arg ?rule)))
 )
 
 (defrule if-the-load-begin-with-http-load-using-http
