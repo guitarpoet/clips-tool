@@ -1,0 +1,17 @@
+{
+    "name": "guitarpoet/clips-tool",
+    "description": "The command framework based on php-clips extension.",
+    "license": "Apache 2.0",
+    "authors": [
+        {
+            "name": "Jack",
+            "email": "guitarpoet@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+	"repositories": [
+    ],
+    "require": {
+		"elkuku/console-progressbar": "*"
+	}
+}
