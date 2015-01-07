@@ -1,10 +1,8 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
-require_once 'Console/ProgressBar.php';
-
 class Clips_Progress_Manager {
 	public function __construct() {
-		if(class_exists('Console_ProgressBar') && is_cli()) {
+		if(class_exists('Elkuku\Console\Helper\ConsoleProgressBar') && is_cli()) {
 			$this->show = true;
 		}
 		else {
@@ -23,7 +21,7 @@ class Clips_Progress_Manager {
 			if($width == -1)
 				$width = $meta['width'];
 
-			$this->progressbar = new Console_ProgressBar('%current%/%max% [%bar%] %percent% %elapsed%', '=>',
+			$this->progressbar = new Elkuku\Console\Helper\ConsoleProgressBar('%current%/%max% [%bar%] %percent% %elapsed%', '=>',
 				' ', $width, $total);
 			$this->current_value = 0;
 		}

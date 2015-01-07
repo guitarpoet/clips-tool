@@ -1,5 +1,7 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+require_once('vendor/autoload.php');
+
 define('CLIPS_TOOL_PATH', dirname(__FILE__));
 
 require_once(CLIPS_TOOL_PATH.'/core/clips.php'); // Require the clips
