@@ -10,8 +10,13 @@
     ],
     "minimum-stability": "dev",
 	"repositories": [
+		{
+			"type": "git",
+			"url": "https://github.com/bobthecow/mustache.php"
+		}
     ],
     "require": {
-		"elkuku/console-progressbar": "*"
+		"elkuku/console-progressbar": "*",
+		"mustache/mustache": "2.7.*"
 	}
 }

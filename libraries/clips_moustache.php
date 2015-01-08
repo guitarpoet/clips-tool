@@ -1,8 +1,5 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
-require_once(dirname(__FILE__).'/moustache/src/Mustache/Autoloader.php');
-Mustache_Autoloader::register();
-
 /**
  * The moustache wrapper for clips tools
  */
