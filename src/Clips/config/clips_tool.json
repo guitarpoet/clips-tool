@@ -1,0 +1,13 @@
+{
+	"version": "1.0.0",
+	"author": "Jack <guitarpoet@gmail.com>",
+	"subclass_prefix": ["MY"],
+	"core_dir": ["core"],
+	"helper_dir": ["helpers"],
+	"command_dir": ["Commands"],
+	"model_dir": ["models"],
+	"library_dir": ["libraries"],
+	"resource_handler_dir": ["handlers"],
+	"datasources_dir": ["handlers"],
+	"template_dir": ["templates"]
+}

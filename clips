@@ -1,7 +1,7 @@
 #! /usr/bin/env php
 <?php
 
-require_once(dirname(__FILE__).'/tool.php');
+require_once('vendor/autoload.php');
 
 $tool = get_clips_tool();
 

@@ -1,2 +1,2 @@
 test:
-	cd tests && phpunit .
+	cd tests && phpunit

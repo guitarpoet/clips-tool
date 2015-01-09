@@ -19,5 +19,11 @@
 		"elkuku/console-progressbar": "*",
 		"niktux/addendum": "*",
 		"mustache/mustache": "2.7.*"
+	},
+	"autoload": {
+		"psr-4": {
+			"Clips\\": "src/Clips/"
+		},
+		"files": ["src/Clips/helpers/core_helper.php"]
 	}
 }
