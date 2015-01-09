@@ -1,18 +1,17 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
-if(!class_exists('Annotation'))
-	require_once(dirname(__FILE__).'/lib/addendum/annotations.php');
-
 define('CLIPS_CORE_ENV', 'CORE');
 define('CLIPS_MAIN_ENV', 'MAIN');
 
-class ClipsMulti extends Annotation {}
+class ClipsMulti extends Addendum\Annotation {}
 
-class ClipsSymbol extends Annotation {
+class ClipsSymbol extends Addendum\Annotation {
 	public $value;
-	// This annotation means this property of class is a symbol
-	public function __construct($value = '') {
-		$this->value = $value;
+
+	public static function symbol($value) {
+		$s = new ClipsSymbol();
+		$s->value = $value;
+		return $s;
 	}
 } 
 
@@ -228,7 +227,7 @@ class Clips {
 			$obj = $data;
 			$name = get_class($obj);
 
-			$reflection = new ReflectionAnnotatedClass($name);
+			$reflection = new Addendum\ReflectionAnnotatedClass($name);
 			
 			if(isset($obj->__template__)) {
 				$name = $obj->__template__;
@@ -241,7 +240,7 @@ class Clips {
 				$ret []= '('.$key;
 				if($reflection->hasProperty($key)) {
 					if($reflection->getProperty($key)->hasAnnotation('ClipsSymbol')) {
-						$value = new ClipsSymbol($value);
+						$value = ClipsSymbol::symbol($value);
 					}
 				}
 				$ret []= $this->translate($value).')';
@@ -269,7 +268,7 @@ class Clips {
 	 */
 	public function defineTemplate($class) {
 		if(is_string($class) && class_exists($class)) {
-			$reflection = new ReflectionAnnotatedClass($class);
+			$reflection = new Addendum\ReflectionAnnotatedClass($class);
 			
 			$ret = array();
 			$ret []= '(deftemplate '.$class;

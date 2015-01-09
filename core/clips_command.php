@@ -1,6 +1,6 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
-class DependsOn extends Annotation {
+class DependsOn extends Addendum\Annotation {
 	public $value;
 }
 

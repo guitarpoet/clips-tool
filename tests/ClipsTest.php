@@ -133,7 +133,7 @@ class ClipsTest extends Clips_TestCase {
 
 	public function testSymbolInArray() {
 		$clips = $this->clips;
-		$clips->assertFacts(array('hello', new ClipsSymbol('world')));
+		$clips->assertFacts(array('hello', ClipsSymbol::symbol('world')));
 		$clips->facts();
 	}
 

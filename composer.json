@@ -17,6 +17,7 @@
     ],
     "require": {
 		"elkuku/console-progressbar": "*",
+		"niktux/addendum": "*",
 		"mustache/mustache": "2.7.*"
 	}
 }
