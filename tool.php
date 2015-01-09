@@ -240,7 +240,7 @@ class Clips_Tool {
 		}
 
 		$the_class = explode("/", $class);
-		$the_class = array_pop($the_class); // The last one is the class name
+		$the_class = array_pop($the_class); // The last one is the name(if in the folder)
 		if(isset($this->_loaded_classes[$the_class])) { // If this class is loaded
 			if($init)
 				return $this->$the_class;
@@ -257,6 +257,20 @@ class Clips_Tool {
 
 		// Let's try loading the class without prefix
 		$loadConfig->prefix = '';
+
+		if(strpos($class, '\\') !== false) { // We have namespace loading here
+			$class_name = ucfirst($class.$loadConfig->suffix);
+
+			if(!class_exists($class_name)) {
+				$this->load_php(str_replace('\\', '/', $class), $loadConfig); 
+			}
+
+			$result = $this->_init_class($class_name, $init, $the_class);
+
+			if(isset($result))
+				return $result;
+		}
+
 		$class_name = $loadConfig->prefix.$the_class.$loadConfig->suffix;
 		if(!class_exists($class_name)) {
 			$this->load_php($class, $loadConfig); 
@@ -327,9 +341,12 @@ class Clips_Tool {
 	}
 
 	public function command($command) {
-		$class = $this->load_class($command, false, new Load_Config($this->config->command_dir, "_command"));
-		if($class)
-			return new $class();
+		foreach(array($command, str_replace('/', '\\', $command)) as $c) {
+			$class = $this->load_class($c, false, new Load_Config($this->config->command_dir, "_command"));
+			if($class)
+				return new $class();
+		}
+
 		return null;
 	}
 
