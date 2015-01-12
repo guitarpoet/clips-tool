@@ -6,7 +6,8 @@ class ProgressManager {
 			$this->show = true;
 		}
 		else {
-			trigger_error('No ProgressBar support!');
+			if(\is_cli())
+				trigger_error('No ProgressBar support!');
 		}
 	}
 
