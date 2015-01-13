@@ -119,7 +119,10 @@ class Sass {
 	protected function precompile() {
 		$this->prefix = '';
 		$this->suffix = '';
-		$this->addSass('variables', 0); // Auto added the variables scss before compile
+
+		foreach(clips_config('sass_preload') as $load) {
+			$this->addSass($load, 0); // Auto added the scsses before compile
+		}
 
 		foreach($this->plugins as $plugin) {
 			if(method_exists($plugin, 'prefix')) {
@@ -151,7 +154,17 @@ class Sass {
 		}
 
 		$content = $this->precompile();
+
 		$this->include_path = (implode(PATH_SEPARATOR, $this->includePathes));
-		return sass_compile("data", $content, $this->options, $this->error);
+		$ret = sass_compile("data", $content, $this->options, $this->error);
+
+		if($ret) {
+			return $ret;
+		}
+
+		$data = explode(":", $this->error);
+		$line = $data[1];
+		$data = explode("\n", $content);
+		throw new \Exception($this->error." at line -> [".$data[$line - 1]." ]\n");
 	}
 }
