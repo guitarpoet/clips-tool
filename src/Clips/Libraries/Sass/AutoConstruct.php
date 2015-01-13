@@ -18,6 +18,9 @@
 class AutoConstruct extends SassPlugin {
 	public function suffix($compiler) {
 		foreach($compiler->sasses as $s) {
+			if(strpos($s, "string://") !== false) // Skip the string resource
+				continue;
+
 			$s = str_replace('.scss', '', $s);
 			$basename = basename($s);
 			$name = strtolower(str_replace('/', '_', $s));

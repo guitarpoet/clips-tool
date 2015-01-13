@@ -202,11 +202,12 @@ class Tool {
 				return $this->_loaded_classes[$class];
 		}
 
-		if(strpos($class, '\\') !== false) { // We have namespace loading here
-			// Try without prefix, with load configuration's prefix and with default prefix
-			foreach(array('', $loadConfig->prefix, 'Clips\\') as $pre) {
-				// Try without prefix
-				$class_name = ucfirst($pre.$class.$loadConfig->suffix);
+		// Let's try load using namespace
+		
+		// Try load the class using the application's namespace
+		foreach(array('', $loadConfig->prefix) as $pre) {
+			foreach(array_merge(clips_config('namespace', array())) as $namespace) {
+				$class_name = ucfirst($namespace.$pre.$class.$loadConfig->suffix);
 
 				if(class_exists($class_name)) { // Let composer do this for me
 					$result = $this->_init_class($class_name, $init, $handle_name);
@@ -215,7 +216,6 @@ class Tool {
 				}
 			}
 		}
-
 
 		// Let's try loading the class without prefix for plain php file
 		$orig_prefix = $loadConfig->prefix;
@@ -243,18 +243,8 @@ class Tool {
 				return $result;
 		}
 
-		// We don't needs to bother with clips's classes, since all of it will load using composer's class loader, so just init with it, so let's try with the prefix
-		foreach(array($loadConfig->prefix, 'Clips\\') as $pre) {
-			// Try without prefix
-			$class_name = ucfirst($pre.$class.$loadConfig->suffix);
-
-			if(class_exists($class_name)) { // Let composer do this for me
-				$result = $this->_init_class($class_name, $init, $handle_name);
-				if(isset($result))
-					return $result;
-			}
-		}
-		$result = $this->_init_class($orig_prefix.ucfirst($class).$loadConfig->suffix, $init, $handle_name);
+		// Try the default clips classes
+		$result = $this->_init_class("Clips\\".$orig_prefix.ucfirst($class).$loadConfig->suffix, $init, $handle_name);
 		if($result)
 			return $result;
 		return false;
@@ -314,7 +304,7 @@ class Tool {
 		return $this->load_class($model, true, new LoadConfig($this->config->model_dir, '_model'));
 	}
 
-	public function library($library, $init = true, $suffix = "", $prefix = "Clips\\Libraries\\") {
+	public function library($library, $init = true, $suffix = "", $prefix = "Libraries\\") {
 		return $this->load_class($library, $init, new LoadConfig($this->config->library_dir, $suffix, $prefix));
 	}
 }

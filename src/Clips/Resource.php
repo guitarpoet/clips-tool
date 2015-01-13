@@ -12,8 +12,28 @@ class Resource {
 
 		if(strpos($uri, "string://") === false) {
 			$info = parse_url($uri);
-			$tool = &get_clips_tool();
-			$handler = $tool->load_class($info['scheme'], true, new LoadConfig($tool->config->resource_handler_dir, "ResourceHandler", "Clips\\ResourceHandlers\\"));
+
+			$proto = $info['scheme'];
+			$clips_class = "Clips\\ResourceHandlers\\".ucfirst($proto)."ResourceHandler";
+			if(class_exists($clips_class)) {
+				$handler = new $clips_class();
+			}
+			else {
+				// Using the configuration to load the handlers
+				foreach(clips_config("resource_handlers") as $c) {
+					if(isset($c->$proto)) {
+						$class = $c->$proto;
+						if(class_exists($class))
+							$handler = new $class();
+					}
+				}
+
+				// We really can't find the handler, let's doing a load.
+				if(!isset($handler)) {
+					$tool = &get_clips_tool();
+					$handler = $tool->load_class(ucfirst($info['scheme']), true, new LoadConfig($tool->config->resource_handler_dir, "ResourceHandler", "ResourceHandlers\\"));
+				}
+			}
 		}
 		else {
 			$handler = new ResourceHandlers\StringResourceHandler();

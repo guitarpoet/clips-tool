@@ -45,7 +45,7 @@ class DataSource {
 		if(isset($config) && isset($config->type)) {
 			$tool = get_clips_tool();
 			$type = $tool->library($config->type, false, 'DataSource');
-			$type = $tool->load_class($config->type, false, new \Clips\LoadConfig($tool->config->datasources_dir, "DataSource", "Clips\\DataSources\\"));
+			$type = $tool->load_class($config->type, false, new \Clips\LoadConfig($tool->config->datasources_dir, "DataSource", "DataSources\\"));
 			$this->$name = new $type($config);
 			return $this->$name;
 		}

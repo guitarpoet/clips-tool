@@ -27,6 +27,8 @@ class Sass {
 
 	public $error;
 
+	protected $includePathes;
+
 	protected function initPlugins() {
 		$tool = &get_clips_tool();
 		foreach(clips_config('sass_plugins', array()) as $plugin) {
@@ -62,7 +64,7 @@ class Sass {
 			}
 		}
 		else {
-			foreach($func_get_args() as $path) {
+			foreach(func_get_args() as $path) {
 				if(in_array($path, $this->includePathes)) // We already have this scss
 					continue;
 				$this->includePathes []= $path;
