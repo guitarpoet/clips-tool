@@ -168,19 +168,17 @@ class DataSource {
 
 	public function query() {
 		$c = func_num_args();
-		switch($c) {
-		case 0:
-			trigger_error('No query found!');
-			return array();
-		case 1:
+		if($c) {
 			$args = func_get_args();
 			$query = array_shift($args);
-		case 2:
 			if($args && is_array($args[0])) { // If we got only 2 args, maybe just is query and args call
 				$args = $args[0];
 			}
-		default:
 			return $this->doQuery($query, $args);
+		}
+		else {
+			trigger_error('No query found!');
+			return array();
 		}
 	}
 }

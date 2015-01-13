@@ -1,5 +1,7 @@
 <?php namespace Clips\Libraries; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+define('DEFAULT_COUNT', 15);
+
 class DBModel extends \Clips\Libraries\Sql {
 	public function __construct() {
 		$tool = &get_clips_tool();
@@ -47,6 +49,74 @@ class DBModel extends \Clips\Libraries\Sql {
 		}
 
 		throw new Exception('Cant\'t find any datasource for this model.');
+	}
+
+	public function one($index = 0) {
+		$ret = call_user_func_array(array($this, 'get'), func_get_args());
+		if(count($ret) >= $index)
+			return $ret[$index];
+		return null;
+	}
+
+	public function get() {
+		switch(func_num_args()) {
+		case 0: // No argument is set, let's check if we have table set
+			if(isset($this->table))
+				return $this->get($this->table, array(), 0, DEFAULT_COUNT);
+			return array(); // No way to get
+		case 1:
+			$table = func_get_arg(0);
+			if(is_string($table)) { // It must be the table name
+				return $this->get($table, array(), 0, DEFAULT_COUNT);
+			}
+
+			if(is_int($table) && isset($this->table)) { // It must be the offset
+				return $this->get($this->table, array(), $table, DEFAULT_COUNT);
+			}
+
+			return array(); // No way to get
+		case 2:
+			$table = func_get_arg(0);
+			if(is_string($table)) {
+				if(isset($this->table)) { // It must be name and arg
+					return $this->get($this->table, 
+						array($table => func_get_arg(1)), 
+						0, DEFAULT_COUNT);
+				}
+				else {
+					// It should be table and offset
+					return $this->get($table, array(), func_get_arg(1), DEFAULT_COUNT);
+				}
+			}
+
+			if(is_int($table) && isset($this->table)) { // It must be the offset and limit
+				return $this->get($this->table, array(), $table, func_get_arg(1));
+			}
+			break;
+		case 3:
+			$table = func_get_arg(0);
+			if(is_string($table)) { // It must be the table name
+				$offset = func_get_arg(1);
+				if(is_string($offset)) { // Must be name and arg
+					return $this->get($table, array(
+						$offset => func_get_arg(2)
+					), 0, DEFAULT_COUNT);
+				}
+
+				if(is_int($offset)) { // It must be table name with offsets
+					return $this->get($table, array(), $offset, func_get_arg(2));
+				}
+			}
+			return array(); // No way to get
+		case 4:
+			$table = func_get_arg(0);
+			$db = $this->select('*')->from($table)->where(func_get_arg(1));
+			$offset = func_get_arg(2);
+			if($offset > 0)
+				$db->limit($offset, func_get_arg(3));
+			return $db->result();
+		}
+		return array();
 	}
 
 	public function result() {

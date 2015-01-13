@@ -59,6 +59,13 @@
 	(modify ?r (sql (str-cat ?sql (get-join-tables))))
 )
 
+(defrule remove-blank-where
+	(declare (salience 9))
+	?w <- (fact_where ?where&"()")
+	=>
+	(retract ?w)
+)
+
 (defrule add-where-to-sql
 	(declare (salience 8))
 	?r <- (Clips\Libraries\SqlResult (sql ?sql&~nil))

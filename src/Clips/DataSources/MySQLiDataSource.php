@@ -125,7 +125,7 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource {
 			return $ret;
 		}
 		else
-			throw new Clips\DataSourceException($this->db->error);
+			throw new \Clips\DataSourceException($this->db->error);
 	}
 
 	protected function doIterate($query, $args, $callback, $context = array()) {
