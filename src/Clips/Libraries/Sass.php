@@ -106,6 +106,13 @@ class Sass {
 			return $r->contents();
 		}
 
+		foreach(clips_config('sass_folders', array()) as $folder) {
+			$r = $this->readFile($folder.$file);
+			if($r) {
+				return $r;
+			}
+		}
+
 		foreach($this->includePathes as $path) {
 			$filepath = $path.'/'.$file;
 			if(file_exists($filepath) && is_file($filepath) &&
