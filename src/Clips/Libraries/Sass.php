@@ -120,7 +120,7 @@ class Sass {
 		$this->prefix = '';
 		$this->suffix = '';
 
-		foreach(clips_config('sass_preload') as $load) {
+		foreach(clips_config('sass_preload', array()) as $load) {
 			$this->addSass($load, 0); // Auto added the scsses before compile
 		}
 

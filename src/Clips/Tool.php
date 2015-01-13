@@ -47,6 +47,10 @@ class Config {
 			$this->library_dir));
 	}
 
+	public function addConfig($config) {
+		$this->config []= $config;
+	}
+
 	public function __get($property) {
 		if(isset($this->config)) {
 			$ret = array();
@@ -207,12 +211,16 @@ class Tool {
 		// Try load the class using the application's namespace
 		foreach(array('', $loadConfig->prefix) as $pre) {
 			foreach(array_merge(clips_config('namespace', array())) as $namespace) {
-				$class_name = ucfirst($namespace.$pre.$class.$loadConfig->suffix);
 
-				if(class_exists($class_name)) { // Let composer do this for me
-					$result = $this->_init_class($class_name, $init, $handle_name);
-					if(isset($result))
-						return $result;
+				foreach(array($loadConfig->suffix, 
+					ucfirst(str_replace('_', '', $loadConfig->suffix))) as $suffix) {
+					$class_name = ucfirst($namespace.$pre.$class.$suffix);
+
+					if(class_exists($class_name)) { // Let composer do this for me
+						$result = $this->_init_class($class_name, $init, $handle_name);
+						if(isset($result))
+							return $result;
+					}
 				}
 			}
 		}
@@ -301,7 +309,7 @@ class Tool {
 
 	public function model($model) {
 		$this->load_class(array('model'), false, new LoadConfig(array('core')));
-		return $this->load_class($model, true, new LoadConfig($this->config->model_dir, '_model'));
+		return $this->load_class($model, true, new LoadConfig($this->config->model_dir, '_model', 'Models\\'));
 	}
 
 	public function library($library, $init = true, $suffix = "", $prefix = "Libraries\\") {

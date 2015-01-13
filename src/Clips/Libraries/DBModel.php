@@ -7,7 +7,11 @@ class DBModel extends \Clips\Libraries\Sql {
 
 		$config = $tool->config;
 		$name = get_class($this);
-		$name = strtolower(substr($name, 0, strlen($name) - 6));
+
+		// Remove the prefixes
+		foreach(array_merge(array('_model', 'Models\\', 'Clips\\'), clips_config('namespace', array())) as $pre) {
+			$name = str_replace($pre, '', $name);
+		}
 
 		// Check for models config first
 		if($config->models) {
