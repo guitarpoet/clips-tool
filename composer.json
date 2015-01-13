@@ -18,7 +18,8 @@
     "require": {
 		"elkuku/console-progressbar": "*",
 		"niktux/addendum": "*",
-		"mustache/mustache": "2.7.*"
+		"mustache/mustache": "2.7.*",
+		"monolog/monolog": "*"
 	},
 	"autoload": {
 		"psr-4": {
