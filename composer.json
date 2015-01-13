@@ -13,6 +13,10 @@
 		{
 			"type": "git",
 			"url": "https://github.com/bobthecow/mustache.php"
+		},
+		{
+			"type": "git",
+			"url": "https://github.com/Seldaek/monolog.git"
 		}
     ],
     "require": {

@@ -58,6 +58,10 @@ class DBModel extends \Clips\Libraries\Sql {
 		return null;
 	}
 
+	protected function isWhereOper($arg) {
+		return is_array($table) || (is_object($table) && is_subclass_of($table, 'Where_Operator'));
+	}
+
 	public function get() {
 		switch(func_num_args()) {
 		case 0: // No argument is set, let's check if we have table set
@@ -74,6 +78,10 @@ class DBModel extends \Clips\Libraries\Sql {
 				return $this->get($this->table, array(), $table, DEFAULT_COUNT);
 			}
 
+			if($this->isWhereOper($table) && isset($this->table)) { // It must be the where args
+				return $this->get($this->table, $table, 0, DEFAULT_COUNT);
+			}
+
 			return array(); // No way to get
 		case 2:
 			$table = func_get_arg(0);
@@ -84,6 +92,9 @@ class DBModel extends \Clips\Libraries\Sql {
 						0, DEFAULT_COUNT);
 				}
 				else {
+					if($this->isWhereOper(func_get_arg(1))) { // It must be table name and the where args
+						return $this->get($table, func_get_arg(1), 0, DEFAULT_COUNT);
+					}
 					// It should be table and offset
 					return $this->get($table, array(), func_get_arg(1), DEFAULT_COUNT);
 				}
@@ -91,6 +102,10 @@ class DBModel extends \Clips\Libraries\Sql {
 
 			if(is_int($table) && isset($this->table)) { // It must be the offset and limit
 				return $this->get($this->table, array(), $table, func_get_arg(1));
+			}
+
+			if($this->isWhereOper($table) && isset($this->table)) { // It must be the where args and the offset
+				return $this->get($this->table, $table, func_get_arg(1), DEFAULT_COUNT);
 			}
 			break;
 		case 3:
@@ -101,6 +116,10 @@ class DBModel extends \Clips\Libraries\Sql {
 					return $this->get($table, array(
 						$offset => func_get_arg(2)
 					), 0, DEFAULT_COUNT);
+				}
+
+				if($this->isWhereOper($offset)) { // It must be table name and the where args with offset
+					return $this->get($table, func_get_arg(1), func_get_arg(2), DEFAULT_COUNT);
 				}
 
 				if(is_int($offset)) { // It must be table name with offsets
