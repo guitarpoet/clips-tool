@@ -5,6 +5,7 @@
 			"datasource": "mysql"
 		}
 	},
+	"sass_plugins": ["Sass\\AutoConstruct"],
 	"datasources": {
 		"mysql": {
 			"table_prefix":"",

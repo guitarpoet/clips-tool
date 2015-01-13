@@ -9,17 +9,18 @@ class Resource {
 			throw new Exception('The resource of uri '.$uri.' is not valid!');
 		}
 		$this->uri = $uri;
-		$info = parse_url($uri);
 
-		$tool = &get_clips_tool();
+		if(strpos($uri, "string://") === false) {
+			$info = parse_url($uri);
+			$tool = &get_clips_tool();
+			$handler = $tool->load_class($info['scheme'], true, new LoadConfig($tool->config->resource_handler_dir, "ResourceHandler", "Clips\\ResourceHandlers\\"));
+		}
+		else {
+			$handler = new ResourceHandlers\StringResourceHandler();
+		}
 
-		// Loading the Resource_Handler base class
-		$tool->load_class('ResourceHandler', false, new LoadConfig($tool->config->core_dir));
-
-		$handler = $tool->load_class($info['scheme'], true, new LoadConfig($tool->config->resource_handler_dir, "ResourceHandler", "Clips\\ResourceHandlers\\"));
-
-		if(!isset($handler)) {
-			throw new Exception('No handler found for resource of uri '.$uri.'!');
+		if(!$handler) {
+			throw new Exception('No handler found for resource of uri '.$uri.' !');
 		}
 		$this->handler = $handler;
 	}

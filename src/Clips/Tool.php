@@ -196,8 +196,7 @@ class Tool {
 		$handle_name = $this->getHandleName($class);
 
 		if(isset($this->_loaded_classes[$class])) { // If this class is loaded
-			if($init && is_object($this->$handle_name) 
-				&& get_class($this->$handle_name) == $class) // If the handle name refers to the same class
+			if($init && is_object($this->$handle_name))
 				return $this->$handle_name;
 			else
 				return $this->_loaded_classes[$class];
@@ -255,7 +254,7 @@ class Tool {
 					return $result;
 			}
 		}
-		$result = $this->_init_class($orig_prefix.$class.$loadConfig->suffix, $init, $handle_name);
+		$result = $this->_init_class($orig_prefix.ucfirst($class).$loadConfig->suffix, $init, $handle_name);
 		if($result)
 			return $result;
 		return false;
