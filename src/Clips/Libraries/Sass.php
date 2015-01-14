@@ -156,6 +156,12 @@ class Sass {
 		$args = func_get_args();
 		if($args) {
 			foreach($args as $sass) {
+				if(is_array($sass)) {
+					foreach($sass as $s) {
+						$this->addSass($s);
+					}
+					continue;
+				}
 				$this->addSass($sass);
 			}
 		}

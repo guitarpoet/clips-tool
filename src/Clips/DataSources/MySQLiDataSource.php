@@ -1,6 +1,6 @@
 <?php namespace Clips\DataSources; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
-class MySQLiDataSource extends \Clips\Libraries\DataSource {
+class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\LoggerAwareInterface {
 	public $host = 'localhost';
 	public $username = 'root';
 	public $password = '';
@@ -218,5 +218,9 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource {
 		if(isset($this->db) && $this->in_transaction) {
 			$this->db->commit(); // If we are in the transaction, let's commit it
 		}
+	}
+
+	public function setLogger(\Psr\Log\LoggerInterface $logger) {
+		$this->logger = $logger;
 	}
 }

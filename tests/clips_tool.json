@@ -5,6 +5,15 @@
 			"datasource": "mysql"
 		}
 	},
+	"logger": {
+		"handlers": {
+			"Stream" : ["php://stdin", "debug"],
+			"FirePHP" : ["debug"],
+			"ChromePHP": ["debug"], 
+			"RotatingFile": ["/tmp/clips.log", 4, "debug"]
+		},
+		"processors": ["Git", "PsrLogMessage", "Introspection", "Tag"]
+	},
 	"sass_plugins": ["Sass\\AutoConstruct"],
 	"datasources": {
 		"mysql": {

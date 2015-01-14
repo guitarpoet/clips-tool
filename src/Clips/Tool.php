@@ -77,6 +77,59 @@ class Tool {
 		$this->clips = new Engine();
 	}
 
+	public function getLogger($name = null) {
+		if($name) {
+			$logger = new \Monolog\Logger($name);
+			return $this->initLogger($logger);
+		}
+		else {
+			if(!isset($this->logger)) {
+				$this->logger = $this->getLogger(get_class($this));
+			}
+			return $this->logger;
+		}
+	}
+
+	protected function createInstance($class, $args = array()) {
+		if(class_exists($class)) {
+			if($args) {
+				$c = new \ReflectionClass($class);
+				return $c->newInstanceArgs($args);
+			}
+			return new $class();
+		}
+		return null;
+	}
+
+	protected function initLogger($logger) {
+		foreach($this->config->logger as $config) {
+			foreach(get_default($config, "processors", array()) as $class) {
+				$processor = $this->createInstance($this->load_class(ucfirst($class), false, new LoadConfig(array(), 'Processor', 'Monolog\\Processor\\' )));
+				if($processor)
+					$logger->pushProcessor($processor);
+			}
+
+			foreach(get_default($config, "handlers", array()) as $class => $args) {
+				if(is_cli() && in_array(strtolower($class), array('firephp', 'chromephp'))) {
+					// In commandline will skip the firephp or chromephp handler since they'll need to output to header
+					continue;
+				}
+
+				$filtered_args = array_map(function($item) {
+					if(is_string($item) && defined("Monolog\\Logger\\".strtoupper($item))) {
+						return constant("Monolog\\Logger\\".strtoupper($item));	
+					}
+					return $item;
+				}, $args);
+
+				$handler = $this->createInstance($this->load_class(ucfirst($class), false, new LoadConfig(array(), 'Handler', 'Monolog\\Handler\\')), $filtered_args);
+				if($handler)
+					$logger->pushHandler($handler);
+			}
+		}
+		return $logger;
+	}
+
 	public static function &get_instance() {
 		static $instance;
 		if(!isset($instance)) {
@@ -155,6 +208,9 @@ class Tool {
 			// We got the class
 			if($init) {
 				$this->$name = new $class();
+				if(is_subclass_of($this->$name, 'Psr\\Log\\LoggerAwareInterface')) {
+					$this->$name->setLogger($this->getLogger($class)); // Setting the logger according to the class name
+				}
 				$this->_loaded_classes[$name] = $class;
 				return $this->$name;	
 			}
@@ -210,7 +266,7 @@ class Tool {
 		
 		// Try load the class using the application's namespace
 		foreach(array('', $loadConfig->prefix) as $pre) {
-			foreach(array_merge(clips_config('namespace', array())) as $namespace) {
+			foreach(array_merge(clips_config('namespace', array()), array('')) as $namespace) {
 
 				foreach(array($loadConfig->suffix, 
 					ucfirst(str_replace('_', '', $loadConfig->suffix))) as $suffix) {

@@ -15,6 +15,9 @@ function &get_clips_tool() {
 	return Clips\Tool::get_instance();
 }
 
+function clips_log($message, $context) {
+}
+
 function clips_config($name, $default = null) {
 	$tool = &get_clips_tool();
 	$ret = $tool->config->$name;
@@ -64,12 +67,17 @@ function clips_library($library, $init = true, $suffix = "") {
 	return $tool->library($library, $init, $suffix);
 }
 
-function clips_out($template, $args) {
+function clips_out($template, $args, $output = true) {
 	$tool = get_clips_tool();
-	if(strpos($template, "://"))
-		echo $tool->template($template, $args);
-	else
-		echo $tool->template("tpl://".$template, $args);
+	if(strpos($template, "://")) {
+		$ret = $tool->template($template, $args);
+	}
+	else {
+		$ret = $tool->template("tpl://".$template, $args);
+	}
+	if($output)
+		echo $ret;
+	return $ret;
 }
 
 function clips_path($path) {

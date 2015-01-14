@@ -9,6 +9,12 @@ class ToolTest extends Clips\TestCase {
 		$this->assertNotNull($this->tool);
 	}
 
+	public function testLogger() {
+		$logger = $this->tool->getLogger();
+		$this->assertNotNull($logger);
+		$logger->info("Hello {world}", array("world" => "Jack"));
+	}
+
 	public function doTearDown() {
 	}
 }
