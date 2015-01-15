@@ -175,6 +175,7 @@ class Sass {
 			return $ret;
 		}
 
+		var_dump($this->error);
 		$data = explode(":", $this->error);
 		$line = $data[1];
 		$data = explode("\n", $content);

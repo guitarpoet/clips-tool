@@ -3,7 +3,6 @@
 class VersionCommand extends \Clips\Command {
 	public function execute($args) {
 		$tool = &get_clips_tool();
-		$tool->template
-		clips_out get_clips_tool()->config->version[0];
+		echo ($tool->config->version[0]);
 	}
 }

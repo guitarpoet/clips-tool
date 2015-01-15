@@ -1,6 +1,10 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
 class Command {
+	public function __construct() {
+		$this->tool = &get_clips_tool();
+	}
+
 	public function execute($args) {
 	}
 
@@ -15,23 +19,20 @@ class Command {
 	}
 
 	public function incre($value = 1) {
-		$tool = &get_clips_tool();
-		if(isset($tool->ProgressManager)) {
-			$tool->ProgressManager->incre($value);
+		if(isset($this->tool->ProgressManager)) {
+			$this->tool->ProgressManager->incre($value);
 		}
 	}
 
 	public function progress($value) {
-		$tool = &get_clips_tool();
-		if(isset($tool->ProgressManager)) {
-			$tool->ProgressManager->update($value);
+		if(isset($this->tool->ProgressManager)) {
+			$this->tool->ProgressManager->update($value);
 		}
 	}
 
 	public function start($total = 100) {
-		$tool = &get_clips_tool();
-		if(isset($tool->ProgressManager)) {
-			$tool->ProgressManager->start($total);
+		if(isset($this->tool->ProgressManager)) {
+			$this->tool->ProgressManager->start($total);
 		}
 	}
 }

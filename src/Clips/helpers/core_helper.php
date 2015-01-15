@@ -81,7 +81,8 @@ function clips_out($template, $args, $output = true) {
 }
 
 function clips_path($path) {
-	return dirname(__FILE__).$path;
+	$rc = new ReflectionClass("Clips\\Tool");
+	return dirname($rc->getFileName()).$path;
 }
 
 function clips_load_rules($rules) {
