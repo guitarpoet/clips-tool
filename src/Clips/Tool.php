@@ -2,6 +2,8 @@
 
 define('CLIPS_TOOL_PATH', dirname(__FILE__));
 
+class Requires extends \Addendum\Annotation { }
+
 class LoadConfig {
 	/** @Multi */
 	public $dirs = array();
@@ -207,10 +209,30 @@ class Tool {
 		if(class_exists($class)) { // Yes we have found it
 			// We got the class
 			if($init) {
+				// Construct the class
 				$this->$name = new $class();
+
+				// Setting the log
 				if(is_subclass_of($this->$name, 'Psr\\Log\\LoggerAwareInterface')) {
 					$this->$name->setLogger($this->getLogger($class)); // Setting the logger according to the class name
 				}
+
+				// Process requires annotation
+				$reflection = new \Addendum\ReflectionAnnotatedClass($class);
+				if($reflection->hasAnnotation('Requires')) {
+					$a = $reflection->getAnnotation('Requires');
+					foreach($a->value as $r) {
+						$this->$name->$r = $this->library($r);
+					}
+				}
+
+				// Process initialize
+				if(is_subclass_of($this->$name, 'CLips\\Interfaces\\Initializable')) {
+					// Call the init function
+					$this->$name->init();
+
+				}
+
 				$this->_loaded_classes[$name] = $class;
 				return $this->$name;	
 			}

@@ -9,8 +9,7 @@ class Git implements \Psr\Log\LoggerAwareInterface {
 		$this->logger = $logger;
 	}
 
-	public function getHeadCommit($path) {
-		$repo = $this->repo($path);
+	public function getHeadCommit($repo) {
 		$head = $repo->getHead();
 		$rev = ($repo->getRevision($head->getFullname()));
 		return $rev->getCommit();

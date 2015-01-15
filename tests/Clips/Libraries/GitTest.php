@@ -8,7 +8,7 @@ class GitTest extends Clips\TestCase {
 
 	public function testGetInfo() {
 		$this->assertNotNull($this->git);
-		$repo = ($this->git->repo(clips_path('/../../../')));
+		$repo = ($this->git->repo(clips_path('/../../')));
 		$head = $repo->getHead();
 		$rev = ($repo->getRevision($head->getFullname()));
 		echo $rev->getCommit()->getCommitterDate()->getTimestamp();
