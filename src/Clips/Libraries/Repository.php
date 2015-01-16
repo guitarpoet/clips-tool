@@ -12,7 +12,18 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 		if($path)
 			$this->path = $path;
 		else
-			$this->path = clips_path('/../../.git/', true); // If no path is given, let read clips tool's git
+			$this->path = clips_path('/../../.git/'); // If no path is given, let read clips tool's git
+
+		$this->readonly = $readonly;
+	}
+
+	/**
+	 * Get the current revisions of the given path, if no path is set, will return all of the revisions of this repo.
+	 *
+	 * @return
+	 */
+	public function revisions($path = null) {
+		return $this->gitrepo->getLog($path);
 	}
 
 	public function init() {
@@ -23,14 +34,29 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 		return $this->git->getHeadCommit($this->gitrepo)->getCommitterDate();
 	}
 
+	public function commit($message, $author) {
+	}
+
+	public function show($path, $revision = null) {
+		if(!$revision)
+			$revision = 'HEAD';
+		return $this->gitrepo->run('show', array($revision.':'.$path));
+	}
+
 	public function create($path) {
+		if($this->readonly)
+			return false;
+
 		return null;
 	}
 
-	public function exists($path, $revision = 'HEAD') {
+	public function exists($path, $revision = null) {
+		$r = $this->git->getRevision($this->gitrepo, $revision);
+		return $r->getLog($path)->count() > 0;
 	}
 
-	public function get($path) {
+	public function get($path, $revision = null) {
+		$r = $this->git->getRevision($this->gitrepo, $revision);
 		return null;
 	}
 

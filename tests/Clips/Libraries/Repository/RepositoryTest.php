@@ -11,4 +11,11 @@ class RepositoryTest extends Clips\TestCase {
 		$this->assertNotNull($this->repo->git);
 		$this->assertNotNull($this->repo->lastCommitterDate());
 	}
+
+	public function testExists() {
+		$this->assertTrue($this->repo->exists('clips'));
+		$this->assertTrue($this->repo->exists('src/Clips/Tool.php'));
+		$this->assertFalse($this->repo->exists('This should not exists'));
+		echo $this->repo->show('composer.json');
+	}
 }
