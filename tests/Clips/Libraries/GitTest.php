@@ -13,4 +13,7 @@ class GitTest extends Clips\TestCase {
 		$rev = ($repo->getRevision($head->getFullname()));
 		echo $rev->getCommit()->getCommitterDate()->getTimestamp();
 	}
+
+	public function doTearDown() {
+	}
 }

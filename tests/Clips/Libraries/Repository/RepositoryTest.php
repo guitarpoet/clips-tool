@@ -16,6 +16,12 @@ class RepositoryTest extends Clips\TestCase {
 		$this->assertTrue($this->repo->exists('clips'));
 		$this->assertTrue($this->repo->exists('src/Clips/Tool.php'));
 		$this->assertFalse($this->repo->exists('This should not exists'));
-		echo $this->repo->show('composer.json');
+	}
+
+	public function testCreate() {
+		$path = clips_path('/tests/_tmp/git_sample');
+		mkdir($path, 0755, true);
+		$this->repo = new Clips\Libraries\Repository($path, false);
+		$this->repo->create();
 	}
 }

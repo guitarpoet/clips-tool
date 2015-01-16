@@ -7,6 +7,10 @@ function console_meta() {
 class Depends extends \Addendum\Annotation {
 }
 
+function path_join() {
+	return str_replace('//', '/', str_replace('///', '/', implode('/', func_get_args())));
+}
+
 function is_cli() {
 	return (php_sapi_name() === 'cli' OR defined('STDIN'));
 }

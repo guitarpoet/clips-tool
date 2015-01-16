@@ -8,11 +8,11 @@
 class Repository implements \Psr\Log\LoggerAwareInterface, 
 	\Clips\Interfaces\Initializable {
 
-	public function __construct($path = null, $readonly = false) {
+	public function __construct($path = null, $readonly = true) {
 		if($path)
 			$this->path = $path;
 		else
-			$this->path = clips_path('/../../.git/'); // If no path is given, let read clips tool's git
+			$this->path = clips_path('/../../'); // If no path is given, let read clips tool's git
 
 		$this->readonly = $readonly;
 	}
@@ -21,43 +21,80 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 	 * Get the current revisions of the given path, if no path is set, will return all of the revisions of this repo.
 	 *
 	 * @return
+	 * 		All the revisions
 	 */
 	public function revisions($path = null) {
-		return $this->gitrepo->getLog($path);
+		if(!isset($this->gitrepo))
+			return false;
+
+		$ret = array();
+		foreach($this->gitrepo->getLog(null, $path) as $r) {
+			$ret []= $r->getRevision();
+		}
+		return $ret;
+	}
+
+	public function logs($path = null, $revision = null) {
+		if(!isset($this->gitrepo))
+			return false;
+
+		return $this->gitrepo->getLog($revision, $path);
 	}
 
 	public function init() {
-		$this->gitrepo = $this->git->repo($this->path);
+		$path = path_join($this->path, '.git');
+		if(file_exists($path))
+			$this->gitrepo = $this->git->repo($path);
 	}
 
 	public function lastCommitterDate() {
+		if(!isset($this->gitrepo))
+			return false;
+
 		return $this->git->getHeadCommit($this->gitrepo)->getCommitterDate();
 	}
 
+	public function save($path, $content) {
+	}
+
+	public function remove() {
+		if($readonly || is_writable($this->path))
+			return false;
+		
+		return rmdir($this->path);
+	}
+
 	public function commit($message, $author) {
+		if($this->readonly || !isset($this->gitrepo))
+			return false;
 	}
 
 	public function show($path, $revision = null) {
-		if(!$revision)
-			$revision = 'HEAD';
-		return $this->gitrepo->run('show', array($revision.':'.$path));
-	}
-
-	public function create($path) {
-		if($this->readonly)
+		if(!isset($this->gitrepo))
 			return false;
 
-		return null;
+		if($this->exists($path, $revision)) {
+			if(!$revision)
+				$revision = 'HEAD';
+			return $this->gitrepo->run('show', array($revision.':'.$path));
+		}
+		return false;
+	}
+
+	public function create() {
+		if($this->readonly || isset($this->gitrepo))
+			return false;
+
+		$this->git->create($this->path);
+		$this->init();
+		return $this;
 	}
 
 	public function exists($path, $revision = null) {
+		if(!isset($this->gitrepo))
+			return file_exists($this->path.'/'. $path);
 		$r = $this->git->getRevision($this->gitrepo, $revision);
 		return $r->getLog($path)->count() > 0;
-	}
-
-	public function get($path, $revision = null) {
-		$r = $this->git->getRevision($this->gitrepo, $revision);
-		return null;
 	}
 
 	public function setLogger(\Psr\Log\LoggerInterface $logger) {

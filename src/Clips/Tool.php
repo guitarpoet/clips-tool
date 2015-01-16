@@ -9,11 +9,14 @@ class LoadConfig {
 	public $dirs = array();
 	public $suffix = "";
 	public $prefix = "";
+	/** @Multi */
+	public $args;
 
-	public function __construct($dirs = array(), $suffix = "", $prefix = "") {
+	public function __construct($dirs = array(), $suffix = "", $prefix = "", $args = null) {
 		$this->dirs = $dirs;
 		$this->suffix = $suffix;
 		$this->prefix = $prefix;
+		$this->args = $args;
 	}
 }
 
@@ -77,6 +80,10 @@ class Tool {
 
 	private function __construct() {
 		$this->clips = new Engine();
+	}
+
+	public function resource($uri) {
+		return new Resource($uri);
 	}
 
 	public function getLogger($name = null) {
@@ -205,12 +212,12 @@ class Tool {
 		}, $facts);
 	}
 
-	private function _init_class($class, $init, $name) {
+	private function _init_class($class, $init, $name, $args = null) {
 		if(class_exists($class)) { // Yes we have found it
 			// We got the class
 			if($init) {
 				// Construct the class
-				$this->$name = new $class();
+				$this->$name = $this->createInstance($class, $args);
 
 				// Setting the log
 				if(is_subclass_of($this->$name, 'Psr\\Log\\LoggerAwareInterface')) {
@@ -261,7 +268,7 @@ class Tool {
 		return array_pop($arr);
 	}
 
-	public function load_class($class, $init = false, $loadConfig = null) {
+	public function load_class($class, $init = false, $loadConfig = null, $args = null) {
 		if(!isset($loadConfig)) {
 			$loadConfig = $this->config->getLoadConfig();
 		}
@@ -295,7 +302,7 @@ class Tool {
 					$class_name = ucfirst($namespace.$pre.$class.$suffix);
 
 					if(class_exists($class_name)) { // Let composer do this for me
-						$result = $this->_init_class($class_name, $init, $handle_name);
+						$result = $this->_init_class($class_name, $init, $handle_name, $args);
 						if(isset($result))
 							return $result;
 					}
@@ -313,7 +320,7 @@ class Tool {
 			$this->load_php($class, $loadConfig); 
 		}
 
-		$result = $this->_init_class($class_name, $init, $handle_name);
+		$result = $this->_init_class($class_name, $init, $handle_name, $args);
 		if($result)
 			return $result;
 
@@ -324,13 +331,13 @@ class Tool {
 			if(!class_exists($class_name)) {
 				$this->load_php($class, $loadConfig);
 			}
-			$result = $this->_init_class($class_name, $init, $handle_name);
+			$result = $this->_init_class($class_name, $init, $handle_name, $args);
 			if($result)
 				return $result;
 		}
 
 		// Try the default clips classes
-		$result = $this->_init_class("Clips\\".$orig_prefix.ucfirst($class).$loadConfig->suffix, $init, $handle_name);
+		$result = $this->_init_class("Clips\\".$orig_prefix.ucfirst($class).$loadConfig->suffix, $init, $handle_name, $args);
 		if($result)
 			return $result;
 		return false;
