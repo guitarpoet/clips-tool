@@ -1,5 +1,15 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+function rmr($path) {
+	echo "Removing $path.......\n";
+	if (PHP_OS === 'Windows') {
+		exec("rd /s /q {$path}");
+	}
+	else {
+		exec("rm -rf {$path}");
+	}
+}
+
 function console_meta() {
 	return array('width' => `tput cols`);
 }

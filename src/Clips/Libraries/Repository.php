@@ -66,10 +66,10 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 	}
 
 	public function remove() {
-		if($readonly || is_writable($this->path))
+		if($this->readonly || !is_writable($this->path))
 			return false;
 		
-		return rmdir($this->path);
+		return rmr($this->path);
 	}
 
 	public function commit($message, $author) {

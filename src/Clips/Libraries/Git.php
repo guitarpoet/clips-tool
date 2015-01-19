@@ -2,7 +2,6 @@
 
 class Git implements \Psr\Log\LoggerAwareInterface {
 	public function repo($path) {
-		var_dump($path);
 		return new \Gitonomy\Git\Repository($path, array('logger' => $this->logger));
 	}
 
