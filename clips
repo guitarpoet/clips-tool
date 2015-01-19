@@ -1,14 +1,2 @@
-#! /usr/bin/env php
-<?php
-
-require_once('vendor/autoload.php');
-
-$tool = get_clips_tool();
-
-$command = 'shell';
-
-if(count($argv) >= 2) { // We have the command
-	$command = $argv[1];
-}
-
-$tool->execute($command, $argv);
+#! /bin/bash 
+env php -r "require_once('`dirname $(readlink $0)`/vendor/autoload.php'); new Clips\\Console('$0 $*');"
