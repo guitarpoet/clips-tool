@@ -23,7 +23,7 @@ class SegCommand extends \Clips\Command {
 				echo "$token/x";
 				break;
 			case "STOP_WORD":
-				echo "$type/s";
+				echo "$token/s";
 				break;
 			case "LINE_BREAK":
 				echo $token;
