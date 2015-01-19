@@ -60,9 +60,11 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 	}
 
 	public function save($path, $content) {
-		if($this->readonly)
+		if($this->readonly || !isset($this->gitrepo))
 			return false;
+
 		file_put_contents(path_join($this->path, $path), $content);
+		$this->git->add($this, $path);
 	}
 
 	public function remove() {
@@ -75,6 +77,8 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 	public function commit($message, $author) {
 		if($this->readonly || !isset($this->gitrepo))
 			return false;
+
+		$this->git->commit($this, $message, $author);
 	}
 
 	public function show($path, $revision = null) {

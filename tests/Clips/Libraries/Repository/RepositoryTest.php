@@ -24,6 +24,8 @@ class RepositoryTest extends Clips\TestCase {
 		$r = $this->repo->get($path, false);
 		$r->create();
 		$r->save('a.txt', "This is only a test.");
+		$r->commit('Hello world', 'Jack <guitarpoet@gmail.com>');
+		$this->assertEquals(count($r->revisions()), 1);
 		$r->remove();
 	}
 }

@@ -175,10 +175,13 @@ class Sass {
 			return $ret;
 		}
 
-		var_dump($this->error);
 		$data = explode(":", $this->error);
-		$line = $data[1];
-		$data = explode("\n", $content);
-		throw new \Exception($this->error." at line -> [".$data[$line - 1]." ]\n");
+		if(count($data) > 1) {
+			$line = $data[1];
+			$data = explode("\n", $content);
+			throw new \Exception($this->error." at line -> [".$data[$line - 1]." ]\n");
+		}
+		else
+			throw new \Exception($this->error);
 	}
 }

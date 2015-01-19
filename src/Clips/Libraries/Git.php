@@ -9,10 +9,29 @@ class Git implements \Psr\Log\LoggerAwareInterface {
 		$this->logger = $logger;
 	}
 
+	public function add($repo, $path) {
+		if(file_exists($repo->path)) {
+			exec('cd '.$repo->path.' && git add '.$path);
+			return true;
+		}
+		return false;
+	}
+
+	public function commit($repo, $message, $author) {
+		if(file_exists($repo->path)) {
+			exec('cd '.$repo->path.' && git commit -am "'.$message.'" --author "'.$author.'"');
+			return true;
+		}
+		return false;
+
+	}
+
 	public function create($path) {
 		if(file_exists($path)) {
 			exec('git init '.$path);
+			return true;
 		}
+		return false;
 	}
 
 	public function getRevision($repo, $rev = null) {
