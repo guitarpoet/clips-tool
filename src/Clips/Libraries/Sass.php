@@ -160,14 +160,20 @@ class Sass {
 				break;
 			}
 
-			$ret = sass_compile("data", $line, $this->options, $this->error);
-			if($ret) {
-				echo $ret;
+			if(sass_is_complete($line)) {
+				$ret = sass_compile("data", $line, $this->options, $this->error);
+				readline_add_history($line);
+				if($ret) {
+					echo $ret;
+				}
+				else {
+					echo $this->error;
+				}
+				$line = readline('sass$ ')."\n";
 			}
-			else
-				echo $this->error;
-			readline_add_history($line);
-			$line = readline('sass$ ')."\n";
+			else {
+				$line .= readline('... ')."\n";
+			}
 		}
 	}
 
