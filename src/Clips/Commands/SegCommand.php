@@ -15,21 +15,21 @@ class SegCommand extends \Clips\Command {
 			$str = $path;
 		}
 
-		$arr = array();
-		mmseg_tokenize($str, $arr);
-		foreach($arr as $t) {
-			switch($t[0]) {
+		$tool = &get_clips_tool();
+		$mmseg = $tool->library('mmseg');
+		$mmseg->tokenize($str, function($type, $token) {
+			switch($type) {
 			case "TOKEN":
-				echo "$t[1]/x";
+				echo "$token/x";
 				break;
 			case "STOP_WORD":
-				echo "$t[1]/s";
+				echo "$type/s";
 				break;
 			case "LINE_BREAK":
-				echo "\n";
+				echo $token;
 				break;
 			}
-		}
+		});
 	}
 
 	public function execute($args) {
