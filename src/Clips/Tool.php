@@ -3,6 +3,7 @@
 define('CLIPS_TOOL_PATH', dirname(__FILE__));
 
 class Requires extends \Addendum\Annotation { }
+class FullArgs extends \Addendum\Annotation { }
 
 class LoadConfig {
 	/** @Multi */
@@ -212,6 +213,10 @@ class Tool {
 		}, $facts);
 	}
 
+	public function create($class, $args) {
+		return $this->_init_class($class, true, "__created__", $args);
+	}
+
 	private function _init_class($class, $init, $name, $args = null) {
 		if(class_exists($class)) { // Yes we have found it
 			// We got the class
@@ -276,7 +281,7 @@ class Tool {
 		// Array support
 		if(is_array($class)) {
 			foreach($class as $c) {
-				$this->load_class($c, $init, $loadConfig);
+				$this->load_class($c, $init, $loadConfig, $args);
 			}
 			return true;
 		}
@@ -379,6 +384,11 @@ class Tool {
 			foreach($deps as $dep) {
 				$this->execute($dep, $args);
 			}
+			$reflection = new \Addendum\ReflectionAnnotatedClass($c);
+			if(!$reflection->hasAnnotation('FullArgs')) {
+				array_shift($args); // For the clips script
+				array_shift($args); // For the command
+			}
 			return $c->execute($args);
 		}
 		trigger_error('No command named '.$command.' found!');
@@ -397,7 +407,7 @@ class Tool {
 		return $this->load_class($model, true, new LoadConfig($this->config->model_dir, '_model', 'Models\\'));
 	}
 
-	public function library($library, $init = true, $suffix = "", $prefix = "Libraries\\") {
-		return $this->load_class($library, $init, new LoadConfig($this->config->library_dir, $suffix, $prefix));
+	public function library($library, $init = true, $suffix = "", $args = null, $prefix = "Libraries\\") {
+		return $this->load_class($library, $init, new LoadConfig($this->config->library_dir, $suffix, $prefix), $args);
 	}
 }

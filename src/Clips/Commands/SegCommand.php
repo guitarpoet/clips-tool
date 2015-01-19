@@ -33,12 +33,8 @@ class SegCommand extends \Clips\Command {
 	}
 
 	public function execute($args) {
-		if(count($args) > 2) {
-			array_shift($args); // The clips script
-			array_shift($args); // The command
-			foreach($args as $p) {
-				$this->segment($p);
-			}
+		foreach($args as $p) {
+			$this->segment($p);
 		}
 	}
 }

@@ -17,6 +17,11 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 		$this->readonly = $readonly;
 	}
 
+	public function get($path, $readonly = true) {
+		$tool = &get_clips_tool();
+		return $tool->create('Clips\\Libraries\\Repository', array($path, $readonly));
+	}
+
 	/**
 	 * Get the current revisions of the given path, if no path is set, will return all of the revisions of this repo.
 	 *
@@ -55,6 +60,9 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 	}
 
 	public function save($path, $content) {
+		if($this->readonly)
+			return false;
+		file_put_contents(path_join($this->path, $path), $content);
 	}
 
 	public function remove() {
@@ -82,7 +90,7 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 	}
 
 	public function create() {
-		if($this->readonly || isset($this->gitrepo))
+		if($this->readonly)
 			return false;
 
 		$this->git->create($this->path);

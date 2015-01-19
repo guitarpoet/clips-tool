@@ -8,6 +8,18 @@ class Command {
 	public function execute($args) {
 	}
 
+	public function error() {
+		echo call_user_func_array("sprintf", func_get_args());
+	}
+
+	public function processArgs($args) {
+		if(count($args) < 2)
+			return false;
+		array_shift($args); // The clips script
+		array_shift($args); // The command
+		return $args;
+	}
+
 	public function getDepends() {
 		$name = get_class($this);
 		$reflection = new \Addendum\ReflectionAnnotatedClass($name);

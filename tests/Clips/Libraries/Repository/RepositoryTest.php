@@ -19,9 +19,11 @@ class RepositoryTest extends Clips\TestCase {
 	}
 
 	public function testCreate() {
-		$path = clips_path('/tests/_tmp/git_sample');
+		$path = clips_path('/../../tests/_tmp/git_sample');
 		mkdir($path, 0755, true);
-		$this->repo = new Clips\Libraries\Repository($path, false);
-		$this->repo->create();
+		$r = $this->repo->get($path, false);
+		$r->create();
+		$r->save('a.txt', "This is only a test.");
+		$r->remove();
 	}
 }

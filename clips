@@ -1,2 +1,2 @@
 #! /bin/bash 
-env php -r "require_once('`dirname $(readlink $0)`/vendor/autoload.php'); new Clips\\Console('$0 $*');"
+env php $PHP_OPTS -r "require_once('`dirname $(readlink $0)`/vendor/autoload.php'); new Clips\\Console('$0 $*');"
