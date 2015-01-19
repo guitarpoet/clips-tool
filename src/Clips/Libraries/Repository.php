@@ -46,6 +46,12 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 		return $this->gitrepo->getLog($revision, $path);
 	}
 
+	public function reset() {
+		if(!isset($this->gitrepo))
+			return false;
+		$this->git->reset($this);
+	}
+
 	public function init() {
 		$path = path_join($this->path, '.git');
 		if(file_exists($path))
@@ -67,11 +73,22 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 		$this->git->add($this, $path);
 	}
 
-	public function remove() {
+	public function remove($path = null) {
 		if($this->readonly || !is_writable($this->path))
 			return false;
 		
-		return rmr($this->path);
+		if($path == null)
+			return rmr($this->path);
+
+		$p = path_join($this->path, $path);
+		if(file_exists($p)) {
+			if(is_dir($p)) {
+				rmr($p);
+			}
+			else {
+				unlink($p);
+			}
+		}
 	}
 
 	public function commit($message, $author) {

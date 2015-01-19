@@ -26,6 +26,16 @@ class Git implements \Psr\Log\LoggerAwareInterface {
 
 	}
 
+	public function reset($repo) {
+		if(file_exists($repo->path)) {
+			exec('cd '.$repo->path.' && git reset --hard');
+			return true;
+		}
+		return false;
+
+	}
+
+
 	public function create($path) {
 		if(file_exists($path)) {
 			exec('git init '.$path);
