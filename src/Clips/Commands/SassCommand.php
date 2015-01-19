@@ -5,6 +5,9 @@ class SassCommand extends \Clips\Command {
 		$tool = &get_clips_tool();
 		$sass = $tool->library('sass');
 		$sass->addIncludePath(getcwd());
-		echo $sass->compile($args);
+		if(count($args) == 1 && $args['0'] == 'console')
+			$sass->console();
+		else
+			echo $sass->compile($args);
 	}
 }

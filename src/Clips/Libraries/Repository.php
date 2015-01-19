@@ -49,7 +49,7 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 	public function reset() {
 		if(!isset($this->gitrepo))
 			return false;
-		$this->git->reset($this);
+		return $this->git->reset($this);
 	}
 
 	public function init() {

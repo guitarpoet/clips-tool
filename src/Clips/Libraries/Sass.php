@@ -152,6 +152,25 @@ class Sass {
 		return $this->content;
 	}
 
+	public function console() {
+		$line = readline('sass$ ')."\n";
+		while(true) {
+			if(trim($line) == 'exit' || trim($line) == 'quit') {
+				echo "Bye.";
+				break;
+			}
+
+			$ret = sass_compile("data", $line, $this->options, $this->error);
+			if($ret) {
+				echo $ret;
+			}
+			else
+				echo $this->error;
+			readline_add_history($line);
+			$line = readline('sass$ ')."\n";
+		}
+	}
+
 	public function compile() {
 		$args = func_get_args();
 		if($args) {
