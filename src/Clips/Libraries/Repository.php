@@ -29,7 +29,7 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 	 * 		All the revisions
 	 */
 	public function revisions($path = null) {
-		if(!isset($this->gitrepo))
+		if(!isset($this->gitrepo) || !$this->has($path))
 			return false;
 
 		$ret = array();
@@ -40,7 +40,7 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 	}
 
 	public function logs($path = null, $revision = null) {
-		if(!isset($this->gitrepo))
+		if(!isset($this->gitrepo) || !$this->has($path))
 			return false;
 
 		return $this->gitrepo->getLog($revision, $path);
@@ -131,7 +131,7 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 	}
 
 	public function exists($path, $revision = null) {
-		if(!isset($this->gitrepo))
+		if(!isset($this->gitrepo) || !$this->has($path))
 			return file_exists($this->path.'/'. $path);
 		$r = $this->git->getRevision($this->gitrepo, $revision);
 		return $r->getLog($path)->count() > 0;
