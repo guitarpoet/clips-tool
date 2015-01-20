@@ -160,8 +160,9 @@ class Sass {
 				break;
 			}
 
-			if(sass_is_complete($line)) {
-				$ret = sass_compile("data", $line, $this->options, $this->error);
+			if(sass_is_complete('* {'.$line.'}')) {
+				$c = '* {'.$line.'}';
+				$ret = sass_compile("data", $c, $this->options, $this->error);
 				readline_add_history($line);
 				if($ret) {
 					echo $ret;
