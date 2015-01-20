@@ -87,6 +87,38 @@ class Tool {
 		return new Resource($uri);
 	}
 
+	public function emergency($message, $context = array()) {
+		$this->getLogger()->emergency($message, $context);
+	}
+
+	public function critical($message, $context = array()) {
+		$this->getLogger()->critical($message, $context);
+	}
+
+	public function notice($message, $context = array()) {
+		$this->getLogger()->notice($message, $context);
+	}
+
+	public function info($message, $context = array()) {
+		$this->getLogger()->notice($message, $context);
+	}
+
+	public function debug($message, $context = array()) {
+		$this->getLogger()->notice($message, $context);
+	}
+
+	public function error($message, $context = array()) {
+		$this->getLogger()->error($message, $context);
+	}
+
+	public function warning($message, $context = array()) {
+		$this->getLogger()->error($message, $context);
+	}
+
+	public function alert($message, $context = array()) {
+		$this->getLogger()->alert($message, $context);
+	}
+
 	public function getLogger($name = null) {
 		if($name) {
 			$logger = new \Monolog\Logger($name);
