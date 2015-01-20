@@ -17,7 +17,7 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 		$this->readonly = $readonly;
 	}
 
-	public function get($path, $readonly = true) {
+	public function repo($path, $readonly = true) {
 		$tool = &get_clips_tool();
 		return $tool->create('Clips\\Libraries\\Repository', array($path, $readonly));
 	}
