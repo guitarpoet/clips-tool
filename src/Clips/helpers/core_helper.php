@@ -101,8 +101,8 @@ function clips_path($path) {
 
 function clips_load_rules($rules) {
 	if($rules) {
-		$c = new Clips\Engine();
-		return $c->load($rules);
+		$tool = &get_clips_tool();
+		return $tool->clips->load($rules);
 	}
 	return false;
 }

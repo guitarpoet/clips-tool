@@ -21,14 +21,6 @@ function clips_path($path) {
 	return dirname(__FILE__).$path;
 }
 
-function clips_load_rules($rules) {
-	if($rules) {
-		$c = new Engine();
-		return $c->load($rules);
-	}
-	return false;
-}
-
 if(!function_exists('get_default')) {
 	function get_default($arr, $key, $default = '') {
 		if(is_object($arr))
@@ -62,6 +54,8 @@ class Engine {
 	 * The clips execution context
 	 */
 	public static $context;
+
+	public $env_stack = array();
 
 	public $current_env;
 
@@ -125,7 +119,7 @@ class Engine {
 	}
 
 	public function runWithEnv($name, $callback, $args = array()) {
-		$env = $this->current_env;
+		$this->env_stack []= $this->current_env;
 		if($this->switchEnv($name)) {
 			$ret = false;
 			try {
@@ -134,8 +128,12 @@ class Engine {
 			catch(Exception $ex) {
 			}
 
+		 	$env = array_pop($this->env_stack);
 			$this->switchEnv($env);
 			return $ret;
+		}
+		else {
+		 	 array_pop($this->env_stack);
 		}
 		return false;
 	}
@@ -159,9 +157,9 @@ class Engine {
 	 */
 	public function switchEnv($name) {
 		if($this->isEnvExists($name)) {
-			$env = $this->current_env;
-			$this->current_env = $name;
 			if(clips_switch_env($name)) {
+				$env = $this->current_env;
+				$this->current_env = $name;
 				return $env;
 			}
 			return false;
@@ -598,7 +596,6 @@ class Engine {
 		foreach($file as $f) {
 			$facts []= array('load_arg', $f);
 		}
-		$current = $this->currentEnv(); // Store the current env
 
 		// Calculating the loading rules using CORE env
 		$commands = $this->runWithEnv(CLIPS_CORE_ENV, function($clips, $facts) {
