@@ -1,6 +1,18 @@
 <?php namespace Clips\Libraries; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
 class Git implements \Psr\Log\LoggerAwareInterface {
+
+	protected function exec($repo, $command, $args) {
+		$cmd = array();
+		$cmd []= 'cd';
+		$cmd []= $repo->path;
+		$cmd []= '&&';
+		$cmd []= 'git';
+		$cmd []= $command;
+		$cmd []= implode(' ', $args);
+		return exec(implode(' ', $cmd));
+	}
+
 	public function repo($path) {
 		return new \Gitonomy\Git\Repository($path, array('logger' => $this->logger));
 	}
@@ -11,10 +23,14 @@ class Git implements \Psr\Log\LoggerAwareInterface {
 
 	public function add($repo, $path) {
 		if(file_exists($repo->path)) {
-			exec('cd '.$repo->path.' && git add '.$path);
+			$this->exec($repo, 'add', array($path));
 			return true;
 		}
 		return false;
+	}
+
+	public function has($repo, $path) {
+		return !!$this->exec($repo, 'log', array($path));
 	}
 
 	public function commit($repo, $message, $author) {
@@ -34,7 +50,6 @@ class Git implements \Psr\Log\LoggerAwareInterface {
 		return false;
 
 	}
-
 
 	public function create($path) {
 		if(file_exists($path)) {
@@ -56,6 +71,6 @@ class Git implements \Psr\Log\LoggerAwareInterface {
 	}
 
 	public function getHeadCommit($repo) {
-		return $this->getHeadRevision($repo)->getCommit();
+		return $repo->getHeadCommit();
 	}
 }

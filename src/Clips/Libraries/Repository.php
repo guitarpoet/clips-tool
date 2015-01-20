@@ -91,6 +91,10 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 		}
 	}
 
+	public function has($path) {
+		return $this->git->has($this, $path);
+	}
+
 	public function commit($message, $author) {
 		if($this->readonly || !isset($this->gitrepo))
 			return false;
@@ -102,10 +106,17 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 		if(!isset($this->gitrepo))
 			return false;
 
-		if($this->exists($path, $revision)) {
-			if(!$revision)
-				$revision = 'HEAD';
-			return $this->gitrepo->run('show', array($revision.':'.$path));
+		if($this->has($path)) {
+			if($this->exists($path, $revision)) {
+				if(!$revision)
+					$revision = 'HEAD';
+				return $this->gitrepo->run('show', array($revision.':'.$path));
+			}
+		}
+		else {
+			if(file_exists(path_join($this->path, $path))) {
+				return file_get_contents(path_join($this->path, $path));
+			}
 		}
 		return false;
 	}
