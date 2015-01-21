@@ -42,7 +42,9 @@ class Sass {
 	}
 
 	public function __get($props) {
-		return $this->options[$props];
+		if(isset($this->options[$props]))
+			return $this->options[$props];
+		return null;
 	}
 
 	public function __set($props, $value) {

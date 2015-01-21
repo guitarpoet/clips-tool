@@ -40,8 +40,9 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 		$this->db->close();
 	}
 
-	public function fetchResult($stmt, $callback = null, $context = array()) {
-		$stmt->store_result();
+	public function fetchResult($stmt, $callback = null, $context = array(), $store = false) {
+		if($store)
+			$stmt->store_result();
 
 		$variables = array();
 		$data = array();
