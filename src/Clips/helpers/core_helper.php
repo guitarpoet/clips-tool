@@ -10,6 +10,11 @@ function rmr($path) {
 	}
 }
 
+function clips_log($message, $context = array()) {
+	$tool = &get_clips_tool();
+	return $tool->info($message, $context);
+}
+
 function console_meta() {
 	return array('width' => `tput cols`);
 }
@@ -27,9 +32,6 @@ function is_cli() {
 
 function &get_clips_tool() {
 	return Clips\Tool::get_instance();
-}
-
-function clips_log($message, $context) {
 }
 
 function clips_config($name, $default = null) {
