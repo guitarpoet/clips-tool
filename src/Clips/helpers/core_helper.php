@@ -9,9 +9,18 @@ function rmr($path) {
 	}
 }
 
+function clips_stacktrace($message, $level = 3) {
+	$trace = debug_backtrace();
+	$ret = array();
+	for($i = 1; $i <= $level; $i++) {
+		$ret []= $trace[$i];
+	}
+	clips_log($message, $ret);
+}
+
 function clips_log($message, $context = array()) {
 	$tool = &get_clips_tool();
-	return $tool->info($message, $context);
+	$tool->info($message, $context);
 }
 
 function console_meta() {

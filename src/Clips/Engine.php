@@ -544,7 +544,8 @@ class Engine {
 			}
 			return;
 		}
-		clips_exec($command."\n", $debug); // Add \n automaticly
+		if($command)
+			clips_exec($command."\n", $debug); // Add \n automaticly
 	}
 
 	public function queryFacts($name = null) {
