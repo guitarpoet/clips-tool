@@ -17,7 +17,7 @@ define("SASS_FORMAT_FORMATTED", 4);
  * @author Jack
  * @date Tue Jan 13 10:53:34 2015
  */
-class Sass {
+class Sass extends \Clips\Libraries\ConsoleBase {
 
 	protected $options = array();
 
@@ -28,6 +28,25 @@ class Sass {
 	public $error;
 
 	protected $includePathes;
+
+	protected function prompt($continue = false) {
+		if($continue)
+			return '... ';
+		return 'sass$ ';
+	}
+
+	protected function isComplete($line) {
+		return sass_is_complete('* {'.$line.'}');
+	}
+
+	protected function doRun($line) {
+		$c = '* {'.$line.'}';
+		$ret = sass_compile("data", $c, $this->options, $this->error);
+		if($ret)
+			echo $ret;	
+		else
+			echo $this->error;
+	}
 
 	protected function initPlugins() {
 		$tool = &get_clips_tool();
@@ -152,32 +171,6 @@ class Sass {
 		}
 		$this->content .= $this->suffix;
 		return $this->content;
-	}
-
-	public function console() {
-		$line = readline('sass$ ')."\n";
-		while(true) {
-			if(trim($line) == 'exit' || trim($line) == 'quit') {
-				echo "Bye.";
-				break;
-			}
-
-			if(sass_is_complete('* {'.$line.'}')) {
-				$c = '* {'.$line.'}';
-				$ret = sass_compile("data", $c, $this->options, $this->error);
-				readline_add_history($line);
-				if($ret) {
-					echo $ret;
-				}
-				else {
-					echo $this->error;
-				}
-				$line = readline('sass$ ')."\n";
-			}
-			else {
-				$line .= readline('... ')."\n";
-			}
-		}
 	}
 
 	public function compile() {

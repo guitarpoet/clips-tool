@@ -24,6 +24,7 @@
 		"niktux/addendum": "*",
 		"mustache/mustache": "2.7.*",
 		"monolog/monolog": "master",
+		"nikic/php-parser": "*",
         "gitonomy/gitlib": "dev-master"
 	},
 	"autoload": {

@@ -1,5 +1,7 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+use Clips\Libraries\ConsoleBase;
+
 if(!defined('CLIPS_CORE_ENV'))
 	define('CLIPS_CORE_ENV', 'CORE');
 
@@ -48,7 +50,7 @@ function clips_get_property($obj, $property) {
 /**
  *  The clips extension engine and execution context
  */
-class Engine {
+class Engine extends ConsoleBase {
 
 	/**
 	 * The clips execution context
@@ -466,21 +468,18 @@ class Engine {
 		}
 	}
 
-	/**
-	 * Start the clips in console mode
-	 */
-	public function console() {
-		$line = readline('pclips$ ')."\n";
-		while(true) {
-			if(clips_is_command_complete($line)) {
-				$this->command($line, true);
-				readline_add_history($line);
-				$line = readline('pclips$ ')."\n";
-			}
-			else {
-				$line .= readline('... ')."\n";
-			}
-		}
+	protected function prompt($continue = false) {
+		if($continue)
+			return '... ';
+		return 'clips$ ';
+	}
+
+	protected function isComplete($line) {
+		return true;
+	}
+
+	protected function doRun($line) {
+		$this->command($line, true);
 	}
 
 	public function instanceExists($name) {
