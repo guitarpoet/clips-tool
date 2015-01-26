@@ -16,13 +16,31 @@ class PHPConsole extends ConsoleBase {
 		return 'php$ ';
 	}
 
+	protected function php($line) {
+		return '<?php '.$this->fixEnd($line);
+	}
+
+	protected function fixEnd($line) {
+		if(str_end_with($line, ';'))
+			return $line;
+		return $line.';';
+	}
+
 	protected function doRun($line) {
-		echo eval($line.';')."\n";
+		$tool = &get_clips_tool();
+		$script = 'clips_console_internal.php';
+		file_put_contents($script, $this->php($line));
+		ob_start();
+		include($script);
+		$output = ob_get_contents();
+		ob_end_clean();
+		unlink($script);
+		echo $output."\n";	
 	}
 
 	protected function isComplete($line) {
 		try {
-			($this->parser->parse('<?php '.$line.';'));
+			($this->parser->parse($this->php($line)));
 			return true;
 		} catch (Error $e) {
 			return false;

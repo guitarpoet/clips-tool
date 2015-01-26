@@ -1,5 +1,15 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+function str_end_with($haystack, $needle, $trim = true) {
+	if($trim) {
+		$str = trim($haystack);
+	}
+	else {
+		$str = $haystack;
+	}
+	return strrpos($str, $needle) === strlen($str);
+}
+
 function rmr($path) {
 	if (PHP_OS === 'Windows') {
 		exec("rd /s /q {$path}");
@@ -7,6 +17,10 @@ function rmr($path) {
 	else {
 		exec("rm -rf {$path}");
 	}
+}
+
+function get_tmp_file($prefix = 'clips_tmp') {
+	return tempnam(sys_get_temp_dir(), $prefix);
 }
 
 function clips_stacktrace($message, $level = 3) {
