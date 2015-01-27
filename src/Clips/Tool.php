@@ -406,7 +406,7 @@ class Tool {
 	}
 
 	public function execute($command, $args) {
-		$c = $this->command($command);
+		$c = $this->command(ucfirst($command));
 		if($c) {
 			$deps = $c->getDepends();
 			if(!is_array($deps)) {
