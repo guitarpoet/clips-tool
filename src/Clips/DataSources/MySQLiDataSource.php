@@ -77,9 +77,9 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 	}
 
 	protected function doQuery($query, $args = array()) {
-		return $this->execute($query, $args, function($stmt, $context) {
-			return $this->processResult($this->fetchResult($stmt));
-		});
+		return $this->execute($query, $args, function($stmt, $self) {
+			return $self->processResult($self->fetchResult($stmt));
+		}, $this);
 	}
 
 	private function execute($sql, $args, $callback, $context = array()) {
@@ -137,7 +137,7 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 		}, array('callback' => $callback, 'context' => $context));
 	}
 
-	protected function processResult($result) {
+	public function processResult($result) {
 		$ret = array();
 		foreach($result as $obj) {
 			$ret [] = (object) $obj;

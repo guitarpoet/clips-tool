@@ -34,6 +34,11 @@ class SqlTable {
 }
 
 class WhereOperator {
+
+	protected function isWhere($v) {
+		return (is_object($v) || (is_string($v) && class_exists($v))) && is_subclass_of($v, "WhereOperator");
+	}
+
 	public function __construct($operators = array(), $arg = true) {
 		if(!is_array($operators))
 			$operators = array($operators);
@@ -41,7 +46,7 @@ class WhereOperator {
 		$this->operators = array();
 
 		foreach($operators as $key => $o) {
-			if(is_subclass_of($o, "WhereOperator")) {
+			if($this->isWhere($o)) {
 				// If the value is an operator, then add it
 				$this->operators []= $o;
 			}
@@ -49,14 +54,14 @@ class WhereOperator {
 				// If it is key and value, add it as equals by default
 				if(is_array($o)) {
 					foreach($o as $k => $v) {
-						if(is_subclass_of($v, "WhereOperator"))
+						if($this->isWhere($v))
 							$this->operators []= $v;
 						else
 							$this->operators []= _equals($k, $v, $arg);
 					}
 				}
 				else {
-					if(is_subclass_of($o, "WhereOperator"))
+					if($this->isWhere($o))
 						$this->operators []= $o;
 					else
 						$this->operators []= _equals($key, $o, $arg);
