@@ -132,9 +132,10 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 	protected function doIterate($query, $args, $callback, $context = array()) {
 		$this->execute($query, $args, function($stmt, $context){
 			$callback = $context['callback'];
+			$self = $context['self'];
 			$c = $context['context'];
-			$this->fetchResult($stmt, $callback, $c);
-		}, array('callback' => $callback, 'context' => $context));
+			$self->fetchResult($stmt, $callback, $c);
+		}, array('self' => $this, 'callback' => $callback, 'context' => $context));
 	}
 
 	public function processResult($result) {
