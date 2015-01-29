@@ -1,0 +1,64 @@
+;===============================================================================
+;
+; The validation rule for ip address
+; 
+; @version 1.0
+; @author Jack <guitarpoet@gmail.com>
+; @date Thu Jan 29 13:05:08 2015
+;
+;===============================================================================
+
+;===============================================================================
+;
+; Constants
+;
+;===============================================================================
+
+(defglobal ?*ipv4_pattern* = "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$") 
+(defglobal ?*ipv6_pattern* = "^[0-9a-fA-F]{4}:[0-9a-fA-F]{4}:[0-9a-fA-F]{4}:[0-9a-fA-F]{4}:[0-9a-fA-F]{4}:[0-9a-fA-F]{4}:[0-9a-fA-F]{4}:[0-9a-fA-F]{4}$")
+
+;===============================================================================
+;
+; Rules
+;
+;===============================================================================
+
+(defrule test-if-the-ip-address-is-ipv4
+	(not (ipv4))
+	(ip ?address)
+	(test (match ?address ?*ipv4_pattern*))
+	=>
+	(assert (ipv4))
+)
+
+(defrule if-address-is-ipv4-get-all-the-fields
+	(ipv4)
+	(ip ?address)
+	=>
+	(foreach ?f (explode "." ?address) (assert (ipv4-field ?f)))
+)
+
+(defrule all-the-ipv4-field-must-little-than-255
+	(not (error ?))
+	(ipv4-field ?f)	
+	(test (> (intval ?f) 255))
+	=>
+	(assert (error "The ip v4 address have 1 field bigger than 255!"))
+)
+
+(defrule test-if-the-ip-address-is-ipv6
+	(not (ipv6))
+	(ip ?address)
+	(test (match ?address ?*ipv6_pattern*))
+	=>
+	(assert (ipv6))
+)
+
+(defrule if-no-match-for-ipv4-or-ipv6-then-error
+	(not (ipv4))
+	(not (ipv6))
+	?i <- (ip ?address)	
+	=>
+	(assert (error "IP address is not valid v4 or v6!"))
+	(retract ?i)
+)

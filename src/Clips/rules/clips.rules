@@ -42,6 +42,7 @@
 (deffunction load-rules ($?file) (php_call "clips_load_rules" $?file))
 (deffunction file-exists (?file) (php_call "file_exists" ?file))
 (deffunction file-contents (?file) (php_call "file_get_contents" ?file))
+(deffunction intval (?v) (php_call "intval" ?v))
 (deffunction cwd () (php_call "getcwd"))
 (deffunction explode (?sep ?str) (php_call "explode" ?sep ?str))
 (deffunction implode (?sep $?str) (php_call "implode" ?sep $?str))
