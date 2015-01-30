@@ -82,7 +82,7 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 		}, $this);
 	}
 
-	private function execute($sql, $args, $callback, $context = array()) {
+	private function execute($sql, $args, $callback = null, $context = array()) {
 		if(!$this->db) {
 			throw new \Clips\DataSourceException('Didn\'t connect to database.');
 		}
@@ -91,29 +91,32 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 
 		if($stmt) {
 			if($args) {
-				$params = array();
-				$str = array();
-				foreach($args as $arg) {
-					$s = $arg;
-					switch(gettype($arg)) {
-					case 'integer':
-						$str []= 'i';
-						break;
-					case 'double':
-						$str []= 'd';
-						break;
-					case 'object':
-					case 'array':
-						$s = json_encode($arg);
-					case 'string':
-						$str []= 's';
-						break;
-					}
-					$params []= &$s;
-				}
-				array_unshift($params, implode('', $str));
-				call_user_func_array(array($stmt, 'bind_param'), $params); // Bind the qrgs
-			}
+                $params = array();
+                $str = array();                                                                          
+                $i = 0;
+                foreach($args as $arg) {                                                                 
+                    $name = 'var'.$i++;
+                    $$name = $arg;
+                    switch(gettype($arg)) {                                                              
+                    case 'integer':                                                                      
+                        $str []= 'i';
+                        break;
+                    case 'double':                                                                       
+                        $str []= 'd';
+                        break;                                                                           
+                    case 'object':                                                                       
+                    case 'array':                                                                        
+                        $$name = json_encode($arg);                                                      
+                    case 'string':                                                                       
+                        $str []= 's';                                                                    
+                        $$name = $arg;                                                                   
+                        break;                                                                           
+                    }
+                    $params []= &$$name;
+                }
+                array_unshift($params, implode('', $str));
+                call_user_func_array(array($stmt, 'bind_param'), $params); // Bind the qrgs
+            }
 
 			$stmt->execute();
 
@@ -159,10 +162,10 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 		$sql []= implode(', ', $keys);
 		$sql []= ') values (';
 		$sql []= implode(', ', $values);
-		$sql []= ');';
-		$sql []= 'select last_insert_id()';
+		$sql []= ')';
 		$sql = implode(' ', $sql);
-		return $this->doQuery($sql, $data);
+		$this->execute($sql, $data);
+		return $this->db->insert_id;
 	}
 
 	protected function doUpdate($id, $args) {
@@ -180,7 +183,7 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 		$sql []= '?'; 
 		$values []= $id;
 		$sql = implode(' ', $sql);
-		$this->doQuery($sql, $values);
+		$this->execute($sql, $values);
 		return true;
 	}
 
