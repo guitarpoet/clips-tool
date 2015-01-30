@@ -91,29 +91,32 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 
 		if($stmt) {
 			if($args) {
-				$params = array();
-				$str = array();
-				foreach($args as $arg) {
-					$s = $arg;
-					switch(gettype($arg)) {
-					case 'integer':
-						$str []= 'i';
-						break;
-					case 'double':
-						$str []= 'd';
-						break;
-					case 'object':
-					case 'array':
-						$s = json_encode($arg);
-					case 'string':
-						$str []= 's';
-						break;
-					}
-					$params []= &$s;
-				}
-				array_unshift($params, implode('', $str));
-				call_user_func_array(array($stmt, 'bind_param'), $params); // Bind the qrgs
-			}
+                $params = array();
+                $str = array();                                                                          
+                $i = 0;
+                foreach($args as $arg) {                                                                 
+                    $name = 'var'.$i++;
+                    $$name = $arg;
+                    switch(gettype($arg)) {                                                              
+                    case 'integer':                                                                      
+                        $str []= 'i';
+                        break;
+                    case 'double':                                                                       
+                        $str []= 'd';
+                        break;                                                                           
+                    case 'object':                                                                       
+                    case 'array':                                                                        
+                        $$name = json_encode($arg);                                                      
+                    case 'string':                                                                       
+                        $str []= 's';                                                                    
+                        $$name = $arg;                                                                   
+                        break;                                                                           
+                    }
+                    $params []= &$$name;
+                }
+                array_unshift($params, implode('', $str));
+                call_user_func_array(array($stmt, 'bind_param'), $params); // Bind the qrgs
+            }
 
 			$stmt->execute();
 
