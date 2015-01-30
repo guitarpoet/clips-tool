@@ -16,10 +16,6 @@ class ValidationTest extends TestCase {
 	}
 
 	public function testValidationIPv6() {
-		$this->assertTrue($this->validator->valid_ip(array('ip', '1.2.3.40')));
-		$this->assertFalse($this->validator->valid_ip(array('ip', 'a1.2.3.40')));
-		$this->assertFalse($this->validator->valid_ip(array('ip', '1.2.3.400')));
-		$this->assertFalse($this->validator->valid_ip(array('ip', 'This is not an address')));
 	}
 
 	public function doTearDown() {

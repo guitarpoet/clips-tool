@@ -212,7 +212,7 @@ class Tool {
 		});
 		$this->config = $this->config[0];
 		$this->config->load(); // Load the configurations
-		$this->load_class(array('template'), true, new LoadConfig($this->config->core_dir)); // Load the template
+		$this->load_class(array('template', 'validator'), true, new LoadConfig($this->config->core_dir)); // Load the template
 	    $this->library(array('ProgressManager'));
 	}
 
