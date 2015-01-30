@@ -82,7 +82,7 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 		}, $this);
 	}
 
-	private function execute($sql, $args, $callback, $context = array()) {
+	private function execute($sql, $args, $callback = null, $context = array()) {
 		if(!$this->db) {
 			throw new \Clips\DataSourceException('Didn\'t connect to database.');
 		}
@@ -161,7 +161,7 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 		$sql []= implode(', ', $values);
 		$sql []= ')';
 		$sql = implode(' ', $sql);
-		$this->doQuery($sql, $data);
+		$this->execute($sql, $data);
 		return $this->db->insert_id;
 	}
 
@@ -180,7 +180,7 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 		$sql []= '?'; 
 		$values []= $id;
 		$sql = implode(' ', $sql);
-		$this->doQuery($sql, $values);
+		$this->execute($sql, $values);
 		return true;
 	}
 
