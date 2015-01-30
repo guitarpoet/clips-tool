@@ -159,10 +159,10 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 		$sql []= implode(', ', $keys);
 		$sql []= ') values (';
 		$sql []= implode(', ', $values);
-		$sql []= ');';
-		$sql []= 'select last_insert_id()';
+		$sql []= ')';
 		$sql = implode(' ', $sql);
-		return $this->doQuery($sql, $data);
+		$this->doQuery($sql, $data);
+		return $this->db->insert_id;
 	}
 
 	protected function doUpdate($id, $args) {
