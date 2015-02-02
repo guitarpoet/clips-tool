@@ -2,6 +2,7 @@
 
 use Psr\Log\LoggerAwareInterface;
 use Clips\Interfaces\ClipsAware;
+use Clips\Interfaces\ToolAware;
 
 class RouteResult {
 	public $controller;
@@ -10,7 +11,7 @@ class RouteResult {
 	public $args;
 }
 
-class Router implements LoggerAwareInterface, ClipsAware {
+class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 
 	public function setClips($clips) {
 		$this->clips = $clips;
@@ -60,12 +61,38 @@ class Router implements LoggerAwareInterface, ClipsAware {
 	}
 
 	public function route() {
+		$request = new HttpRequest();
 		// Empty the main envrionment
 		$this->clips->clear();
 		$this->clips->template("Clips\\RouteResult");
 		$this->clips->load(clips_config('route_rules', array('/rules/route.rules')));
-		$this->clips->assertFacts(array('uri', $this->getRequestURI()));
+		$this->clips->assertFacts(array('uri', $this->getRequestURI()), array('RequestType', $request->getType()), array('RequestMethod', $request->method));
 		$this->clips->run();
-		var_dump($this->clips->queryFacts());
+		$error = $this->clips->queryFacts("RouteError");
+		if($error) {
+			$this->showError($error);
+		}
+		else {
+			$result = $this->clips->queryFacts("Clips\\RouteResult");
+			$result = $result[0];
+			$controller = new $result->controller; 
+			$controller->request = $request;
+
+			$this->filterChain = $this->tool->load_class('FilterChain', true);
+			$this->filterChain->addFilter(clips_config('filters'));
+
+			$this->filterChain->filter_before($this->filterChain, $controller, $result->method, $result->args, $request);
+			call_user_func_array(array($controller, $result->method), $result->args);
+
+			$this->filterChain->filter_after($this->filterChain, $controller, $result->method, $result->args, $request);
+		}
+	}
+
+	public function setTool($tool) {
+		$this->tool = $tool;
+	}
+
+	public function showError($error) {
+		var_dump($error);
 	}
 }

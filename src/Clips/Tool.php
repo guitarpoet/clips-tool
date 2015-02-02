@@ -265,6 +265,10 @@ class Tool {
 					$this->$name->setClips($this->clips);
 				}
 
+				if(is_subclass_of($this->$name, 'Clips\\Interfaces\\ToolAware')) {
+					$this->$name->setTool($this);
+				}
+
 				// Process requires annotation
 				$reflection = new \Addendum\ReflectionAnnotatedClass($class);
 				if($reflection->hasAnnotation('Requires')) {
@@ -444,6 +448,10 @@ class Tool {
 			return new $class();
 
 		return null;
+	}
+
+	public function filter($filter) {
+		return $this->load_class($filter, true, new LoadConfig($this->config->filter_dir, 'Filter', "Filters\\"));
 	}
 
 	public function model($model) {

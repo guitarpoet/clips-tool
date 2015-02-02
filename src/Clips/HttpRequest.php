@@ -3,8 +3,9 @@
 class HttpRequest extends Request {
 	public function __construct() {
 		// Getting the method as the lower case
-		$this->method = strtolower(get_default($_SERVER, 'REQUEST_METHOD', 'GET')));
+		$this->method = strtolower(get_default($_SERVER, 'REQUEST_METHOD', 'GET'));
 		$tool = &get_clips_tool();
+		$tool->load_class("validator", true);
 		$this->validator = $tool->validator;
 	}
 
@@ -47,10 +48,10 @@ class HttpRequest extends Request {
 	 * 		array too
 	 */
 	public function post($param = null, $default = null) {
-		return $this->_param($_POST $param, $default);
+		return $this->_param($_POST, $param, $default);
 	}
 
-	private function _param($arr, $param = null, $default = null)) {
+	private function _param($arr, $param = null, $default = null) {
 		if(is_array($param)) {
 			if(is_array($default) && count($default) == count($param)) {
 				$ret = array();
@@ -103,7 +104,7 @@ class HttpRequest extends Request {
 		return $this->ip_address;
 	}
 
-	private function getType() {
+	public function getType() {
 		if($this->server('HTTP_X_REQUESTED_WITH') === 'XMLHttpRequest') {
 			return 'ajax';
 		}

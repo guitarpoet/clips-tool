@@ -46,6 +46,26 @@
 	(assert (method "index"))
 )
 
+(defrule if-is-ajax-prefer-ajax-suffix-method
+	(RequestType "ajax")
+	?method <- (method ?m&:(not (str-index "_ajax" ?m)))
+	?r <- (Clips\RouteResult (controller ?c&~nil) (method nil))
+	(test (method-exists ?c (str-cat ?m "_ajax")))
+	=>
+	(retract ?method)
+	(assert (method (str-cat ?m "_ajax")))
+)
+
+(defrule if-is-post-prefer-form-suffix-method
+	(RequestMethod "post")
+	?method <- (method ?m&:(not (str-index "_form" ?m)))
+	?r <- (Clips\RouteResult (controller ?c&~nil) (method nil))
+	(test (method-exists ?c (str-cat ?m "_form")))
+	=>
+	(retract ?method)
+	(assert (method (str-cat ?m "_form")))
+)
+
 (defrule insert-a-result-if-nothing-found
 	(declare (salience ?*low*))
 	(not (Clips\RouteResult))
@@ -59,4 +79,20 @@
 	(test (method-exists ?c ?m))
 	=>
 	(modify ?r (method ?m))
+)
+
+(defrule set-the-args-to-the-result
+	?r <- (Clips\RouteResult (controller ~nil) (method ~nil) (args $?args&:(= (length$ $?args) 0)))
+	(segments $?segs)
+	(test (> (length$ $?segs) 2))
+	=>
+	(modify ?r (args (rest$ (rest$ $?segs))))
+)
+
+(defrule if-the-method-is-not-found-at-all-then-error
+	(method ?m&~"")
+	?r <- (Clips\RouteResult (controller ?c&~nil) (method nil))
+	(test (not (method-exists ?c ?m)))
+	=>
+	(assert (RouteError (str-cat "No method named " ?m " found in controller " ?c "!")))
 )

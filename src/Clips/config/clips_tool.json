@@ -11,4 +11,5 @@
 	"datasources_dir": ["DataSources"],
 	"template_dir": ["templates"],
 	"controller_dir": ["Controllers"]
+	"filter_dir": ["Filters"]
 }
