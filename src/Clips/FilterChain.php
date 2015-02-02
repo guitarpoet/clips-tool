@@ -41,27 +41,33 @@ class FilterChain extends AbstractFilter implements ToolAware {
 			if(!$this->run) {
 				break;
 			}
-			$f->filter_before($chain, $controller, $method, $args, $request);
+
+			if($f->accept($chain, $controller, $method, $args, $request)) {
+				$f->filter_before($chain, $controller, $method, $args, $request);
+			}
 		}
 	}
 
-	public function filter_after($chain, $controller, $method, $args, $request) {
+	public function filter_after($chain, $controller, $method, $args, $request, $controller_ret) {
 		$this->run = true;
 		foreach($this->filters as $f) {
 			if(!$this->run) {
 				break;
 			}
-			$f->filter_after($chain, $controller, $method, $args, $request);
+
+			if($f->accept($chain, $controller, $method, $args, $request, $controller_ret)) {
+				$f->filter_after($chain, $controller, $method, $args, $request, $controller_ret);
+			}
 		}
 	}
 
-	public function filter_render($chain, $controller, $method, $args, $request, $view, $view_context) {
+	public function filter_render($chain, $controller, $method, $args, $request, $view, $view_context, $controller_ret) {
 		$this->run = true;
 		foreach($this->filters as $f) {
 			if(!$this->run) {
 				break;
 			}
-			$f->filter_render($chain, $controller, $method, $args, $request, $view, $view_context);
+			$f->filter_render($chain, $controller, $method, $args, $request, $view, $view_context, $controller_ret);
 		}
 	}
 }

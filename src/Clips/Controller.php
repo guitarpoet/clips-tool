@@ -4,6 +4,7 @@ use Psr\Log\LoggerAwareInterface;
 use Clips\Interfaces\ClipsAware;
 use Psr\Log\LoggerInterface;
 use Clips\Interfaces\ToolAware;
+use Clips\Models\ViewModel;
 
 class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 
@@ -20,5 +21,9 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 
 	public function setLogger(LoggerInterface $logger) {
 		$this->logger = $logger;
+	}
+
+	public function render($template, $args = array(), $engine = null) {
+		return new ViewModel($template, $args, $engine);
 	}
 }

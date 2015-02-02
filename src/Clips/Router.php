@@ -82,9 +82,9 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 			$this->filterChain->addFilter(clips_config('filters'));
 
 			$this->filterChain->filter_before($this->filterChain, $controller, $result->method, $result->args, $request);
-			call_user_func_array(array($controller, $result->method), $result->args);
+			$ret = call_user_func_array(array($controller, $result->method), $result->args);
 
-			$this->filterChain->filter_after($this->filterChain, $controller, $result->method, $result->args, $request);
+			$this->filterChain->filter_after($this->filterChain, $controller, $result->method, $result->args, $request, $ret);
 		}
 	}
 
