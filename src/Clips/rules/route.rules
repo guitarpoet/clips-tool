@@ -1,0 +1,62 @@
+;===============================================================================
+;
+; The default request route rules
+; 
+; This is the default requrest route rules(much like CI with a few tweaks)
+;
+; @version 1.0
+; @author Jack <guitarpoet@gmail.com>
+; @date Mon Feb  2 15:47:24 2015
+;
+;===============================================================================
+
+(defrule explode-the-uri-to-segments
+	(uri ?uri)
+	=>
+	(assert (segments (explode "/" ?uri)))
+)
+
+(defrule take-the-controller-and-method-seg
+	(not (controller ?))
+	(segments $?segs)
+	=>
+	(assert (controller (nth$ 1 $?segs)))
+	(assert (method (nth$ 2 $?segs)))
+)
+
+(defrule try-to-find-controller-by-controller-seg
+	(controller ?c&~"")
+	(test (php_call "controller_exists" ?c))
+	=>
+	(assert (Clips\RouteResult (controller (php_call "controller_class" ?c))))
+)
+
+(defrule if-no-controller-is-found-using-the-controller-seg-show-error
+	(declare (salience ?*low*))
+	(controller ?c&~"")
+	(not (test (php_call "controller_exists" ?c)))
+	=>
+	(assert (RouteError (str-cat "No controller named " ?c " found!")))
+)
+
+(defrule use-default-index-method-if-no-method-set
+	?m <- (method ""|nil)
+	=>
+	(retract ?m)
+	(assert (method "index"))
+)
+
+(defrule insert-a-result-if-nothing-found
+	(declare (salience ?*low*))
+	(not (Clips\RouteResult))
+	=>
+	(assert (Clips\RouteResult))
+)
+
+(defrule set-the-method-to-result-if-the-method-matched
+	(method ?m&~"")
+	?r <- (Clips\RouteResult (controller ?c&~nil) (method nil))
+	(test (method-exists ?c ?m))
+	=>
+	(modify ?r (method ?m))
+)

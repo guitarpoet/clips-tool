@@ -1,6 +1,21 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
-class Router implements \Psr\Log\LoggerAwareInterface {
+use Psr\Log\LoggerAwareInterface;
+use Clips\Interfaces\ClipsAware;
+
+class RouteResult {
+	public $controller;
+	public $method;
+	/** @Multi */
+	public $args;
+}
+
+class Router implements LoggerAwareInterface, ClipsAware {
+
+	public function setClips($clips) {
+		$this->clips = $clips;
+	}
+
 	public function setLogger(\Psr\Log\LoggerInterface $logger) {
 		$this->logger = $logger;
 	}
@@ -45,5 +60,12 @@ class Router implements \Psr\Log\LoggerAwareInterface {
 	}
 
 	public function route() {
+		// Empty the main envrionment
+		$this->clips->clear();
+		$this->clips->template("Clips\\RouteResult");
+		$this->clips->load(clips_config('route_rules', array('/rules/route.rules')));
+		$this->clips->assertFacts(array('uri', $this->getRequestURI()));
+		$this->clips->run();
+		var_dump($this->clips->queryFacts());
 	}
 }

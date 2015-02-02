@@ -156,6 +156,15 @@ function clips_get_property($obj, $property) {
 	return null;
 }
 
+function controller_class($c) {
+	$tool = &get_clips_tool();
+	return $tool->controller(ucfirst($c));
+}
+
+function controller_exists($c) {
+	return !! controller_class($c);
+}
+
 if(!function_exists('copy_new')) {
 	function copy_new($src, $class = null) {
 		return copy_object($src, null, $class);

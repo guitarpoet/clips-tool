@@ -1,6 +1,6 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
-define('CLIPS_TOOL_PATH', dirname(__FILE__));
+define('CLIPS_TOOL_PATH', __DIR__);
 
 class Requires extends \Addendum\Annotation { }
 class FullArgs extends \Addendum\Annotation { }
@@ -261,6 +261,10 @@ class Tool {
 					$this->$name->setLogger($this->getLogger($class)); // Setting the logger according to the class name
 				}
 
+				if(is_subclass_of($this->$name, 'Clips\\Interfaces\\ClipsAware')) {
+					$this->$name->setClips($this->clips);
+				}
+
 				// Process requires annotation
 				$reflection = new \Addendum\ReflectionAnnotatedClass($class);
 				if($reflection->hasAnnotation('Requires')) {
@@ -424,6 +428,14 @@ class Tool {
 			return $c->execute($args);
 		}
 		trigger_error('No command named '.$command.' found!');
+	}
+
+	public function controller($controller) {
+		$class = $this->load_class($controller, false, new LoadConfig($this->config->controller_dir, "Controller", "Controllers\\"));
+		if($class)
+			return $class;
+
+		return null;
 	}
 
 	public function command($command) {

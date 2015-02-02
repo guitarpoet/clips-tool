@@ -8,6 +8,7 @@
 	"model_dir": ["models"],
 	"library_dir": ["libraries"],
 	"resource_handler_dir": ["handlers"],
-	"datasources_dir": ["handlers"],
-	"template_dir": ["templates"]
+	"datasources_dir": ["DataSources"],
+	"template_dir": ["templates"],
+	"controller_dir": ["Controllers"]
 }
