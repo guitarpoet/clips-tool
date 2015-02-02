@@ -75,7 +75,7 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 		else {
 			$result = $this->clips->queryFacts("Clips\\RouteResult");
 			$result = $result[0];
-			$controller = new $result->controller; 
+			$controller = $this->tool->create($result->controller);
 			$controller->request = $request;
 
 			$this->filterChain = $this->tool->load_class('FilterChain', true);

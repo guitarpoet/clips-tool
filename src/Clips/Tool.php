@@ -245,7 +245,7 @@ class Tool {
 		}, $facts);
 	}
 
-	public function create($class, $args) {
+	public function create($class, $args = null) {
 		return $this->_init_class($class, true, "__created__", $args);
 	}
 

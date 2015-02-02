@@ -1,5 +1,13 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+function safe_file_exists($file) {
+	if(strpos($file, "://") !== false) {
+		// Skip this for resource
+		return false;
+	}
+	return file_exists($file);
+}
+
 function str_end_with($haystack, $needle, $trim = true) {
 	if($trim) {
 		$str = trim($haystack);
@@ -8,6 +16,11 @@ function str_end_with($haystack, $needle, $trim = true) {
 		$str = $haystack;
 	}
 	return strrpos($str, $needle) === strlen($str);
+}
+
+function resource_contents($uri) {
+	$r = new Clips\Resource($uri);
+	return $r->contents();
 }
 
 function rmr($path) {

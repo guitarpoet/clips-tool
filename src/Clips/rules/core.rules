@@ -82,3 +82,12 @@
 	(assert (command (file-contents ?commands)))
 	(retract ?a)
 )
+
+(defrule if-the-load-begin-with-rules-load-using-resource
+    (declare (salience ?*highest*))
+	?l <- (load_arg ?file)
+	(test (str-index "rules://" ?file))
+	=>
+	(retract ?l)
+	(assert (command (resource ?file)))
+)
