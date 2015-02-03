@@ -17,7 +17,7 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 		$this->clips = $clips;
 	}
 
-	public function siteUrl($url = '') {
+	public function baseUrl($url = '') {
 		$index = clips_config('use_rewrite')? '': '/index.php';
 		if(!isset($this->base))
 			$this->base = dirname($_SERVER['SCRIPT_NAME']);
@@ -96,6 +96,27 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 			$this->filterChain->addFilter(clips_config('filters'));
 
 			$this->filterChain->filter_before($this->filterChain, $controller, $result->method, $result->args, $request);
+
+			$re = new \Addendum\ReflectionAnnotatedClass(get_class($controller));
+			$m = $re->getMethod($result->method);
+			foreach($m->getAnnotations() as $a) {
+				if(get_class($a) == 'Clips\\Js') {
+					foreach($a->value as $j) {
+						clips_add_js($j);
+					}
+				}
+				else if(get_class($a) == 'Clips\\Css') {
+					foreach($a->value as $c) {
+						clips_add_css($c);
+					}
+				}
+				else if(get_class($a) == 'Clips\\Scss') {
+					foreach($a->value as $c) {
+						clips_add_scss($c);
+					}
+				}
+			}
+
 			$ret = call_user_func_array(array($controller, $result->method), $result->args);
 
 			$this->filterChain->filter_after($this->filterChain, $controller, $result->method, $result->args, $request, $ret);
@@ -107,6 +128,7 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 	}
 
 	public function showError($error) {
+		http_response_code(404);
 		var_dump($error);
 	}
 }

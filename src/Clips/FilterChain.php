@@ -49,6 +49,13 @@ class FilterChain extends AbstractFilter implements ToolAware {
 	}
 
 	public function filter_after($chain, $controller, $method, $args, $request, $controller_ret) {
+		$this->analyzeRet($controller_ret);
+
+		if($this->headers) {
+			foreach($this->headers as $h => $v) {
+				header($h.': '. $v);
+			}
+		}
 		$this->run = true;
 		foreach($this->filters as $f) {
 			if(!$this->run) {

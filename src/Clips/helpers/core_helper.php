@@ -1,11 +1,76 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+function try_path($path, $others = array()) {
+	foreach(array_merge($others, array(getcwd(), clips_path('/'))) as $pre) {
+		$p = path_join($pre, $path);
+		if(file_exists($p))
+			return $p;
+	}
+	return false;
+}
+
+function clips_context($key = null, $value = null, $append = false) {
+	$tool = &get_clips_tool();
+	return $tool->context($key, $value, $append);
+}
+
+function find_file($folder, $file, $suffix = null, $blur = false) {
+	$ret = array();
+
+	if(is_array($folder)) {
+		foreach($folder as $f) {
+			$ret = array_merge($ret, find_file($f, $file, $suffix, $blur));
+		}
+		return $ret;
+	}
+
+	$iterator = new DirectoryIterator($folder);
+    foreach ($iterator as $fileinfo) {
+		if($fileinfo->isDot())
+			continue;
+
+        if ($fileinfo->isFile()) {
+            $name = $fileinfo->getPathname();
+			$info = pathinfo($name);
+			if($info && ($suffix == null || ($suffix && $info['extension'] == $suffix))) {
+				if($info['filename'] == $file){
+					$ret []= $name;
+				}
+				else if($blur && strpos($info['filename'], $file) !== false) {
+					$ret []= $name;
+				}
+			}
+        }
+		else if ($fileinfo->isDir()) {
+			$ret = array_merge($ret, find_file($fileinfo->getPathname(), $file, $suffix, $blur));
+		}
+    }
+	return $ret;
+}
+
 function safe_file_exists($file) {
 	if(strpos($file, "://") !== false) {
 		// Skip this for resource
 		return false;
 	}
 	return file_exists($file);
+}
+
+function to_flat($str) {
+	$result = array();
+	foreach(explode('\\', $str) as $s) {
+		$tmp = array();
+		foreach(str_split($s) as $c) {
+			if(ctype_upper($c) && $tmp) {
+				$result []= strtolower(implode('', $tmp));
+				$tmp = array();
+			}
+			$tmp []= $c;
+		}
+		if($tmp)
+			$result []= strtolower(implode('', $tmp));
+	}
+	return implode('_', $result);
 }
 
 function to_camel($str) {
@@ -147,7 +212,7 @@ function clips_out($template, $args, $output = true) {
 
 function clips_path($path) {
 	$rc = new ReflectionClass("Clips\\Tool");
-	return dirname($rc->getFileName()).$path;
+	return path_join(dirname($rc->getFileName()), $path);
 }
 
 function clips_load_rules($rules) {

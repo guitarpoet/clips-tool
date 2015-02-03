@@ -75,6 +75,13 @@ class Sass extends \Clips\Libraries\ConsoleBase {
 	}
 
 	public function addIncludePath() {
+		if(func_num_args() == 1 && is_array(func_get_arg(0))) {
+			foreach(func_get_arg(0) as $p) {
+				$this->addIncludePath($p);
+			}
+			return;
+		}
+
 		if(func_num_args() == 2 && is_int(func_get_arg(1))) {
 			// This must be the add using index
 			$p = func_get_arg(0);
@@ -128,9 +135,9 @@ class Sass extends \Clips\Libraries\ConsoleBase {
 		}
 
 		foreach(clips_config('sass_folders', array()) as $folder) {
-			$r = $this->readFile($folder.$file);
+			$r = try_path(path_join($folder, $file));
 			if($r) {
-				return $r;
+				return file_get_contents($r);
 			}
 		}
 

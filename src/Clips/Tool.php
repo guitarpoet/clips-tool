@@ -277,8 +277,8 @@ class Tool implements Interfaces\Initializable {
 
 				// Process requires annotation
 				$reflection = new \Addendum\ReflectionAnnotatedClass($class);
-				if($reflection->hasAnnotation('Requires')) {
-					$a = $reflection->getAnnotation('Requires');
+				if($reflection->hasAnnotation('Clips\\Requires')) {
+					$a = $reflection->getAnnotation('Clips\\Requires');
 					foreach($a->value as $r) {
 						$this->$name->$r = $this->library($r);
 					}
@@ -440,15 +440,28 @@ class Tool implements Interfaces\Initializable {
 		trigger_error('No command named '.$command.' found!');
 	}
 
-	public function context($key, $value = null) {
+	public function context($key = null, $value = null, $append = false) {
+		if($key == null)
+			return $this->_context;
+
 		if($value) {
-			$this->_context[$key] = $value;
+			if($append) {
+				if(!isset($this->_context[$key])) {
+					$this->_context[$key] = array();
+				}
+				if(!is_array($this->_context[$key]))
+					$this->_context[$key] = array($this->_context[$key]);
+				$this->_context[$key] []= $value;
+			}
+			else {
+				$this->_context[$key] = $value;
+			}
 			return $value;
 		}
 		if(is_array($key) || is_object($key)) {
 			// Setting using array or object
 			foreach($key as $k => $v) {
-				$this->context($k, $v);
+				$this->context($k, $v, $append);
 			}
 			return true;
 		}

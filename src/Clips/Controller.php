@@ -27,13 +27,17 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 		$this->logger = $logger;
 	}
 
-	public function render($template, $args = array(), $engine = null) {
+	public function render($template, $args = array(), $engine = null, $headers = array()) {
 		if(!$engine) {
 			$default = \clips_config('default_view');
 			if($default) {
 				$engine = $default[0];
 			}
 		}
-		return new ViewModel($template, $args, $engine);
+		return new ViewModel($template, $args, $engine, $headers);
+	}
+
+	public function redirect($url) {
+		return $this->render("", array(), 'direct', array('Location' => $url));
 	}
 }
