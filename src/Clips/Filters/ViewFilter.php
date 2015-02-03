@@ -4,6 +4,15 @@ use Clips\AbstractFilter;
 
 class ViewFilter extends AbstractFilter {
 
+	public function filter_after($chain, $controller, $method, $args, $request, $controller_ret) {
+		$chain->filter_render($chain, $controller, $method, $args, $request, $this->template, $this->args, $controller_ret);
+
+		$this->doRender($controller, $method, $args, $request, $this->template, $this->args, $controller_ret);
+	}
+
+	protected function doRender($controller, $method, $args, $request, $template, $data, $controller_ret) {
+	}
+
 	protected function analyzeRet($ret) {
 		if(is_string($ret)) {
 			$this->template = $ret;
