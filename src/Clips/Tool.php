@@ -75,9 +75,10 @@ class Config {
 	}
 }
 
-class Tool {
+class Tool implements Interfaces\Initializable {
 	private $_loaded_files = array();
 	private $_loaded_classes = array();
+	private $_context = array();
 
 	private function __construct() {
 		$this->clips = new Engine();
@@ -197,7 +198,7 @@ class Tool {
 		$this->clips->console();
 	}
 
-	private function init() {
+	public function init() {
 		$this->config = $this->clips->runWithEnv(CLIPS_CORE_ENV, function($clips){
 			$clips->reset();
 			$clips->assertFacts(new Config());
@@ -213,6 +214,11 @@ class Tool {
 		$this->config = $this->config[0];
 		$this->config->load(); // Load the configurations
 		$this->load_class(array('template', 'validator'), true, new LoadConfig($this->config->core_dir)); // Load the template
+
+		// Load the helpers
+		call_user_func_array(array($this, 'helper'), $this->config->helpers);
+
+		// Load the progress manager
 	    $this->library(array('ProgressManager'));
 	}
 
@@ -432,6 +438,21 @@ class Tool {
 			return $c->execute($args);
 		}
 		trigger_error('No command named '.$command.' found!');
+	}
+
+	public function context($key, $value = null) {
+		if($value) {
+			$this->_context[$key] = $value;
+			return $value;
+		}
+		if(is_array($key) || is_object($key)) {
+			// Setting using array or object
+			foreach($key as $k => $v) {
+				$this->context($k, $v);
+			}
+			return true;
+		}
+		return get_default($this->_context, $key, null);
 	}
 
 	public function controller($controller) {

@@ -5,6 +5,14 @@ class ToolTest extends Clips\TestCase {
 		$this->tool = &get_clips_tool();
 	}
 
+	public function testSetContext() {
+		$this->tool->context("test", 1);
+		$this->assertEquals($this->tool->context("test"), 1);
+		$this->tool->context(array("test" => 2, "name" => "Jack"));
+		$this->assertEquals($this->tool->context("test"), 2);
+		$this->assertEquals($this->tool->context("name"), "Jack");
+	}
+
 	public function testGetTool() {
 		$this->assertNotNull($this->tool);
 	}

@@ -17,6 +17,13 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 		$this->clips = $clips;
 	}
 
+	public function siteUrl($url = '') {
+		$index = clips_config('use_rewrite')? '': '/index.php';
+		if(!isset($this->base))
+			$this->base = dirname($_SERVER['SCRIPT_NAME']);
+		return $this->base.$index.'/'.$url;
+	}
+
 	public function setLogger(\Psr\Log\LoggerInterface $logger) {
 		$this->logger = $logger;
 	}
@@ -62,6 +69,12 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 
 	public function route() {
 		$request = new HttpRequest();
+
+		$this->tool->context(array(
+			'request' => $request,
+			'router' => $this
+		)); // Set the request context to the context
+
 		// Empty the main envrionment
 		$this->clips->clear();
 		$this->clips->template("Clips\\RouteResult");
@@ -76,6 +89,7 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 			$result = $this->clips->queryFacts("Clips\\RouteResult");
 			$result = $result[0];
 			$controller = $this->tool->create($result->controller);
+			$this->tool->context('controller', $controller); // Set the controller to the tool context
 			$controller->request = $request;
 
 			$this->filterChain = $this->tool->load_class('FilterChain', true);

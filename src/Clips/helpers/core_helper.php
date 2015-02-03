@@ -8,6 +8,20 @@ function safe_file_exists($file) {
 	return file_exists($file);
 }
 
+function to_camel($str) {
+	$arr = explode('/', $str);
+	$ret = array();
+	foreach($arr as $a) {
+		$data = explode('_', $a);
+		$sa = array();
+		foreach($data as $s) {
+			$sa []= ucfirst($s);
+		}
+		$ret []= implode('', $sa);
+	}
+	return implode('/', $ret);
+}
+
 function str_end_with($haystack, $needle, $trim = true) {
 	if($trim) {
 		$str = trim($haystack);

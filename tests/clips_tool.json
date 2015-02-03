@@ -5,6 +5,7 @@
 			"datasource": "mysql"
 		}
 	},
+	"helpers": ["web"],
 	"logger": {
 		"handlers": {
 			"Stream" : ["php://stdin", "debug"],

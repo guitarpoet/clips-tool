@@ -11,6 +11,10 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 	public function __construct() {
 	}
 
+	public function context($key, $value = null) {
+		return $this->tool->context($key, $value);
+	}
+
 	public function setTool($tool) {
 		$this->tool = $tool;
 	}
