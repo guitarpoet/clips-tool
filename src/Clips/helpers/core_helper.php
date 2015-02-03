@@ -1,5 +1,10 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+function class_script_path($class) {
+    $rc = new ReflectionClass($class);
+    return $rc->getFileName();
+}
+
 function try_path($path, $others = array()) {
 	foreach(array_merge($others, array(getcwd(), clips_path('/'))) as $pre) {
 		$p = path_join($pre, $path);
@@ -46,6 +51,10 @@ function find_file($folder, $file, $suffix = null, $blur = false) {
 		}
     }
 	return $ret;
+}
+
+function parse_json($json) {
+	return json_decode($json);
 }
 
 function safe_file_exists($file) {

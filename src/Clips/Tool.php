@@ -1,6 +1,7 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
 define('CLIPS_TOOL_PATH', __DIR__);
+define('FCPATH', getcwd());
 
 class Requires extends \Addendum\Annotation { }
 class FullArgs extends \Addendum\Annotation { }
@@ -486,6 +487,17 @@ class Tool implements Interfaces\Initializable {
 
 	public function filter($filter) {
 		return $this->load_class($filter, true, new LoadConfig($this->config->filter_dir, 'Filter', "Filters\\"));
+	}
+
+	public function widget($widget) {
+		if(is_array($widget)) {
+			foreach($widget as $w) {
+				$this->widget($w);
+			}
+			return true;
+		}
+
+		return $this->load_class('Widget', true, new LoadConfig($this->config->widget_dir, '', "Widgets\\".ucfirst($widget).'\\'));
 	}
 
 	public function model($model) {

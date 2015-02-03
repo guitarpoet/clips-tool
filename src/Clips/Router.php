@@ -115,6 +115,9 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 						clips_add_scss($c);
 					}
 				}
+				else if(get_class($a) == 'Clips\\Widget') {
+					$this->tool->widget($a->value);
+				}
 			}
 
 			$ret = call_user_func_array(array($controller, $result->method), $result->args);
