@@ -24,6 +24,12 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 	}
 
 	public function render($template, $args = array(), $engine = null) {
+		if(!$engine) {
+			$default = \clips_config('default_view');
+			if($default) {
+				$engine = $default[0];
+			}
+		}
 		return new ViewModel($template, $args, $engine);
 	}
 }
