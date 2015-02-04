@@ -95,7 +95,12 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 			$result = $this->clips->queryFacts("Clips\\RouteResult");
 			$result = $result[0];
 			$controller = $this->tool->create($result->controller);
-			$this->tool->context('controller', $controller); // Set the controller to the tool context
+			$this->tool->context(array(
+				'controller_class' => $result->controller,
+				'controller' => $controller,
+				'controller_method' => $result->method,
+				'args' => $result->args
+			));
 			$controller->request = $request;
 
 			$this->filterChain = $this->tool->load_class('FilterChain', true);
@@ -120,6 +125,11 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 					foreach($a->value as $c) {
 						clips_add_scss($c);
 					}
+				}
+				else if(get_class($a) == 'Clips\\Form') {
+					// If this is the form annotation, initialize it and set it to the context
+					$this->tool->enhance($a);
+					clips_context('form', $a);
 				}
 				else if(get_class($a) == 'Clips\\Widget') {
 					$this->tool->widget($a->value);

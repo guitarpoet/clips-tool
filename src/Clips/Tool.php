@@ -256,42 +256,43 @@ class Tool implements Interfaces\Initializable {
 		return $this->_init_class($class, true, "__created__", $args);
 	}
 
+	public function enhance($obj) {
+		// Setting the log
+		if(is_subclass_of($obj, 'Psr\\Log\\LoggerAwareInterface')) {
+			$obj->setLogger($this->getLogger(get_class($obj))); // Setting the logger according to the class name
+		}
+
+		if(is_subclass_of($obj, 'Clips\\Interfaces\\ClipsAware')) {
+			$obj->setClips($this->clips);
+		}
+
+		if(is_subclass_of($obj, 'Clips\\Interfaces\\ToolAware')) {
+			$obj->setTool($this);
+		}
+
+		// Process requires annotation
+		$a = get_annotation(get_class($obj), 'Clips\\Requires');
+		if($a) {
+			foreach($a->value as $r) {
+				$obj->$r = $this->library($r);
+			}
+		}
+
+		// Process initialize
+		if(is_subclass_of($obj, 'CLips\\Interfaces\\Initializable')) {
+			// Call the init function
+			$obj->init();
+
+		}
+	}
+
 	private function _init_class($class, $init, $name, $args = null) {
 		if(isset($class) && is_string($class) && class_exists($class)) { // Yes we have found it
 			// We got the class
 			if($init) {
 				// Construct the class
 				$this->$name = $this->createInstance($class, $args);
-
-				// Setting the log
-				if(is_subclass_of($this->$name, 'Psr\\Log\\LoggerAwareInterface')) {
-					$this->$name->setLogger($this->getLogger($class)); // Setting the logger according to the class name
-				}
-
-				if(is_subclass_of($this->$name, 'Clips\\Interfaces\\ClipsAware')) {
-					$this->$name->setClips($this->clips);
-				}
-
-				if(is_subclass_of($this->$name, 'Clips\\Interfaces\\ToolAware')) {
-					$this->$name->setTool($this);
-				}
-
-				// Process requires annotation
-				$reflection = new \Addendum\ReflectionAnnotatedClass($class);
-				if($reflection->hasAnnotation('Clips\\Requires')) {
-					$a = $reflection->getAnnotation('Clips\\Requires');
-					foreach($a->value as $r) {
-						$this->$name->$r = $this->library($r);
-					}
-				}
-
-				// Process initialize
-				if(is_subclass_of($this->$name, 'CLips\\Interfaces\\Initializable')) {
-					// Call the init function
-					$this->$name->init();
-
-				}
-
+				$this->enhance($this->$name);
 				$this->_loaded_classes[$name] = $class;
 				return $this->$name;	
 			}

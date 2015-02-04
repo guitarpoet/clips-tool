@@ -13,6 +13,7 @@
 	"template_dir": ["templates"],
 	"controller_dir": ["Controllers"],
 	"filter_dir": ["Filters"],
+	"form_config_dir": ["application/config/form"],
 	"smarty_compile_dir": ["application/cache/smarty/templates_c"],
 	"smarty_config_dir": ["application/config/smarty"],
 	"smarty_cache_dir": ["application/cache/smarty"]
