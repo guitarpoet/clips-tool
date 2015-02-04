@@ -2,6 +2,17 @@
 
 use Clips\Interfaces\Initializable;
 
+/**
+ * The form helper class, this is the basic form configuration support class.
+ *
+ * It can be configured as the docstring in the PHP code, and look for the configuration file
+ *
+ * of json format. This will be the bridge from the request to the validation rules, and will
+ *
+ * provide the configuration support for client side validation(like using jQBootStrapValidation).
+ *
+ * Also, this supports for mutiple form configuration
+ */
 class Form extends \Addendum\Annotation implements Initializable {
 	public function init() {
 		if(isset($this->value)) {
@@ -10,14 +21,38 @@ class Form extends \Addendum\Annotation implements Initializable {
 			}
 		}
 		else {
-			$controller = clips_context('controller_class');
-			$method = clips_context('conroller_method');
-			$name = explode('Controllers', $controller);
-
-			// Get the name after controllers namespace, and get the last basename as the controller name
-			$name = basename($name[count($name) - 1]);
-			$this->value = $controller_class.'/'.$method;
+			$this->value = defautl_form_name();
 		}
+		$this->fieldMap = array();
+	}
+
+	public function field($name) {
+		$current = clips_context('current_form');
+		if($current) {
+			// If we can find the current form
+			$config = $this->config($current);
+			if($config) {
+				// If we can find the configuration for this form
+				foreach($config as $f) {
+					if($f->field == $name) {
+						// If has the configuration for the field, let's try to get the field using the field map
+						if(!isset($this->fieldMap[$current]))
+							$this->fieldMap[$current] = array();
+
+						$map = $this->fieldMap[$current];
+						if(isset($map[$name])) // If we can find the field, return it
+							return $map[$name];
+
+						// Create the field
+						$field = copy_new($f, "Clips\\FormField");
+						$map[$name] = $field;
+						$this->fieldMap[$current] = $map;
+						return $field;
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	protected function getConfig() {

@@ -57,11 +57,20 @@ function get_widget_path($widget) {
 	return false;
 }
 
+function default_form_name() {
+	$controller = clips_context('controller_class');
+	$method = clips_context('conroller_method');
+	$name = explode('Controllers', $controller);
+
+	// Get the name after controllers namespace, and get the last basename as the controller name
+	$name = basename($name[count($name) - 1]);
+	return $controller.'/'.$method;
+}
+
 function require_widget_smarty_plugin($widget, $name) {
 	$path = get_widget_path($widget);
 	foreach(array('block', 'function') as $prefix) {
 		$p = path_join($path, 'smarty', $prefix.'.'.$name.'.php');
-		var_dump($p);
 		if(file_exists(path_join($path, 'smarty', $prefix.'.'.$name.'.php'))) {
 			require_once($p);
 			return true;

@@ -1,5 +1,10 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+function show_error() {
+	$msg = call_user_func_array('sprintf', func_get_args());
+	trigger_error($msg);
+}
+
 function get_annotation($class, $annotation, $method = null) {
 	$re = new Addendum\ReflectionAnnotatedClass($class);
 	if($method) {
