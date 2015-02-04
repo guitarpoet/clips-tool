@@ -18,6 +18,7 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 		$this->rel_dir = substr($this->base_dir, strlen(FCPATH));
 		$this->loadConfig();
 		$this->initTemplateEngine();
+		$this->initScss();
 	}
 
 	public function setTool($tool) {
@@ -39,6 +40,26 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 	}
 
 	protected function initScss() {
+		// We should have sass in the context
+		$sass = clips_context('sass');
+		if($sass && isset($this->config->scss)) {
+			// Add the include path, so that others can just import the scss this widget provided
+			$sass->addIncludePath(path_join($this->base_dir, 'scss'));
+
+			$scss_config = $this->config->scss;
+            if(isset($scss_config->depends)) {
+                foreach($scss_config->depends as $d) {
+					clips_add_scss($d);
+				}				
+			}			
+
+			// Add the scss files
+			if(isset($scss_config->files)) {
+                foreach($scss_config->files as $file) {
+					clips_add_scss(path_join($this->base_dir, $file));
+                }
+            }
+		}
 	}
 
 	protected function initJs() {

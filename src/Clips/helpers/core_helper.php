@@ -1,5 +1,12 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+function format($obj, $formatter) {
+	$f = Clips\Formatter::get($formatter);
+	if($f)
+		return $f->format($obj);
+	return '';
+}
+
 function class_script_path($class) {
     $rc = new ReflectionClass($class);
     return $rc->getFileName();

@@ -1,5 +1,12 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+function static_url($uri) {
+	$router = clips_context('router');
+	if($router)
+		return $router->staticUrl($uri);
+	return $uri;
+}
+
 function base_url($uri) {
 	$router = clips_context('router');
 	if($router)

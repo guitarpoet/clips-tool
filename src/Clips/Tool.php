@@ -497,7 +497,8 @@ class Tool implements Interfaces\Initializable {
 			return true;
 		}
 
-		return $this->load_class('Widget', true, new LoadConfig($this->config->widget_dir, '', "Widgets\\".ucfirst($widget).'\\'));
+		$class = $this->load_class('Widget', false, new LoadConfig($this->config->widget_dir, '', "Widgets\\".ucfirst($widget).'\\'));
+		return $this->create($class);
 	}
 
 	public function model($model) {

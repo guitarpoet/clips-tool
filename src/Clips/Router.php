@@ -17,6 +17,12 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 		$this->clips = $clips;
 	}
 
+	public function staticUrl($url = '') {
+		if(!isset($this->base))
+			$this->base = dirname($_SERVER['SCRIPT_NAME']);
+		return $this->base.'/'.$url;
+	}
+
 	public function baseUrl($url = '') {
 		$index = clips_config('use_rewrite')? '': '/index.php';
 		if(!isset($this->base))
