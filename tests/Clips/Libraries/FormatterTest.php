@@ -8,7 +8,7 @@ class FormatterTest extends Clips\TestCase {
 	public function testDumpFormatter() {
 		$f = Clips\Formatter::get("dump");
 		$this->assertNotNull($f);
-		$this->assertEquals($f->format(1), "int(1)");
+		$this->assertEquals($f->format(1), "int(1)\n");
 	}
 
 	public function doTearDown() {

@@ -134,6 +134,10 @@ class Sass extends \Clips\Libraries\ConsoleBase {
 			return $r->contents();
 		}
 
+		// Try the absolute path first
+		if(file_exists($file))
+			return file_get_contents($file);
+
 		foreach(clips_config('sass_folders', array()) as $folder) {
 			$r = try_path(path_join($folder, $file));
 			if($r) {

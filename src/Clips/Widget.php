@@ -16,9 +16,13 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 	public function init() {
 		$this->base_dir = dirname(class_script_path($this));
 		$this->rel_dir = substr($this->base_dir, strlen(FCPATH));
+		$this->sass = $this->tool->library('sass');
 		$this->loadConfig();
+		$this->initDepends();
 		$this->initTemplateEngine();
 		$this->initScss();
+		$this->initCss();
+		$this->initJs();
 	}
 
 	public function setTool($tool) {
@@ -30,6 +34,9 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 	}
 
 	protected function initDepends() {
+		if(isset($this->config->depends)) {
+			$this->tool->widget($this->config->depends);
+        }
 	}
 
 	protected function initTemplateEngine() {
@@ -41,7 +48,7 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 
 	protected function initScss() {
 		// We should have sass in the context
-		$sass = clips_context('sass');
+		$sass = $this->sass;
 		if($sass && isset($this->config->scss)) {
 			// Add the include path, so that others can just import the scss this widget provided
 			$sass->addIncludePath(path_join($this->base_dir, 'scss'));
@@ -56,16 +63,46 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 			// Add the scss files
 			if(isset($scss_config->files)) {
                 foreach($scss_config->files as $file) {
-					clips_add_scss(path_join($this->base_dir, $file));
+					clips_add_scss(path_join($this->base_dir, 'scss', $file));
                 }
             }
 		}
 	}
 
 	protected function initJs() {
+		if(isset($this->config->js)) {
+			$js_config = $this->config->js;
+            if(isset($js_config->depends)) {
+                foreach($js_config->depends as $j) {
+					clips_add_js($d);
+				}				
+			}			
+
+			// Add the js files
+			if(isset($js_config->files)) {
+                foreach($js_config->files as $file) {
+					clips_add_js(path_join($this->rel_dir, 'js', $file));
+                }
+            }
+		}
 	}
 
 	protected function initCss() {
+		if(isset($this->config->css)) {
+			$css_config = $this->config->css;
+            if(isset($css_config->depends)) {
+                foreach($css_config->depends as $c) {
+					clips_add_css($c);
+				}				
+			}			
+
+			// Add the css files
+			if(isset($css_config->files)) {
+                foreach($css_config->files as $file) {
+					clips_add_css(path_join($this->rel_dir, 'css', $file));
+                }
+            }
+		}
 	}
 
     protected function loadConfig() {

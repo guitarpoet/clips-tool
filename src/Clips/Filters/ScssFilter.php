@@ -7,7 +7,6 @@ use Clips\AbstractFilter;
  */
 class ScssFilter extends AbstractFilter {
 	public function filter_after($chain, $controller, $method, $args, $request, $controller_ret) {
-		clips_context('sass', $this->sass);
 		$scsses = clips_context('scss');
 		if($scsses) {
 			// Add the sass_dir into include pathes

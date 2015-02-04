@@ -6,6 +6,6 @@
 	"doc":"The basic html widgets",
 	"scss": {
 		"dependes": [],
-		"files": ["clips.html.scss"]
+		"files": ["clips.html"]
 	}
 }

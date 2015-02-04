@@ -74,6 +74,7 @@ function safe_file_exists($file) {
 
 function to_flat($str) {
 	$result = array();
+	$str = str_replace('/', '\\', $str);
 	foreach(explode('\\', $str) as $s) {
 		$tmp = array();
 		foreach(str_split($s) as $c) {
