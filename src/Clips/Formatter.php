@@ -3,7 +3,7 @@
 /**
  * The base class for all the formatter
  */
-class Formatter {
+class Formatter extends \Addendum\Annotation {
 	public function format($obj) {
 		return '';
 	}

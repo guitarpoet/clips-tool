@@ -1,6 +1,22 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+/**
+ * @Clips\Widget({"Html"})
+ */
 class CoreHelperTest extends Clips\TestCase {
+
+	/**
+	 * @Clips\Widget({"Test"})
+	 */
+	public function testGetAnnotation() {
+		$an = get_annotation($this, "Clips\\Widget");
+		$this->assertNotNull($an);
+		$this->assertEquals($an->value, array("Html"));
+		$an = get_annotation($this, "Clips\\Widget", "testGetAnnotation");
+		$this->assertNotNull($an);
+		$this->assertEquals($an->value, array("Test"));
+	}
+
 	public function testFindFile() {
 		$this->assertEquals(count(find_file(getcwd(), 'HelperTest', 'php')), 1);
 		$this->assertEquals(count(find_file(getcwd(), 'HelperTest', 'xml')), 0);

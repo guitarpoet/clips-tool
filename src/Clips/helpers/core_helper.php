@@ -1,5 +1,21 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+function get_annotation($class, $annotation, $method = null) {
+	$re = new Addendum\ReflectionAnnotatedClass($class);
+	if($method) {
+		$an = $re->getMethod($method);
+	}
+	else {
+		$an = $re;
+	}
+	if($an->hasAnnotation($annotation)) {
+		foreach($an->getAnnotations() as $a) {
+			if(get_class($a) == $annotation)
+				return $a;
+		}
+	}
+}
+
 function format($obj, $formatter) {
 	$f = Clips\Formatter::get($formatter);
 	if($f)

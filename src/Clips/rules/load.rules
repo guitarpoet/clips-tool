@@ -23,7 +23,6 @@
 			(assert (try-load-php-file (str-cat ?w "/" ?dir "/" (php_call "process_file_name" ?prefix ?file ?suffix) ".php"))))
 	)
 	(retract ?try)
-	(retract ?config)
 )
 
 (defrule try-load-the-php-file-if-exists
