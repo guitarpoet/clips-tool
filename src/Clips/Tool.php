@@ -135,7 +135,7 @@ class Tool implements Interfaces\Initializable {
 	}
 
 	protected function createInstance($class, $args = array()) {
-		if(class_exists($class)) {
+		if(isset($class) && is_string($class) && class_exists($class)) {
 			if($args) {
 				$c = new \ReflectionClass($class);
 				return $c->newInstanceArgs($args);
@@ -257,7 +257,7 @@ class Tool implements Interfaces\Initializable {
 	}
 
 	private function _init_class($class, $init, $name, $args = null) {
-		if(class_exists($class)) { // Yes we have found it
+		if(isset($class) && is_string($class) && class_exists($class)) { // Yes we have found it
 			// We got the class
 			if($init) {
 				// Construct the class
@@ -489,6 +489,10 @@ class Tool implements Interfaces\Initializable {
 		return $this->load_class($filter, true, new LoadConfig($this->config->filter_dir, 'Filter', "Filters\\"));
 	}
 
+	public function widgetClass($widget) {
+		return $this->load_class('Widget', false, new LoadConfig($this->config->widget_dir, '', "Widgets\\".ucfirst($widget).'\\'));
+	}
+
 	public function widget($widget) {
 		if(is_array($widget)) {
 			foreach($widget as $w) {
@@ -497,8 +501,7 @@ class Tool implements Interfaces\Initializable {
 			return true;
 		}
 
-		$class = $this->load_class('Widget', false, new LoadConfig($this->config->widget_dir, '', "Widgets\\".ucfirst($widget).'\\'));
-		return $this->create($class);
+		return $this->create($this->widgetClass($widget));
 	}
 
 	public function model($model) {

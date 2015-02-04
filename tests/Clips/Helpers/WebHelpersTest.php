@@ -5,6 +5,11 @@ class WebHelpersTest extends Clips\TestCase {
 		echo site_url('adsf');
 	}
 
+	public function testRequireWidgetSmartyPlugin() {
+		require_widget_smarty_plugin('Html', 'h1');
+		$this->assertTrue(function_exists('smarty_block_h1'));
+	}
+
 	public function testToHeader() {
 		$this->assertEquals(to_header('content_type'), "Content-Type");
 	}

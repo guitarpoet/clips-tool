@@ -48,3 +48,24 @@ function to_header($str) {
 	return implode('-', $sa);
 }
 
+function get_widget_path($widget) {
+	$tool = &get_clips_tool();
+	$class = $tool->widgetClass($widget);
+	if($class) {
+		return dirname(class_script_path($class));
+	}
+	return false;
+}
+
+function require_widget_smarty_plugin($widget, $name) {
+	$path = get_widget_path($widget);
+	foreach(array('block', 'function') as $prefix) {
+		$p = path_join($path, 'smarty', $prefix.'.'.$name.'.php');
+		var_dump($p);
+		if(file_exists(path_join($path, 'smarty', $prefix.'.'.$name.'.php'))) {
+			require_once($p);
+			return true;
+		}
+	}
+	return false;
+}
