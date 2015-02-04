@@ -14,7 +14,7 @@ class ScssFilter extends AbstractFilter {
 			if($result) {
 				$cache = $this->FileCache->cacheDir();
 				$full_name = to_flat(get_class($controller)).'_'.$method;
-				$uri = path_join(path_join($cache, 'css'), $full_name).'.css';
+				$uri = path_join(path_join($cache, 'css'), $full_name);
 				$this->FileCache->save(to_flat(get_class($controller).'_'.$method).'.css', path_join($cache, 'css'), $result, true);
 				clips_add_css(static_url($uri));
 			}
