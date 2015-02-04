@@ -19,6 +19,10 @@ function to_name($str) {
 	return implode('-', $result);
 }
 
+function create_tag_with_content($tag, $content, $attr = array(), $default = array()) {
+	return create_tag($tag, $attr, $default, $content);
+}
+
 function create_tag($tag = 'div', $attr = array(), $default = array(), $content = null, $close = false) {
 	$arr = copy_arr($attr, $default);
 	$ret = '<'.$tag.' '.format($arr, 'TagAttribute');

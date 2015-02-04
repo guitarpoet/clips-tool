@@ -1,0 +1,8 @@
+{
+	"author": "Jack <guitarpoet@gmail.com>",
+	"date": "Wed Feb  4 15:26:39 2015",
+	"version": "1.0",
+	"name": "clips.form",
+	"doc":"The form widgets",
+	"depends": ["html"]
+}

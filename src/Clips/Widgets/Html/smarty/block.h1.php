@@ -3,5 +3,5 @@
 function smarty_block_h1($params, $content = '', $template, &$repeat) {
 	if($repeat)
 		return;
-	return "<h1>".$content."</h1>";
+	return Clips\create_tag_with_content('h1', $content, $params);
 }

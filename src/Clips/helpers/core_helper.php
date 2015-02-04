@@ -39,6 +39,16 @@ function try_path($path, $others = array()) {
 
 function clips_context($key = null, $value = null, $append = false) {
 	$tool = &get_clips_tool();
+	if(is_numeric($append)) {
+		$arr = $tool->context($key);
+		if($arr == null)
+			$arr = array();
+		$index = $append;
+		if($index >= 0 && $index < count($arr)) {
+			return $tool->context($key, array_splice($arr, $index, 0, $value));
+		}
+		$append = true;
+	}
 	return $tool->context($key, $value, $append);
 }
 
