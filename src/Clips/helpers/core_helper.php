@@ -300,6 +300,26 @@ function controller_exists($c) {
 	return !! controller_class($c);
 }
 
+function extend_arr($dest, $src) {
+	if($src == null || !(is_array($src) || is_object($src)))
+		return $dest;
+
+	foreach($src as $key => $value) {
+		if(isset($dest[$key])) {
+			$v = $dest[$key];
+			if(!is_array($v)) {
+				$v = array($v);	
+			}
+			if(!is_array($value)) {
+				$value = array($value);
+			}
+			$value = array_merge($v, $value);
+		}
+		$dest[$key] = $value;
+	}
+	return $dest;
+}
+
 if(!function_exists('copy_new')) {
 	function copy_new($src, $class = null) {
 		return copy_object($src, null, $class);
@@ -309,7 +329,7 @@ if(!function_exists('copy_new')) {
 if(!function_exists('copy_arr')) {
 	function copy_arr($src, $dest = null) {
 		if($src == null)
-			return null;
+			return $dest;
 
 		if($dest == null) {
 			$dest = array();

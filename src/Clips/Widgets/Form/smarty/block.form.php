@@ -5,6 +5,7 @@ function smarty_block_form($params, $content = '', $template, &$repeat) {
 		return;
 	return Clips\create_tag_with_content('form', $content, $params, array(
 		'action' => '#',
-		'method' => 'post'
+		'method' => 'post',
+		'class' => ['clips-form', 'default-form']
 	));
 }
