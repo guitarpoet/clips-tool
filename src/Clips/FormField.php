@@ -24,4 +24,29 @@ class FormField {
 	public function getId() {
 		return "field_".$this->name;
 	}
+
+	public function getDefault($default = array()) {
+		$default['id'] = $this->getId();
+		$default['name'] = $this->name;
+		$default['placeholder'] = $this->placeholder;
+		if(isset($this->defaultValue))
+			$default['value'] = $this->defaultValue;
+		if(isset($this->value))
+			$default['value'] = $this->value;
+		$default = copy_arr($this->validationRules(), $default);
+		return $default;
+	}
+
+	public function validationRules() {
+		if(isset($this->rules)) {
+			$rules = $this->rules;
+			if(isset($this->messages)) {
+				foreach($this->messages as $k => $v) {
+					$rules['data-validation-'.$k.'-message'] = $v;
+				}
+			}
+			return $rules;
+		}
+		return array();
+	}
 }
