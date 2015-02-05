@@ -45,6 +45,7 @@ class Form extends \Addendum\Annotation implements Initializable {
 
 						// Create the field
 						$field = copy_new($f, "Clips\\FormField");
+						$field->init();
 						$map[$name] = $field;
 						$this->fieldMap[$current] = $map;
 						return $field;

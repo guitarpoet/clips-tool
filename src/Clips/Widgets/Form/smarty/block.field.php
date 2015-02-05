@@ -24,9 +24,12 @@ function smarty_block_field($params, $content = '', $template, &$repeat) {
 	}
 	else {
 		if(clips_context('current_field')) {
+			$f = clips_context('current_field');
+
 			$layout = get_default($params, 'layout', array());
 			$label_layout_class = 'col-1280-2';
 			$element_layout_class = 'col-1280-10';
+
 			if(is_array($layout)) {
 				if(isset($layout['label']))
 					$label_layout_class = 'col-1280-'.$layout['label'];
@@ -55,8 +58,13 @@ function smarty_block_field($params, $content = '', $template, &$repeat) {
 				require_widget_smarty_plugin('Form', 'input');	
 				$content = smarty_function_input(array(), $template);
 			}
+
+			$label = Clips\create_tag_with_content('label', $f->label, array(
+				'for' => $f->getId(),
+				'class' => array($label_layout_class, $labelClass, 'control-label', isset($f->required)?'form_field_required':'')
+			));
 			// Add the element div
-			$content .= Clips\create_tag_with_content('div', '', array('class' => array($element_layout_class, $inputClass)));
+			$content = $label.Clips\create_tag_with_content('div', $content, array('class' => array($element_layout_class, $inputClass)));
 
 			// Added the help block
 			$content .= Clips\create_tag_with_content('p', '', array('class' => 'help-block'));
