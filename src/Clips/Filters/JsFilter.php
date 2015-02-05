@@ -9,8 +9,8 @@ class JsFilter extends AbstractFilter {
 			if(!is_array($js)) {
 				$js = array($js);
 			}
-
-			clips_context('js', clips_out("string://{{#.}}<script src=\"{{.}}.js\"></script>\n{{/.}}", $js, false));
 		}
+
+		clips_context('js', clips_out("string://{{#.}}<script type=\"text/javascript\" {{^init}}src=\"{{.}}.js\"{{/init}}>{{script}}</script>\n{{/.}}", $js, false));
 	}
 }

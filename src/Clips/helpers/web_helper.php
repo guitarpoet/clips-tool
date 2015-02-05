@@ -18,6 +18,10 @@ function site_url($uri) {
 	return base_url($uri);
 }
 
+function clips_add_init_js($js) {
+	clips_add_js(array('init'=>true, 'script'=>$js));
+}
+
 function clips_add_js($js, $index = true) {
 	$jses = clips_context('js');
 	if(!isset($jses) || array_search($js, $jses) === false) {

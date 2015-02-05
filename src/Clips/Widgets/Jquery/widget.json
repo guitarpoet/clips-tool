@@ -1,0 +1,11 @@
+{
+	"author": "Jack <guitarpoet@gmail.com>",
+	"date": "Wed Feb  4 15:26:39 2015",
+	"version": "2.1.1",
+	"name": "clips.jquery",
+	"doc":"The jquery javascript framework",
+	"depends": ["html"],
+	"js": {
+		"files": ["jquery"]
+	}
+}

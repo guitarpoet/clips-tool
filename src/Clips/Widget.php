@@ -15,7 +15,13 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 
 	public function init() {
 		$this->base_dir = dirname(class_script_path($this));
-		$this->rel_dir = substr($this->base_dir, strlen(FCPATH));
+		if(strpos($this->base_dir, FCPATH) === false) {
+			// We might be in the soft link(in development mode)
+			$base_dir = dirname(dirname(dirname(class_script_path('Clips\\Widget'))));
+			$this->rel_dir = path_join('vendor/guitarpoet/clips-tool/', substr($this->base_dir, strlen($base_dir)));
+		}
+		else
+			$this->rel_dir = substr($this->base_dir, strlen(FCPATH));
 		$this->sass = $this->tool->library('sass');
 		$this->loadConfig();
 		$this->initDepends();

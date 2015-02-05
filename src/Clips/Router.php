@@ -20,7 +20,7 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 	public function staticUrl($url = '') {
 		if(!isset($this->base))
 			$this->base = dirname($_SERVER['SCRIPT_NAME']);
-		return $this->base.'/'.$url;
+		return path_join($this->base, $url);
 	}
 
 	public function baseUrl($url = '') {
