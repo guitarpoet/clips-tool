@@ -1,0 +1,78 @@
+;===============================================================================
+;
+; The basic rules to run all the basic validations
+; 
+; This rule will provide the basic validations such as (type vaidation, number
+; validation, and regex validation)
+;
+; @version 1.0
+; @author Jack <guitarpoet@gmail.com>
+; @date Sat Feb  7 09:39:32 2015
+;
+;===============================================================================
+(defrule check-the-required-rule
+	?r <- (rule ?field "required")
+	(not (field ?name&:(eq ?name ?field) ?))
+	=>
+	(assert (validate-error ?field "required"))
+	(retract ?r)
+)
+
+(defrule check-for-regex-rule
+	(rule ?field "regex" ?regex)
+	(field ?name&:(eq ?name ?field) ?value)
+	(test (not (match ?value ?regex)))
+	=>
+	(assert (validate-error ?field (str-cat ?value " is not match pattern " ?regex)))
+)
+
+(defrule check-for-the-type-number
+	(rule ?field "type" "number")
+	(field ?name&:(eq ?name ?field) ?value)
+	(test (not (is-numeric ?value)))
+	=>
+	(assert (validate-error ?field (str-cat ?value " is not number")))
+)
+
+(defrule field-pass-the-number-test
+	(rule ?field "type" "number")
+	(field ?name&:(eq ?name ?field) ?value)
+	(test (is-numeric ?value))
+	=>
+	(assert (number ?field))
+)
+
+(defrule check-for-min-value
+	(rule ?field "min" ?min)
+	(number ?fn&:(eq ?fn ?field))
+	(field ?name&:(eq ?name ?field) ?value)
+	(test (not (>= ?value ?min)))
+	=>
+	(assert (validate-error ?field (str-cat ?value " is smaller than " ?min)))
+)
+
+(defrule check-for-max-value
+	(rule ?field "max" ?max)
+	(number ?fn&:(eq ?fn ?field))
+	(field ?name&:(eq ?name ?field) ?value)
+	(test (not (<= ?value ?max)))
+	=>
+	(assert (validate-error ?field (str-cat ?value " is bigger than " ?max)))
+)
+
+(defrule if-has-validate-error-show-it
+    (declare (salience ?*low*))
+	?ve <- (validate-error ?field ?error)
+	=>
+	(retract ?ve)
+	(assert (error (str-cat ?field " " ?error)))
+)
+
+(defrule if-has-the-customize-message-use-the-customize-message
+	?ve <- (validate-error ?field ?error)
+	(message ?name&:(eq ?name ?field) ?e&:(eq ?e ?error) ?message)
+	=>
+	(retract ?ve)
+	(assert (error ?message))
+
+)

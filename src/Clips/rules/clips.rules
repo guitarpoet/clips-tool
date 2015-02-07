@@ -56,5 +56,6 @@
 (deffunction method-exists(?class ?method) (php_call "method_exists" ?class ?method))
 (deffunction match (?str ?pattern) (php_call "clips_str_match" ?str ?pattern))
 (deffunction php-get (?inst ?field) (php_call "clips_get_property" ?inst ?field))
+(deffunction is-numeric (?i) (php_call "is_numeric" ?i))
 (deffunction php-require-once (?file) (php_call "clips_php_require_once" ?file))
 (deffunction php-function-exists (?func) (php_call "function_exists" ?func))
