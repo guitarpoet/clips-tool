@@ -21,7 +21,7 @@ class Form extends \Addendum\Annotation implements Initializable {
 			}
 		}
 		else {
-			$this->value = defautl_form_name();
+			$this->value = default_form_name();
 		}
 		$this->fieldMap = array();
 	}

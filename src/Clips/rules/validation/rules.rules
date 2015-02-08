@@ -18,6 +18,22 @@
 	(retract ?r)
 )
 
+(defrule check-for-min-length
+	(rule ?field "minlength" ?minlength)
+	(field ?name&:(eq ?name ?field) ?value)
+	(test (>= (str-length ?value) ?minlength))
+	=>
+	(assert (validate-error ?field (str-cat ?value "is shortter than " ?minlength)))
+)
+
+(defrule check-for-max-length
+	(rule ?field "maxlength" ?maxlength)
+	(field ?name&:(eq ?name ?field) ?value)
+	(test (<= (str-length ?value) ?maxlength))
+	=>
+	(assert (validate-error ?field (str-cat ?value "is longger than " ?maxlength)))
+)
+
 (defrule check-for-regex-rule
 	(rule ?field "regex" ?regex)
 	(field ?name&:(eq ?name ?field) ?value)
@@ -74,5 +90,4 @@
 	=>
 	(retract ?ve)
 	(assert (error ?message))
-
 )

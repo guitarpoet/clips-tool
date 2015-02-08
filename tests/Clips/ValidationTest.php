@@ -61,7 +61,6 @@ class ValidationTest extends TestCase {
                 "field": "remember_me"
         }
 ]
-
 TEXT;
 		$errors = $this->validator->validate($arr, parse_json($json));
 		var_dump($errors);
