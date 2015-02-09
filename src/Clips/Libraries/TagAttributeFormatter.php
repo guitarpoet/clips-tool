@@ -12,7 +12,7 @@ class TagAttributeFormatter extends \Clips\Formatter {
 	}
 
 	public function format($obj) {
-		if(is_array($obj)) {
+		if(is_array($obj) && $obj) {
 			$result = array();
 			foreach($obj as $k => $v) {
 				$str = $v;

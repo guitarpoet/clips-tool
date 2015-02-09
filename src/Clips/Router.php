@@ -145,7 +145,7 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 			$error = clips_context('error');
 
 			if($ret == null && $error) { // If there is no output and we can get the error, show the error
-				$default_view = \clips_config('default_view');
+				$default_view = clips_config('default_view');
 				if($default_view) {
 					$ret = new ViewModel('error/'.$error->cause, array('error' => $error->message), $default_view[0]);
 				}

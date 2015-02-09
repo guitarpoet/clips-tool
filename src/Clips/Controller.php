@@ -37,6 +37,25 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 		return new ViewModel($template, $args, $engine, $headers);
 	}
 
+	public function meta($key, $value) {
+		$meta = clips_context('html_meta');
+		if(!$meta)
+			$meta = array();
+		
+		$res = array();
+		$found = false;
+		foreach($meta as $m) {
+			if(isset($m[$key])) {
+				$m[$key] = $value;
+				$found = true;
+			}
+			$res []= $m;
+		}
+		if(!$found)
+			$res []= array($key => $value);
+		clips_context('html_meta', $res);
+	}
+
 	public function redirect($url) {
 		return $this->render("", array(), 'direct', array('Location' => $url));
 	}
