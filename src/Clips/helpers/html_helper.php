@@ -24,7 +24,7 @@ function create_tag_with_content($tag, $content, $attr = array(), $default = arr
 }
 
 function create_tag($tag = 'div', $attr = array(), $default = array(), $content = null, $close = false) {
-	$arr = extend_arr($default, $attr);
+	$arr = extend_arr($default, $attr, array('class'));
 	$ret = '<'.$tag.' '.format($arr, 'TagAttribute');
 	if($content !== null) {
 		$ret .= '>'.$content.'</'.$tag.'>'; 

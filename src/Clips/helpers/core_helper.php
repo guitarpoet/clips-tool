@@ -309,12 +309,12 @@ function controller_exists($c) {
 	return !! controller_class($c);
 }
 
-function extend_arr($dest, $src) {
+function extend_arr($dest, $src, $fields = null) {
 	if($src == null || !(is_array($src) || is_object($src)))
 		return $dest;
 
 	foreach($src as $key => $value) {
-		if(isset($dest[$key])) {
+		if(isset($dest[$key]) && ($fields == null || array_search($key, $fields) !== false)) {
 			$v = $dest[$key];
 			if(!is_array($v)) {
 				$v = array($v);	

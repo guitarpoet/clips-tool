@@ -1,0 +1,23 @@
+{
+	"author": "Andy (andy.pinet@pinet.co)",
+	"date": "Wed Feb  4 15:42:10 2015",
+	"version": "1.0",
+	"name": "demo.BootstrapCommon",
+	"doc":"BootstrapCommon widget",
+	"depends": ["Jquery"],
+	"scss": {
+		"files": [
+			"_normalize"
+			,"_variables"
+			,"mixins/_vendor-prefixes"
+			,"mixins/_text-emphasis"
+			,"mixins/_background-variant"
+			,"mixins/_text-overflow"
+			,"mixins/_clearfix"
+			,"mixins/_tab-focus.scss"
+			,"mixins/_image"
+			,"_scaffolding"
+			,"_type"
+		]
+	}
+}

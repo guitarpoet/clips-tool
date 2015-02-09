@@ -1,0 +1,11 @@
+{
+	"author": "Andy (andy.pinet@pinet.co)",
+	"date": "Thu Feb  5 11:08:56 2015",
+	"version": "1.0",
+	"name": "Common",
+	"doc":"The Basic widget",
+	"depends": ["BootstrapCommon"],
+	"scss": {
+		"files": ["_pinet_variables"]
+	}
+}

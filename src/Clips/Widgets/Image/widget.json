@@ -1,0 +1,11 @@
+{
+	"author": "Andy (andy.pinet@pinet.co)",
+	"date": "Wed Feb  4 15:31:46 2015",
+	"version": "1.0",
+	"name": "demo.image",
+	"doc":"Image widget",
+	"depends": ["Jquery","BootstrapCommon"],
+	"js": {
+		"files": ["jquery-picture"]
+	}
+}

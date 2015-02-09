@@ -1,0 +1,11 @@
+{
+	"author": "Andy (andy.pinet@pinet.co)",
+	"date": "Thu Feb  5 10:36:56 2015",
+	"version": "1.0",
+	"name": "bootstrap alert widget",
+	"doc":"Bootstrap Alert widget",
+	"depends": ["BootstrapCommon"],
+	"scss": {
+		"files": ["mixins/_alerts","_alerts"]
+	}
+}

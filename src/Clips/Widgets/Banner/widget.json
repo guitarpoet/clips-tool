@@ -1,0 +1,11 @@
+{
+	"author": "Andy (andy.pinet@pinet.co)",
+	"date": "Thu Feb  5 11:36:57 2015",
+	"version": "1.0",
+	"name": "demo.Banner",
+	"doc":"Banner widget",
+	"depends": ["Jquery"],
+	"js": {
+		"files" : ["banner"]
+	}
+}

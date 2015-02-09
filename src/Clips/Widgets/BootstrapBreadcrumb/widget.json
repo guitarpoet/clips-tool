@@ -1,0 +1,11 @@
+{
+	"author": "Andy (andy.pinet@pinet.co)",
+	"date": "Thu Feb  5 12:47:50 2015",
+	"version": "1.0",
+	"name": "bootstrap breadcrumb",
+	"doc":"Bootstrap breadcrumb widget",
+	"depends": ["BootstrapCommon"],
+	"scss": {
+		"files": ["_breadcrumb"]
+	}
+}
