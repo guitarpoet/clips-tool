@@ -21,7 +21,7 @@
 (defrule check-for-min-length
 	(rule ?field "minlength" ?minlength)
 	(field ?name&:(eq ?name ?field) ?value)
-	(test (>= (str-length ?value) ?minlength))
+	(test (< (str-length ?value) ?minlength))
 	=>
 	(assert (validate-error ?field (str-cat ?value "is shortter than " ?minlength)))
 )
@@ -29,7 +29,7 @@
 (defrule check-for-max-length
 	(rule ?field "maxlength" ?maxlength)
 	(field ?name&:(eq ?name ?field) ?value)
-	(test (<= (str-length ?value) ?maxlength))
+	(test (> (str-length ?value) ?maxlength))
 	=>
 	(assert (validate-error ?field (str-cat ?value "is longger than " ?maxlength)))
 )
