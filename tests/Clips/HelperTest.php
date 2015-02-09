@@ -5,9 +5,9 @@ class HelperTest extends Clips\TestCase {
 	}
 
 	public function testPathJoin() {
-		$this->assertEquals(path_join(1,2,3,4), '1/2/3/4');
-		$this->assertEquals(path_join("a/", "/b"), 'a/b');
-		$this->assertEquals(path_join("/a/", "/b/"), '/a/b/');
-		$this->assertEquals(path_join("a", "b"), 'a/b');
+		$this->assertEquals(Clips\path_join(1,2,3,4), '1/2/3/4');
+		$this->assertEquals(Clips\path_join("a/", "/b"), 'a/b');
+		$this->assertEquals(Clips\path_join("/a/", "/b/"), '/a/b/');
+		$this->assertEquals(Clips\path_join("a", "b"), 'a/b');
 	}
 }

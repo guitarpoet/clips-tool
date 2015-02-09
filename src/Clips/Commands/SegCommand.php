@@ -15,7 +15,7 @@ class SegCommand extends \Clips\Command {
 			$str = $path;
 		}
 
-		$tool = &get_clips_tool();
+		$tool = &\Clips\get_clips_tool();
 		$mmseg = $tool->library('mmseg');
 		$mmseg->tokenize($str, function($type, $token) {
 			switch($type) {

@@ -1,7 +1,13 @@
 <?php namespace Clips\Libraries; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
-class DataSource {
+use Clips\Interfaces\ToolAware;
+
+class DataSource implements ToolAware {
 	public $context;
+
+	public function setTool($tool) {
+		$this->tool = $tool;
+	}
 
 	public function __construct($config = null) {
 		if(isset($config)) {
@@ -19,7 +25,7 @@ class DataSource {
 			return $this->_datasources;
 
 		$ret = array();
-		foreach(clips_config('datasources') as $d) {
+		foreach(\Clips\clips_config('datasources') as $d) {
 			foreach($d as $k => $v) {
 				$ret []= $k;
 			}
@@ -33,8 +39,8 @@ class DataSource {
 		if(isset($this->$name))
 			return $this->$name;
 
-		$tool = &get_clips_tool();
-		$ds = clips_config('datasources');
+		$tool = $this->tool;
+		$ds = \Clips\clips_config('datasources');
 		foreach($ds as $d) {
 			if(isset($d->$name)) {
 				$config = $d->$name;
@@ -43,7 +49,7 @@ class DataSource {
 		}
 
 		if(isset($config) && isset($config->type)) {
-			$tool = get_clips_tool();
+			$tool = $this->tool;
 			$type = $tool->library($config->type, false, 'DataSource');
 			$type = $tool->load_class($config->type, false, new \Clips\LoadConfig($tool->config->datasources_dir, "DataSource", "DataSources\\"));
 			$this->$name = new $type($config);

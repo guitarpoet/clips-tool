@@ -6,7 +6,7 @@ class TplResourceHandler extends \Clips\BaseResourceHandler {
 	}
 
 	public function getTemplate($uri) {
-		$tool = &get_clips_tool();
+		$tool = &\Clips\get_clips_tool();
 		$name = str_replace("tpl://", "", $uri);
 		foreach(array(getcwd(), CLIPS_TOOL_PATH) as $path) { // Test for clips tool's path and the cwd
 			foreach($tool->config->template_dir as $dir) {

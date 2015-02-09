@@ -2,7 +2,7 @@
 
 class Template {
 	public function __construct() {
-		$tool = &get_clips_tool();
+		$tool = &\Clips\get_clips_tool();
 		$this->engine = $tool->library('Mustache');
 	}
 

@@ -29,7 +29,7 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 			throw new \Clips\DataSourceException($this->db->connect_error);
 		}
 
-		$tool = get_clips_tool();
+		$tool = &\Clips\get_clips_tool();
 		$sql = $tool->library('sql', false);
 		$this->sql = new $sql();
 		if(isset($config->table_prefix))

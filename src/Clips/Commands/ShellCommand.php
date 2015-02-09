@@ -2,7 +2,7 @@
 
 class ShellCommand extends \Clips\Command {
 	public function execute($args) {
-		$tool = get_clips_tool();
+		$tool = &\Clips\get_clips_tool();
 		$tool->ruleConsole();
 	}
 }

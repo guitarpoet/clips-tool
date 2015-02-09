@@ -1,4 +1,4 @@
-<?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
+<?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
 function static_url($uri) {
 	$router = clips_context('router');

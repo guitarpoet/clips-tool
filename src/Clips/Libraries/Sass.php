@@ -1,7 +1,7 @@
 <?php namespace Clips\Libraries; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
 if(!extension_loaded('sass')) {
-	show_error('Cant\'t find any sass plugin installed!!');
+	Clips\show_error('Cant\'t find any sass plugin installed!!');
 	die;
 }
 
@@ -49,8 +49,8 @@ class Sass extends \Clips\Libraries\ConsoleBase {
 	}
 
 	protected function initPlugins() {
-		$tool = &get_clips_tool();
-		foreach(clips_config('sass_plugins', array()) as $plugin) {
+		$tool = &\Clips\get_clips_tool();
+		foreach(\Clips\clips_config('sass_plugins', array()) as $plugin) {
 			$this->plugins []= $tool->library($plugin);
 		}
 	}
@@ -138,8 +138,8 @@ class Sass extends \Clips\Libraries\ConsoleBase {
 		if(file_exists($file))
 			return file_get_contents($file);
 
-		foreach(clips_config('sass_folders', array()) as $folder) {
-			$r = \try_path(path_join($folder, $file));
+		foreach(\Clips\clips_config('sass_folders', array()) as $folder) {
+			$r = \Clips\try_path(\Clips\path_join($folder, $file));
 			if($r) {
 				return file_get_contents($r);
 			}
@@ -159,7 +159,7 @@ class Sass extends \Clips\Libraries\ConsoleBase {
 		$this->prefix = '';
 		$this->suffix = '';
 
-		foreach(clips_config('sass_preload', array()) as $load) {
+		foreach(\Clips\clips_config('sass_preload', array()) as $load) {
 			$this->addSass($load, 0); // Auto added the scsses before compile
 		}
 

@@ -4,13 +4,13 @@ use Clips\AbstractFilter;
 
 class CssFilter extends AbstractFilter {
 	public function filter_after($chain, $controller, $method, $args, $request, $controller_ret) {
-		$css = clips_context('css');
+		$css = \Clips\clips_context('css');
 		if($css) {
 			if(!is_array($css)) {
 				$css = array($css);
 			}
 
-			clips_context('css', clips_out("string://{{#.}}<link rel=\"stylesheet\" href=\"{{.}}.css\">\n{{/.}}", $css, false));
+			\Clips\clips_context('css', \Clips\clips_out("string://{{#.}}<link rel=\"stylesheet\" href=\"{{.}}.css\">\n{{/.}}", $css, false));
 		}
 	}
 }

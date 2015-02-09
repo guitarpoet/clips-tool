@@ -21,13 +21,13 @@ class PHPConsole extends ConsoleBase {
 	}
 
 	protected function fixEnd($line) {
-		if(str_end_with($line, ';'))
+		if(\Clips\str_end_with($line, ';'))
 			return $line;
 		return $line.';';
 	}
 
 	protected function doRun($line) {
-		$tool = &get_clips_tool();
+		$tool = &\Clips\get_clips_tool();
 		$script = 'clips_console_internal.php';
 		file_put_contents($script, $this->php($line));
 		ob_start();

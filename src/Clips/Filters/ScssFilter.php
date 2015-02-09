@@ -7,16 +7,16 @@ use Clips\AbstractFilter;
  */
 class ScssFilter extends AbstractFilter {
 	public function filter_after($chain, $controller, $method, $args, $request, $controller_ret) {
-		$scsses = clips_context('scss');
+		$scsses = \Clips\clips_context('scss');
 		if($scsses) {
 			// Add the sass_dir into include pathes
 			$result = $this->sass->compile($scsses);
 			if($result) {
 				$cache = $this->FileCache->cacheDir();
-				$full_name = to_flat(get_class($controller)).'_'.$method;
-				$uri = path_join(path_join($cache, 'css'), $full_name);
-				$this->FileCache->save(to_flat(get_class($controller).'_'.$method).'.css', path_join($cache, 'css'), $result, true);
-				clips_add_css(static_url($uri));
+				$full_name = \Clips\to_flat(get_class($controller)).'_'.$method;
+				$uri = \Clips\path_join(\Clips\path_join($cache, 'css'), $full_name);
+				$this->FileCache->save(\Clips\to_flat(get_class($controller).'_'.$method).'.css', \Clips\path_join($cache, 'css'), $result, true);
+				\Clips\clips_add_css(\Clips\static_url($uri));
 			}
 		}
 	}

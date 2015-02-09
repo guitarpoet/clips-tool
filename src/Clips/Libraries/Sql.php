@@ -294,7 +294,7 @@ class SqlResult {
 
 class Sql {
 	public function __construct($type = 'mysqli') {
-		$tool = &get_clips_tool();
+		$tool = &\Clips\get_clips_tool();
 
 		$this->clips = $tool->clips;
 		// Register all the template into the clips context
@@ -375,7 +375,7 @@ class Sql {
 		if(isset($this->table_prefix)) // Honor the prefix in sql
 			$prefix = array($this->table_prefix);
 		else
-			$prefix = clips_config('table_prefix', null);
+			$prefix = \Clips\clips_config('table_prefix', null);
 
 		if(isset($prefix)) {
 			$this->clips->assertFacts(array('table-prefix', $prefix[0]));

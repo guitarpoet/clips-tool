@@ -2,7 +2,7 @@
 
 class SassCommand extends \Clips\Command {
 	public function execute($args) {
-		$tool = &get_clips_tool();
+		$tool = &\Clips\get_clips_tool();
 		$sass = $tool->library('sass');
 		$sass->addIncludePath(getcwd());
 		if(count($args) == 1 && $args['0'] == 'console')

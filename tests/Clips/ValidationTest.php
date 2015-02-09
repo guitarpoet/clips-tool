@@ -62,20 +62,20 @@ class ValidationTest extends TestCase {
         }
 ]
 TEXT;
-		$errors = $this->validator->validate($arr, parse_json($json));
+		$errors = $this->validator->validate($arr, Clips\parse_json($json));
 		var_dump($errors);
 		$this->assertEquals(count($errors), 2);
 		$arr['age'] = 100;
-		$errors = $this->validator->validate($arr, parse_json($json));
+		$errors = $this->validator->validate($arr, Clips\parse_json($json));
 		$this->assertEquals(count($errors), 2);
 		$arr['age'] = 'test';
-		$errors = $this->validator->validate($arr, parse_json($json));
+		$errors = $this->validator->validate($arr, Clips\parse_json($json));
 		$this->assertEquals(count($errors), 2);
 		$arr['regex'] = 'az';
-		$errors = $this->validator->validate($arr, parse_json($json));
+		$errors = $this->validator->validate($arr, Clips\parse_json($json));
 		$this->assertEquals(count($errors), 3);
 		$arr['regex'] = 'abcdefgz';
-		$errors = $this->validator->validate($arr, parse_json($json));
+		$errors = $this->validator->validate($arr, Clips\parse_json($json));
 		$this->assertEquals(count($errors), 2);
 	}
 

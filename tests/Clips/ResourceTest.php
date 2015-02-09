@@ -2,7 +2,7 @@
 
 class ResourceTest extends Clips\TestCase {
 	public function doSetUp() {
-		$this->tool = &get_clips_tool();
+		$this->tool = &Clips\get_clips_tool();
 	}
 
 	public function testFileResource() {

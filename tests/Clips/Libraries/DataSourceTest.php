@@ -2,7 +2,7 @@
 
 class DataSourceTest extends Clips\TestCase {
 	public function doSetup() {
-		$this->tool = &get_clips_tool();
+		$this->tool = &Clips\get_clips_tool();
 		$this->tool->library('DataSource');
 	}
 

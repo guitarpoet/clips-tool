@@ -2,7 +2,7 @@
 
 class TagAttributeFormatter extends \Clips\Formatter {
 	private function processObject($obj) {
-		$fa = \get_annotation(get_class($obj), 'Clips\\Formatter');
+		$fa = \CLips\get_annotation(get_class($obj), 'Clips\\Formatter');
 		if($fa) {
 			return $name.'="'.\format($obj, $fa->value).'"';
 		}

@@ -5,6 +5,6 @@
  */
 class UsageCommand extends \Clips\Command {
 	public function execute($args) {
-		clips_out('usage', array('script' => basename($args[0])));
+		\Clips\clips_out('usage', array('script' => basename($args[0])));
 	}
 }

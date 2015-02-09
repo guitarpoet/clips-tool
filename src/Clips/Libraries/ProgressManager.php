@@ -2,11 +2,11 @@
 
 class ProgressManager {
 	public function __construct() {
-		if(class_exists('Elkuku\Console\Helper\ConsoleProgressBar') && \is_cli()) {
+		if(class_exists('Elkuku\Console\Helper\ConsoleProgressBar') && \Clips\is_cli()) {
 			$this->show = true;
 		}
 		else {
-			if(\is_cli())
+			if(\Clips\is_cli())
 				trigger_error('No ProgressBar support!');
 		}
 	}
@@ -17,7 +17,7 @@ class ProgressManager {
 				$this->progressbar->erase();
 			}
 
-			$meta = console_meta();
+			$meta = Clips\console_meta();
 
 			if($width == -1)
 				$width = $meta['width'];

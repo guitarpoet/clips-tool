@@ -2,15 +2,15 @@
 
 class WebHelpersTest extends Clips\TestCase {
 	public function testSiteUri() {
-		echo site_url('adsf');
+		echo Clips\site_url('adsf');
 	}
 
 	public function testRequireWidgetSmartyPlugin() {
-		require_widget_smarty_plugin('Html', 'h1');
+		Clips\require_widget_smarty_plugin('Html', 'h1');
 		$this->assertTrue(function_exists('smarty_block_h1'));
 	}
 
 	public function testToHeader() {
-		$this->assertEquals(to_header('content_type'), "Content-Type");
+		$this->assertEquals(Clips\to_header('content_type'), "Content-Type");
 	}
 }

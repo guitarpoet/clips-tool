@@ -8,7 +8,7 @@ class RulesResourceHandler extends BaseResourceHandler {
 	}
 
 	public function getRules($uri) {
-		$tool = &get_clips_tool();
+		$tool = &\Clips\get_clips_tool();
 		$name = str_replace("rules://", "", $uri);
 		foreach(array(getcwd(), CLIPS_TOOL_PATH) as $path) { // Test for clips tool's path and the cwd
 			foreach($tool->config->rules_dir as $dir) {

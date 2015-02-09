@@ -12,13 +12,13 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 		if($path)
 			$this->path = $path;
 		else
-			$this->path = clips_path('/../../'); // If no path is given, let read clips tool's git
+			$this->path = \Clips\clips_path('/../../'); // If no path is given, let read clips tool's git
 
 		$this->readonly = $readonly;
 	}
 
 	public function repo($path, $readonly = true) {
-		$tool = &get_clips_tool();
+		$tool = &\Clips\get_clips_tool();
 		return $tool->create('Clips\\Libraries\\Repository', array($path, $readonly));
 	}
 
@@ -53,7 +53,7 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 	}
 
 	public function init() {
-		$path = path_join($this->path, '.git');
+		$path = \Clips\path_join($this->path, '.git');
 		if(file_exists($path))
 			$this->gitrepo = $this->git->repo($path);
 	}
@@ -69,7 +69,7 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 		if($this->readonly || !isset($this->gitrepo))
 			return false;
 
-		file_put_contents(path_join($this->path, $path), $content);
+		file_put_contents(\Clips\path_join($this->path, $path), $content);
 		$this->git->add($this, $path);
 	}
 
@@ -78,12 +78,12 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 			return false;
 		
 		if($path == null)
-			return rmr($this->path);
+			return \Clips\rmr($this->path);
 
-		$p = path_join($this->path, $path);
+		$p = \Clips\path_join($this->path, $path);
 		if(file_exists($p)) {
 			if(is_dir($p)) {
-				rmr($p);
+				\Clips\rmr($p);
 			}
 			else {
 				unlink($p);
@@ -114,8 +114,8 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 			}
 		}
 		else {
-			if(file_exists(path_join($this->path, $path))) {
-				return file_get_contents(path_join($this->path, $path));
+			if(file_exists(\Clips\path_join($this->path, $path))) {
+				return file_get_contents(\Clips\path_join($this->path, $path));
 			}
 		}
 		return false;

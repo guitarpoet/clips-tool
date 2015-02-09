@@ -21,7 +21,7 @@ class ListCommand extends \Clips\Command {
 	}
 
 	public function execute($args) {
-		$tool = &get_clips_tool();
+		$tool = &\Clips\get_clips_tool();
 		$arr = array();
 		foreach($tool->listLoadDirs() as $dir) {
 			if($dir) {
@@ -32,6 +32,6 @@ class ListCommand extends \Clips\Command {
 			}
 		}
 		$script = basename(array_shift($args));
-		clips_out('list', array('app' => $script, 'commands' => $arr));
+		\Clips\clips_out('list', array('app' => $script, 'commands' => $arr));
 	}
 }

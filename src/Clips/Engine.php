@@ -19,34 +19,6 @@ class Symbol extends \Addendum\Annotation {
 	}
 } 
 
-function clips_path($path) {
-	return dirname(__FILE__).$path;
-}
-
-if(!function_exists('get_default')) {
-	function get_default($arr, $key, $default = '') {
-		if(is_object($arr))
-			return isset($arr->$key)? $arr->$key: $default;
-		if(is_array($arr))
-			return isset($arr[$key])? $arr[$key]: $default;
-		return $default;
-	}
-}
-
-function clips_str_match($str, $pattern) {
-	return !!preg_match('/'.$pattern.'/', $str);
-}
-
-function clips_get_property($obj, $property) {
-	if(is_array($obj) && isset($obj[$property])) {
-		return $obj[$property];
-	}
-
-	if(is_object($obj) && isset($obj->$property)) {
-		return $obj->$property;
-	}
-	return null;
-}
 /**
  *  The clips extension engine and execution context
  */

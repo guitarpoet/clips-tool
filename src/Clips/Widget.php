@@ -114,7 +114,7 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
     protected function loadConfig() {
 		$config_file = path_join($this->base_dir, 'widget.json');
 		if(file_exists($config_file)) {
-			$this->config = \parse_json(file_get_contents($config_file));
+			$this->config = parse_json(file_get_contents($config_file));
 		}
 		else {
 			throw new WidgetException('Cant\'t find configuration file for widget ' . get_class($this));

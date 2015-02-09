@@ -18,13 +18,13 @@ class FileCache implements LoggerAwareInterface, ClipsAware, ToolAware {
 	}
 
 	public function genFileName($nt) {
-		return clips_out('string://'.$nt, array(
+		return \Clips\clips_out('string://'.$nt, array(
 			'timestamp' => strftime('%Y%m%d%H%M%S')
 		), false);
 	}
 
 	public function cacheDir() {
-		$cache = clips_config('cache');
+		$cache = \Clips\clips_config('cache');
 		if($cache)
 			return $cache[0];
 		return 'application/cache';
@@ -39,7 +39,7 @@ class FileCache implements LoggerAwareInterface, ClipsAware, ToolAware {
 		}
 
 		$filename = $this->genFileName($nt);
-		$file = path_join($folder, $filename);
+		$file = \Clips\path_join($folder, $filename);
 		if(file_exists($file) && !$override) {
 			return false;
 		}

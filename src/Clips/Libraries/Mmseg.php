@@ -11,7 +11,7 @@ class Mmseg {
 	const DICT_NAME = "uni.lib";
 
 	public function createDict($input_file, $output_dir = "/usr/local/etc/") {
-		mmseg_create_dict($input_file, path_join($output_dir, DICT_NAME));
+		mmseg_create_dict($input_file, Clips\path_join($output_dir, DICT_NAME));
 	}
 
 	public function tokenize() {

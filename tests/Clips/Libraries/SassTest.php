@@ -2,7 +2,7 @@
 
 class SassTest extends Clips\TestCase {
 	public function doSetup() {
-		$this->tool = &get_clips_tool();
+		$this->tool = &Clips\get_clips_tool();
 		$this->sass = $this->tool->library('Sass');
 	}
 

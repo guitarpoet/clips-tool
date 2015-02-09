@@ -2,7 +2,7 @@
 
 class RepositoryTest extends Clips\TestCase {
 	public function doSetUp() {
-		$this->tool = &get_clips_tool();
+		$this->tool = &Clips\get_clips_tool();
 		$this->repo = $this->tool->library("Repository");
 	}
 
@@ -19,7 +19,7 @@ class RepositoryTest extends Clips\TestCase {
 	}
 
 	public function testCreate() {
-		$path = clips_path('/../../tests/_tmp/git_sample');
+		$path = Clips\clips_path('/../../tests/_tmp/git_sample');
 		mkdir($path, 0755, true);
 		$r = $this->repo->repo($path, false);
 		$r->create();

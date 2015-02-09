@@ -1,7 +1,7 @@
-<?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
+<?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
 function clips_error($cause, $message = array()) {
-	clips_context('error', new Clips\Error($cause, $message));
+	clips_context('error', new Error($cause, $message));
 }
 
 function show_error() {
@@ -10,7 +10,7 @@ function show_error() {
 }
 
 function get_annotation($class, $annotation, $method = null) {
-	$re = new Addendum\ReflectionAnnotatedClass($class);
+	$re = new \Addendum\ReflectionAnnotatedClass($class);
 	if($method) {
 		$an = $re->getMethod($method);
 	}
@@ -26,14 +26,14 @@ function get_annotation($class, $annotation, $method = null) {
 }
 
 function format($obj, $formatter) {
-	$f = Clips\Formatter::get($formatter);
+	$f = Formatter::get($formatter);
 	if($f)
 		return $f->format($obj);
 	return '';
 }
 
 function class_script_path($class) {
-    $rc = new ReflectionClass($class);
+    $rc = new \ReflectionClass($class);
     return $rc->getFileName();
 }
 
@@ -71,7 +71,7 @@ function find_file($folder, $file, $suffix = null, $blur = false) {
 		return $ret;
 	}
 
-	$iterator = new DirectoryIterator($folder);
+	$iterator = new \DirectoryIterator($folder);
     foreach ($iterator as $fileinfo) {
 		if($fileinfo->isDot())
 			continue;
@@ -150,7 +150,7 @@ function str_end_with($haystack, $needle, $trim = true) {
 }
 
 function resource_contents($uri) {
-	$r = new Clips\Resource($uri);
+	$r = new Resource($uri);
 	return $r->contents();
 }
 
@@ -197,7 +197,7 @@ function is_cli() {
 }
 
 function &get_clips_tool() {
-	return Clips\Tool::get_instance();
+	return Tool::get_instance();
 }
 
 function clips_config($name, $default = null) {
@@ -223,7 +223,7 @@ function record_file_load($file) {
 
 function file_load($file) {
 	if($file) {
-		$tool = get_clips_tool();
+		$tool = &get_clips_tool();
 		return $tool->isFileLoaded($file);
 	}
 	return false;
@@ -263,7 +263,7 @@ function clips_out($template, $args, $output = true) {
 }
 
 function clips_path($path) {
-	$rc = new ReflectionClass("Clips\\Tool");
+	$rc = new \ReflectionClass("Clips\\Tool");
 	return path_join(dirname($rc->getFileName()), $path);
 }
 

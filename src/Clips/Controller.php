@@ -29,7 +29,7 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 
 	public function render($template, $args = array(), $engine = null, $headers = array()) {
 		if(!$engine) {
-			$default = \clips_config('default_view');
+			$default = clips_config('default_view');
 			if($default) {
 				$engine = $default[0];
 			}

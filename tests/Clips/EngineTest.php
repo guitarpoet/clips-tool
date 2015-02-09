@@ -218,7 +218,7 @@ class EngineTest extends Clips\TestCase {
 	}
 
 	public function testClipsLoadRules() {
-		clips_load_rules(array(dirname(__FILE__).'/test.rules'));
+		Clips\clips_load_rules(array(dirname(__FILE__).'/test.rules'));
 		$facts = $this->clips->queryFacts();
 		$this->assertEquals($facts, array(array('rules', '__template__' => 'hello')));
 	}

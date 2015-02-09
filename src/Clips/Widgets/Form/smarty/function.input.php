@@ -1,8 +1,8 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
 function smarty_function_input($params, $template) {
-	$default = array('class' => 'form-input');
-	$f = clips_context('current_field');
+	$default = array('class' => array('form-input', 'form-control'));
+	$f = Clips\clips_context('current_field');
 	if($f) {
 		$default = $f->getDefault($default);
 	}

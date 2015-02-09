@@ -26,15 +26,15 @@
 
 (defrule try-to-find-controller-by-controller-seg
 	(controller ?c&~"")
-	(test (php_call "controller_exists" ?c))
+	(test (php_call "Clips\\controller_exists" ?c))
 	=>
-	(assert (Clips\RouteResult (controller (php_call "controller_class" ?c))))
+	(assert (Clips\RouteResult (controller (php_call "Clips\\controller_class" ?c))))
 )
 
 (defrule if-no-controller-is-found-using-the-controller-seg-show-error
 	(declare (salience ?*low*))
 	(controller ?c&~"")
-	(not (test (php_call "controller_exists" ?c)))
+	(not (test (php_call "Clips\\controller_exists" ?c)))
 	=>
 	(assert (RouteError (str-cat "No controller named " ?c " found!")))
 )

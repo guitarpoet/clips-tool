@@ -2,31 +2,31 @@
 
 function smarty_block_field($params, $content = '', $template, &$repeat) {
 	if($repeat) {
-		clips_context('current_field', null); // Remove the last current field
-		$form = clips_context('form');
+		Clips\clips_context('current_field', null); // Remove the last current field
+		$form = Clips\clips_context('form');
 		if($form) {
-			$field = get_default($params, 'field', null);
+			$field = Clips\get_default($params, 'field', null);
 
 			if(!isset($field)) {
-				show_error('No field configured for the field plugin!');
+				Clips\show_error('No field configured for the field plugin!');
 			}
 
 			$f = $form->field($field);
 			if(!isset($f)) {
-				show_error('No field configuration found for field %s!', $field);
+				Clips\show_error('No field configuration found for field %s!', $field);
 			}
 			// Put the current field to the context
-			clips_context('current_field', $f);
+			Clips\clips_context('current_field', $f);
 		}
 		else {
-			show_error('No form configuration found for this field!');
+			Clips\show_error('No form configuration found for this field!');
 		}
 	}
 	else {
-		if(clips_context('current_field')) {
-			$f = clips_context('current_field');
+		if(Clips\clips_context('current_field')) {
+			$f = Clips\clips_context('current_field');
 
-			$layout = get_default($params, 'layout', array());
+			$layout = Clips\get_default($params, 'layout', array());
 			$label_layout_class = 'col-1280-2';
 			$element_layout_class = 'col-1280-10';
 
@@ -45,9 +45,9 @@ function smarty_block_field($params, $content = '', $template, &$repeat) {
 				return Clips\create_tag_with_content('div', $content, $params, array('class' => array('form-group', 'control-group')));
 			}
 
-			$labelClass = get_default($params, 'labelClass', 'pinet-form-label');
-			$inputClass = get_default($params, 'inputClass', 'pinet-form-input');
-			$glyphicon = get_default($params, 'glyphicon', null);
+			$labelClass = Clips\get_default($params, 'labelClass', 'pinet-form-label');
+			$inputClass = Clips\get_default($params, 'inputClass', 'pinet-form-input');
+			$glyphicon = Clips\get_default($params, 'glyphicon', null);
 
 			if($glyphicon) {
 				// Add the glyphicon
@@ -55,7 +55,7 @@ function smarty_block_field($params, $content = '', $template, &$repeat) {
 			}
 
 			if(trim($content) == '') {
-				require_widget_smarty_plugin('Form', 'input');	
+				Clips\require_widget_smarty_plugin('Form', 'input');	
 				$content = smarty_function_input(array(), $template);
 			}
 

@@ -20,7 +20,7 @@ class FormFilter extends AbstractFilter implements ToolAware, Initializable {
 
 	public function filter_before($chain, $controller, $method, $args, $request) {
 		// Get the form name from the form field
-		$form = clips_context('form');
+		$form = \Clips\clips_context('form');
 		if($form) {
 			// Try to get form name from the request parameter
 			$form_name = $request->param(\Clips\Form::FORM_FIELD);
@@ -36,7 +36,7 @@ class FormFilter extends AbstractFilter implements ToolAware, Initializable {
 			$ret = $this->validator->validate($request->param(), $config);
 			if($ret) {
 				$chain->succeed = false;
-				clips_error('form_validation', $ret);
+				\Clips\clips_error('form_validation', $ret);
 			}
 		}
 	}

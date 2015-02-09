@@ -2,16 +2,25 @@
 
 define('DEFAULT_COUNT', 15);
 
-class DBModel extends \Clips\Libraries\Sql {
-	public function __construct() {
-		$tool = &get_clips_tool();
+use Clips\Libraries\Sql;
+use Clips\Interfaces\ToolAware;
+use Clips\Interfaces\Initializable;
+
+class DBModel extends Sql implements ToolAware, Initializable {
+
+	public function setTool($tool) {
+		$this->tool = $tool;
+	}
+
+	public function init() {
+		$tool = $this->tool;
 		$tool->library('datasource'); // Load the datasource library
 
 		$config = $tool->config;
 		$name = get_class($this);
 
 		// Remove the prefixes
-		foreach(array_merge(array('_model', 'Models\\', 'Clips\\'), clips_config('namespace', array())) as $pre) {
+		foreach(array_merge(array('_model', 'Models\\', 'Clips\\'), \Clips\clips_config('namespace', array())) as $pre) {
 			$name = str_replace($pre, '', $name);
 		}
 

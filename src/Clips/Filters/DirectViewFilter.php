@@ -5,7 +5,7 @@
  */
 class DirectViewFilter extends ViewFilter {
 	public function doRender($controller, $method, $args, $request, $template, $data, $controller_ret) {
-		clips_log($template, $data);
+		Clips\clips_log($template, $data);
 		echo $this->template;
 	}
 }
