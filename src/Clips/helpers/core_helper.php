@@ -1,5 +1,9 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+function clips_error($cause, $message = array()) {
+	clips_context('error', new Clips\Error($cause, $message));
+}
+
 function show_error() {
 	$msg = call_user_func_array('sprintf', func_get_args());
 	trigger_error($msg);
