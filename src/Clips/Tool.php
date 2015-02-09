@@ -1,7 +1,9 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
 define('CLIPS_TOOL_PATH', __DIR__);
-define('FCPATH', getcwd());
+
+if(!defined('FCPATH'))
+	define('FCPATH', getcwd());
 
 class Requires extends \Addendum\Annotation { }
 class FullArgs extends \Addendum\Annotation { }
