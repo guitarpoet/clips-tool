@@ -139,7 +139,7 @@ class Sass extends \Clips\Libraries\ConsoleBase {
 			return file_get_contents($file);
 
 		foreach(clips_config('sass_folders', array()) as $folder) {
-			$r = try_path(path_join($folder, $file));
+			$r = \try_path(path_join($folder, $file));
 			if($r) {
 				return file_get_contents($r);
 			}

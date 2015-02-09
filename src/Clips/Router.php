@@ -3,6 +3,7 @@
 use Psr\Log\LoggerAwareInterface;
 use Clips\Interfaces\ClipsAware;
 use Clips\Interfaces\ToolAware;
+use Clips\Models\ViewModel;
 
 class RouteResult {
 	public $controller;
@@ -138,6 +139,22 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 			if($this->filterChain->filter_before($this->filterChain, $controller, $result->method, $result->args, $request)) {
 				// Let the filter before can prevent the run of the controller method
 				$ret = call_user_func_array(array($controller, $result->method), $result->args);
+			}
+
+			// Getting the error from the context
+			$error = clips_context('error');
+
+			if($ret == null && $error) { // If there is no output and we can get the error, show the error
+				$default_view = \clips_config('default_view');
+				if($default_view) {
+					$ret = new ViewModel('error/'.$error->cause, array('error' => $error->message), $default_view[0]);
+				}
+				else
+					$ret = $error;
+			}
+			else {
+				// We can get the response, so just log the error
+				$this->logger->error('Getting an error when serving the request.', array('error' => $error));
 			}
 
 			// Always run filter after(since the filter after will render the views)

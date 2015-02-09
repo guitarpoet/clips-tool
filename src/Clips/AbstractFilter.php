@@ -18,10 +18,16 @@ class AbstractFilter implements Filter {
 			$this->template = $ret;
 			$this->args = array();
 		}
-		else if(is_object($ret) && get_class($ret) == "Clips\\Models\\ViewModel") {
-			$this->template = $ret->template;
-			$this->args = $ret->args;
-			$this->headers = $ret->headers;
+		else if(is_object($ret)) {
+			if(get_class($ret) == "Clips\\Models\\ViewModel") {
+				$this->template = $ret->template;
+				$this->args = $ret->args;
+				$this->headers = $ret->headers;
+			}
+			if(get_class($ret) == "Clips\\Error") {
+				$this->template = 'error/'.$ret->cause;
+				$this->args = array('error' => $ret->message);
+			}
 		}
 		else if(is_array($ret)) {
 			switch(count($ret)) {
