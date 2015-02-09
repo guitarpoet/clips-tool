@@ -14,6 +14,9 @@ use Clips\Interfaces\Initializable;
  * Also, this supports for mutiple form configuration
  */
 class Form extends \Addendum\Annotation implements Initializable {
+
+	const FORM_FIELD = '_clips_form';
+
 	public function init() {
 		if(isset($this->value)) {
 			if(!is_array($this->value)) {
@@ -72,6 +75,18 @@ class Form extends \Addendum\Annotation implements Initializable {
 			}
 		}
 		return $this->_config;
+	}
+
+	/**
+	 * Use the first form configuration as the default form
+	 */
+	public function defaultFormName() {
+		if(isset($this->value) && $this->value) {
+			if(is_array($this->value))
+				return $this->value[0];
+			return $this->value;
+		}
+		return null;
 	}
 
 	public function config($name = null) {

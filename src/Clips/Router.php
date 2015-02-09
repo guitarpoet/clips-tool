@@ -106,8 +106,6 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 			$this->filterChain = $this->tool->load_class('FilterChain', true);
 			$this->filterChain->addFilter(clips_config('filters'));
 
-			$this->filterChain->filter_before($this->filterChain, $controller, $result->method, $result->args, $request);
-
 			$re = new \Addendum\ReflectionAnnotatedClass(get_class($controller));
 			$m = $re->getMethod($result->method);
 			foreach($m->getAnnotations() as $a) {
@@ -136,8 +134,13 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 				}
 			}
 
-			$ret = call_user_func_array(array($controller, $result->method), $result->args);
+			$ret = null;
+			if($this->filterChain->filter_before($this->filterChain, $controller, $result->method, $result->args, $request)) {
+				// Let the filter before can prevent the run of the controller method
+				$ret = call_user_func_array(array($controller, $result->method), $result->args);
+			}
 
+			// Always run filter after(since the filter after will render the views)
 			$this->filterChain->filter_after($this->filterChain, $controller, $result->method, $result->args, $request, $ret);
 		}
 	}
