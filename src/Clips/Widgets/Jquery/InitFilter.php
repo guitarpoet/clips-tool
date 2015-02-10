@@ -5,13 +5,13 @@
  */
 class InitFilter extends \Clips\AbstractFilter {
 	public function filter_after($chain, $controller, $method, $args, $request, $controller_ret) {
-		$init = Clips\clips_context('jquery_init');
+		$init = \Clips\clips_context('jquery_init');
 		if($init) {
 			if(!is_array($init)) {
 				$init = array($init);
 			}
 
-			clips_add_init_js('jQuery(function($){'.implode("\n", $init).'});');
+			\Clips\clips_add_init_js('jQuery(function($){'.implode("\n", $init).'});');
 		}
 	}
 }

@@ -10,7 +10,8 @@ class CssFilter extends AbstractFilter {
 				$css = array($css);
 			}
 
-			\Clips\clips_context('css', \Clips\clips_out("string://{{#.}}<link rel=\"stylesheet\" href=\"{{.}}.css\">\n{{/.}}", $css, false));
+			$css = array_map(function($item) { return '<link rel="stylesheet" href="'.\Clips\safe_add_extension($item, 'css').'">'; }, $css);
+			\Clips\clips_context('css', implode("\n\t\t", $css), false);
 		}
 	}
 }

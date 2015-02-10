@@ -4,5 +4,11 @@
 	"version": "1.0",
 	"name": "clips.form",
 	"doc":"The form widgets",
-	"depends": ["html"]
+	"depends": ["html", "jquery", "bootstrapSass"],
+	"js": {
+		"files": ["jqBootstrapValidation-1.3.7"]
+	},
+	"context": {
+		"jquery_init": "$('input,select,textarea').not('[type=submit]').jqBootstrapValidation();"
+	}
 }

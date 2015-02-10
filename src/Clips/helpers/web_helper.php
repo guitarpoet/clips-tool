@@ -1,5 +1,33 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+function process_list_items($params, $content, $template) {
+	$items = get_default($params, 'items', null);
+
+	if($items) {
+		// We do have items
+		if(trim($content)) {
+			// Use the content as the template
+			$tmp = $content;
+		}
+		else {
+			$tmp = '{li}{$item}{/li}'; // The default template
+		}
+
+		$tmp = 'string:'.$tmp;
+		$content = array();
+		foreach($items as $item) {
+			$params['item'] = $item;
+			$content []= $template->fetch($tmp, $params);
+		}
+		$content = implode("\n", $content);
+
+		unset($params['item']);
+		unset($params['items']);
+	}
+
+	return $content;
+}
+
 function static_url($uri) {
 	$router = clips_context('router');
 	if($router)

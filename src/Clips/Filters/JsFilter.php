@@ -11,6 +11,17 @@ class JsFilter extends AbstractFilter {
 			}
 		}
 
-		\Clips\clips_context('js', \Clips\clips_out("string://{{#.}}<script type=\"text/javascript\" {{^init}}src=\"{{.}}.js\"{{/init}}>{{script}}</script>\n{{/.}}", $js, false));
+		$js = array_map(function($item) {
+			if(is_array($item)) {
+				return '<script type="text/javascript">'.$item['script'].'</script>';
+			}
+			if(is_object($item)) {
+				return '<script type="text/javascript">'.$item->script.'</script>';
+			}
+			else {
+				return '<script type="text/javascript" src="'.\Clips\safe_add_extension($item, 'js').'"></script>';
+			}
+		} ,$js);
+		\Clips\clips_context('js', implode("\n\t\t", $js), false);
 	}
 }

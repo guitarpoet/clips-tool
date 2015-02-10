@@ -1,5 +1,14 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+function safe_add_extension($path, $ext) {
+	if(str_end_with($path, $ext)) {
+		return $path;
+	}
+	else {
+		return $path.'.'.$ext;
+	}
+}
+
 function clips_error($cause, $message = array()) {
 	clips_context('error', new Error($cause, $message));
 }
@@ -47,6 +56,13 @@ function try_path($path, $others = array()) {
 }
 
 function clips_context($key = null, $value = null, $append = false) {
+	if(is_object($key) || is_array($key)) {
+		foreach($key as $k => $v) {
+			clips_context($k, $v, $append);
+		}
+		return true;
+	}
+
 	$tool = &get_clips_tool();
 	if(is_numeric($append)) {
 		$arr = $tool->context($key);

@@ -29,6 +29,7 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 		$this->initScss();
 		$this->initCss();
 		$this->initJs();
+		$this->initContext();
 	}
 
 	public function setTool($tool) {
@@ -37,6 +38,12 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 
 	public function setLogger(\Psr\Log\LoggerInterface $logger) {
 		$this->logger = $logger;
+	}
+
+	protected function initContext() {
+		if(isset($this->config->context)) {
+			clips_context($this->config->context, null, true);
+        }
 	}
 
 	protected function initDepends() {
