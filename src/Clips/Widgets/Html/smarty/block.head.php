@@ -1,8 +1,10 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
 function smarty_block_head($params, $content = '', $template, &$repeat) {
-	if($repeat)
+	if($repeat) {
+		Clips\clips_context('indent_level', 1, true); // Enstack indent level
 		return;
+	}
 
 	$encoding = Clips\get_default($params, 'encoding', 'UTF-8');
 	$version = Clips\clips_context('html_version');
@@ -36,18 +38,22 @@ function smarty_block_head($params, $content = '', $template, &$repeat) {
 		break;
 	}
 
-	$pre = '';
+	$pre = array();
 
 	foreach($meta as $m) {
-		$pre .= "\t\t".Clips\create_tag('meta', $m)."\n";
+		$pre []= Clips\create_tag('meta', $m);
 	}
 
 	// Adding the title
 	if($title) {
-		$pre .= "\t\t".Clips\create_tag_with_content('title', $title);
+		$pre []= Clips\create_tag_with_content('title', $title);
 	}
+
+	$pre = "\t".implode("\n\t\t", $pre);
 
 	if(isset($params['title']))
 		unset($params['title']);
-	return Clips\create_tag_with_content('head', "\n".$pre.$content, $params);
+
+	Clips\context_pop('indent_level'); // Pop the stack before output
+	return Clips\create_tag_with_content('head', $pre.$content, $params);
 }

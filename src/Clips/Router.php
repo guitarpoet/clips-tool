@@ -108,30 +108,51 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 			$this->filterChain->addFilter(clips_config('filters'));
 
 			$re = new \Addendum\ReflectionAnnotatedClass(get_class($controller));
-			$m = $re->getMethod($result->method);
-			foreach($m->getAnnotations() as $a) {
-				if(get_class($a) == 'Clips\\Js') {
-					foreach($a->value as $j) {
-						clips_add_js($j);
+			// Trying to get the definition from class and the method annotation
+			foreach(array($re, $re->getMethod($result->method)) as $m) {
+				foreach($m->getAnnotations() as $a) {
+					if(get_class($a) == 'Clips\\Meta') {
+						if(isset($a->value) && is_array($a->value)) {
+							foreach($a->value as $k => $v) {
+								$controller->meta($k, $v);
+							}
+						}
+						else {
+							$controller->meta($a->key, $a->value);
+						}
 					}
-				}
-				else if(get_class($a) == 'Clips\\Css') {
-					foreach($a->value as $c) {
-						clips_add_css($c);
+					if(get_class($a) == 'Clips\\Js') {
+						foreach($a->value as $j) {
+							clips_add_js($j);
+						}
 					}
-				}
-				else if(get_class($a) == 'Clips\\Scss') {
-					foreach($a->value as $c) {
-						clips_add_scss($c);
+					else if(get_class($a) == 'Clips\\Css') {
+						foreach($a->value as $c) {
+							clips_add_css($c);
+						}
 					}
-				}
-				else if(get_class($a) == 'Clips\\Form') {
-					// If this is the form annotation, initialize it and set it to the context
-					$this->tool->enhance($a);
-					clips_context('form', $a);
-				}
-				else if(get_class($a) == 'Clips\\Widget') {
-					$this->tool->widget($a->value);
+					else if(get_class($a) == 'Clips\\Scss') {
+						foreach($a->value as $c) {
+							clips_add_scss($c);
+						}
+					}
+					else if(get_class($a) == 'Clips\\Context') {
+						if(isset($a->value) && is_array($a->value)) {
+							// This must be the set by array
+							clips_context($a->value, null, $a->append);
+						}
+						else {
+							clips_context($a->key, $a->value, $a->append);
+						}
+					}
+					else if(get_class($a) == 'Clips\\Form') {
+						// If this is the form annotation, initialize it and set it to the context
+						$this->tool->enhance($a);
+						clips_context('form', $a);
+					}
+					else if(get_class($a) == 'Clips\\Widget') {
+						$this->tool->widget($a->value);
+					}
 				}
 			}
 
@@ -153,8 +174,9 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 					$ret = $error;
 			}
 			else {
-				// We can get the response, so just log the error
-				$this->logger->error('Getting an error when serving the request.', array('error' => $error));
+				if($error)
+					// We can get the response, so just log the error
+					$this->logger->error('Getting an error when serving the request.', array('error' => $error));
 			}
 
 			// Always run filter after(since the filter after will render the views)

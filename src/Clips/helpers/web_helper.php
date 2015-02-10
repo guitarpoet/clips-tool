@@ -1,6 +1,17 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
 function process_list_items($params, $content, $template) {
+	$level = clips_context('indent_level');
+	if($level === null)
+		$level = 0; // Default level is 0
+	else
+		$level = count($level);
+
+	$indent = '';
+	for($i = 0; $i < $level; $i++) {
+		$indent .= "\t";
+	}
+
 	$items = get_default($params, 'items', null);
 
 	if($items) {
@@ -19,7 +30,7 @@ function process_list_items($params, $content, $template) {
 			$params['item'] = $item;
 			$content []= $template->fetch($tmp, $params);
 		}
-		$content = implode("\n", $content);
+		$content = implode("\n$indent", $content);
 
 		unset($params['item']);
 		unset($params['items']);

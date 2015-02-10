@@ -2,6 +2,7 @@
 
 function smarty_block_field($params, $content = '', $template, &$repeat) {
 	if($repeat) {
+		Clips\clips_context('indent_level', 1, true);
 		Clips\clips_context('current_field', null); // Remove the last current field
 		$form = Clips\clips_context('form');
 		if($form) {
@@ -59,17 +60,28 @@ function smarty_block_field($params, $content = '', $template, &$repeat) {
 				$content = smarty_function_input(array(), $template);
 			}
 
-			$label = Clips\create_tag_with_content('label', $f->label, array(
+			$label = "\t".Clips\create_tag_with_content('label', $f->label, array(
 				'for' => $f->getId(),
 				'class' => array($label_layout_class, $labelClass, 'control-label', isset($f->required)?'form_field_required':'')
 			));
+
+			$level = Clips\clips_context('indent_level');
+			if($level === null)
+				$level = 0; // Default level is 0
+			else
+				$level = count($level);
+			$indent = '';
+			for($i = 0; $i < $level; $i++) {
+				$indent .= "\t";
+			}
 			// Add the element div
-			$content = $label.Clips\create_tag_with_content('div', $content, array('class' => array($element_layout_class, $inputClass)));
+			$content = $label."\n".$indent.Clips\create_tag_with_content('div', $content, array('class' => array($element_layout_class, $inputClass)));
 
 			// Added the help block
-			$content .= Clips\create_tag_with_content('p', '', array('class' => 'help-block'));
+			$content .= "\n".$indent.Clips\create_tag_with_content('p', '', array('class' => 'help-block'));
 			
 			// Altogether
+			Clips\context_pop('indent_level');
 			return Clips\create_tag_with_content('div', $content, $params, array('class' => array('form-group', 'control-group')));
 		}
 	}

@@ -4,8 +4,10 @@ function smarty_block_html($params, $content = '', $template, &$repeat) {
 	$version = Clips\get_default($params, 'version', '5');
 	Clips\clips_context('html_version', $version);
 
-	if($repeat)
+	if($repeat) {
+		Clips\clips_context('indent_level', 1, true); // Enstack indent level
 		return;
+	}
 
 	$default = array();
 	switch($version) {
@@ -49,5 +51,7 @@ function smarty_block_html($params, $content = '', $template, &$repeat) {
 	}
 	if(isset($params['version']))
 		unset($params['version']);
+
+	Clips\context_pop('indent_level');
 	return $pre."\n".Clips\create_tag_with_content('html', $content, $params, $default);
 }

@@ -444,11 +444,26 @@ class Tool implements Interfaces\Initializable {
 		trigger_error('No command named '.$command.' found!');
 	}
 
+	public function context_pop($key) {
+		if(isset($this->_context[$key])) {
+			$arr = $this->_context[$key];
+			if(is_array($arr)) {
+				$ret = array_pop($arr);
+				$this->context($key, $arr);
+			}
+			else {
+				$ret = $arr;
+				unset($this->_context[$key]);
+			}
+		}
+		return null;
+	}
+
 	public function context($key = null, $value = null, $append = false) {
 		if($key == null)
 			return $this->_context;
 
-		if($value) {
+		if($value !== null) {
 			if($append) {
 				if(!isset($this->_context[$key])) {
 					$this->_context[$key] = array();

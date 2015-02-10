@@ -9,6 +9,11 @@ function safe_add_extension($path, $ext) {
 	}
 }
 
+function context_pop($key) {
+	$tool = &get_clips_tool();
+	return $tool->context_pop($key);
+}
+
 function clips_error($cause, $message = array()) {
 	clips_context('error', new Error($cause, $message));
 }
