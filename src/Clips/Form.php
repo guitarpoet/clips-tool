@@ -17,6 +17,8 @@ class Form extends \Addendum\Annotation implements Initializable {
 
 	const FORM_FIELD = '_clips_form';
 
+	public $get = false;
+
 	public function init() {
 		if(isset($this->value)) {
 			if(!is_array($this->value)) {

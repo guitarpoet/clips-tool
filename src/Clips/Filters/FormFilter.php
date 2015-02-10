@@ -15,6 +15,17 @@ class FormFilter extends AbstractFilter implements ToolAware, Initializable {
 	}
 
 	public function accept($chain, $controller, $method, $args, $request, $controller_ret = null) {
+		$form_name = $request->param(\Clips\Form::FORM_FIELD);
+		if($form_name) // If we can get the form name from the request, it must be the form post(even in get request)
+			return true;
+
+		$form = \Clips\clips_context('form');
+		if($form) {
+			if($form->get) // If force to use get validation
+				return true;
+		}
+
+		// For the default operation, all the post request, will be processed as form request
 		return $request->method == 'post';
 	}
 
@@ -33,7 +44,10 @@ class FormFilter extends AbstractFilter implements ToolAware, Initializable {
 			// Get the current form config
 			$config = $form->config($form_name);
 
-			$ret = $this->validator->validate($request->param(), $config);
+			$params = $request->param();
+			if(!$params)
+				$params = array();
+			$ret = $this->validator->validate($params, $config);
 			if($ret) {
 				$chain->succeed = false;
 				\Clips\clips_error('form_validation', $ret);
