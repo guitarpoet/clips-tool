@@ -19,7 +19,10 @@ class JsFilter extends AbstractFilter {
 				return '<script type="text/javascript">'.$item->script.'</script>';
 			}
 			else {
-				return '<script type="text/javascript" src="'.\Clips\safe_add_extension($item, 'js').'"></script>';
+				$path = \Clips\safe_add_extension($item, 'js');
+				if(strpos($path, 'http:') === false) 
+					$path = \Clips\static_url($path);
+				return '<script type="text/javascript" src="'.$path.'"></script>';
 			}
 		} ,$js);
 		\Clips\clips_context('js', implode("\n\t\t", $js), false);

@@ -122,18 +122,30 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 						}
 					}
 					if(get_class($a) == 'Clips\\Js') {
-						foreach($a->value as $j) {
-							clips_add_js($j);
+						if(is_string($a->value))
+							clips_add_js($a->value);
+						else if(is_array($a->value)) {
+							foreach($a->value as $j) {
+								clips_add_js($j);
+							}
 						}
 					}
 					else if(get_class($a) == 'Clips\\Css') {
-						foreach($a->value as $c) {
-							clips_add_css($c);
+						if(is_string($a->value))
+							clips_add_css($a->value);
+						else if(is_array($a->value)) {
+							foreach($a->value as $c) {
+								clips_add_css($c);
+							}
 						}
 					}
 					else if(get_class($a) == 'Clips\\Scss') {
-						foreach($a->value as $c) {
-							clips_add_scss($c);
+						if(is_string($a->value))
+							clips_add_scss($a->value);
+						else if(is_array($a->value)) {
+							foreach($a->value as $c) {
+								clips_add_scss($c);
+							}
 						}
 					}
 					else if(get_class($a) == 'Clips\\Context') {

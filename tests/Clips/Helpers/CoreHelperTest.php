@@ -33,4 +33,9 @@ class CoreHelperTest extends Clips\TestCase {
 		$this->assertEquals(Clips\to_camel('aa_bb_cc'), 'AaBbCc');
 		$this->assertEquals(Clips\to_camel('d/e/f/aa_bb_cc'), 'D/E/F/AaBbCc');
 	}
+
+	public function testStrEndWith() {
+		$this->assertTrue(Clips\str_end_with("asdf.js", "js"));
+		$this->assertFalse(Clips\str_end_with("asdf.js", "css"));
+	}
 }

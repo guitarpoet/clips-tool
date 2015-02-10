@@ -171,7 +171,7 @@ function str_end_with($haystack, $needle, $trim = true) {
 	else {
 		$str = $haystack;
 	}
-	return strrpos($str, $needle) === strlen($str);
+	return strrpos($str, $needle) === strlen($str) - strlen($needle);
 }
 
 function resource_contents($uri) {
