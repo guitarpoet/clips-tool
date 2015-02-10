@@ -1,5 +1,9 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+function context($key = null, $value = null, $append = false) {
+	clips_context($key, $value, $append);
+}
+
 function safe_add_extension($path, $ext) {
 	if(str_end_with($path, $ext)) {
 		return $path;
