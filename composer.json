@@ -9,16 +9,6 @@
         }
     ],
     "minimum-stability": "dev",
-	"repositories": [
-		{
-			"type": "git",
-			"url": "https://github.com/bobthecow/mustache.php"
-		},
-		{
-			"type": "git",
-			"url": "https://github.com/Seldaek/monolog.git"
-		}
-    ],
     "require": {
 		"elkuku/console-progressbar": "*",
 		"niktux/addendum": "*",
@@ -26,7 +16,8 @@
 		"monolog/monolog": "master",
 		"nikic/php-parser": "*",
         "smarty/smarty": "3.1.21",
-        "gitonomy/gitlib": "dev-master"
+        "gitonomy/gitlib": "dev-master",
+		"seld/jsonlint": "*"
 	},
 	"autoload": {
 		"psr-4": {

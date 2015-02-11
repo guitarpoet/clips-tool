@@ -121,7 +121,14 @@ function find_file($folder, $file, $suffix = null, $blur = false) {
 }
 
 function parse_json($json) {
-	return json_decode($json);
+	$parser = new \Seld\JsonLint\JsonParser();
+	$ret = $parser->lint($json);
+	if($ret) {
+		trigger_error($ret->getMessage());
+		return null;
+	}
+	else
+		return json_decode($json);
 }
 
 function safe_file_exists($file) {
