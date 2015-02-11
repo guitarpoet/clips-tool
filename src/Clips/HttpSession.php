@@ -4,6 +4,8 @@ use Clips\Interfaces\Initializable;
 use Addendum\Annotation;
 
 class HttpSession extends Annotation implements Initializable {
+	public $key;
+
 	public function init() {
 		if(HttpSession::status() != 'active')
 			session_start();
@@ -25,11 +27,15 @@ class HttpSession extends Annotation implements Initializable {
 	}
 
 	public function abort() {
-		session_abort();
+		if(function_exists('session_abort'))
+			session_abort();
 	}
 
 	public function reset() {
-		session_reset();
+		if(function_exists('session_reset'))
+			session_reset();
+		else
+			session_unset($property);
 	}
 
 	public static function status() {

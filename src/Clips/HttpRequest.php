@@ -23,10 +23,21 @@ class HttpRequest extends Request {
 		return $this->_param($_GET, $param, $default);
 	}
 
+	/**
+	 * Get the session values
+	 *
+	 * @param key
+	 * 		The key of the session data, if no key is given, will return the
+	 * 		session object
+	 * @param value
+	 * 		The value of the session data, if no value is given, will just return
+	 * 		the value of the session data
+	 */
 	public function session($key = null, $value = null) {
 		if(!isset($this->_session)) {
 			$this->_session = $this->tool->load_class('HttpSession', true);
 		}
+
 		if(!$key)
 			return $this->_session;
 

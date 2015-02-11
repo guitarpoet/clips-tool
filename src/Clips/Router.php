@@ -111,7 +111,19 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 			// Trying to get the definition from class and the method annotation
 			foreach(array($re, $re->getMethod($result->method)) as $m) {
 				foreach($m->getAnnotations() as $a) {
-					if(get_class($a) == 'Clips\\Meta') {
+					if(get_class($a) == 'Clips\\HttpSession') {
+						if(isset($a->value))  {
+							if(is_array($a->value)) {
+								foreach($a->value as $k => $v) {
+									$request->session($k, $v);
+								}
+							}
+							else {
+								$request->session($a->key, $a->value);
+							}
+						}
+					}
+					else if(get_class($a) == 'Clips\\Meta') {
 						if(isset($a->value) && is_array($a->value)) {
 							foreach($a->value as $k => $v) {
 								$controller->meta($k, $v);
@@ -121,7 +133,7 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 							$controller->meta($a->key, $a->value);
 						}
 					}
-					if(get_class($a) == 'Clips\\Js') {
+					else if(get_class($a) == 'Clips\\Js') {
 						if(is_string($a->value))
 							clips_add_js($a->value);
 						else if(is_array($a->value)) {
