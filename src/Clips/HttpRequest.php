@@ -4,9 +4,9 @@ class HttpRequest extends Request {
 	public function __construct() {
 		// Getting the method as the lower case
 		$this->method = strtolower(get_default($_SERVER, 'REQUEST_METHOD', 'GET'));
-		$tool = &get_clips_tool();
-		$tool->load_class("validator", true);
-		$this->validator = $tool->validator;
+		$this->tool = &get_clips_tool();
+		$this->tool->load_class("validator", true);
+		$this->validator = $this->tool->validator;
 	}
 
 	/**
@@ -21,6 +21,20 @@ class HttpRequest extends Request {
 	 */
 	public function get($param = null, $default = null) {
 		return $this->_param($_GET, $param, $default);
+	}
+
+	public function session($key = null, $value = null) {
+		if(!isset($this->_session)) {
+			$this->_session = $this->tool->load_class('HttpSession', true);
+		}
+		if(!$key)
+			return $this->_session;
+
+		if(!$value)
+			return $this->_session->$key;
+
+		$this->_session->$key = $value;
+		return true;
 	}
 
 	/**
