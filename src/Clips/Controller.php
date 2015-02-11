@@ -8,7 +8,15 @@ use Clips\Models\ViewModel;
 
 class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 
-	public function __construct() {
+	/**
+	 * The short hand method for request->get
+	 */
+	public function get($param = null, $default = null) {
+		return $this->request->get($param, $default = null);
+	}
+
+	public function post($param = null, $default = null) {
+		$this->request->post($param, $default);
 	}
 
 	public function context($key, $value = null) {

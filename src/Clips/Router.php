@@ -75,7 +75,7 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 	}
 
 	public function route() {
-		$request = new HttpRequest();
+		$request = $this->tool->create('Clips\\HttpRequest');
 
 		$this->tool->context(array(
 			'request' => $request,
