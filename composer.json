@@ -17,6 +17,7 @@
 		"nikic/php-parser": "*",
         "smarty/smarty": "3.1.21",
         "gitonomy/gitlib": "dev-master",
+		"robmorgan/phinx": "*",
 		"seld/jsonlint": "*"
 	},
 	"autoload": {
