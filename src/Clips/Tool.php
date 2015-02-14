@@ -286,6 +286,7 @@ class Tool implements Interfaces\Initializable {
 			$obj->init();
 
 		}
+		return $obj;
 	}
 
 	private function _init_class($class, $init, $name, $args = null) {

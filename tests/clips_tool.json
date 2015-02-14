@@ -1,5 +1,6 @@
 {
 	"table_prefix":"demo_",
+	"test_data_dir": "data",
 	"models": {
 		"clips_demo": {
 			"datasource": "mysql"

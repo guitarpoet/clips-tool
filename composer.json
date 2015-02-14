@@ -24,5 +24,6 @@
 			"Clips\\": "src/Clips/"
 		},
 		"files": ["src/Clips/helpers/core_helper.php"]
-	}
+	},
+	"bin": ["clips"]
 }

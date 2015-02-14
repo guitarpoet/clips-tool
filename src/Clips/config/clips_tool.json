@@ -3,6 +3,7 @@
 	"author": "Jack <guitarpoet@gmail.com>",
 	"subclass_prefix": ["MY"],
 	"core_dir": ["core"],
+	"test_dir": ["tests"],
 	"rules_dir": ["rules"],
 	"helper_dir": ["helpers"],
 	"command_dir": ["Commands"],

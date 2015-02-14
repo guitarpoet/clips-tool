@@ -9,6 +9,16 @@ class TestCase extends \PHPUnit_Framework_TestCase {
             echo "\n----------".$ref->name." | ".$func."----------\n";
 		$this->tool = &Tool::get_instance();
 		$this->clips = new Engine();
+
+		// Check for test data
+		$a = get_annotation($this, "Clips\\TestData", $func); // Check for method first
+		if(!$a)
+			$a = get_annotation($this, "Clips\\TestData"); // Check for class if there is no annotation on method
+
+		if($a) {
+			$this->data = $this->tool->enhance($a);
+		}
+
 		$this->doSetUp();
     }
 
