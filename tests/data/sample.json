@@ -1,0 +1,17 @@
+{
+	"%obj": {
+		"id": 0
+	},
+	"jack": {
+		"$template": "%obj",
+		"$type": "UserSample",
+		"username": "Jack",
+		"age": 34,
+		"groups": ["$admin"]
+	},
+	"admin": {
+		"$template": "%obj",
+		"$type": "GroupSample",
+		"name": "admin"
+	}
+}
