@@ -4,7 +4,7 @@
 	"version": "2.1.1",
 	"name": "clips.jquery",
 	"doc":"The jquery javascript framework",
-	"depends": ["html"],
+	"depends": ["Html"],
 	"js": {
 		"files": ["jquery"]
 	}

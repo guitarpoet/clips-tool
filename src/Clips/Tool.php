@@ -280,6 +280,19 @@ class Tool implements Interfaces\Initializable {
 			}
 		}
 
+		// Process model annotation
+		$a = get_annotation(get_class($obj), 'Clips\\Model');
+
+		if($a) {
+			if(isset($a->table)) {
+				$obj->table = $a->table;
+			}
+			if(isset($a->name)) {
+				$obj->name = $a->name;
+			}
+			clips_context('models', $obj, true);
+		}
+
 		// Process initialize
 		if(is_subclass_of($obj, 'CLips\\Interfaces\\Initializable')) {
 			// Call the init function
@@ -303,6 +316,7 @@ class Tool implements Interfaces\Initializable {
 		}
 		return false;
 	}
+
 	/** 
 	 * We support 3 kinds of class name here 
 	 * 1. Plain PHP File: Something like this test_service.php, will serve as $tool->test_service 
@@ -355,7 +369,7 @@ class Tool implements Interfaces\Initializable {
 
 				foreach(array($loadConfig->suffix, 
 					ucfirst(str_replace('_', '', $loadConfig->suffix))) as $suffix) {
-					$class_name = ucfirst($namespace.$pre.$class.$suffix);
+					$class_name = ucfirst($namespace.$pre.ucfirst($class).$suffix);
 
 					if(class_exists($class_name)) { // Let composer do this for me
 						$result = $this->_init_class($class_name, $init, $handle_name, $args);
@@ -509,7 +523,16 @@ class Tool implements Interfaces\Initializable {
 	}
 
 	public function widgetClass($widget) {
-		return $this->load_class('Widget', false, new LoadConfig($this->config->widget_dir, '', "Widgets\\".ucfirst($widget).'\\'));
+		$name = ucfirst($widget).'Widget';
+		if(isset($this->_loaded_classes[$name])) {
+			$cls = $this->_loaded_classes[$name];
+		}
+		else {
+			$cls = $this->load_class('Widget', false, new LoadConfig($this->config->widget_dir, '', "Widgets\\".ucfirst($widget).'\\'));
+			if($cls)
+				$this->_loaded_classes[$name] = $cls;
+		}
+		return $cls;
 	}
 
 	public function widget($widget) {
@@ -524,7 +547,6 @@ class Tool implements Interfaces\Initializable {
 	}
 
 	public function model($model) {
-		$this->load_class(array('model'), false, new LoadConfig(array('core')));
 		return $this->load_class($model, true, new LoadConfig($this->config->model_dir, '_model', 'Models\\'));
 	}
 

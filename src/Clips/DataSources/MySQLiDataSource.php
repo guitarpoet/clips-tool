@@ -30,8 +30,7 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 		}
 
 		$tool = &\Clips\get_clips_tool();
-		$sql = $tool->library('sql', false);
-		$this->sql = new $sql();
+		$this->sql = new \Clips\Libraries\Sql(); // Should we have a better idea?
 		if(isset($config->table_prefix))
 			$this->sql->table_prefix = $config->table_prefix;
 	}

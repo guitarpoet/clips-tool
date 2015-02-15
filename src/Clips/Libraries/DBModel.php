@@ -24,6 +24,10 @@ class DBModel extends Sql implements ToolAware, Initializable {
 			$name = str_replace($pre, '', $name);
 		}
 
+		if(!isset($this->table)) {
+			$this->table = strtolower(str_replace('Model', '', $name)).'s'; // If no table is set for this model, just guess for its table
+		}
+
 		// Check for models config first
 		if($config->models) {
 			foreach($config->models as $mc) {

@@ -4,7 +4,7 @@
 	"version": "1.0",
 	"name": "clips.form",
 	"doc":"The form widgets",
-	"depends": ["html", "jquery", "bootstrapSass"],
+	"depends": ["Html", "Jquery", "BootstrapSass"],
 	"js": {
 		"files": ["jqBootstrapValidation-1.3.7"]
 	},
