@@ -117,15 +117,18 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
                 call_user_func_array(array($stmt, 'bind_param'), $params); // Bind the qrgs
             }
 
-			$stmt->execute();
-
-			$ret = null;
-			if(isset($callback) && is_callable($callback)) {
-				$ret = $callback($stmt, $context);
+			if(!$stmt->execute()) {
+				throw new \Clips\DataSourceException($this->db->error);
 			}
+			else {
+				$ret = null;
+				if(isset($callback) && is_callable($callback)) {
+					$ret = $callback($stmt, $context);
+				}
 
-			$stmt->close();
-			return $ret;
+				$stmt->close();
+				return $ret;
+			}
 		}
 		else
 			throw new \Clips\DataSourceException($this->db->error);
@@ -204,7 +207,7 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 
 	public function doDelete($id) {
 		if(isset($this->context)) {
-			$this->doQuery('delete from '.$this->context.' where '.$this->idField().' = ?', $id);
+			$this->execute('delete from '.$this->context.' where '.$this->idField().' = ?', array($id));
 		}
 	}
 

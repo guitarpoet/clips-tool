@@ -75,6 +75,111 @@ class DBModel extends Sql implements ToolAware, Initializable {
 		return is_array($table) || (is_object($table) && is_subclass_of($table, 'Where_Operator'));
 	}
 
+	protected function doInsert($table, $obj) {
+		$orig = $this->db->context;
+		$this->db->context = $table;
+		$ret = false;
+		try{
+			$ret = $this->db->insert($obj);
+		}
+		catch(Exception $e) {
+		}
+		$this->db->context = $orig;
+		return $ret;
+	}
+
+	protected function doUpdate($table, $obj) {
+		if(isset($obj->id)) {
+			$orig = $this->db->context;
+			$this->db->context = $table;
+			$ret = false;
+			try{
+				$ret = $this->db->update($obj->id, $obj);
+			}
+			catch(Exception $e) {
+			}
+			$this->db->context = $orig;
+			return $ret;
+		}
+	}
+
+	protected function doDelete($table, $ids) {
+		$orig = $this->db->context;
+		$this->db->context = $table;
+		$ret = false;
+		try{
+			if(!is_array($ids))
+				$ids = array($ids);
+
+			$ret = $this->db->delete($ids);
+		}
+		catch(Exception $e) {
+		}
+		$this->db->context = $orig;
+		return $ret;
+	}
+
+	protected function doLoad($table, $id) {
+		$orig = $this->db->context;
+		$this->db->context = $table;
+		$ret = false;
+		try{
+			$ret = $this->db->load($id);
+		}
+		catch(Exception $e) {
+		}
+		$this->db->context = $orig;
+		return $ret;
+	}
+
+	public function load($table, $id = 0) {
+		if(is_numeric($table)) { // Table is id
+			if(isset($this->table)) {
+				return $this->doLoad($this->table, $table);
+			}
+		}
+		else {
+			return $this->doLoad($table, $id);
+		}
+		return false;
+	}
+
+	public function insert($table, $obj = array()) {
+		if(is_array($table) || is_object($table)) {
+			if(isset($this->table)) {
+				return $this->doInsert($this->table, $table);
+			}
+		}
+		else {
+			return $this->doInsert($table, $obj);
+		}
+		return false;
+	}
+
+	public function update($table, $obj = array()) {
+		if(is_array($table) || is_object($table)) {
+			if(isset($this->table)) {
+				return $this->doUpdate($this->table, $table);
+			}
+		}
+		else {
+			return $this->doUpdate($table, $obj);
+		}
+		return false;
+	}
+
+	public function delete($table, $ids = array()) {
+		if(is_array($table) || is_numeric($table)) {
+			if(isset($this->table)) {
+				return $this->doDelete($this->table, $table);
+			}
+		}
+		else {
+			return $this->doDelete($table, $ids);
+		}
+		return false;
+	}
+
 	public function get() {
 		switch(func_num_args()) {
 		case 0: // No argument is set, let's check if we have table set
