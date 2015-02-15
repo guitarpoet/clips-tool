@@ -38,7 +38,7 @@ class Config {
 			$p = realpath($config);
 			if(in_array($p, $loaded))
 				continue;
-			$c = json_decode(file_get_contents($config));
+			$c = parse_json(file_get_contents($config));
 			if(isset($c)) {
 				$loaded []= $p;
 				$arr []= (array) $c;

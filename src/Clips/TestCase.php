@@ -29,6 +29,11 @@ class TestCase extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function tearDown() {
+		if(isset($this->data)) { // If we are using test data, auto clean it.
+			if(method_exists($this->data, 'clean')) {
+				$this->data->clean();
+			}
+		}
 		$this->doTearDown();
         $ref = new \ReflectionClass($this);
         $func = $this->getName();

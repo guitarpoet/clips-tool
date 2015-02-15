@@ -2,12 +2,20 @@
 
 use Addendum\Annotation;
 use Clips\Interfaces\Initializable;
+use Clips\Interfaces\ToolAware;
 
-class TestData extends Annotation implements Initializable {
+class TestData extends Annotation implements Initializable, ToolAware {
 	const TPL_NAME = '$template';
 
 	private $_config;
 	private $_data;
+	private $_storage_ids;
+	private $tool;
+
+
+	public function setTool($tool) {
+		$this->tool = $tool;
+	}
 
 	public function __get($property) {
 		if(isset($this->_data[$property])) {
@@ -18,6 +26,7 @@ class TestData extends Annotation implements Initializable {
 
 	public function init() {
 		$this->_data = array();
+		$this->_storage_ids = array();
 		// Read the configurations
 		foreach($this->getConfig() as $name => $conf) {
 			$tpls = array();
@@ -73,8 +82,30 @@ class TestData extends Annotation implements Initializable {
 			foreach($obj as $k => $v) {
 				$obj->$k = $this->processReference($v);
 			}
+
+			if(isset($obj->{'$storage'}) && $obj->{'$storage'}) {
+				// This object needs to be stored
+				if(isset($obj->{'$model'})) {
+					$model = $this->tool->model($obj->{'$model'});
+					unset($obj->{'$model'});
+					unset($obj->{'$storage'});
+					$id = $model->insert($obj);
+					if($id) {
+						$obj->id = $id;
+						array_unshift($this->_storage_ids, array($model, $id));
+					}
+				}
+			}
 		}
 		return $obj;
+	}
+
+	public function clean() {
+		foreach($this->_storage_ids as $s) {
+			$model = $s[0];
+			var_dump($s[1]);
+			$model->delete($s[1]);
+		}
 	}
 
 	public function getConfig() {
