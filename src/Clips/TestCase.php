@@ -18,33 +18,30 @@ class TestCase extends \PHPUnit_Framework_TestCase {
 		if($a) {
 			$this->data = $this->tool->enhance($a);
 		}
-		else {
-			// Honor TestData, if there is no test data, then try for test value
-			$a = get_annotation($this, "Clips\\TestValue", $func); // Check for method first
-			if(!$a)
-				$a = get_annotation($this, "Clips\\TestValue"); // Check for class if there is no annotation on method
+		$a = get_annotation($this, "Clips\\TestValue", $func); // Check for method first
+		if(!$a)
+			$a = get_annotation($this, "Clips\\TestValue"); // Check for class if there is no annotation on method
 
-			if($a) {
-				if(isset($a->file)) {
-					$test_config_dir = clips_config('test_data_dir');
-					if(!$test_config_dir) {
-						$test_config_dir = clips_config('test_dir');
-						$test_config_dir = path_join($test_config_dir[0], 'data');
-					}
-					else {
-						$test_config_dir = $test_config_dir[0];
-					}
-					$p = path_join($test_config_dir, $a->file);
-					if(\file_exists($p)) {
-						$this->data = \file_get_contents($p);
-					}
+		if($a) {
+			if(isset($a->file)) {
+				$test_config_dir = clips_config('test_data_dir');
+				if(!$test_config_dir) {
+					$test_config_dir = clips_config('test_dir');
+					$test_config_dir = path_join($test_config_dir[0], 'data');
 				}
-				else if(isset($a->context)) {
-					$this->data = clips_context($a->context);
+				else {
+					$test_config_dir = $test_config_dir[0];
 				}
-				else if(isset($a->value)) {
-					$this->data = $a->value;
+				$p = path_join($test_config_dir, $a->file);
+				if(\file_exists($p)) {
+					$this->value = \file_get_contents($p);
 				}
+			}
+			else if(isset($a->context)) {
+				$this->value = clips_context($a->context);
+			}
+			else if(isset($a->value)) {
+				$this->value = $a->value;
 			}
 		}
 

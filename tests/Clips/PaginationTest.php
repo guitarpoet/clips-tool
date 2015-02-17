@@ -5,6 +5,6 @@ class PaginationTest extends Clips\TestCase {
 	 * @Clips\TestValue(file="datatable.json")
 	 */
 	public function testPaginationFromJson() {
-		$p = Clips\Pagination::fromJson($this->data);
+		$p = Clips\Pagination::fromJson($this->value);
    	}
 }

@@ -10,20 +10,20 @@ class TestValueTest extends Clips\TestCase {
 	 * @Clips\TestValue(file="sample.json")
 	 */
 	public function testFileValue() {
-		$this->assertNotNull($this->data);
+		$this->assertNotNull($this->value);
 	}
 
 	/**
 	 * @Clips\TestValue(123)
 	 */
 	public function testValue() {
-		$this->assertEquals($this->data, 123);
+		$this->assertEquals($this->value, 123);
 	}
 
 	/**
 	 * @Clips\TestValue(context="value")
 	 */
 	public function testContextValue() {
-		$this->assertEquals($this->data, 123);
+		$this->assertEquals($this->value, 123);
 	}
 }
