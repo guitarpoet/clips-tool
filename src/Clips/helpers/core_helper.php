@@ -51,6 +51,7 @@ function get_annotation($class, $annotation, $method = null) {
 	else {
 		$an = $re;
 	}
+
 	if($an->hasAnnotation($annotation)) {
 		foreach($an->getAnnotations() as $a) {
 			if(get_class($a) == $annotation)

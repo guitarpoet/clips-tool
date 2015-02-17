@@ -62,7 +62,7 @@ class DataSource implements ToolAware {
 	}
 
 	protected function idField() {
-		return get_default($this->config, 'id_field', 'id');
+		return \Clips\get_default($this->config, 'id_field', 'id');
 	}
 
 	protected function init($config) {
@@ -97,9 +97,12 @@ class DataSource implements ToolAware {
 
 	public function load($id) {
 		$result = $this->fetch($this->idField(), $id);
-		if($result && is_array($result))
-			return $result[0];
-		return $result;
+		if($result) {
+			if(is_array($result))
+				return $result[0];
+			return $result;
+		}
+		return null;
 	}
 
 	/**
@@ -119,9 +122,9 @@ class DataSource implements ToolAware {
 				$args = func_get_args();
 				return $this->doFetch(array($args[0] => $args[1]));
 			}
-			throw new Exception('The args must be set for the fetch.');
+			throw new \Clips\DataSourceException('The args must be set for the fetch.');
 		}
-		throw new Exception('No context set for this datasource');
+		throw new \Clips\DataSourceException('No context set for this datasource');
 	}
 
 	public function iterate($query, $callback, $args = array(), $context = array()) {

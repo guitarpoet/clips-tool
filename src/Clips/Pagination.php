@@ -17,10 +17,12 @@ class Pagination {
 	 * The table to select from
 	 */
 	public $from;
+
 	/**
 	 * The total records of this type in database
 	 */
 	public $dbtotal;
+
 	/**
 	 * The total records count
 	 */
@@ -102,7 +104,6 @@ class Pagination {
 
 	public function next() {
 		if($this->hasNext()) {
-			p($this->current());
 			$this->offset = ($this->current() + 1) * $this->length;
 			return $this->current();
 		}

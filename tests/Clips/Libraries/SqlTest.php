@@ -3,7 +3,7 @@
 class SqlTest extends Clips\TestCase {
 	public function doSetUp() {
 		$tool = Clips\get_clips_tool();
-		$this->sql = $tool->library('sql');
+		$this->sql = new Clips\Libraries\Sql();
 	}
 
 	public function testGenerateSql() {
