@@ -323,7 +323,7 @@ class Tool implements Interfaces\Initializable {
 	 * 2. Plain PHP File with folder prefix: Something like libraries/test_service.php, will serve as $tool->test_service 
 	 * 3. Namespace based PHP: Something like \Clips\Resource, will serve as $tool->Resource
 	*/
-	private function getHandleName($class) {
+	public function getHandleName($class) {
 		$arr = array();
 		// Test for namespace first
 		if(strpos($class, '\\') !== false) {
@@ -339,6 +339,7 @@ class Tool implements Interfaces\Initializable {
 	}
 
 	public function load_class($class, $init = false, $loadConfig = null, $args = null) {
+		echo "Loading class $class \n";
 		if(!isset($loadConfig)) {
 			$loadConfig = $this->config->getLoadConfig();
 		}
@@ -365,8 +366,7 @@ class Tool implements Interfaces\Initializable {
 		
 		// Try load the class using the application's namespace
 		foreach(array('', $loadConfig->prefix) as $pre) {
-			foreach(array_merge(clips_config('namespace', array()), array('')) as $namespace) {
-
+			foreach(array_merge(array(''), clips_config('namespace', array())) as $namespace) {
 				foreach(array($loadConfig->suffix, 
 					ucfirst(str_replace('_', '', $loadConfig->suffix))) as $suffix) {
 					$class_name = ucfirst($namespace.$pre.ucfirst($class).$suffix);

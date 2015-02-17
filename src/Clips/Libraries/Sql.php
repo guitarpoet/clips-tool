@@ -1,296 +1,6 @@
 <?php namespace Clips\Libraries; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
-class SqlCommand {
-}
-
-/**
- * The abstraction class for sql tables
- */
-class SqlTable {
-	/**
-	 * The name of the table
-	 */
-	public $name;
-
-	/**
-	 * The alias of the table
-	 */
-	public $alias;
-
-	/**
-	 * The type for the table(only support from and join yet)
-	 */
-	public $type;
-
-	/**
-	 * The join type of this table for join
-	 */
-	public $join_type;
-
-	/**
-	 * The join condition for this table
-	 */
-	public $join_condition;
-}
-
-class WhereOperator {
-
-	protected function isWhere($v) {
-		return (is_object($v) || (is_string($v) && class_exists($v))) && is_subclass_of($v, "WhereOperator");
-	}
-
-	public function __construct($operators = array(), $arg = true) {
-		if(!is_array($operators))
-			$operators = array($operators);
-
-		$this->operators = array();
-
-		foreach($operators as $key => $o) {
-			if($this->isWhere($o)) {
-				// If the value is an operator, then add it
-				$this->operators []= $o;
-			}
-			else {
-				// If it is key and value, add it as equals by default
-				if(is_array($o)) {
-					foreach($o as $k => $v) {
-						if($this->isWhere($v))
-							$this->operators []= $v;
-						else
-							$this->operators []= _equals($k, $v, $arg);
-					}
-				}
-				else {
-					if($this->isWhere($o))
-						$this->operators []= $o;
-					else
-						$this->operators []= _equals($key, $o, $arg);
-				}
-			}
-		}
-	}
-	public function getArgs() {
-		if(count($this->operators)) {
-			$ret = array();
-			foreach($this->operators as $o) {
-				$args = $o->getArgs();
-				if(!$args)
-					continue;
-				if(is_array($args))
-					$ret = array_merge($ret, $args);
-				else
-					$ret []= $args;
-			}
-			return $ret;
-		}
-		return null;
-	}
-
-	public function toArray() {
-		return array_map(function($data){ return $data->toString();}, $this->operators);
-	}
-}
-
-class AndOperator extends WhereOperator {
-	public function __construct($operators = array(), $arg = true) {
-		parent::__construct($operators, $arg);
-	}
-
-	public function toString() {
-		return '('.implode(' and ', $this->toArray()).')';
-	}
-}
-
-class OrOperator extends WhereOperator {
-	public function __construct($operators = array(), $arg = true) {
-		parent::__construct($operators, $arg);
-	}
-
-	public function toString() {
-		return '('.implode(' or ', $this->toArray()).')';
-	}
-}
-
-class NotOperator extends WhereOperator {
-	public function __construct($operators = array()) {
-		parent::__construct($operators);
-	}
-
-	public function toString() {
-		return implode('not', $this->toArray());
-	}
-}
-
-class LikeOperator extends WhereOperator {
-	public function __construct($left, $right) {
-		parent::__construct(array());
-		$this->left = $left;
-		$this->right = $right;
-	}
-
-	public function getArgs() {
-		return $this->right;
-	}
-
-	public function toString() {
-		return $left.' like ?';
-	}
-}
-
-class EqualsOperator extends WhereOperator {
-	public function __construct($left, $right, $arg) {
-		parent::__construct(array());
-		$this->left = $left;
-		$this->right = $right;
-		$this->arg = $arg;
-	}
-
-	public function getArgs() {
-		if($this->arg)
-			return $this->right;
-		return null;
-	}
-
-	public function toString() {
-		if($this->arg)
-			return $this->left.' = ?';
-		return $this->left.' = '.$this->right;
-	}
-}
-
-class FulltextOperator extends WhereOperator {
-	public function __construct($field, $keyword, $boolean = false) {
-		parent::__construct(array());
-		$this->keyword = $keyword;
-		$this->field = $field;
-		$this->boolean = $boolean;
-	}
-
-	public function getArgs() {
-		return $this->keyword;
-	}
-
-	public function toString() {
-		if($this->boolean)
-			return 'match('.$this->field.') against (? in boolean mode)';
-
-		return 'match('.$this->field.') against (?)';
-	}
-}
-
-function _and() {
-	return new AndOperator(func_get_args());
-}
-
-function _jand() {
-	return new AndOperator(func_get_args(), false);
-}
-
-function _or() {
-	return new OrOperator(func_get_args());
-}
-
-function _not($operator) {
-	return new NotOperator($operator);
-}
-
-function _like($left, $right) {
-	return new LikeOperator($left, $right);
-}
-
-function _equals($left, $right, $arg = true) {
-	return new EqualsOperator($left, $right, $arg);
-}
-
-function _text($fields, $text, $boolean = false) {
-	return new FulltextOperator($fields, $text, $boolean);
-}
-
-class Select extends SqlCommand {
-	public $fields;
-	public function __construct($fields = array('*')) {
-		if(func_num_args()) {
-			$fields = func_get_args();
-		}
-		if(is_array($fields))
-			$this->fields = $fields;
-		else
-			$this->fields = array($fields);
-	}
-}
-
-class Limit extends SqlCommand {
-	public $offset;
-	public $count;
-
-	public function __construct($offset = 0, $count = 15) {
-		$this->offset = $offset;
-		$this->count = $count;
-	}
-}
-
-class From extends SqlCommand {
-	public $tables;
-
-	public function __construct($tables = array()) {
-		if(func_num_args()) {
-			$tables = func_get_args();
-		}
-		if(is_array($tables))
-			$this->tables = $tables;
-		else
-			$this->tables = array($tables);
-	}
-}
-
-class Join extends SqlCommand {
-	public $table;
-	public $type;
-	public $text;
-	public function __construct($table, $text, $type) {
-		$this->table = $table;
-		$this->text = $text;
-		$this->type = $type;
-	}
-}
-
-class Where extends SqlCommand {
-	public $text;
-
-	public function __construct($text) {
-		$this->text = $text;
-	}
-}
-
-class GroupBy extends SqlCommand {
-	public $fields;
-	public function __construct($fields = array()) {
-		if(func_num_args()) {
-			$fields = func_get_args();
-		}
-		if(is_array($fields)) {
-			$this->fields = $fields;
-		}
-		else
-			$this->fields = array($fields);
-	}
-}
-
-class OrderBy extends SqlCommand {
-	public $fields;
-	public $orders;
-	public function __construct($fields = array()) {
-		if(is_array($fields)) {
-			$this->fields = $fields;
-		}
-		else
-			$this->fields = array($fields);
-	}
-}
-
-class SqlResult {
-	public $sql;
-}
+require_once(__DIR__.'/sql_helpers.php');
 
 class Sql {
 	public function __construct($type = 'mysqli') {
@@ -367,8 +77,74 @@ class Sql {
 				$fields = array($fields);
 			}
 		}
-		$this->clips->assertFacts('fact_order_by', array(new GroupBy($fields)));
+		$this->clips->assertFacts('fact_order_by', array(new OrderBy($fields)));
 		return $this;
+	}
+
+	protected function _pagi($p, $count = false) {
+		if(\Clips\valid_obj($p, 'Clips\\Pagination')) {
+			// Check for the table first
+			if(isset($p->from)) {
+				$this->from($p->from);
+			}
+			else {
+				\Clips\clips_error("No table to select from!");
+				return false;
+			}
+
+			// For fields
+			if($count) {
+				$this->select('count(*) as count');
+			}
+			else {
+				$this->select($p->fields());
+			}
+
+			// For where
+			if(isset($p->where)) {
+				$this->where($p->where);
+			}
+
+			// For joins
+			if(isset($p->join)) {
+				foreach($p->join as $j) {
+					switch(count($j)) {
+					case 0:
+					case 1:
+						\Clips\clips_error("Too few arguments for join!", array($j));
+						break;
+					case 2:
+						$this->join($j[0], $j[1]);
+						break;
+					default:
+						$this->join($j[0], $j[1], $j[2]);
+						break;
+					}
+				}
+			}
+
+			// For group bys
+			if(isset($p->groupBy)) {
+				$this->groupBy($p->groupBy);
+			}
+
+
+			// For order bys
+			if(isset($p->orderBy)) {
+				$this->orderBy($p->orderBy);
+			}
+
+			return $this->sql();
+		}
+		return false;
+	}
+
+	public function count($p) {
+		return $this->_pagi($p, true);
+	}
+
+	public function pagination($p) {
+		return $this->_pagi($p);
 	}
 
 	public function sql() {

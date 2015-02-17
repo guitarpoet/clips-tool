@@ -1,10 +1,9 @@
 {
-	"from": "",
+	"from": "users",
 	"columns": [
-		{ "data": "users.id", "title" : "", "action":"user/show", "toggle": true},
-		{ "data": "users.id", "title" : "ID", "action":"user/show"},
-		{ "data": "users.status", "title":"Status" },
-		{ "data": "users.create_date", "title":"Create Date" }
+		{ "data": "users.id", "title" : "User ID", "action":"user/show", "toggle": true},
+		{ "data": "users.username", "title" : "Username"},
+		{ "data": "groups.name", "title" : "Group", "refer":"groups.id", "action":"group/show"}
 	],
 	"where": {
 	},

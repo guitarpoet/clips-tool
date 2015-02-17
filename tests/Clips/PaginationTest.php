@@ -2,6 +2,7 @@
 
 class PaginationTest extends Clips\TestCase {
 	/**
+	 * @Clips\Object("Clips\Libraries\Sql")
 	 * @Clips\TestValue(file="datatable.json")
 	 */
 	public function testPaginationFromJson() {

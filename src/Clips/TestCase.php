@@ -45,6 +45,20 @@ class TestCase extends \PHPUnit_Framework_TestCase {
 			}
 		}
 
+		$a = get_annotation($this, "Clips\\Object", $func); // Check for method first
+		if(!$a)
+			$a = get_annotation($this, "Clips\\Object"); // Check for class if there is no annotation on method
+		if($a) {
+			if(isset($a->value)) {
+				if(!\is_array($a->value))
+					$a->value = array($a->value);
+				foreach($a->value as $c) {
+					$h = $this->tool->getHandleName($c);
+					$this->$h = $this->tool->load_class($c, true);
+				}
+			}
+		}
+
 		$this->doSetUp();
     }
 

@@ -9,11 +9,6 @@
 class Pagination {
 
 	/**
-	 * The select fields
-	 */
-	public $select = '*';
-
-	/**
 	 * The table to select from
 	 */
 	public $from;
@@ -52,6 +47,10 @@ class Pagination {
 	 * The order by parameters
 	 */
 	public $orderBy = array();
+
+	/**
+	 */
+	public $groupBy = array();
 
 	/**
 	 * The where parameters
@@ -139,6 +138,14 @@ class Pagination {
 			return $ret? $ret: 1;
 		}
 		return 0;
+	}
+
+	public function fields() {
+		if(isset($this->columns)) {
+			return array_map(function($i) { return $i->data; }, $this->columns);
+		}
+		else
+			return array('*');
 	}
 
 	public static function fromJson($json) {
