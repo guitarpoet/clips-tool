@@ -53,7 +53,7 @@ class TestCase extends \PHPUnit_Framework_TestCase {
 				if(!\is_array($a->value))
 					$a->value = array($a->value);
 				foreach($a->value as $c) {
-					$h = $this->tool->getHandleName($c);
+					$h = strtolower($this->tool->getHandleName($c));
 					$this->$h = $this->tool->load_class($c, true);
 				}
 			}

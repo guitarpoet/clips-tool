@@ -339,7 +339,6 @@ class Tool implements Interfaces\Initializable {
 	}
 
 	public function load_class($class, $init = false, $loadConfig = null, $args = null) {
-		echo "Loading class $class \n";
 		if(!isset($loadConfig)) {
 			$loadConfig = $this->config->getLoadConfig();
 		}

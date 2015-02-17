@@ -19,6 +19,7 @@ class SqlTest extends Clips\TestCase {
 		$this->assertNotNull($result[1]);
 		$result = $this->sql->select('name as n', 'shit as t')
 			->from('hello', 'users as u', 'class c')->sql();
+		var_dump($result);
 		$this->assertEquals(count($result), 1);
 	}
 

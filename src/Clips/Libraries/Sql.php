@@ -44,7 +44,7 @@ class Sql {
 		return $this;
 	}
 	public function join($table, $where = array(), $type = null) {
-		if($where instanceof Where_Operator) {
+		if($where instanceof WhereOperator) {
 			$this->clips->assertFacts('fact_join', array(new Join($table, $where->toString(), $type)));
 		}
 		if(is_array($where)) {
@@ -83,15 +83,6 @@ class Sql {
 
 	protected function _pagi($p, $count = false) {
 		if(\Clips\valid_obj($p, 'Clips\\Pagination')) {
-			// Check for the table first
-			if(isset($p->from)) {
-				$this->from($p->from);
-			}
-			else {
-				\Clips\clips_error("No table to select from!");
-				return false;
-			}
-
 			// For fields
 			if($count) {
 				$this->select('count(*) as count');
@@ -100,37 +91,52 @@ class Sql {
 				$this->select($p->fields());
 			}
 
+			// Check for the table first
+			if(isset($p->from) && $p->from) {
+				$this->from($p->from);
+			}
+			else {
+				\Clips\clips_error("No table to select from!");
+				return false;
+			}
+
 			// For where
-			if(isset($p->where)) {
-				$this->where($p->where);
+			if(isset($p->where) && $p->where) {
+				$this->where((array) $p->where);
 			}
 
 			// For joins
-			if(isset($p->join)) {
+			if(isset($p->join) && $p->join) {
+				if(is_array($p->join)) {
+					if(!is_array($p->join[0])) {
+						$p->join = array($p->join);
+					}
+				}
 				foreach($p->join as $j) {
 					switch(count($j)) {
 					case 0:
 					case 1:
+						throw new Exception('FUCK!!!!');
 						\Clips\clips_error("Too few arguments for join!", array($j));
 						break;
 					case 2:
-						$this->join($j[0], $j[1]);
+						$this->join($j[0], (array)$j[1]);
 						break;
 					default:
-						$this->join($j[0], $j[1], $j[2]);
+						$this->join($j[0], (array)$j[1], $j[2]);
 						break;
 					}
 				}
 			}
 
 			// For group bys
-			if(isset($p->groupBy)) {
+			if(isset($p->groupBy) && $p->groupBy) {
 				$this->groupBy($p->groupBy);
 			}
 
 
 			// For order bys
-			if(isset($p->orderBy)) {
+			if(isset($p->orderBy) && $p->orderBy) {
 				$this->orderBy($p->orderBy);
 			}
 

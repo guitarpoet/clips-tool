@@ -7,5 +7,8 @@ class PaginationTest extends Clips\TestCase {
 	 */
 	public function testPaginationFromJson() {
 		$p = Clips\Pagination::fromJson($this->value);
+		$this->assertNotNull($this->sql);
+		print_r($this->sql->count($p));
+		print_r($this->sql->pagination($p));
    	}
 }

@@ -6,6 +6,8 @@
 		{ "data": "groups.name", "title" : "Group", "refer":"groups.id", "action":"group/show"}
 	],
 	"where": {
+		"user.username": "Jack"
 	},
-	"join": ["groups", {"users.group_id": "groups.id"}]
+	"join": ["groups", {"users.group_id": "groups.id"}],
+	"groupBy": ["users.id"]
 }
