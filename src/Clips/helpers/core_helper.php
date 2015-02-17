@@ -1,5 +1,21 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+function content_relative($name, $obj) {
+	$path = class_script_path($obj);
+	if($path) {
+		$p = path_join(dirname($path), $name);
+		if(\file_exists($p)) {
+			return \file_get_contents($p);
+		}
+	}
+	return null;
+}
+
+function valid_obj($obj, $class) {
+	return \is_object($obj) && \class_exists($class) 
+		&& (\get_class($obj) == $class || \is_subclass_of($obj, $class));
+}
+
 function context($key = null, $value = null, $append = false) {
 	clips_context($key, $value, $append);
 }
@@ -307,14 +323,12 @@ function clips_load_rules($rules) {
 	return false;
 }
 
-if(!function_exists('get_default')) {
-	function get_default($arr, $key, $default = '') {
-		if(is_object($arr))
-			return isset($arr->$key)? $arr->$key: $default;
-		if(is_array($arr))
-			return isset($arr[$key])? $arr[$key]: $default;
-		return $default;
-	}
+function get_default($arr, $key, $default = '') {
+	if(is_object($arr))
+		return isset($arr->$key)? $arr->$key: $default;
+	if(is_array($arr))
+		return isset($arr[$key])? $arr[$key]: $default;
+	return $default;
 }
 
 function clips_str_match($str, $pattern) {
@@ -361,44 +375,38 @@ function extend_arr($dest, $src, $fields = null) {
 	return $dest;
 }
 
-if(!function_exists('copy_new')) {
-	function copy_new($src, $class = null) {
-		return copy_object($src, null, $class);
-	}
+function copy_new($src, $class = null) {
+	return copy_object($src, null, $class);
 }
 
-if(!function_exists('copy_arr')) {
-	function copy_arr($src, $dest = null) {
-		if($src == null)
-			return $dest;
-
-		if($dest == null) {
-			$dest = array();
-		}
-
-		foreach($src as $key => $value) {
-			$dest[$key] = $value;
-		}
+function copy_arr($src, $dest = null) {
+	if($src == null)
 		return $dest;
+
+	if($dest == null) {
+		$dest = array();
 	}
+
+	foreach($src as $key => $value) {
+		$dest[$key] = $value;
+	}
+	return $dest;
 }
 
-if(!function_exists('copy_object')) {
-	function copy_object($src, $dest = null, $class = null) {
-		if($src == null)
-			return null;
+function copy_object($src, $dest = null, $class = null) {
+	if($src == null)
+		return null;
 
-		if($dest == null) {
-			if($class == null)
-				$dest = new stdclass();
-			else
-				$dest = new $class();
-		}
-
-		foreach($src as $key => $value) {
-			$k = str_replace('.', '_', $key);
-			$dest->$k = $value;
-		}
-		return $dest;
+	if($dest == null) {
+		if($class == null)
+			$dest = new stdclass();
+		else
+			$dest = new $class();
 	}
+
+	foreach($src as $key => $value) {
+		$k = str_replace('.', '_', $key);
+		$dest->$k = $value;
+	}
+	return $dest;
 }

@@ -38,4 +38,10 @@ class CoreHelperTest extends Clips\TestCase {
 		$this->assertTrue(Clips\str_end_with("asdf.js", "js"));
 		$this->assertFalse(Clips\str_end_with("asdf.js", "css"));
 	}
+
+	public function testValidObj() {
+		$obj = new Clips\Commands\VersionCommand();
+		$this->assertTrue(Clips\valid_obj($obj, "Clips\\Commands\\VersionCommand"));
+		$this->assertTrue(Clips\valid_obj($obj, "Clips\\Command"));
+	}
 }

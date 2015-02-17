@@ -1,0 +1,12 @@
+{
+	"from": "",
+	"columns": [
+		{ "data": "users.id", "title" : "", "action":"user/show", "toggle": true},
+		{ "data": "users.id", "title" : "ID", "action":"user/show"},
+		{ "data": "users.status", "title":"Status" },
+		{ "data": "users.create_date", "title":"Create Date" }
+	],
+	"where": {
+	},
+	"join": ["groups", {"users.group_id": "groups.id"}]
+}

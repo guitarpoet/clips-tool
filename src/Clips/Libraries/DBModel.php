@@ -12,6 +12,17 @@ class DBModel extends Sql implements ToolAware, Initializable {
 		$this->tool = $tool;
 	}
 
+	public function paginate($p) {
+		// Let's get the count first
+		if(isset($p->where) && $p->where) {
+			$this->select('count(*) as count');
+
+			// Test for join
+			if(isset($p->join) && $p->join) {
+			}
+		}
+	}
+
 	public function init() {
 		$tool = $this->tool;
 		$tool->library('datasource'); // Load the datasource library
