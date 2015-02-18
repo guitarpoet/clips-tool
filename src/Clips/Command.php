@@ -47,4 +47,8 @@ class Command {
 			$this->tool->ProgressManager->start($total);
 		}
 	}
+
+	public function output() {
+		echo \call_user_func_array('sprintf', func_get_args());
+	}
 }

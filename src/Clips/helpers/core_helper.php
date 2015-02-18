@@ -11,6 +11,11 @@ function content_relative($name, $obj) {
 	return null;
 }
 
+function current_user() {
+	$user = \posix_getpwuid(\posix_geteuid());
+	return $user['name'];
+}
+
 function valid_obj($obj, $class) {
 	return \is_object($obj) && \class_exists($class) 
 		&& (\get_class($obj) == $class || \is_subclass_of($obj, $class));

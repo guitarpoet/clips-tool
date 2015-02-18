@@ -3,6 +3,7 @@
 	"author": "Jack <guitarpoet@gmail.com>",
 	"subclass_prefix": ["MY"],
 	"core_dir": ["core"],
+	"config_dir": ["config"],
 	"test_dir": ["tests"],
 	"rules_dir": ["rules"],
 	"helper_dir": ["helpers"],
@@ -15,6 +16,7 @@
 	"controller_dir": ["Controllers"],
 	"filter_dir": ["Filters"],
 	"form_config_dir": ["application/config/form"],
+	"widget_dir": "src/Clips/Widgets",
 	"smarty_compile_dir": ["application/cache/smarty/templates_c"],
 	"smarty_config_dir": ["application/config/smarty"],
 	"smarty_cache_dir": ["application/cache/smarty"]
