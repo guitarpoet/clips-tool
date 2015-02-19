@@ -64,6 +64,32 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 		clips_context('html_meta', $res);
 	}
 
+	/**
+	 * The overall paginate query support.
+	 */
+	public function pagination($config) {
+		$config_dir = clips_config('pagination_config_dir');
+		if($config_dir) {
+			$config_dir = $config_dir[0];
+			$p = path_join($config_dir, $config.'.json');
+			if(file_exists($p)) {
+				$pagination = Pagination::fromJson(file_get_contents($p));
+				$pagination->update($this->request->param());
+				$sql = $this->tool->library('sql');
+				clips_log('Sql is {0}', $sql->pagination($pagination));
+
+				// Get the first datasource
+				$datasource = $this->tool->library('datasource')->first();
+
+				$query = $sql->count($pagination);
+				$result = $datasource->query($query[0], $query[1]);
+				clips_log('The result for count query {0} is ', array($query[0], $result));
+			}
+		}
+		// Output empty by default
+		return $this->render("", array('data' => array(), 'recordsTotal' => 0, 'recordsFiltered' => 0), 'json');
+	}
+
 	public function redirect($url) {
 		return $this->render("", array(), 'direct', array('Location' => $url));
 	}

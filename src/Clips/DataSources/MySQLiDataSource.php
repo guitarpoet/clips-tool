@@ -29,10 +29,13 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 			throw new \Clips\DataSourceException($this->db->connect_error);
 		}
 
+		var_dump($config);
 		$tool = &\Clips\get_clips_tool();
 		$this->sql = new \Clips\Libraries\Sql(); // Should we have a better idea?
-		if(isset($config->table_prefix))
+		if(isset($config->table_prefix)) {
 			$this->sql->table_prefix = $config->table_prefix;
+			$this->table_prefix = $config->table_prefix;
+		}
 	}
 
 	protected function destroy() {
@@ -47,8 +50,9 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 		$data = array();
 		$meta = $stmt->result_metadata();
 
-		while($field = $meta->fetch_field())
+		while($field = $meta->fetch_field()) {
 			$variables[] = &$data[$field->name];
+		}
 
 		call_user_func_array(array($stmt, 'bind_result'), $variables);
 
@@ -152,7 +156,12 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 	}
 
 	protected function doInsert($args) {
-		$sql = array('insert', 'into', $this->context, '(');
+		if(isset($this->table_prefix)) {
+			$sql = array('insert', 'into', $this->table_prefix.$this->context, '(');
+		}
+		else {
+			$sql = array('insert', 'into', $this->context, '(');
+		}
 		$keys = array();
 		$values = array();
 		$data = array();
@@ -171,7 +180,12 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 	}
 
 	protected function doUpdate($id, $args) {
-		$sql = array('update', $this->context, 'set');
+		if(isset($this->table_prefix)) {
+			$sql = array('update', $this->table_prefix.$this->context, 'set');
+		}
+		else {
+			$sql = array('update', $this->context, 'set');
+		}
 		$keys = array();
 		$values = array();
 		foreach($args as $k => $v) {
@@ -207,7 +221,12 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 
 	public function doDelete($id) {
 		if(isset($this->context)) {
-			$this->execute('delete from '.$this->context.' where '.$this->idField().' = ?', array($id));
+			if(isset($this->table_prefix)) {
+				$this->execute('delete from '.$this->table_prefix.$this->context.' where '.$this->idField().' = ?', array($id));
+			}
+			else {
+				$this->execute('delete from '.$this->context.' where '.$this->idField().' = ?', array($id));
+			}
 		}
 	}
 

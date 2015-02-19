@@ -46,10 +46,7 @@ class DBModel extends Sql implements ToolAware, Initializable {
 
 		if(!isset($datasource)) {
 			// There is still no datasource information, let's try using first one of the datasource
-			foreach($tool->datasource->datasources() as $ds) {
-				$this->db = $tool->datasource->get($ds);
-				break;
-			}
+			$this->db = $tool->datasource->first();
 		}
 		else {
 			$this->db = $tool->datasource->get($datasource);

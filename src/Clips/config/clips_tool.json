@@ -16,6 +16,7 @@
 	"controller_dir": ["Controllers"],
 	"filter_dir": ["Filters"],
 	"form_config_dir": ["application/config/form"],
+	"pagination_config_dir": ["application/config/pagination"],
 	"widget_dir": "src/Clips/Widgets",
 	"smarty_compile_dir": ["application/cache/smarty/templates_c"],
 	"smarty_config_dir": ["application/config/smarty"],

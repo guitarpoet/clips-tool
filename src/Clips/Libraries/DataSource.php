@@ -35,6 +35,13 @@ class DataSource implements ToolAware {
 		return $ret;
 	}
 
+	public function first() {
+		foreach($this->datasources() as $ds) {
+			return $this->get($ds);
+		}
+		return null;
+	}
+
 	public function get($name) {
 		if(isset($this->$name))
 			return $this->$name;

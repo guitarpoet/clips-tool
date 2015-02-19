@@ -133,7 +133,6 @@ class GroupBy extends SqlCommand {
 
 class OrderBy extends SqlCommand {
 	public $fields;
-	public $orders;
 	public function __construct($fields = array()) {
 		if(is_array($fields)) {
 			$this->fields = $fields;

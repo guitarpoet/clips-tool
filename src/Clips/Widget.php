@@ -30,6 +30,10 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 		$this->initCss();
 		$this->initJs();
 		$this->initContext();
+		$this->doInit();
+	}
+
+	protected function doInit() {
 	}
 
 	public function setTool($tool) {

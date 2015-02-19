@@ -134,11 +134,13 @@ class Sql {
 				$this->groupBy($p->groupBy);
 			}
 
-
 			// For order bys
 			if(isset($p->orderBy) && $p->orderBy) {
 				$this->orderBy($p->orderBy);
 			}
+
+			// For limits
+			$this->limit($p->offset, $p->length);
 
 			return $this->sql();
 		}

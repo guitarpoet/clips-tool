@@ -56,6 +56,32 @@
 	(assert (method (str-cat ?m "_ajax")))
 )
 
+(defrule if-is-pagination-prefer-pagination-suffix-method
+	(RequestType "ajax")
+	(Parameter "draw" ?)
+	(Parameter "start" ?)
+	(Parameter "length" ?)
+	?method <- (method ?m&:(not (str-index "_pagination" ?m)))
+	?r <- (Clips\RouteResult (controller ?c&~nil) (method nil))
+	(test (method-exists ?c (str-cat ?m "_pagination")))
+	=>
+	(retract ?method)
+	(assert (method (str-cat ?m "_pagination")))
+)
+
+(defrule if-is-pagination-and-no-pagination-suffix-method-use-default-pagination-method
+	(RequestType "ajax")
+	(Parameter "draw" ?)
+	(Parameter "start" ?)
+	(Parameter "length" ?)
+	?method <- (method ?m&:(not (eq "pagination" ?m)))
+	?r <- (Clips\RouteResult (controller ?c&~nil) (method nil))
+	=>
+	(retract ?method)
+	(assert (method "pagination"))
+	(modify ?r (args (create$ ?m)))
+)
+
 (defrule if-is-post-prefer-form-suffix-method
 	(RequestMethod "post")
 	?method <- (method ?m&:(not (str-index "_form" ?m)))

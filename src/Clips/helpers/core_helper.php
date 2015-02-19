@@ -230,6 +230,10 @@ function clips_stacktrace($message, $level = 3) {
 	clips_log($message, $ret);
 }
 
+function log($message, $context = array()) {
+	clips_log($message, $context);
+}
+
 function clips_log($message, $context = array()) {
 	$tool = &get_clips_tool();
 	$tool->info($message, $context);

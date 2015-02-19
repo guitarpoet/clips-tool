@@ -155,6 +155,21 @@ class Pagination {
 		return null;
 	}
 
+	public function update($params) {
+		$this->offset = $params['start'];
+		$this->length = $params['length'];
+
+		$order = $params['order'];
+		$arr = array();
+		if($order) {
+			foreach($order as $o) {
+				$col = $params['columns'][$o['column']]['data'];
+				$arr []= $col.' '.$o['dir'];
+			}
+		}
+		$this->orderBy = $arr;
+	}
+
 	public function toJson() {
 		return json_encode($this);
 	}

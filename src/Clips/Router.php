@@ -86,7 +86,19 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 		$this->clips->clear();
 		$this->clips->template("Clips\\RouteResult");
 		$this->clips->load(clips_config('route_rules', array('/rules/route.rules')));
+		// Assert the uris
 		$this->clips->assertFacts(array('uri', $this->getRequestURI()), array('RequestType', $request->getType()), array('RequestMethod', $request->method));
+
+		// Assert the parameters
+		$params = array();
+		$p = $request->param();
+		if($p) {
+			foreach($request->param() as $k => $v) {
+				$params []= array('Parameter', $k, $v);
+			}
+			$this->clips->assertFacts($params);
+		}
+
 		$this->clips->run();
 		$error = $this->clips->queryFacts("RouteError");
 		if($error) {
@@ -173,6 +185,11 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 						// If this is the form annotation, initialize it and set it to the context
 						$this->tool->enhance($a);
 						clips_context('form', $a);
+					}
+					else if(get_class($a) == 'Clips\\Widgets\\DataTable') {
+						// If this is the datatable annotation, initialize it and set it to the context
+						$this->tool->enhance($a);
+						clips_context('datatable', $a);
 					}
 					else if(get_class($a) == 'Clips\\Widget') {
 						$this->tool->widget($a->value);

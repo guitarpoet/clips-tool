@@ -3,5 +3,19 @@
 	"date": "Wed Feb 18 16:52:03 2015",
 	"version": "1.0",
 	"name": "DataTable",
-	"doc":"The datatable widget."
+	"doc":"The datatable widget.",
+	"depends": ["Html", "Jquery"],
+	"js": {
+		"files": [
+			"jquery.dataTables.js"
+		]
+	},
+	"css": {
+		"files": [
+			"jquery.dataTables.css"
+		]
+	},
+	"context": {
+		"jquery_init": "$('.clips-datatable').DataTable();"
+	}
 }
