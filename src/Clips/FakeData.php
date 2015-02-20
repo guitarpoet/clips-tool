@@ -33,7 +33,7 @@ class FakeData {
 
 	function fakeEmail($name = null, $domain = null) {
 		$n = $this->fakeName($name);
-		$domain = $domain? $domain: fake_domain();
+		$domain = $domain? $domain: $this->fakeDomain();
 		return $n->simple_name."@".$domain;
 	}
 
