@@ -83,7 +83,15 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 
 				$query = $sql->count($pagination);
 				$result = $datasource->query($query[0], $query[1]);
-				clips_log('The result for count query {0} is ', array($query[0], $result));
+
+				if($result) {
+					$count = $result[0]->count;
+					$query = $sql->pagination($pagination);
+					$result = $datasource->query($query[0], $query[1]);
+					if($result) {
+						return $this->render("", array('data' => array(), 'recordsTotal' => 0, 'recordsFiltered' => 0), 'json');
+					}
+				}
 			}
 		}
 		// Output empty by default

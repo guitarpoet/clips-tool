@@ -1,6 +1,25 @@
 <?php namespace Clips\Libraries; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
 class MigrationTool {
+
+	public function insert($migration, $table, $data) {
+		foreach($data as $d) {
+			$sql = array('insert', 'into', $table, '(');
+			$keys = array();
+			$values = array();
+			foreach($d as $k => $v) {
+				$keys []= $k;
+				$values []= '"'.$v.'"';
+			}
+			$sql []= implode(', ', $keys);
+			$sql []= ') values (';
+			$sql []= implode(', ', $values);
+			$sql []= ')';
+			$sql = implode(' ', $sql);
+			$migration->execute($sql, $data);
+		}
+	}
+
 	public function up($migration, $config) {
 		foreach($config as $name => $options) {
 			$table = $migration->table($name);

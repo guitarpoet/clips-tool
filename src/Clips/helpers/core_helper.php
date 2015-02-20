@@ -1,5 +1,9 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+function choice($array) {
+	return $array[array_rand($array)];
+}
+
 function content_relative($name, $obj) {
 	$path = class_script_path($obj);
 	if($path) {
