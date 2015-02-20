@@ -5,7 +5,7 @@ define('CLIPS_TOOL_PATH', __DIR__);
 if(!defined('FCPATH'))
 	define('FCPATH', getcwd());
 
-class Requires extends \Addendum\Annotation { }
+class Library extends \Addendum\Annotation { }
 class FullArgs extends \Addendum\Annotation { }
 
 class LoadConfig {
@@ -273,7 +273,7 @@ class Tool implements Interfaces\Initializable {
 		}
 
 		// Process requires annotation
-		$a = get_annotation(get_class($obj), 'Clips\\Requires');
+		$a = get_annotation(get_class($obj), 'Clips\\Library');
 		if($a) {
 			foreach($a->value as $r) {
 				$obj->$r = $this->library($r);

@@ -4,6 +4,17 @@ use Clips\AbstractFilter;
 use Clips\Interfaces\Initializable;
 use Clips\Interfaces\ToolAware;
 
+/**
+ * This is the form processing filter, will be triggered by using Clips\Form
+ * annotation.
+ *
+ * This filter will only filter post requests by default, but if you really want
+ * it to filter http get requests, you can add get = true option to the Form 
+ * annotation to enable it.
+ *
+ * @author Jack
+ * @date Fri Feb 20 21:08:54 2015
+ */
 class FormFilter extends AbstractFilter implements ToolAware, Initializable {
 
 	public function init() {
@@ -19,7 +30,7 @@ class FormFilter extends AbstractFilter implements ToolAware, Initializable {
 		if($form_name) // If we can get the form name from the request, it must be the form post(even in get request)
 			return true;
 
-		$form = \Clips\clips_context('form');
+		$form = \Clips\context('form');
 		if($form) {
 			if($form->get) // If force to use get validation
 				return true;
@@ -31,7 +42,7 @@ class FormFilter extends AbstractFilter implements ToolAware, Initializable {
 
 	public function filter_before($chain, $controller, $method, $args, $request) {
 		// Get the form name from the form field
-		$form = \Clips\clips_context('form');
+		$form = \Clips\context('form');
 		if($form) {
 			// Try to get form name from the request parameter
 			$form_name = $request->param(\Clips\Form::FORM_FIELD);

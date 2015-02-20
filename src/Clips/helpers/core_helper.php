@@ -34,7 +34,7 @@ function valid_obj($obj, $class) {
 }
 
 function context($key = null, $value = null, $append = false) {
-	clips_context($key, $value, $append);
+	return clips_context($key, $value, $append);
 }
 
 function safe_add_extension($path, $ext) {
@@ -273,6 +273,10 @@ function is_cli() {
 
 function &get_clips_tool() {
 	return Tool::get_instance();
+}
+
+function config($name, $default = null) {
+	return clips_config($name, $default);
 }
 
 function clips_config($name, $default = null) {

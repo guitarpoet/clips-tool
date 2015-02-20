@@ -13,7 +13,7 @@ class InitFilter extends \Clips\AbstractFilter {
 
 			$init []= "if(typeof initialize === 'function') initialize();";
 
-			\Clips\clips_add_init_js('jQuery(function($){'.implode("\n", $init).'});');
+			\Clips\add_init_js('jQuery(function($){'.implode("\n", $init).'});');
 		}
 	}
 }

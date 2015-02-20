@@ -1,5 +1,11 @@
 <?php namespace Clips\DataSources; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+/**
+ * The MySQLi DataSource, impmement the datasource functions using PHP's mysqli driver.
+ *
+ * @author Jack
+ * @date Fri Feb 20 21:00:20 2015
+ */
 class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\LoggerAwareInterface {
 	public $host = 'localhost';
 	public $username = 'root';

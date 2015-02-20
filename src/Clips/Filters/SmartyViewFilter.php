@@ -3,6 +3,12 @@
 use Clips\Interfaces\Initializable;
 use Clips\Interfaces\ToolAware;
 
+/**
+ * The view filter using smarty
+ *
+ * @author Jack
+ * @date Fri Feb 20 22:01:12 2015
+ */
 class SmartyViewFilter extends ViewFilter implements Initializable, ToolAware {
 
 	public function init() {

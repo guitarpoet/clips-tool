@@ -57,8 +57,16 @@ function site_url($uri) {
 	return base_url($uri);
 }
 
+function add_init_js($js) {
+	clips_add_init_js($js);
+}
+
 function clips_add_init_js($js) {
 	clips_add_js(array('init'=>true, 'script'=>$js));
+}
+
+function add_js($js, $index = true) {
+	clips_add_js($js, $index);
 }
 
 function clips_add_js($js, $index = true) {
@@ -68,11 +76,19 @@ function clips_add_js($js, $index = true) {
 	}
 }
 
+function add_css($css, $index = true) {
+	clips_add_css($css, $index);
+}
+
 function clips_add_css($css, $index = true) {
 	$csses = clips_context('css');
 	if(!isset($csses) || array_search($css, $csses) === false) {
 		clips_context('css', $css, $index);
 	}
+}
+
+function add_scss($scss, $index = true) {
+	clips_add_scss($scss, $index);
 }
 
 function clips_add_scss($scss, $index = true) {

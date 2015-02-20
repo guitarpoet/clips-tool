@@ -2,6 +2,12 @@
 
 use Clips\AbstractFilter;
 
+/**
+ * The base filter for all the view filters.
+ *
+ * @author Jack
+ * @date Fri Feb 20 22:01:34 2015
+ */
 class ViewFilter extends AbstractFilter {
 
 	public function filter_after($chain, $controller, $method, $args, $request, $controller_ret) {

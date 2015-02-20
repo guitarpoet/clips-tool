@@ -4,6 +4,19 @@ use Clips\AbstractFilter;
 use Clips\Interfaces\ClipsAware;
 use Addendum\ReflectionAnnotatedClass;
 
+/**
+ * This filter will be trigger by the Clips\Rules annotation, and will act like this:
+ *
+ * 1. Load all the rules in Clips\Rules's annotation configuration
+ * 2. Let the controller's method to add facts to the clips engine
+ * 3. Run the clips engine
+ *
+ * This is quite handy for some rule based operations(like login). Will save lots of
+ * preparation for the rule engine routine.
+ *
+ * @author Jack
+ * @date Fri Feb 20 21:31:54 2015
+ */ 
 class RulesFilter extends AbstractFilter implements ClipsAware {
 
 	public function setClips($clips) {

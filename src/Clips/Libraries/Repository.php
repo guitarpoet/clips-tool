@@ -3,7 +3,7 @@
 /**
  * This is the repository facade for store files in repository
  *
- * @Requires({"git"})
+ * @Clips\Library({"git"})
  */
 class Repository implements \Psr\Log\LoggerAwareInterface, 
 	\Clips\Interfaces\Initializable {
