@@ -329,6 +329,10 @@ function clips_path($path) {
 	return path_join(dirname($rc->getFileName()), $path);
 }
 
+function load_rules($rules) {
+	clips_load_rules($rules);
+}
+
 function clips_load_rules($rules) {
 	if($rules) {
 		$tool = &get_clips_tool();

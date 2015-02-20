@@ -7,3 +7,8 @@
 ; @date Fri Feb 20 11:47:50 2015
 ;
 ;===============================================================================
+
+; Load the name validation rules
+(load-rules "/rules/validation/name.rules")
+
+(list-defrules)

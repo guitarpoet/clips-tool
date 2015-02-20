@@ -4,10 +4,9 @@ use Clips\TestCase;
 
 class ValidationTest extends TestCase {
 
-	public function doSetUp() {
-		$this->validator = new Clips\Validator();
-	}
-
+	/**
+	 * @Clips\Object("Validator")
+	 */
 	public function testValidationIPv4() {
 		$this->assertEquals(count($this->validator->valid_ip(array('ip', '1.2.3.40'))), 0 );
 		$this->assertEquals(count($this->validator->valid_ip(array('ip', 'a1.2.3.40'))), 1);
@@ -15,6 +14,19 @@ class ValidationTest extends TestCase {
 		$this->assertEquals(count($this->validator->valid_ip(array('ip', 'This is not an address'))), 1);
 	}
 
+	/**
+	 * @Clips\Object({"Validator", "FakeData"})
+	 */
+	public function testValidateName() {
+		$name = $this->fakedata->fakeName();
+		$this->assertEquals($this->validator->valid_name(array('name', $name->simple_name)), array());
+		$this->assertEquals(count($this->validator->valid_name(array('name', $name->name))), 1);
+		$this->assertEquals(count($this->validator->valid_email(array('name', '~SHIT !@#$'))), 7);
+	}
+
+	/**
+	 * @Clips\Object("Validator")
+	 */
 	public function testValidate() {
 		$arr = array('password' => 'password', 'remember_me' => true, 'age' => -1);
 		$json = <<<TEXT

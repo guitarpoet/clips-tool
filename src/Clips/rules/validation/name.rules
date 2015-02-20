@@ -1,0 +1,165 @@
+;===============================================================================
+;
+; The validation rule for simple name
+; 
+; @version 1.0
+; @author Jack <guitarpoet@gmail.com>
+; @date Fri Feb 20 11:58:47 2015
+;
+;===============================================================================
+
+(defrule name-must-start-with-a-character
+	(name ?n &:(match ?n "^[^_a-zA-Z].*"))
+	=>
+	(assert (error "Name [" ?n "] is not start with character"))
+)
+
+(defrule name-must-not-have-any-blanks
+	(name ?n &:(str-index " " ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have blank in it!")))
+)
+
+(defrule name-must-not-have-any-$
+	(name ?n &:(str-index "$" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have $ in it!")))
+)
+
+(defrule name-must-not-have-any-!
+	(name ?n &:(str-index "!" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have ! in it!")))
+)
+
+(defrule name-must-not-have-any-#
+	(name ?n &:(str-index "#" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have # in it!")))
+)
+
+(defrule name-must-not-have-any-%
+	(name ?n &:(str-index "%" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have % in it!")))
+)
+
+(defrule name-must-not-have-any-amperstand
+	(name ?n &:(str-index "&" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have & in it!")))
+)
+
+(defrule name-must-not-have-any-`
+	(name ?n &:(str-index "`" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have ` in it!")))
+)
+
+(defrule name-must-not-have-any-*
+	(name ?n &:(str-index "*" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have * in it!")))
+)
+
+(defrule name-must-not-have-any-left-bracelet
+	(name ?n &:(str-index "(" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have ( in it!")))
+)
+
+(defrule name-must-not-have-any-right-bracelet
+	(name ?n &:(str-index ")" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have ) in it!")))
+)
+
+(defrule name-must-not-have-any-+
+	(name ?n &:(str-index "+" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have + in it!")))
+)
+
+(defrule name-must-not-have-any-minus
+	(name ?n &:(str-index "-" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have - in it!")))
+)
+
+(defrule name-must-not-have-any-/
+	(name ?n &:(str-index "/" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have / in it!")))
+)
+
+(defrule name-must-not-have-any-,
+	(name ?n &:(str-index "," ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have , in it!")))
+)
+
+(defrule name-must-not-have-any-wave
+	(name ?n &:(str-index "~" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have ~ in it!")))
+)
+
+(defrule name-must-not-have-any-=
+	(name ?n &:(str-index "=" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have = in it!")))
+)
+
+(defrule name-must-not-have-any-%
+	(name ?n &:(str-index "%" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have % in it!")))
+)
+
+(defrule name-must-not-have-any-@
+	(name ?n &:(str-index "@" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have @ in it!")))
+)
+
+(defrule name-must-not-have-any-^
+	(name ?n &:(str-index "^" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have ^ in it!")))
+)
+
+(defrule name-must-not-have-any->
+	(name ?n &:(str-index ">" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have > in it!")))
+)
+
+(defrule name-must-not-have-any-lt
+	(name ?n &:(str-index "<" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have < in it!")))
+)
+
+(defrule name-must-not-have-any-:
+	(name ?n &:(str-index ":" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have : in it!")))
+)
+
+(defrule name-must-not-have-any-quote
+	(name ?n &:(str-index "\"" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have \" in it!")))
+)
+
+(defrule name-must-not-have-any-?
+	(name ?n &:(str-index "?" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have ? in it!")))
+)
+
+(defrule name-must-not-have-any-line
+	(name ?n &:(str-index "|" ?n))
+	=> 
+	(assert (error (str-cat "Name [" ?n "] have | in it!")))
+)
