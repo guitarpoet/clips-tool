@@ -2,11 +2,11 @@
 
 use Clips\TestCase;
 
+/**
+ * @Clips\Object("Validator")
+ */
 class ValidationTest extends TestCase {
 
-	/**
-	 * @Clips\Object("Validator")
-	 */
 	public function testValidationIPv4() {
 		$this->assertEquals(count($this->validator->valid_ip(array('ip', '1.2.3.40'))), 0 );
 		$this->assertEquals(count($this->validator->valid_ip(array('ip', 'a1.2.3.40'))), 1);
@@ -15,7 +15,7 @@ class ValidationTest extends TestCase {
 	}
 
 	/**
-	 * @Clips\Object({"Validator", "FakeData"})
+	 * @Clips\Object("FakeData")
 	 */
 	public function testValidateName() {
 		$name = $this->fakedata->fakeName();
@@ -24,9 +24,6 @@ class ValidationTest extends TestCase {
 		$this->assertEquals(count($this->validator->valid_email(array('name', '~SHIT !@#$'))), 7);
 	}
 
-	/**
-	 * @Clips\Object({"Validator"})
-	 */
 	public function testValidateDomainName() {
 		$this->assertEquals($this->validator->valid_domain(array('domain', 'thinkingcloud.info')), array());
 		$this->assertEquals($this->validator->valid_domain(array('domain', 'www.w3c-school.org')), array());
@@ -34,9 +31,6 @@ class ValidationTest extends TestCase {
 		$this->assertEquals(count($this->validator->valid_domain(array('domain', '$$$.micro$oft.com'))), 2);
 	}
 
-	/**
-	 * @Clips\Object("Validator")
-	 */
 	public function testValidate() {
 		$arr = array('password' => 'password', 'remember_me' => true, 'age' => -1);
 		$json = <<<TEXT

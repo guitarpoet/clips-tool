@@ -45,9 +45,16 @@ class TestCase extends \PHPUnit_Framework_TestCase {
 			}
 		}
 
-		$a = get_annotation($this, "Clips\\Object", $func); // Check for method first
-		if(!$a)
-			$a = get_annotation($this, "Clips\\Object"); // Check for class if there is no annotation on method
+		$this->processObject(get_annotation($this, 
+			"Clips\\Object", $func)); // Check for method first
+
+		$this->processObject(get_annotation($this, 
+			"Clips\\Object")); // Check for class as the global
+
+		$this->doSetUp();
+    }
+
+	protected function processObject($a) {
 		if($a) {
 			if(isset($a->value)) {
 				if(!\is_array($a->value))
@@ -58,9 +65,7 @@ class TestCase extends \PHPUnit_Framework_TestCase {
 				}
 			}
 		}
-
-		$this->doSetUp();
-    }
+	}
 
 	public function doSetUp() {
 	}
