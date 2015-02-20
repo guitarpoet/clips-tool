@@ -3,6 +3,7 @@
 class MigrationTool {
 
 	public function insert($migration, $table, $data) {
+		$ret = array();
 		foreach($data as $d) {
 			$sql = array('insert', 'into', $table, '(');
 			$keys = array();
@@ -16,8 +17,9 @@ class MigrationTool {
 			$sql []= implode(', ', $values);
 			$sql []= ')';
 			$sql = implode(' ', $sql);
-			$migration->execute($sql, $data);
+			$ret []= $migration->execute($sql, $data);
 		}
+		return $ret;
 	}
 
 	public function up($migration, $config) {

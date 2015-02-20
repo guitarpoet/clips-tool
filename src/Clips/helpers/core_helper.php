@@ -173,6 +173,11 @@ function safe_file_exists($file) {
 	return file_exists($file);
 }
 
+function smooth($str) {
+	$result = explode('.', $str);
+	return implode('_', $result);
+}
+
 function to_flat($str) {
 	$result = array();
 	$str = str_replace('/', '\\', $str);

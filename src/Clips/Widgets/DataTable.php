@@ -33,8 +33,15 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 				// Setting the default values for the datatable configuration
 				if(!isset($config->ajax))
 					$config->ajax = $name;
+
 				$config->processing = true;
 				$config->serverSide = true;
+
+				foreach($config->columns as $col) {
+					if(isset($col->data)) {
+						$col->data = \Clips\smooth($col->data);
+					}
+				}
 
 				// Adding the initialize script to jquery init
 				\Clips\context('jquery_init', '$("table[name='.$name.']").DataTable('.json_encode($config).')');

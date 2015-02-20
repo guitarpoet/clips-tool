@@ -76,20 +76,26 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 				$pagination = Pagination::fromJson(file_get_contents($p));
 				$pagination->update($this->request->param());
 				$sql = $this->tool->library('sql');
-				clips_log('Sql is {0}', $sql->pagination($pagination));
 
 				// Get the first datasource
 				$datasource = $this->tool->library('datasource')->first();
 
 				$query = $sql->count($pagination);
-				$result = $datasource->query($query[0], $query[1]);
+				log($query[0]);
+				if(isset($query[1]))
+					$result = $datasource->query($query[0], $query[1]);
+				else
+					$result = $datasource->query($query[0]);
 
 				if($result) {
 					$count = $result[0]->count;
 					$query = $sql->pagination($pagination);
-					$result = $datasource->query($query[0], $query[1]);
+					if(isset($query[1]))
+						$result = $datasource->query($query[0], $query[1]);
+					else
+						$result = $datasource->query($query[0]);
 					if($result) {
-						return $this->render("", array('data' => array(), 'recordsTotal' => 0, 'recordsFiltered' => 0), 'json');
+						return $this->render("", array('data' => $result, 'recordsTotal' => $count, 'recordsFiltered' => $count), 'json');
 					}
 				}
 			}

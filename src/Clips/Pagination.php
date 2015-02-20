@@ -142,7 +142,12 @@ class Pagination {
 
 	public function fields() {
 		if(isset($this->columns)) {
-			return array_map(function($i) { return $i->data; }, $this->columns);
+			return array_map(function($i) { 
+				if(strpos($i->data, ' ') === false) {
+					return $i->data.' as '.smooth($i->data);
+				}
+				return $i->data; 
+			}, $this->columns);
 		}
 		else
 			return array('*');

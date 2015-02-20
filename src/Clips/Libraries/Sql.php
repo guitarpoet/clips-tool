@@ -85,7 +85,7 @@ class Sql {
 		if(\Clips\valid_obj($p, 'Clips\\Pagination')) {
 			// For fields
 			if($count) {
-				$this->select('count(*) as count');
+				$this->select(array_merge(array('count(*) as count'), $p->fields()));
 			}
 			else {
 				$this->select($p->fields());
@@ -140,7 +140,8 @@ class Sql {
 			}
 
 			// For limits
-			$this->limit($p->offset, $p->length);
+			if(!$count)
+				$this->limit($p->offset, $p->length);
 
 			return $this->sql();
 		}
