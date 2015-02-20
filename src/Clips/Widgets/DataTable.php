@@ -39,12 +39,22 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 
 				foreach($config->columns as $col) {
 					if(isset($col->data)) {
+						// Must smooth the data
 						$col->data = \Clips\smooth($col->data);
+					}
+
+					if(isset($col->refer)) {
+						$col->refer = \Clips\smooth($col->refer);
+					}
+
+					if(isset($col->action)) {
+						// If has action, use action render
+						$col->render = 'datatable_action_column';
 					}
 				}
 
 				// Adding the initialize script to jquery init
-				\Clips\context('jquery_init', '$("table[name='.$name.']").DataTable('.json_encode($config).')');
+				\Clips\context('jquery_init', '$("table[name='.$name.']").DataTable('.str_replace('"datatable_action_column"', 'datatable_action_column', json_encode($config)).')');
 			}
 		}
 	}

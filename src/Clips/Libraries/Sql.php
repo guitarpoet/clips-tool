@@ -116,7 +116,6 @@ class Sql {
 					switch(count($j)) {
 					case 0:
 					case 1:
-						throw new Exception('FUCK!!!!');
 						\Clips\clips_error("Too few arguments for join!", array($j));
 						break;
 					case 2:

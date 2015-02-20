@@ -81,7 +81,6 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 				$datasource = $this->tool->library('datasource')->first();
 
 				$query = $sql->count($pagination);
-				log($query[0]);
 				if(isset($query[1]))
 					$result = $datasource->query($query[0], $query[1]);
 				else

@@ -7,7 +7,8 @@
 	"depends": ["Html", "Jquery"],
 	"js": {
 		"files": [
-			"jquery.dataTables.js"
+			"jquery.dataTables.js",
+			"datatable.functions.js"
 		]
 	},
 	"css": {

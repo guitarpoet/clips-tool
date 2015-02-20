@@ -142,12 +142,23 @@ class Pagination {
 
 	public function fields() {
 		if(isset($this->columns)) {
-			return array_map(function($i) { 
+			$fields = array();
+			foreach($this->columns as $i) {
 				if(strpos($i->data, ' ') === false) {
-					return $i->data.' as '.smooth($i->data);
+					$fields []= $i->data.' as '.smooth($i->data);
 				}
-				return $i->data; 
-			}, $this->columns);
+				else
+				   	$fields []= $i->data; 
+
+				if(isset($i->refer)) {
+					if(strpos($i->refer, ' ') === false) {
+						$fields []= $i->refer.' as '.smooth($i->refer);
+					}
+					else
+						$fields []= $i->refer; 
+				}
+			}
+			return $fields;
 		}
 		else
 			return array('*');
