@@ -1,6 +1,7 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
 use Clips\Interfaces\Initializable;
+use Clips\Interfaces\ToolAware;
 
 /**
  * The form helper class, this is the basic form configuration support class.
@@ -13,13 +14,18 @@ use Clips\Interfaces\Initializable;
  *
  * Also, this supports for mutiple form configuration
  */
-class Form extends \Addendum\Annotation implements Initializable {
+class Form extends \Addendum\Annotation implements Initializable, ToolAware {
 
 	const FORM_FIELD = '_clips_form';
 
 	public $get = false;
 
+	public function setTool($tool) {
+		$this->tool = $tool;
+	}
+
 	public function init() {
+		$this->tool->widget('Form');
 		if(isset($this->value)) {
 			if(!is_array($this->value)) {
 				$this->value = array($this->value);

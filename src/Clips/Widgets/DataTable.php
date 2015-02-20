@@ -17,6 +17,7 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 	}
 
 	public function init() {
+		$this->tool->widget('DataTable');
 		if(isset($this->value)) {
 			if(!is_array($this->value)) {
 				$this->value = array($this->value);

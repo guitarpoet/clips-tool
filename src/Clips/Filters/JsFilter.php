@@ -9,22 +9,22 @@ class JsFilter extends AbstractFilter {
 			if(!is_array($js)) {
 				$js = array($js);
 			}
-		}
 
-		$js = array_map(function($item) {
-			if(is_array($item)) {
-				return '<script type="text/javascript">'.$item['script'].'</script>';
-			}
-			if(is_object($item)) {
-				return '<script type="text/javascript">'.$item->script.'</script>';
-			}
-			else {
-				$path = \Clips\safe_add_extension($item, 'js');
-				if(strpos($path, 'http:') === false) 
-					$path = \Clips\static_url($path);
-				return '<script type="text/javascript" src="'.$path.'"></script>';
-			}
-		} ,$js);
-		\Clips\clips_context('js', implode("\n\t\t", $js), false);
+			$js = array_map(function($item) {
+				if(is_array($item)) {
+					return '<script type="text/javascript">'.$item['script'].'</script>';
+				}
+				if(is_object($item)) {
+					return '<script type="text/javascript">'.$item->script.'</script>';
+				}
+				else {
+					$path = \Clips\safe_add_extension($item, 'js');
+					if(strpos($path, 'http:') === false) 
+						$path = \Clips\static_url($path);
+					return '<script type="text/javascript" src="'.$path.'"></script>';
+				}
+			} ,$js);
+			\Clips\clips_context('js', implode("\n\t\t", $js), false);
+		}
 	}
 }
