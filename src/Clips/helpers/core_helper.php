@@ -1,5 +1,13 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+function n_times($n, $func, $start = 1) {
+	$ret = array();
+	for($i = $start; $i < $n + $start; $i++) {
+		$ret []= call_user_func($func, $i);
+	}
+	return $ret;
+}
+
 function choice($array) {
 	return $array[array_rand($array)];
 }
