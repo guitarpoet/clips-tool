@@ -11,4 +11,8 @@
 ; Load the name validation rules
 (load-rules "/rules/validation/name.rules")
 
-(list-defrules)
+(defrule email-address-must-have-@
+	(email ?e &: (not (str-index "@" ?e)))
+	=>
+	(assert (error "Email address " ?e " didn't have @ in it!"))
+)

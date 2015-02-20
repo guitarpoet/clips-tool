@@ -25,6 +25,16 @@ class ValidationTest extends TestCase {
 	}
 
 	/**
+	 * @Clips\Object({"Validator"})
+	 */
+	public function testValidateDomainName() {
+		$this->assertEquals($this->validator->valid_domain(array('domain', 'thinkingcloud.info')), array());
+		$this->assertEquals($this->validator->valid_domain(array('domain', 'www.w3c-school.org')), array());
+		$this->assertEquals(count($this->validator->valid_domain(array('domain', 'Oh No!'))), 3);
+		$this->assertEquals(count($this->validator->valid_domain(array('domain', '$$$.micro$oft.com'))), 2);
+	}
+
+	/**
 	 * @Clips\Object("Validator")
 	 */
 	public function testValidate() {

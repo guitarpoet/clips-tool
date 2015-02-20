@@ -1,0 +1,25 @@
+;===============================================================================
+;
+; The validation rule for domain address
+; 
+; @version 1.0
+; @author Jack <guitarpoet@gmail.com>
+; @date Fri Feb 20 12:42:45 2015
+;
+;===============================================================================
+
+; Load the name validation rules
+(load-rules "/rules/validation/name.rules")
+
+(defrule domain-address-must-have-.
+	(domain ?e &: (not (str-index "." ?e)))
+	=>
+	(assert (error (str-cat "Domain address [" ?e "] didn't have . in it!")))
+)
+
+(defrule domain-address-must-be-valid-name
+	(domain ?d)
+	(not (name ?n&:(eq ?d ?n)))
+	=>
+	(assert (name ?d))
+)
