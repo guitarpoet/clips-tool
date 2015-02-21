@@ -3,7 +3,11 @@
 use Clips\Controller;
 
 /**
- * The default responsive controller for create image responsivly
+ * The default responsive controller for create image responsively.
+ *
+ * The usage for this controller is something like this:
+ *
+ * index.php/responsive/size/120/admin/user.png
  *
  * @author Jack
  * @date Sat Feb 21 12:56:47 2015
@@ -59,6 +63,5 @@ class ResponsiveController extends Controller {
 			$this->imageUtils->thumbnail($path, $name, $size);
 		}
 		return $this->image($name);
-		//var_dump($this->imageUtils->size($path));
 	}
 }
