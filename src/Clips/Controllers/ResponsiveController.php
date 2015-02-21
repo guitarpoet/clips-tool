@@ -37,7 +37,7 @@ class ResponsiveController extends Controller {
 			return;
 		}
 
-		$name = array_pop($args);
+		$n = array_pop($args);
 		if($args) { 
 			// If we still have args, make it as the folder
 			$folder = implode('/', $args);
@@ -54,8 +54,8 @@ class ResponsiveController extends Controller {
 			mkdir($folder, 0777, true);
 		}
 
-		$name = $this->fileCache->fileName($name, $folder);
-		if($this->fileCache->shouldUpdate($name, $folder, $path)) {
+		$name = $this->fileCache->fileName($n, $folder);
+		if($this->fileCache->shouldUpdate($n, $folder, $path)) {
 			$this->imageUtils->thumbnail($path, $name, $size);
 		}
 		return $this->image($name);
