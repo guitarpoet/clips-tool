@@ -1,17 +1,54 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
-function n_times($n, $func, $start = 1) {
+/**
+ * Call function n times
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:20:25 2015
+ * @param n
+ * 		How many times
+ * @param func
+ * 		The function	
+ * @param args (default empty)
+ * 		The args to send into the function
+ * @param start (default 1)
+ * 		The start point
+ * @return
+ * 		The result array of all the return values
+ */
+function n_times($n, $func, $args = array(), $start = 1) {
 	$ret = array();
 	for($i = $start; $i < $n + $start; $i++) {
-		$ret []= call_user_func($func, $i);
+		$args []= $i;
+		$ret []= call_user_func_array($func, $args);
+		array_pop($args);
 	}
 	return $ret;
 }
 
-function choice($array) {
+/**
+ * Choose an item from array randomly.
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:21:21 2015
+ */
+function choice(array $array) {
 	return $array[array_rand($array)];
 }
 
+/**
+ * Get the resource relative to object's script file, this is quite useful to
+ * get the resource content that locates in the composer's vendor folder.
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:22:35 2015
+ * @param name
+ * 		The name of the resource
+ * @param obj
+ * 		The object
+ * @return
+ * 		The content of the resource
+ */
 function content_relative($name, $obj) {
 	$path = class_script_path($obj);
 	if($path) {
@@ -23,20 +60,57 @@ function content_relative($name, $obj) {
 	return null;
 }
 
+/**
+ * Get current posix user(will need php posix plugin)
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:24:10 2015
+ */
 function current_user() {
 	$user = \posix_getpwuid(\posix_geteuid());
 	return $user['name'];
 }
 
+/**
+ * Test if the object is valid
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:24:46 2015
+ * @param obj
+ * 		The object to test
+ * @param class
+ * 		The object's class or super class
+ */
 function valid_obj($obj, $class) {
 	return \is_object($obj) && \class_exists($class) 
 		&& (\get_class($obj) == $class || \is_subclass_of($obj, $class));
 }
 
+/**
+ * Get, set or append to clips context
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:28:44 2015
+ * @param key
+ * 		The key of the context
+ * @param value
+ * 		The value of the key
+ * @param append (default false)
+ * 		Whether to append or replace this value	to context
+ */
 function context($key = null, $value = null, $append = false) {
 	return clips_context($key, $value, $append);
 }
 
+/**
+ * Test the path before adding extension to it
+ *
+ * @param path
+ * 		The path to add extension
+ * @param ext
+ * 		The extension
+ * @return The path that has the extension
+ */
 function safe_add_extension($path, $ext) {
 	if(str_end_with($path, $ext)) {
 		return $path;
@@ -46,20 +120,61 @@ function safe_add_extension($path, $ext) {
 	}
 }
 
+/**
+ * Pop from the context value, if there is only 1 value in the context for the key, just remove it
+ *
+ * @param key
+ * 		The key
+ * @return 
+ * 		The value of the key in the context
+ */
 function context_pop($key) {
 	$tool = &get_clips_tool();
 	return $tool->context_pop($key);
 }
 
-function clips_error($cause, $message = array()) {
-	clips_context('error', new Error($cause, $message));
+/**
+ * Appending the error to clips context
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:30:08 2015
+ * @param cause
+ * 		The cause of the error
+ * @param message
+ * 		The message of the error
+ */
+function error($cause, $message = array()) {
+	clips_error($cause, $message);
 }
 
+function clips_error($cause, $message = array()) {
+	context('error', new Error($cause, $message), true);
+}
+
+/**
+ * Show the error using sprintf pattern
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:31:05 2015
+ */
 function show_error() {
 	$msg = call_user_func_array('sprintf', func_get_args());
 	trigger_error($msg);
 }
 
+
+/**
+ * Get the annotation from class or method
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:31:44 2015
+ * @param class
+ * 		The class to get the annotation
+ * @param annotation
+ * 		The class of the annotation
+ * @param method
+ * 		The method to get the annotation
+ */
 function get_annotation($class, $annotation, $method = null) {
 	$re = new \Addendum\ReflectionAnnotatedClass($class);
 	if($method) {
@@ -77,6 +192,16 @@ function get_annotation($class, $annotation, $method = null) {
 	}
 }
 
+/**
+ * Format the object using the formatter
+ *
+ * @param obj
+ * 		The object to be formatted
+ * @param formatter
+ * 		The formatter	
+ * @return
+ * 		The formatted string
+ */
 function format($obj, $formatter) {
 	$f = Formatter::get($formatter);
 	if($f)
@@ -84,12 +209,30 @@ function format($obj, $formatter) {
 	return '';
 }
 
+/**
+ * Get the script path of the given class
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:33:55 2015
+ * @param class
+ * 		The class
+ * @return The path of the class script
+ */
 function class_script_path($class) {
     $rc = new \ReflectionClass($class);
     return $rc->getFileName();
 }
 
-function try_path($path, $others = array()) {
+/**
+ * The fundamental path guess function, will try current working directory and clips path
+ * to get the resource
+ *
+ * @param path
+ * 		The relative path of the resource
+ * @param others
+ * 		The alternative pathes
+ */
+function try_path($path, array $others = array()) {
 	foreach(array_merge($others, array(getcwd(), clips_path('/'))) as $pre) {
 		$p = path_join($pre, $path);
 		if(file_exists($p))
@@ -120,6 +263,21 @@ function clips_context($key = null, $value = null, $append = false) {
 	return $tool->context($key, $value, $append);
 }
 
+/**
+ * Try to find the file in folder recursively
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:37:11 2015
+ * @param folder
+ * 		The folder to find the file
+ * @param file
+ * 		The filename	
+ * @param suffix (default null)
+ * 		The file extension (only match the same extension)
+ * @param blur (default false)
+ * 		If using blur, will just locate the filename in the filename, not matching it
+ * @return All the matching files
+ */
 function find_file($folder, $file, $suffix = null, $blur = false) {
 	$ret = array();
 
@@ -154,6 +312,12 @@ function find_file($folder, $file, $suffix = null, $blur = false) {
 	return $ret;
 }
 
+/**
+ * Safely parse the JSON, using a JSON lint library
+ * 
+ * @author Jack
+ * @date Sat Feb 21 10:40:14 2015
+ */
 function parse_json($json) {
 	$parser = new \Seld\JsonLint\JsonParser();
 	$ret = $parser->lint($json);
@@ -165,6 +329,12 @@ function parse_json($json) {
 		return json_decode($json);
 }
 
+/**
+ * Make file exists function safe(because the resource uri scheme will trigger php streamhandlers)
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:41:29 2015
+ */
 function safe_file_exists($file) {
 	if(strpos($file, "://") !== false) {
 		// Skip this for resource
@@ -173,11 +343,23 @@ function safe_file_exists($file) {
 	return file_exists($file);
 }
 
+/**
+ * Smooth the string like a.b.c to a_b_c
+ * 
+ * @author Jack
+ * @date Sat Feb 21 10:41:51 2015
+ */
 function smooth($str) {
 	$result = explode('.', $str);
 	return implode('_', $result);
 }
 
+/**
+ * Flattern the string like Demo\TestService to demo_test_service
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:42:29 2015
+ */
 function to_flat($str) {
 	$result = array();
 	$str = str_replace('/', '\\', $str);
@@ -196,6 +378,12 @@ function to_flat($str) {
 	return implode('_', $result);
 }
 
+/**
+ * Make the string like demo/test_service to Demo/TestService
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:43:19 2015
+ */
 function to_camel($str) {
 	$arr = explode('/', $str);
 	$ret = array();
@@ -210,6 +398,12 @@ function to_camel($str) {
 	return implode('/', $ret);
 }
 
+/**
+ * The missing function in php, to test if the string is end with string.
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:44:01 2015
+ */
 function str_end_with($haystack, $needle, $trim = true) {
 	if($trim) {
 		$str = trim($haystack);
@@ -220,11 +414,23 @@ function str_end_with($haystack, $needle, $trim = true) {
 	return strrpos($str, $needle) === strlen($str) - strlen($needle);
 }
 
+/**
+ * Get the content using the resource
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:44:37 2015
+ */
 function resource_contents($uri) {
 	$r = new Resource($uri);
 	return $r->contents();
 }
 
+/**
+ * Remove all the files and the folder
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:45:40 2015
+ */
 function rmr($path) {
 	if (PHP_OS === 'Windows') {
 		exec("rd /s /q {$path}");
@@ -234,8 +440,28 @@ function rmr($path) {
 	}
 }
 
+/**
+ * Get the tmp file using php's tempnam and system temp dir
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:45:51 2015
+ */
 function get_tmp_file($prefix = 'clips_tmp') {
 	return tempnam(sys_get_temp_dir(), $prefix);
+}
+
+/**
+ * Log the stacktrace to the log
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:47:12 2015
+ * @param message
+ * 		The message to log
+ * @param level
+ * 		The stacktrace level
+ */
+function stacktrace($message, $level = 3) {
+	clips_stacktrace($message, $level);
 }
 
 function clips_stacktrace($message, $level = 3) {
@@ -247,6 +473,17 @@ function clips_stacktrace($message, $level = 3) {
 	clips_log($message, $ret);
 }
 
+/**
+ * Log using clips tool's LoggerInterface, only used for test or helper function.
+ * For objects, the LoggerAware interface is more appriciated
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:49:09 2015
+ * @param message
+ * 		The message to log
+ * @param context
+ * 		The log context
+ */
 function log($message, $context = array()) {
 	clips_log($message, $context);
 }
@@ -256,6 +493,13 @@ function clips_log($message, $context = array()) {
 	$tool->info($message, $context);
 }
 
+/**
+ * The meta function for console tools, only support posix console, and only get the width of the 
+ * console
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:50:15 2015
+ */
 function console_meta() {
 	return array('width' => `tput cols`);
 }
@@ -263,18 +507,46 @@ function console_meta() {
 class Depends extends \Addendum\Annotation {
 }
 
+/**
+ * Join the pathes carefully
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:50:57 2015
+ */
 function path_join() {
 	return str_replace('//', '/', str_replace('///', '/', implode('/', func_get_args())));
 }
 
+/**
+ * Test if the php is called in cli
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:51:14 2015
+ */
 function is_cli() {
 	return (php_sapi_name() === 'cli' OR defined('STDIN'));
 }
 
+/**
+ * Get the clips tool globally
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:51:37 2015
+ */
 function &get_clips_tool() {
 	return Tool::get_instance();
 }
 
+/**
+ * Get the configuration
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:52:02 2015
+ * @param name
+ * 		The name of the config
+ * @param default
+ * 		if no configuration is found, the default value to be returned
+ */
 function config($name, $default = null) {
 	return clips_config($name, $default);
 }
@@ -287,10 +559,23 @@ function clips_config($name, $default = null) {
 	return $default;
 }
 
+/**
+ * The relative path of the clips tool
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:52:59 2015
+ */
 function clips_tool_path($path) {
 	return CLIPS_TOOL_PATH.$path;
 }
 
+/**
+ * Record this php file is loaded, this function is used for loading php file
+ * using rule engine
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:53:34 2015
+ */
 function record_file_load($file) {
 	if($file) {
 		$tool = get_clips_tool();
@@ -300,6 +585,12 @@ function record_file_load($file) {
 	return false;
 }
 
+/**
+ * Test if the file is loaded
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:54:21 2015
+ */
 function file_load($file) {
 	if($file) {
 		$tool = &get_clips_tool();
@@ -308,6 +599,16 @@ function file_load($file) {
 	return false;
 }
 
+/**
+ * Adding file prefix and suffix to filename only, this function will act like this:
+ *
+ * a/b/c/d => a/b/c/prefix_d_suffix.php
+ *
+ * This is the tool function for loading php file using rule engine
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:56:07 2015
+ */
 function process_file_name($prefix, $file, $suffix) {
 	$arr = explode('/', $file);
 	$tail = array_pop($arr);
@@ -315,6 +616,12 @@ function process_file_name($prefix, $file, $suffix) {
 	return implode('/', $arr);
 }
 
+/**
+ * Load the php file using guard of record_file_load
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:56:38 2015
+ */
 function clips_php_require_once($file) {
 	if(require_once($file)) {
 		record_file_load($file);
@@ -323,11 +630,35 @@ function clips_php_require_once($file) {
 	return false;
 }
 
+/**
+ * Load the library
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:56:58 2015
+ * @param library
+ * 		The library to load
+ * @param init (default true)
+ * 		Should init the library class?
+ * @param suffix (default '')
+ * 		The suffix of the class
+ */
 function clips_library($library, $init = true, $suffix = "") {
 	$tool = get_clips_tool();
 	return $tool->library($library, $init, $suffix);
 }
 
+/**
+ * Output the template using mustache, the template is load using tpl:// resource by default
+ *
+ * @author Jack
+ * @date Sat Feb 21 10:58:36 2015
+ * @param template
+ * 		The template resource, by default is tpl://{resource}
+ * @param args
+ * 		The template args
+ * @param output (default true)
+ * 		Should output to stdout?
+ */
 function clips_out($template, $args, $output = true) {
 	$tool = get_clips_tool();
 	if(strpos($template, "://")) {
@@ -341,11 +672,27 @@ function clips_out($template, $args, $output = true) {
 	return $ret;
 }
 
+/**
+ * Get the path relative to clips tool
+ *
+ * @author Jack
+ * @date Sat Feb 21 11:00:20 2015
+ */
+function path($patn) {
+	return clips_path($path);
+}
+
 function clips_path($path) {
 	$rc = new \ReflectionClass("Clips\\Tool");
 	return path_join(dirname($rc->getFileName()), $path);
 }
 
+/**
+ * Load the rules using clips engine
+ *
+ * @author Jack
+ * @date Sat Feb 21 11:00:47 2015
+ */
 function load_rules($rules) {
 	clips_load_rules($rules);
 }
@@ -358,6 +705,12 @@ function clips_load_rules($rules) {
 	return false;
 }
 
+/**
+ * Get the value of the key from object or array, if no value is there, return the default value
+ *
+ * @author Jack
+ * @date Sat Feb 21 11:02:05 2015
+ */
 function get_default($arr, $key, $default = '') {
 	if(is_object($arr))
 		return isset($arr->$key)? $arr->$key: $default;
@@ -366,10 +719,22 @@ function get_default($arr, $key, $default = '') {
 	return $default;
 }
 
+/**
+ * This is the helper function for clips engine, to match the string using preg_match
+ *
+ * @author Jack
+ * @date Sat Feb 21 11:02:29 2015
+ */
 function clips_str_match($str, $pattern) {
 	return !!preg_match('/'.$pattern.'/', $str);
 }
 
+/**
+ * This is the helper function for clips engine, to get the value from object or array
+ *
+ * @author Jack
+ * @date Sat Feb 21 11:03:24 2015
+ */
 function clips_get_property($obj, $property) {
 	if(is_array($obj) && isset($obj[$property])) {
 		return $obj[$property];
@@ -381,15 +746,41 @@ function clips_get_property($obj, $property) {
 	return null;
 }
 
+/**
+ * Get the controller's class
+ *
+ * @author Jack
+ * @date Sat Feb 21 11:03:55 2015
+ */
 function controller_class($c) {
 	$tool = &get_clips_tool();
 	return $tool->controller(ucfirst($c));
 }
 
+/**
+ * Test if the controller is exists, this is used for router's rule
+ *
+ * @author Jack
+ * @date Sat Feb 21 11:04:23 2015
+ */
 function controller_exists($c) {
 	return !! controller_class($c);
 }
 
+/**
+ * Extend the dest array using the src array.
+ * And if the key is in the additional fields, will just append the value instead of replacing it
+ *
+ * @author Jack
+ * @date Sat Feb 21 11:05:25 2015
+ * @param $dest
+ * 		The dest array
+ * @param $src
+ * 		The src array
+ * @param fields
+ * 		The append fields, if the key is in this array, will append instead of replace
+ * @return The dest array
+ */
 function extend_arr($dest, $src, $fields = null) {
 	if($src == null || !(is_array($src) || is_object($src)))
 		return $dest;
@@ -410,10 +801,27 @@ function extend_arr($dest, $src, $fields = null) {
 	return $dest;
 }
 
+/**
+ * Create an new object using class, and copy all the data from src to it
+ *
+ * @author Jack
+ * @date Sat Feb 21 11:07:08 2015
+ * @param src
+ * 		The src object or array
+ * @param class
+ * 		The class of the object, if null will use stdclass
+ * @return The object
+ */
 function copy_new($src, $class = null) {
 	return copy_object($src, null, $class);
 }
 
+/**
+ * Copy the src object or array to dest array
+ * 
+ * @author Jack
+ * @date Sat Feb 21 11:08:43 2015
+ */
 function copy_arr($src, $dest = null) {
 	if($src == null)
 		return $dest;
@@ -428,6 +836,12 @@ function copy_arr($src, $dest = null) {
 	return $dest;
 }
 
+/**
+ * Copy src object or array to dest object
+ *
+ * @author Jack
+ * @date Sat Feb 21 11:09:04 2015
+ */
 function copy_object($src, $dest = null, $class = null) {
 	if($src == null)
 		return null;
@@ -440,8 +854,7 @@ function copy_object($src, $dest = null, $class = null) {
 	}
 
 	foreach($src as $key => $value) {
-		$k = str_replace('.', '_', $key);
-		$dest->$k = $value;
+		$dest->$key = $value;
 	}
 	return $dest;
 }
