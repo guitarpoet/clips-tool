@@ -211,16 +211,26 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 			$ret = null;
 			if($this->filterChain->filter_before($this->filterChain, $controller, $result->method, $result->args, $request)) {
 				// Let the filter before can prevent the run of the controller method
-				$ret = call_user_func_array(array($controller, $result->method), $result->args);
+				try { 
+					$ret = call_user_func_array(array($controller, $result->method), $result->args);
+				}
+				catch(\Exception $e) {
+					error(get_class($e), array($e->getMessage()), true);
+				}
 			}
 
 			// Getting the error from the context
-			$error = clips_context('error');
+			$error = context('error');
 
 			if($ret == null && $error) { // If there is no output and we can get the error, show the error
-				$default_view = clips_config('default_view');
+				$default_view = config('default_view');
 				if($default_view) {
-					$ret = new ViewModel('error/'.$error->cause, array('error' => $error->message), $default_view[0]);
+					if(isset($error->cause)) {
+						$ret = new ViewModel('error/'.$error->cause, array('error' => $error->message), $default_view[0]);
+					}
+					else {
+						$ret = new ViewModel('error/error', array('error' => $error), $default_view[0]);
+					}
 				}
 				else
 					$ret = $error;

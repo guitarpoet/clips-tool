@@ -15,6 +15,13 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 		return $this->request->get($param, $default = null);
 	}
 
+	public function error($message, $cause = null) {
+		if(!\is_array($message)) {
+			$message = array($message);
+		}
+		\Clips\error($cause, $message);
+	}
+
 	public function post($param = null, $default = null) {
 		$this->request->post($param, $default);
 	}
@@ -105,5 +112,24 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 
 	public function redirect($url) {
 		return $this->render("", array(), 'direct', array('Location' => $url));
+	}
+
+	public function image($img) {
+		if(file_exists($img)) {
+			$path_parts = \pathinfo($img);
+			$ext = $path_parts['extension'];
+
+			if($ext == 'jpg' || $ext == 'jpeg') {
+				$header = array('Content-Type' => 'image/jpg');
+			}
+			else if($ext == 'png') {
+				$header = array('Content-Type' => 'image/png');
+			}
+			else if($ext == 'gif') {
+				$header = array('Content-Type' => 'image/gif');
+			}
+			return $this->render(file_get_contents($img), array(), 'direct', $header);
+		}
+		$this->error('Can\'t find the image ['.$img.'] to render!', 'render');
 	}
 }

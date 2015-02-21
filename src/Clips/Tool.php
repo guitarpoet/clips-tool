@@ -1,12 +1,14 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+use Addendum\Annotation;
+
 define('CLIPS_TOOL_PATH', __DIR__);
 
 if(!defined('FCPATH'))
 	define('FCPATH', getcwd());
 
-class Library extends \Addendum\Annotation { }
-class FullArgs extends \Addendum\Annotation { }
+class Library extends Annotation { }
+class FullArgs extends Annotation { }
 
 class LoadConfig {
 	/** @Multi */
@@ -24,7 +26,7 @@ class LoadConfig {
 	}
 }
 
-class Config {
+class Config extends Annotation {
 
 	/** @Multi */
 	public $files = array();
@@ -275,6 +277,8 @@ class Tool implements Interfaces\Initializable {
 		// Process requires annotation
 		$a = get_annotation(get_class($obj), 'Clips\\Library');
 		if($a) {
+			if(!is_array($a->value))
+				$a->value = array($a->value);
 			foreach($a->value as $r) {
 				$obj->$r = $this->library($r);
 			}

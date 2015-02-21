@@ -1,7 +1,19 @@
 <?php namespace Clips\Libraries; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
-class Git implements \Psr\Log\LoggerAwareInterface {
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
 
+/**
+ * The git operation wrapper
+ *
+ * @author Jack
+ * @date Sat Feb 21 12:43:56 2015
+ */
+class Git implements LoggerAwareInterface {
+
+	/**
+	 * Execute the git command
+	 */
 	protected function exec($repo, $command, $args) {
 		$cmd = array();
 		$cmd []= 'cd';
@@ -13,11 +25,14 @@ class Git implements \Psr\Log\LoggerAwareInterface {
 		return exec(implode(' ', $cmd));
 	}
 
+	/**
+	 * Create the git repository support
+	 */
 	public function repo($path) {
 		return new \Gitonomy\Git\Repository($path, array('logger' => $this->logger));
 	}
 
-	public function setLogger(\Psr\Log\LoggerInterface $logger) {
+	public function setLogger(LoggerInterface $logger) {
 		$this->logger = $logger;
 	}
 

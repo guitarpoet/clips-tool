@@ -6,6 +6,25 @@ use Clips\Libraries\Sql;
 use Clips\Interfaces\ToolAware;
 use Clips\Interfaces\Initializable;
 
+/**
+ * The model that supports sql query.
+ *
+ * This model needs 3 configurations:
+ *
+ * 1. Table: The table name that this model host (can be guessed)
+ * 2. DataSource: The datasource to run the querys (can be guessed)
+ * 3. TablePrefix: The prefix of the table (default is empty string)
+ *
+ * This model will read the configuration to find the datasource it should use.
+ * If there is no configuration for this model, will try the base datasource(first datasource) as the datasource.
+ * Then will using the datasource's type initialize sql support(only support mysql for this version).
+ *
+ * The default table for this model can be set in the configuration, and if there is no table config, will guess the table name like this:
+ * UserModel => users
+ *
+ * @author Jack
+ * @date Sat Feb 21 12:14:53 2015
+ */
 class DBModel extends Sql implements ToolAware, Initializable {
 
 	public function setTool($tool) {
@@ -61,10 +80,13 @@ class DBModel extends Sql implements ToolAware, Initializable {
 		throw new Exception('Cant\'t find any datasource for this model.');
 	}
 
-	public function one($index = 0) {
+	/**
+	 * Get the first one result in get
+	 */
+	public function one() {
 		$ret = call_user_func_array(array($this, 'get'), func_get_args());
-		if(count($ret) >= $index)
-			return $ret[$index];
+		if($ret)
+			return $ret[0];
 		return null;
 	}
 
@@ -72,6 +94,9 @@ class DBModel extends Sql implements ToolAware, Initializable {
 		return is_array($table) || (is_object($table) && is_subclass_of($table, 'Where_Operator'));
 	}
 
+	/**
+	 * Insert value into table(can be other tables), this function can be override by subclass
+	 */
 	protected function doInsert($table, $obj) {
 		$orig = $this->db->context;
 		$this->db->context = $table;
@@ -129,6 +154,15 @@ class DBModel extends Sql implements ToolAware, Initializable {
 		return $ret;
 	}
 
+	/**
+	 * Load the result using id
+	 *
+	 * @param table or id
+	 * 		If this is id, just load the result using the table of this model or using this parameter as table
+	 * @param id or null
+	 * 		IF the first argument is table, this must be the id
+	 * @return result or null
+	 */
 	public function load($table, $id = 0) {
 		if(is_numeric($table)) { // Table is id
 			if(isset($this->table)) {
@@ -141,6 +175,14 @@ class DBModel extends Sql implements ToolAware, Initializable {
 		return false;
 	}
 
+	/**
+	 * Insert the data into table
+	 *
+	 * @param table or data
+	 * 		If this is data, will insert the data into this model's table
+	 * @param data or empty
+	 * 		If the first argument is table, will insert this data into that table
+	 */
 	public function insert($table, $obj = array()) {
 		if(is_array($table) || is_object($table)) {
 			if(isset($this->table)) {
@@ -153,6 +195,9 @@ class DBModel extends Sql implements ToolAware, Initializable {
 		return false;
 	}
 
+	/**
+	 * Same as insert
+	 */
 	public function update($table, $obj = array()) {
 		if(is_array($table) || is_object($table)) {
 			if(isset($this->table)) {
@@ -165,6 +210,9 @@ class DBModel extends Sql implements ToolAware, Initializable {
 		return false;
 	}
 
+	/**
+	 * Same as insert
+	 */
 	public function delete($table, $ids = array()) {
 		if(is_array($table) || is_numeric($table)) {
 			if(isset($this->table)) {
@@ -177,6 +225,22 @@ class DBModel extends Sql implements ToolAware, Initializable {
 		return false;
 	}
 
+	/**
+	 * Support syntax like this:
+	 *
+	 * 1. get() => Get all the data in model's table (pagination by 0)
+	 * 2. get($table) => Get all the data in table (pagination by 0)
+	 * 3. get($offset) => Get all the data in table(pagination by offset)
+	 * 4. get(WhereOperator $where) => Get all the data in table match where operation(pagination by 0)
+	 * 5. get($field, $value); => Get all the data where $field = $value(pagination by 0)
+	 * 6. get(WhereOperator $where, $offset); => Get all the data match where operation (pagination by $offset)
+	 * 7. get($table, $offset); => Get all the data in $table (pagination by $offset)
+	 * 8. get($offset, $count); => Get all the data in table (pagination by $offset, count by $count)
+	 * 9. get($table, $field, $value); => Get all the data where $field = $value in $table (pagination by 0)
+	 * 10. get($table, WhereOperator $where, $offset); => Get all the data match where operation in $table (pagination by $offset)
+	 * 11. get(WhereOperator $where, $offset, $count); => Get all the data match where operation in table (pagination by $offset, count by $count)
+	 * 12. get($table, $where, $offset, $count); => Get all the data match where operation in $table (pagination by $offset, count by $count)
+	 */
 	public function get() {
 		switch(func_num_args()) {
 		case 0: // No argument is set, let's check if we have table set

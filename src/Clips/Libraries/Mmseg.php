@@ -6,6 +6,12 @@ class MmsegException extends \Clips\Exception {
 	}
 }
 
+/**
+ * The Chinese text segmenter using php-mmseg, can be used as text analyzer
+ *
+ * @author Jack
+ * @date Sat Feb 21 12:53:06 2015
+ */
 class Mmseg {
 
 	const DICT_NAME = "uni.lib";

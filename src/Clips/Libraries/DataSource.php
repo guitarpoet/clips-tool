@@ -2,6 +2,12 @@
 
 use Clips\Interfaces\ToolAware;
 
+/**
+ * The DataSource facade and base class for all the DataSources
+ *
+ * @author Jack
+ * @date Sat Feb 21 12:04:41 2015
+ */
 class DataSource implements ToolAware {
 	public $context;
 
@@ -9,6 +15,9 @@ class DataSource implements ToolAware {
 		$this->tool = $tool;
 	}
 
+	/**
+	 * If have configuration, will init using configuration
+	 */
 	public function __construct($config = null) {
 		if(isset($config)) {
 			$this->config = $config;
@@ -16,16 +25,22 @@ class DataSource implements ToolAware {
 		}
 	}
 
+	/**
+	 * Release the resources when destruct
+	 */
 	public function __destruct() {
 		$this->destroy();
 	}
 
+	/**
+	 * Iterate all the datasource names, and return names as an array
+	 */
 	public function datasources() {
 		if(isset($this->_datasources))
 			return $this->_datasources;
 
 		$ret = array();
-		foreach(\Clips\clips_config('datasources') as $d) {
+		foreach(\Clips\config('datasources') as $d) {
 			foreach($d as $k => $v) {
 				$ret []= $k;
 			}
@@ -35,6 +50,9 @@ class DataSource implements ToolAware {
 		return $ret;
 	}
 
+	/**
+	 * Get the first datasource, normally the base datasource is using database
+	 */
 	public function first() {
 		foreach($this->datasources() as $ds) {
 			return $this->get($ds);
@@ -42,12 +60,15 @@ class DataSource implements ToolAware {
 		return null;
 	}
 
+	/**
+	 * Get the datasource by name(name in the configuration)
+	 */
 	public function get($name) {
 		if(isset($this->$name))
 			return $this->$name;
 
 		$tool = $this->tool;
-		$ds = \Clips\clips_config('datasources');
+		$ds = \Clips\config('datasources');
 		foreach($ds as $d) {
 			if(isset($d->$name)) {
 				$config = $d->$name;
@@ -68,37 +89,77 @@ class DataSource implements ToolAware {
 		return null;
 	}
 
+	/**
+	 * Get id field
+	 */
 	protected function idField() {
 		return \Clips\get_default($this->config, 'id_field', 'id');
 	}
 
+	/**
+	 * Interface method, let datasource connect to the datasource using this configuration
+	 */
 	protected function init($config) {
 	}
 
+	/**
+	 * Interface method, let datasource release the resources
+	 */
 	protected function destroy() {
 	}
 
+	/**
+	 * Interface method, let the datasouce do the query
+	 */
 	protected function doQuery($query, $args = array()) {
 	}
 
+	/**
+	 * Interface method, let the datasource do the update operation
+	 */
 	protected function doUpdate($id, $args) {
 	}
 
+	/**
+	 * Interface method, let the datasource do the delete operation
+	 */
 	protected function doDelete($id) {
 	}
 
+	/**
+	 * Interface method, let the datasource do the fetch operation
+	 */
 	protected function doFetch($args) {
 	}
 
+	/**
+	 * Interface method, let the datasource do the iterate operation.
+	 * The iterate operation is used for big result sets(for example database).
+	 * By using the cursor of the large resultset, will save lots of memory and
+	 * time to operate on the resultset.
+	 */
 	protected function doIterate($query, $args, $callback, $context = array()) {
 	}
 
+	/**
+	 * Interface method, let the datasource do the insert operation
+	 */
 	protected function doInsert($args) {
 	}
 
+	/**
+	 * Begin the batch operation, so that all the operation can be commit or rollback at once
+	 *
+	 * No all datasource impmenent the transaction, so no commit or rollback on the facade interface.
+	 *
+	 * You can call commit or transaction method on the Database DataSource directly
+	 */
 	public function beginBatch() {
 	}
 
+	/**
+	 * End the batch operation
+	 */
 	public function endBatch() {
 	}
 
@@ -182,6 +243,12 @@ class DataSource implements ToolAware {
 		return $this->doDelete($id);
 	}
 
+	/**
+	 * Supports 2 kinds of syntax:
+	 *
+	 * 1. query($query, $arg1, $arg2, $arg3) // Variable args
+	 * 2. query($query, $args) // Array args
+	 */
 	public function query() {
 		$c = func_num_args();
 		if($c) {
