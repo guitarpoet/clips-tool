@@ -5,6 +5,30 @@
  */
 class CoreHelperTest extends Clips\TestCase {
 
+	public function testNTimes() {
+		$this->count = 0;
+		Clips\n_times(10, function($test, $i){
+			$test->assertTrue(is_numeric($i));
+			$test->assertTrue($i <= 10);
+			$test->count += 1;
+		}, array($this));
+		$this->assertEquals($this->count, 10);
+
+		$this->count = 0;
+		Clips\n_times(10, function($test, $i){
+			$test->assertTrue(is_numeric($i));
+			$test->assertTrue($i >= 8);
+			$test->assertTrue($i <= 18);
+			$test->count += 1;
+		}, array($this), 8);
+		$this->assertEquals($this->count, 10);
+	}
+
+	public function testContentRelative() {
+		$this->assertNull(Clips\content_relative('NotExists.php', $this));
+		$this->assertNotNull(Clips\content_relative('WebHelpersTest.php', $this));
+	}
+
 	/**
 	 * @Clips\Widget({"Test"})
 	 */
