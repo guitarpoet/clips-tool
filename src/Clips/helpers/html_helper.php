@@ -1,5 +1,18 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+/**
+ * Convert the string like this
+ *
+ * 1. a\b\c => a-b-c
+ * 2. a_b_c => a-b-c
+ * 3. a/b/c => a-b-c
+ * 4. DemoTestController demo-test-controller
+ *
+ * This function is most useful for html attributes
+ *
+ * @author Jack
+ * @date Sat Feb 21 11:23:30 2015
+ */
 function to_name($str) {
 	$result = array();
 	$str = str_replace('/', '\\', $str);
@@ -19,10 +32,41 @@ function to_name($str) {
 	return implode('-', $result);
 }
 
+/**
+ * Shortcut function for create tag, using mostly for tag with contents
+ *
+ * @author Jack
+ * @date Sat Feb 21 11:24:03 2015
+ */
 function create_tag_with_content($tag, $content, $attr = array(), $default = array()) {
 	return create_tag($tag, $attr, $default, $content);
 }
 
+
+/**
+ * Create the html tag(honor the indent level using clips context)
+ *
+ * Tag has 3 status
+ *
+ * 1. Open: The tag like <input>
+ * 2. Closed: The tag like <br/> 
+ * 3. With content: The tag <p>text</p>
+ *
+ * @author Jack
+ * @date Sat Feb 21 11:24:47 2015
+ * @param tag (default div)
+ * 		The tagname
+ * @param attr
+ * 		The attributes of the tag
+ * @param default
+ * 		The default attributes of the tag, the class attribute will append to the attributes, others
+ * 		will be replaced by attribute array
+ * @param content
+ * 		The inner content of the tag
+ * @param close
+ * 		If this tag is closed
+ *
+ */
 function create_tag($tag = 'div', $attr = array(), $default = array(), $content = null, $close = false) {
 	$level = clips_context('indent_level');
 	if($level === null)
