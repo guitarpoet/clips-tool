@@ -3,4 +3,3 @@ hello default:
 
 hello default template:
     Hello {{name}}!
-

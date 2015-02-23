@@ -110,7 +110,6 @@ class MessageBundle extends Annotation implements Initializable, LoggerAwareInte
 		if(!isset($format))
 			$format = $key;
 		array_unshift($args, $format);
-		var_dump($func, $args);
 		return call_user_func_array($func, $args);
 	}
 

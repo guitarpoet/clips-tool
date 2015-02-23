@@ -9,7 +9,7 @@
 class WebApp {
 	public function __construct($name = '') {
 		$this->tool = get_clips_tool();
-		clips_context('app', $this);
+		context('app', $this);
 		$this->name = $name;
 		$this->router = $this->tool->load_class('Router', true);
 		$this->router->route();

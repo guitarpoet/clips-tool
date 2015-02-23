@@ -939,3 +939,14 @@ function copy_object($src, $dest = null, $class = null) {
 	}
 	return $dest;
 }
+
+/**
+ * Get the message bundle by its name
+ *
+ * @author Jack
+ * @date Mon Feb 23 14:01:51 2015
+ */
+function bundle($name = '') {
+	$tool = &get_clips_tool();
+	return $tool->bundle($name);
+}

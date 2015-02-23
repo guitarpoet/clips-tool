@@ -22,6 +22,14 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 		\Clips\error($cause, $message);
 	}
 
+	public function server($key, $default = null) {
+		return $this->request->server($key, $default);
+	}
+
+	public function cookie($key, $default = null) {
+		return $this->request->cookie($key, $default);
+	}
+
 	public function post($param = null, $default = null) {
 		$this->request->post($param, $default);
 	}

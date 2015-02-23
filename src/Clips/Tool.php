@@ -84,6 +84,7 @@ class Tool implements Interfaces\Initializable {
 	private $_loaded_files = array();
 	private $_loaded_classes = array();
 	private $_context = array();
+	private $_bundles = array();
 
 	private function __construct() {
 		$this->clips = new Engine();
@@ -225,6 +226,12 @@ class Tool implements Interfaces\Initializable {
 
 		// Load the progress manager
 	    $this->library(array('ProgressManager'));
+
+		// Setting the bundle dir
+		$bundle_dir = config('bundle_dir');
+		if($bundle_dir) {
+			context('bundle_dir', $bundle_dir);
+		}
 	}
 
 	public function template() {
@@ -555,6 +562,27 @@ class Tool implements Interfaces\Initializable {
 		}
 
 		return $this->create($this->widgetClass($widget));
+	}
+
+	/**
+	 * Try to get bundle manualy.
+	 *
+	 * In most of the times, the bundle should be get using annotation. But, in some
+	 * circumstances, in some functions, for example. You'll need to get the bundle manually,
+	 * this function will come to help.
+	 *
+	 * @param name
+	 * 		The name of the bundle.
+	 *
+	 * @date Mon Feb 23 13:56:47 2015
+	 */
+	public function bundle($name = '') {
+		if(isset($this->_bundles[$name]))
+			return $this->_bundles[$name];
+
+		$bundle = new MessageBundle();
+		$bundle->name = $name;
+		return $this->enhance($bundle);
 	}
 
 	public function model($model) {
