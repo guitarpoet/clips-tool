@@ -74,8 +74,9 @@ class MessageBundle extends Annotation implements Initializable, LoggerAwareInte
 		return false;
 	}
 
-	public function message() {
+	private function _process() {
 		$args = func_get_args();
+		$func = array_shift($args);
 		$key = array_shift($args);
 		if(isset($this->folder)) { // Locale folder must be found!
 			if(isset($this->locale)) { // Only try to load the locale when locale is set
@@ -104,12 +105,26 @@ class MessageBundle extends Annotation implements Initializable, LoggerAwareInte
 				}
 				else
 					$format = $key;
-
 			}
 		}
 		if(!isset($format))
 			$format = $key;
 		array_unshift($args, $format);
-		return call_user_func_array('sprintf', $args);
+		var_dump($func, $args);
+		return call_user_func_array($func, $args);
+	}
+
+	public function template() {
+		$args = func_get_args();
+		$key = array_shift($args);
+		array_unshift($args, $key);
+		array_unshift($args, 'Clips\\str_template');
+		return call_user_func_array(array($this, '_process'), $args);
+	}
+
+	public function message() {
+		$args = func_get_args();
+		array_unshift($args, 'sprintf');
+		return call_user_func_array(array($this, '_process'), $args);
 	}
 }

@@ -1,3 +1,6 @@
 hello default:
     Hello %s!
 
+hello default template:
+    Hello {{name}}!
+

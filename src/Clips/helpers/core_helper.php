@@ -724,6 +724,10 @@ function clips_library($library, $init = true, $suffix = "") {
 	return $tool->library($library, $init, $suffix);
 }
 
+function str_template($template, $args) {
+	return clips_out('string://'.$template, $args, false);
+}
+
 /**
  * Output the template using mustache, the template is load using tpl:// resource by default
  *
