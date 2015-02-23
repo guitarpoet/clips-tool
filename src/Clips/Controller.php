@@ -118,6 +118,12 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 		return $this->render("", array('data' => array(), 'recordsTotal' => 0, 'recordsFiltered' => 0), 'json');
 	}
 
+	public function message() {
+		if(isset($this->bundle)) {
+			return call_user_func_array(array($this->bundle, 'message'), func_get_args());
+		}
+	}
+
 	public function redirect($url) {
 		return $this->render("", array(), 'direct', array('Location' => $url));
 	}
