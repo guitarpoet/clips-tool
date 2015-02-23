@@ -1,6 +1,16 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
 /**
+ * Set the html title
+ *
+ * @author Jack
+ * @date Mon Feb 23 21:22:20 2015
+ */
+function html_title($title) {
+	context('html_title', $title);
+}
+
+/**
  * This is the helper function for ul and ol smarty plugin.
  * Will take the template loated in the literal tag for the list.
  * If this is no template, will use li tag to render

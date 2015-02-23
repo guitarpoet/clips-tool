@@ -7,17 +7,17 @@ function smarty_block_head($params, $content = '', $template, &$repeat) {
 	}
 
 	$encoding = Clips\get_default($params, 'encoding', 'UTF-8');
-	$version = Clips\clips_context('html_version');
+	$version = Clips\context('html_version');
 	$title = Clips\get_default($params, 'title', null);
 
 	if(!$title) // If didn't found title on the parameter, try find it in context
-		$title = Clips\clips_context('html_title');
+		$title = Clips\context('html_title');
 
 	// Adding metas
 	if(!$version)
 		$version = 5;
 
-	$meta = Clips\clips_context('html_meta');
+	$meta = Clips\context('html_meta');
 
 	if(!$meta)
 		$meta = array();

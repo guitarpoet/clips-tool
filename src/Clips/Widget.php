@@ -57,7 +57,7 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 	}
 
 	protected function initTemplateEngine() {
-		$smarty = clips_context('smarty');
+		$smarty = context('smarty');
 		if($smarty) {
 			$smarty->addPluginsDir(path_join($this->base_dir, 'smarty'));
 		}
