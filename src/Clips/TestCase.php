@@ -18,6 +18,15 @@ class TestCase extends \PHPUnit_Framework_TestCase {
 		if($a) {
 			$this->data = $this->tool->enhance($a);
 		}
+
+		$a = get_annotation($this, "Clips\\MessageBundle", $func); // Check for method first
+		if(!$a)
+			$a = get_annotation($this, "Clips\\MessageBundle"); // Check for class if there is no annotation on method
+
+		if($a) {
+			$this->bundle = $this->tool->enhance($a);
+		}
+
 		$a = get_annotation($this, "Clips\\TestValue", $func); // Check for method first
 		if(!$a)
 			$a = get_annotation($this, "Clips\\TestValue"); // Check for class if there is no annotation on method

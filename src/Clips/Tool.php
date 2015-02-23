@@ -284,6 +284,14 @@ class Tool implements Interfaces\Initializable {
 			}
 		}
 
+		// Process message bundle
+		$a = get_annotation(get_class($obj), 'Clips\\MessageBundle');
+		
+		if($a) {
+			$this->enhance($a);
+			$obj->bundle = $a;
+		}
+
 		// Process model annotation
 		$a = get_annotation(get_class($obj), 'Clips\\Model');
 

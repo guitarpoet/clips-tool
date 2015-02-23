@@ -1,6 +1,83 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
 /**
+ * Try to guess the locale.
+ *
+ * For command line, try to get the locale from intl extension or locale command.
+ * For http requests, try to get the locale from lang cookie, then locale cookie, 
+ * if not found in any cookie, then try to guess it from the HTTP_ACCEPT_LANGUAGE header
+ *
+ * @author Jack
+ * @date Mon Feb 23 11:38:29 2015
+ */
+function get_locale() {
+	if(is_cli()) {
+		// For command line, using the machine's locale
+		if(\extension_loaded('intl')) { // Try intl extension first
+			$locale = \locale_get_default();
+			$locale = explode('_', $locale);
+			if(count($locale) > 2)
+				array_pop($locale); // Pop the encoding
+			return implode('-', $locale);
+		}
+
+		switch(PHP_OS) {
+		case 'Linux':
+		case 'Darwin':
+		case 'Unix':
+			$locale = str_replace('"', '', exec("locale | grep LANG | awk -F= '{print $2}'"));
+
+			$locale = explode('.', $locale);
+			$locale = $locale[0];
+			return str_replace('_', '-', $locale);
+		}
+		return 'en-US'; // Return en-US as default
+	}
+	else {
+		// For web requests
+		$controller = context('controller');
+		if($controller) {
+			// If we do have controller here
+			
+			// Try lang cookie first
+			$locale = $controller->cookie('lang');
+
+			if(!$locale) { // There is no lang cookie, then let's try locale cookie
+				$locale = $controller->cookie('locale');
+			}
+
+			if(!$locale) { // There is no locale cookie either, let's try accept language
+				$locale = $controller->server('HTTP_ACCEPT_LANGUAGE');
+				if($locale) {
+					$langs = array();
+					// break up string into pieces (languages and q factors)
+					preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', $locale, $lang_parse);
+					if (count($lang_parse[1])) {
+						// create a list like "en" => 0.8
+						$langs = array_combine($lang_parse[1], $lang_parse[4]);
+
+						// set default to 1 for any without q factor
+						foreach ($langs as $lang => $val) {
+							if ($val === '') {
+								$langs[$lang] = 1;
+								$locale = $lang;
+							}
+						}
+
+						// sort list based on value
+						arsort($langs, SORT_NUMERIC);
+						context('langs', $langs);
+					}
+				}
+			}
+
+			return $locale;
+		}
+		return 'en-US'; // Return en-US as default
+	}
+}
+
+/**
  * Call function n times
  *
  * @author Jack
