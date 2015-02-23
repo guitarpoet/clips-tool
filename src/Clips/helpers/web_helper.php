@@ -88,7 +88,7 @@ function add_init_js($js) {
 }
 
 function clips_add_init_js($js) {
-	clips_add_js(array('init'=>true, 'script'=>$js));
+	add_js(array('init'=>true, 'script'=>$js));
 }
 
 /**
@@ -106,9 +106,9 @@ function add_js($js, $index = true) {
 }
 
 function clips_add_js($js, $index = true) {
-	$jses = clips_context('js');
+	$jses = context('js');
 	if(!isset($jses) || array_search($js, $jses) === false) {
-		clips_context('js', $js, $index);
+		context('js', $js, $index);
 	}
 }
 

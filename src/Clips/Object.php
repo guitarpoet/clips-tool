@@ -2,6 +2,12 @@
 
 use Addendum\Annotation;
 
+/**
+ * This annotation indicates that the object enhanced by clips tool, will have a dependency object name like this.
+ *
+ * @author Jack
+ * @date Mon Feb 23 16:06:46 2015
+ */
 class Object extends Annotation {
 	public $name;
 }

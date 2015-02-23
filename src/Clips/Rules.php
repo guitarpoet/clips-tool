@@ -2,6 +2,12 @@
 
 use Addendum\Annotation;
 
+/**
+ * This annotation will config the rules for router to load in controller's method
+ *
+ * @author Jack
+ * @date Mon Feb 23 16:17:04 2015
+ */
 class Rules extends Annotation {
 	public $clear = true;
     public $rules = array();

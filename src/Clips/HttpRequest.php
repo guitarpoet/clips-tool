@@ -1,5 +1,11 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+/**
+ * The http request wrapper same as CI's CI_Input, but nicer api
+ *
+ * @author Jack
+ * @date Mon Feb 23 15:57:53 2015
+ */
 class HttpRequest extends Request {
 	public function __construct() {
 		// Getting the method as the lower case

@@ -2,6 +2,9 @@
 
 /**
  * The form field class
+ *
+ * @author Jack
+ * @date Mon Feb 23 15:42:01 2015
  */
 class FormField {
 	public $name;

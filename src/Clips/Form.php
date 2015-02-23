@@ -5,14 +5,13 @@ use Clips\Interfaces\ToolAware;
 
 /**
  * The form helper class, this is the basic form configuration support class.
- *
  * It can be configured as the docstring in the PHP code, and look for the configuration file
- *
  * of json format. This will be the bridge from the request to the validation rules, and will
- *
  * provide the configuration support for client side validation(like using jQBootStrapValidation).
- *
  * Also, this supports for mutiple form configuration
+ *
+ * @author Jack
+ * @date Mon Feb 23 15:41:27 2015
  */
 class Form extends \Addendum\Annotation implements Initializable, ToolAware {
 

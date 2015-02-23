@@ -2,5 +2,11 @@
 
 use Addendum\Annotation;
 
+/**
+ * Same as css
+ *
+ * @author Jack
+ * @date Mon Feb 23 16:18:04 2015
+ */
 class Scss extends Annotation {
 }

@@ -3,6 +3,15 @@
 use Clips\Interfaces\Initializable;
 use Addendum\Annotation;
 
+/**
+ * The http session abstraction, also can use this class as annotation for controller method or class,
+ * to manipulate http session.
+ *
+ * To access session's value this using property get and set.
+ *
+ * @author Jack
+ * @date Mon Feb 23 15:59:31 2015
+ */
 class HttpSession extends Annotation implements Initializable {
 	public $key;
 

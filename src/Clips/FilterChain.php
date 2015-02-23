@@ -2,6 +2,12 @@
 
 use Clips\Interfaces\ToolAware;
 
+/**
+ * The filter chain
+ *
+ * @author Jack
+ * @date Mon Feb 23 15:40:10 2015
+ */
 class FilterChain extends AbstractFilter implements ToolAware {
 	private $run = false;
 	private $filters = array();
@@ -10,6 +16,10 @@ class FilterChain extends AbstractFilter implements ToolAware {
 		$this->tool = $tool;
 	}
 
+	/**
+	 * Stop the filter chain running process, this should be used for filters that
+	 * wants to stop all the filting
+	 */
 	public function stop() {
 		$this->run = false;
 	}

@@ -2,5 +2,11 @@
 
 use Addendum\Annotation;
 
+/**
+ * Same as css annotation
+ *
+ * @author Jack
+ * @date Mon Feb 23 16:01:10 2015
+ */
 class Js extends Annotation {
 }

@@ -2,6 +2,9 @@
 
 /**
  * The base class for all the formatter
+ * 
+ * @author Jack
+ * @date Mon Feb 23 15:41:50 2015
  */
 class Formatter extends \Addendum\Annotation {
 	public function format($obj) {

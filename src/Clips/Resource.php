@@ -1,5 +1,11 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+/**
+ * The resource facade
+ *
+ * @author Jack
+ * @date Mon Feb 23 16:07:56 2015
+ */
 class Resource {
 	public $uri;
 	protected $stream;

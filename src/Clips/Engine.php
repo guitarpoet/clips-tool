@@ -21,6 +21,9 @@ class Symbol extends \Addendum\Annotation {
 
 /**
  *  The clips extension engine and execution context
+ *  
+ *  @author Jack
+ *  @date Mon Feb 23 15:28:19 2015
  */
 class Engine extends ConsoleBase {
 
