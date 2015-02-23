@@ -39,14 +39,14 @@
 ;
 ;===============================================================================
 
-(deffunction load-rules ($?file) (php_call "Clips\\clips_load_rules" $?file))
+(deffunction load-rules ($?file) (php_call "Clips\\load_rules" $?file))
 (deffunction file-exists (?file) (php_call "Clips\\safe_file_exists" ?file))
 (deffunction file-contents (?file) (php_call "file_get_contents" ?file))
 (deffunction intval (?v) (php_call "intval" ?v))
 (deffunction cwd () (php_call "getcwd"))
 (deffunction explode (?sep ?str) (php_call "explode" ?sep ?str))
 (deffunction implode (?sep $?str) (php_call "implode" ?sep $?str))
-(deffunction clips-path (?path) (php_call "Clips\\clips_path" ?path))
+(deffunction clips-path (?path) (php_call "Clips\\path" ?path))
 (deffunction constant (?name) (php_call "constant" ?name))
 (deffunction dump (?arg) (php_call "var_dump" ?arg))
 (deffunction ucfirst (?arg) (php_call "ucfirst" ?arg))

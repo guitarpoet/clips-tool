@@ -102,148 +102,153 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 		$this->clips->run();
 		$error = $this->clips->queryFacts("RouteError");
 		if($error) {
-			$this->showError($error);
+			$result = new RouteResult();
+			$result->controller = $this->tool->controller('error');
+			$result->method = 'show';
+			$result->args = $error[0];
+			http_response_code(404);
+			error('RouteError', array($error[0][0]));
 		}
 		else {
 			$result = $this->clips->queryFacts("Clips\\RouteResult");
 			$result = $result[0];
-			$controller = $this->tool->create($result->controller);
-			$this->tool->context(array(
-				'controller_class' => $result->controller,
-				'controller' => $controller,
-				'controller_method' => $result->method,
-				'args' => $result->args
-			));
-			$controller->request = $request;
+		}
+		$controller = $this->tool->create($result->controller);
+		$this->tool->context(array(
+			'controller_class' => $result->controller,
+			'controller' => $controller,
+			'controller_method' => $result->method,
+			'args' => $result->args
+		));
+		$controller->request = $request;
 
-			$this->filterChain = $this->tool->load_class('FilterChain', true);
-			$this->filterChain->addFilter(clips_config('filters'));
+		$this->filterChain = $this->tool->load_class('FilterChain', true);
+		$this->filterChain->addFilter(clips_config('filters'));
 
-			$re = new \Addendum\ReflectionAnnotatedClass(get_class($controller));
-			// Trying to get the definition from class and the method annotation
-			foreach(array($re, $re->getMethod($result->method)) as $m) {
-				foreach($m->getAnnotations() as $a) {
-					if(get_class($a) == 'Clips\\HttpSession') {
-						if(isset($a->value))  {
-							if(is_array($a->value)) {
-								foreach($a->value as $k => $v) {
-									$request->session($k, $v);
-								}
-							}
-							else {
-								$request->session($a->key, $a->value);
-							}
-						}
-					}
-					else if(get_class($a) == 'Clips\\Meta') {
-						if(isset($a->value) && is_array($a->value)) {
+		$re = new \Addendum\ReflectionAnnotatedClass(get_class($controller));
+		// Trying to get the definition from class and the method annotation
+		foreach(array($re, $re->getMethod($result->method)) as $m) {
+			foreach($m->getAnnotations() as $a) {
+				if(get_class($a) == 'Clips\\HttpSession') {
+					if(isset($a->value))  {
+						if(is_array($a->value)) {
 							foreach($a->value as $k => $v) {
-								html_meta($k, $v);
+								$request->session($k, $v);
 							}
 						}
 						else {
-							html_meta($a->key, $a->value);
-						}
-					}
-					else if(get_class($a) == 'Clips\\Js') {
-						if(is_string($a->value))
-							clips_add_js($a->value);
-						else if(is_array($a->value)) {
-							foreach($a->value as $j) {
-								clips_add_js($j);
-							}
-						}
-					}
-					else if(get_class($a) == 'Clips\\Css') {
-						if(is_string($a->value))
-							clips_add_css($a->value);
-						else if(is_array($a->value)) {
-							foreach($a->value as $c) {
-								clips_add_css($c);
-							}
-						}
-					}
-					else if(get_class($a) == 'Clips\\Scss') {
-						if(is_string($a->value))
-							clips_add_scss($a->value);
-						else if(is_array($a->value)) {
-							foreach($a->value as $c) {
-								clips_add_scss($c);
-							}
-						}
-					}
-					else if(get_class($a) == 'Clips\\Context') {
-						if(isset($a->value) && is_array($a->value)) {
-							// This must be the set by array
-							clips_context($a->value, null, $a->append);
-						}
-						else {
-							clips_context($a->key, $a->value, $a->append);
-						}
-					}
-					else if(get_class($a) == 'Clips\\Form') {
-						// If this is the form annotation, initialize it and set it to the context
-						$this->tool->enhance($a);
-						clips_context('form', $a);
-					}
-					else if(get_class($a) == 'Clips\\Widgets\\DataTable') {
-						// If this is the datatable annotation, initialize it and set it to the context
-						$this->tool->enhance($a);
-						clips_context('datatable', $a);
-					}
-					else if(get_class($a) == 'Clips\\Widget') {
-						$this->tool->widget($a->value);
-					}
-					else if(get_class($a) == 'Clips\\Object') {
-						if(isset($a->value)) {
-							if(!\is_array($a->value))
-								$a->value = array($a->value);
-
-							foreach($a->value as $c) {
-								$h = strtolower($this->tool->getHandleName($c));
-								$controller->$h = $this->tool->load_class($c, true);
-							}
+							$request->session($a->key, $a->value);
 						}
 					}
 				}
-			}
-
-			$ret = null;
-			if($this->filterChain->filter_before($this->filterChain, $controller, $result->method, $result->args, $request)) {
-				// Let the filter before can prevent the run of the controller method
-				try { 
-					$ret = call_user_func_array(array($controller, $result->method), $result->args);
-				}
-				catch(\Exception $e) {
-					error(get_class($e), array($e->getMessage()), true);
-				}
-			}
-
-			// Getting the error from the context
-			$error = context('error');
-
-			if($ret == null && $error) { // If there is no output and we can get the error, show the error
-				$default_view = config('default_view');
-				if($default_view) {
-					if(isset($error->cause)) {
-						$ret = new ViewModel('error/'.$error->cause, array('error' => $error->message), $default_view[0]);
+				else if(get_class($a) == 'Clips\\Meta') {
+					if(isset($a->value) && is_array($a->value)) {
+						foreach($a->value as $k => $v) {
+							html_meta($k, $v);
+						}
 					}
 					else {
-						$ret = new ViewModel('error/error', array('error' => $error), $default_view[0]);
+						html_meta($a->key, $a->value);
 					}
 				}
-				else
-					$ret = $error;
-			}
-			else {
-				if($error)
-					// We can get the response, so just log the error
-					$this->logger->error('Getting an error when serving the request.', array('error' => $error));
-			}
+				else if(get_class($a) == 'Clips\\Js') {
+					if(is_string($a->value))
+						clips_add_js($a->value);
+					else if(is_array($a->value)) {
+						foreach($a->value as $j) {
+							clips_add_js($j);
+						}
+					}
+				}
+				else if(get_class($a) == 'Clips\\Css') {
+					if(is_string($a->value))
+						clips_add_css($a->value);
+					else if(is_array($a->value)) {
+						foreach($a->value as $c) {
+							clips_add_css($c);
+						}
+					}
+				}
+				else if(get_class($a) == 'Clips\\Scss') {
+					if(is_string($a->value))
+						clips_add_scss($a->value);
+					else if(is_array($a->value)) {
+						foreach($a->value as $c) {
+							clips_add_scss($c);
+						}
+					}
+				}
+				else if(get_class($a) == 'Clips\\Context') {
+					if(isset($a->value) && is_array($a->value)) {
+						// This must be the set by array
+						clips_context($a->value, null, $a->append);
+					}
+					else {
+						clips_context($a->key, $a->value, $a->append);
+					}
+				}
+				else if(get_class($a) == 'Clips\\Form') {
+					// If this is the form annotation, initialize it and set it to the context
+					$this->tool->enhance($a);
+					clips_context('form', $a);
+				}
+				else if(get_class($a) == 'Clips\\Widgets\\DataTable') {
+					// If this is the datatable annotation, initialize it and set it to the context
+					$this->tool->enhance($a);
+					clips_context('datatable', $a);
+				}
+				else if(get_class($a) == 'Clips\\Widget') {
+					$this->tool->widget($a->value);
+				}
+				else if(get_class($a) == 'Clips\\Object') {
+					if(isset($a->value)) {
+						if(!\is_array($a->value))
+							$a->value = array($a->value);
 
-			// Always run filter after(since the filter after will render the views)
-			$this->filterChain->filter_after($this->filterChain, $controller, $result->method, $result->args, $request, $ret);
+						foreach($a->value as $c) {
+							$h = strtolower($this->tool->getHandleName($c));
+							$controller->$h = $this->tool->load_class($c, true);
+						}
+					}
+				}
+			}
 		}
+
+		$ret = null;
+		if($this->filterChain->filter_before($this->filterChain, $controller, $result->method, $result->args, $request)) {
+			// Let the filter before can prevent the run of the controller method
+			try { 
+				$ret = call_user_func_array(array($controller, $result->method), $result->args);
+			}
+			catch(\Exception $e) {
+				error(get_class($e), array($e->getMessage()), true);
+			}
+		}
+
+		// Getting the error from the context
+		$error = context('error');
+
+		if($ret == null && $error) { // If there is no output and we can get the error, show the error
+			$default_view = config('default_view');
+			if($default_view) {
+				if(isset($error->cause)) {
+					$ret = new ViewModel('error/'.$error->cause, array('error' => $error->message), $default_view[0]);
+				}
+				else {
+					$ret = new ViewModel('error/error', array('error' => $error), $default_view[0]);
+				}
+			}
+			else
+				$ret = $error;
+		}
+		else {
+			if($error)
+				// We can get the response, so just log the error
+				$this->logger->error('Getting an error when serving the request.', array('error' => $error));
+		}
+
+		// Always run filter after(since the filter after will render the views)
+		$this->filterChain->filter_after($this->filterChain, $controller, $result->method, $result->args, $request, $ret);
 	}
 
 	public function setTool($tool) {
@@ -252,6 +257,6 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 
 	public function showError($error) {
 		http_response_code(404);
-		var_dump($error);
+		error('RouteError', $error[0][0]);
 	}
 }

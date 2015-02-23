@@ -1,5 +1,11 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+/**
+ * Test if the method's modifier is public
+ *
+ * @author Jack
+ * @date Mon Feb 23 15:02:59 2015
+ */
 function method_is_public($class, $method) {
 	if(is_string($class) && is_string($method) && class_exists($class) 
 		&& method_exists($class, $method)) {
@@ -768,7 +774,7 @@ function clips_out($template, $args, $output = true) {
  * @author Jack
  * @date Sat Feb 21 11:00:20 2015
  */
-function path($patn) {
+function path($path) {
 	return clips_path($path);
 }
 

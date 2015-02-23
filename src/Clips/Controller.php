@@ -158,6 +158,7 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 	 * Send the redirect response
 	 */
 	protected function redirect($url) {
+		http_response_code(302);
 		return $this->render("", array(), 'direct', array('Location' => $url));
 	}
 
