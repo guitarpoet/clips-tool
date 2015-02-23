@@ -138,11 +138,11 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 					else if(get_class($a) == 'Clips\\Meta') {
 						if(isset($a->value) && is_array($a->value)) {
 							foreach($a->value as $k => $v) {
-								$controller->meta($k, $v);
+								html_meta($k, $v);
 							}
 						}
 						else {
-							$controller->meta($a->key, $a->value);
+							html_meta($a->key, $a->value);
 						}
 					}
 					else if(get_class($a) == 'Clips\\Js') {

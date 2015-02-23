@@ -53,7 +53,7 @@
 (deffunction resource (?uri) (php_call "Clips\\resource_contents" ?uri))
 (deffunction push$ (?list ?item) (insert$ ?list (+ 1 (length$ ?list)) ?item))
 (deffunction unshift$ (?list ?item) (insert$ ?list 1 ?item))
-(deffunction method-exists(?class ?method) (php_call "method_exists" ?class ?method))
+(deffunction method-exists(?class ?method) (and (php_call "method_exists" ?class ?method) (php_call "Clips\\method_is_public" ?class ?method)))
 (deffunction match (?str ?pattern) (php_call "Clips\\clips_str_match" ?str ?pattern))
 (deffunction php-get (?inst ?field) (php_call "Clips\clips_get_property" ?inst ?field))
 (deffunction is-numeric (?i) (php_call "is_numeric" ?i))

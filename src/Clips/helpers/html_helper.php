@@ -1,5 +1,24 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+function html_meta($key, $value) {
+	$meta = context('html_meta');
+	if(!$meta)
+		$meta = array();
+	
+	$res = array();
+	$found = false;
+	foreach($meta as $m) {
+		if(isset($m[$key])) {
+			$m[$key] = $value;
+			$found = true;
+		}
+		$res []= $m;
+	}
+	if(!$found)
+		$res []= array($key => $value);
+	context('html_meta', $res);
+}
+
 /**
  * Convert the string like this
  *

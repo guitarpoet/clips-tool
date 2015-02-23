@@ -6,35 +6,56 @@ use Psr\Log\LoggerInterface;
 use Clips\Interfaces\ToolAware;
 use Clips\Models\ViewModel;
 
+/**
+ * The base class for all the controllers
+ *
+ * @author Jack
+ * @date Mon Feb 23 14:40:28 2015
+ */
 class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 
 	/**
 	 * The short hand method for request->get
 	 */
-	public function get($param = null, $default = null) {
+	protected function get($param = null, $default = null) {
 		return $this->request->get($param, $default = null);
 	}
 
-	public function error($message, $cause = null) {
+	/**
+	 * Reporting the error
+	 */
+	protected function error($message, $cause = null) {
 		if(!\is_array($message)) {
 			$message = array($message);
 		}
 		\Clips\error($cause, $message);
 	}
 
-	public function server($key, $default = null) {
+	/**
+	 * Get the value from $_SERVER
+	 */
+	protected function server($key, $default = null) {
 		return $this->request->server($key, $default);
 	}
 
-	public function cookie($key, $default = null) {
+	/**
+	 * Get the value from cookie
+	 */
+	protected function cookie($key, $default = null) {
 		return $this->request->cookie($key, $default);
 	}
 
-	public function post($param = null, $default = null) {
+	/**
+	 * Get the post parameters
+	 */
+	protected function post($param = null, $default = null) {
 		$this->request->post($param, $default);
 	}
 
-	public function context($key, $value = null) {
+	/**
+	 * Get or set the context value
+	 */
+	protected function context($key, $value = null) {
 		return $this->tool->context($key, $value);
 	}
 
@@ -50,7 +71,10 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 		$this->logger = $logger;
 	}
 
-	public function render($template, $args = array(), $engine = null, $headers = array()) {
+	/**
+	 * Render wrapper, will create the ViewModel based on the parameter
+	 */
+	protected function render($template, $args = array(), $engine = null, $headers = array()) {
 		if(!$engine) {
 			$default = clips_config('default_view');
 			if($default) {
@@ -60,8 +84,11 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 		return new ViewModel($template, $args, $engine, $headers);
 	}
 
-	public function meta($key, $value) {
-		$meta = clips_context('html_meta');
+	/**
+	 * Write the meta of the output html
+	 */
+	protected function meta($key, $value) {
+		$meta = context('html_meta');
 		if(!$meta)
 			$meta = array();
 		
@@ -76,7 +103,7 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 		}
 		if(!$found)
 			$res []= array($key => $value);
-		clips_context('html_meta', $res);
+		context('html_meta', $res);
 	}
 
 	/**
@@ -118,17 +145,30 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 		return $this->render("", array('data' => array(), 'recordsTotal' => 0, 'recordsFiltered' => 0), 'json');
 	}
 
-	public function message() {
+	/**
+	 * Shorthand method to the bundle message
+	 */
+	protected function message() {
 		if(isset($this->bundle)) {
 			return call_user_func_array(array($this->bundle, 'message'), func_get_args());
 		}
 	}
 
-	public function redirect($url) {
+	/**
+	 * Send the redirect response
+	 */
+	protected function redirect($url) {
 		return $this->render("", array(), 'direct', array('Location' => $url));
 	}
 
-	public function image($img) {
+	protected function json($data) {
+		return $this->render("", $data, 'json');
+	}
+
+	/**
+	 * Send the image file
+	 */
+	protected function image($img) {
 		if(file_exists($img)) {
 			$path_parts = \pathinfo($img);
 			$ext = $path_parts['extension'];

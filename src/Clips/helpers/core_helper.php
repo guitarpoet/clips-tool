@@ -1,5 +1,14 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+function method_is_public($class, $method) {
+	if(is_string($class) && is_string($method) && class_exists($class) 
+		&& method_exists($class, $method)) {
+		$refl = new \ReflectionMethod($class, $method); 
+		return $refl->isPublic();
+	}
+	return false;
+}
+
 /**
  * Try to guess the locale.
  *
@@ -40,14 +49,14 @@ function get_locale() {
 			// If we do have controller here
 			
 			// Try lang cookie first
-			$locale = $controller->cookie('lang');
+			$locale = $controller->request->cookie('lang');
 
 			if(!$locale) { // There is no lang cookie, then let's try locale cookie
-				$locale = $controller->cookie('locale');
+				$locale = $controller->request->cookie('locale');
 			}
 
 			if(!$locale) { // There is no locale cookie either, let's try accept language
-				$locale = $controller->server('HTTP_ACCEPT_LANGUAGE');
+				$locale = $controller->request->server('HTTP_ACCEPT_LANGUAGE');
 				if($locale) {
 					$langs = array();
 					// break up string into pieces (languages and q factors)
