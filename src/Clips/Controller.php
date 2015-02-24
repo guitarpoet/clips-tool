@@ -63,7 +63,7 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 	 * Get the post parameters
 	 */
 	protected function post($param = null, $default = null) {
-		$this->request->post($param, $default);
+		return $this->request->post($param, $default);
 	}
 
 	/**

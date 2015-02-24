@@ -302,7 +302,7 @@ class Tool implements Interfaces\Initializable {
 		// Process model annotation
 		$a = get_annotation(get_class($obj), 'Clips\\Model');
 
-		if($a) {
+		if($a && valid_obj($obj, "Clips\\DBModel")) {
 			if(isset($a->table)) {
 				$obj->table = $a->table;
 			}

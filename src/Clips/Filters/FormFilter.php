@@ -61,7 +61,7 @@ class FormFilter extends AbstractFilter implements ToolAware, Initializable {
 			$ret = $this->validator->validate($params, $config);
 			if($ret) {
 				$chain->succeed = false;
-				\Clips\clips_error('form_validation', $ret);
+				\Clips\clips_error('form_validation', array_map(function($item){ return $item[0];}, $ret));
 			}
 		}
 	}
