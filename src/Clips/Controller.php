@@ -14,6 +14,20 @@ use Clips\Models\ViewModel;
  */
 class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 
+	protected function title($title, $translate = false) {
+		if($translate && isset($this->bundle)) {
+			$title = $this->message($title);
+		}
+		html_title($title);
+	}
+
+	/**
+	 * The shorthand method for getting the request parameters
+	 */
+	protected function param($param = null, $default = null) {
+		$this->request->param($param, $default);
+	}
+
 	/**
 	 * The short hand method for request->get
 	 */

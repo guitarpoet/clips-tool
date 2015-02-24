@@ -1,5 +1,7 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+define('RANDOM_STRING', '3141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086FromfairestcreatureswedesireincreaseThattherebybeautysrosemightneverdieButastheripershouldbytimedeceaseHistenderheirmightbearhismemoryButthoucontractedtothineownbrighteyesFeedstthylightsflamewithself-substantialfuelMakingafaminewhereabundanceliesThyselfthyfoetothysweetselftoocruelThouthatartnowtheworldsfreshornamentAndonlyheraldtothegaudyspringWithinthineownbudburiestthycontentAndtenderchurlmakstwasteinniggardingPitytheworldorelsethisgluttonbeToeattheworldsduebythegraveandthee');
+
 /**
  * Test if the method's modifier is public
  *
@@ -964,4 +966,57 @@ function copy_object($src, $dest = null, $class = null) {
 function bundle($name = '') {
 	$tool = &get_clips_tool();
 	return $tool->bundle($name);
+}
+
+/**
+ * Generate a random string
+ *
+ * @author Jack
+ * @date Tue Feb 24 11:34:12 2015
+ */
+function random_string($length = 10) {
+	return substr(str_shuffle(RANDOM_STRING), 0, $length);
+}
+
+/**
+ * Try hash the password using password_hash method, if that is not there, will hash the password
+ * using salted md5.
+ *
+ * If using 2 parameters, will try to verify the password using the hash
+ *
+ * @param password
+ * 		The password
+ * @param hash
+ * 		The hash to verify (default null)
+ * @param force_hash
+ * 		Force to use hash (mainly for testing)
+ * @return
+ * 		If hashing, then the hashed password or if the password matches the hash
+ *
+ * @author Jack
+ * @date Tue Feb 24 11:28:16 2015
+ *
+ */
+function password($password, $hash = null, $force_hash = false) {
+	if(function_exists('password_hash') && !$force_hash) { // Thank godness, we are above 5.5, let's use this method in stead
+		if(isset($hash)) {
+			return password_verify($password, $hash);
+		}
+
+		return password_hash($password, PASSWORD_DEFAULT);
+	}
+	else {
+		if(isset($hash)) {
+			$data = explode('#', $hash);
+			if(count($data) != 2)
+				return false;
+			$salt = $data[0];
+			return $data[1] == md5($salt.$password);
+		}
+		else {
+			$salt = random_string(27);
+			$p = $salt.$password;
+			return $salt.'#'.md5($p);
+		}
+	}
 }

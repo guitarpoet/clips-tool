@@ -5,6 +5,16 @@
  */
 class CoreHelperTest extends Clips\TestCase {
 
+	public function testPassword() {
+		$pass = 'pass';
+		$hash = Clips\password($pass);
+		$this->assertTrue(Clips\password($pass, $hash));
+
+		// For md5
+		$hash = Clips\password($pass, null, true);
+		$this->assertTrue(Clips\password($pass, $hash, true));
+	}
+
 	public function testNTimes() {
 		$this->count = 0;
 		Clips\n_times(10, function($test, $i){

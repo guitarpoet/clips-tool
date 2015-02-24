@@ -36,19 +36,22 @@ class MigrationTool {
 
 			// Add the columns
 			foreach($options as $colname => $colopts) {
+				if(!is_array($colopts))
+					$colopts = (array) $colopts;
+
 				$type = \Clips\get_default($colopts, 'type', 'integer');
 				$opts = \Clips\get_default($colopts, 'options', array());
 
-				if(isset($colopts->key) && $colopts->key)
+				if(isset($colopts['key']) && $colopts['key'])
 					$keys []= $colname;
 
-				if(isset($colopts->foreign_key)) {
-					switch(count($colopts->foreign_key)) {
+				if(isset($colopts['foreign_key'])) {
+					switch(count($colopts['foreign_key'])) {
 					case 1: // Only the table name, using id as the reference field
-						$foreign_keys []= array($colname, $colopts->foreign_key, "id");
+						$foreign_keys []= array($colname, $colopts['foreign_key'], "id");
 						break;
 					case 2:
-						$foreign_keys []= array($colname, $colopts->foreign_key[0], $colopts->foreign_key[1]);
+						$foreign_keys []= array($colname, $colopts['foreign_key'][0], $colopts['foreign_key'][1]);
 						break;
 					}
 				}	
