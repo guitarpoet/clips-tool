@@ -2,6 +2,9 @@
 
 use Clips\Controller;
 
+/**
+ * @Clips\Widget('html')
+ */
 class ErrorController extends Controller {
 	public function show($error) {
 	}

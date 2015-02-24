@@ -24,6 +24,30 @@
 	(assert (method (nth$ 2 $?segs)))
 )
 
+(defrule if-seg-length-is-bigger-than-2-try-controller-with-namespace
+	(declare (salience ?*low*))
+	(not (Clips\RouteResult)) ; No route result is found
+	(segments $?segs &: (> (length$ $?segs) 2)) ; The segment is larger than 2
+	?c <- (controller ?name &:(not (eq ?name (str-cat (ucfirst (nth$ 1 $?segs)) "\\" (ucfirst (nth$ 2 $?segs))))))
+	=>
+	(retract ?c)
+	(assert (controller (str-cat (ucfirst (nth$ 1 $?segs)) "\\" (ucfirst (nth$ 2 $?segs)))))
+	(assert (method (nth$ 3 $?segs)))
+)
+
+(defrule try-default-method-if-the-seg-length-is-equals-to-2
+	(declare (salience ?*low*))
+	(not (Clips\RouteResult)) ; No route result is found
+	(segments $?segs &: (= (length$ $?segs) 2))
+	?c <- (controller ?name &:(not (eq ?name (str-cat (ucfirst (nth$ 1 $?segs)) "\\" (ucfirst (nth$ 2 $?segs))))))
+	?m <- (method ?)
+	=>
+	(retract ?c)
+	(retract ?m)
+	(assert (controller (str-cat (ucfirst (nth$ 1 $?segs)) "\\" (ucfirst (nth$ 2 $?segs)))))
+	(assert (method ""))
+)
+
 (defrule try-to-find-controller-by-controller-seg
 	(controller ?c&~"")
 	(test (php_call "Clips\\controller_exists" ?c))
