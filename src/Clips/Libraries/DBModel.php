@@ -27,6 +27,43 @@ use Clips\Interfaces\Initializable;
  */
 class DBModel extends Sql implements ToolAware, Initializable {
 
+	/**
+	 * Clean the object(or array) using the fields table has(removing all the needless fields)
+	 *
+	 * @param table
+	 * 		The table meta to use
+	 * @param obj
+	 * 		The array or object to clean
+	 */
+	public function cleanFields($table, $obj) {
+		if(isset($this->table_prefix))
+			$fields = $this->listFields($this->table_prefix.$table);
+		else
+			$fields = $this->listFields($table);
+		$ret = array();
+		foreach($obj as $k => $v) {
+			if(array_search($k, $fields) !== false)
+				$ret[$k] = $v;
+		}
+		return is_array($obj)? $ret: (object) $ret;
+	}
+
+	/**
+	 * List all the field names in table
+	 */
+	public function listFields($table) {
+		// TODO It is a little bit silly, isn't it?
+		if(isset($this->table_prefix))
+			$orig = $this->table_prefix;
+		$this->table_prefix = '';
+		$ret = $this->get('INFORMATION_SCHEMA.COLUMNS as COLUMNS', 'TABLE_NAME', $table);
+		if(isset($orig)) 
+			$this->table_prefix = $orig;
+		else
+			unset($this->table_prefix);
+		return array_map(function($i){return $i->COLUMN_NAME;}, $ret);
+	}
+
 	public function setTool($tool) {
 		$this->tool = $tool;
 	}
@@ -39,9 +76,8 @@ class DBModel extends Sql implements ToolAware, Initializable {
 		$name = get_class($this);
 
 		// Remove the prefixes
-		foreach(array_merge(array('_model', 'Models\\', 'Clips\\'), \Clips\clips_config('namespace', array())) as $pre) {
-			$name = str_replace($pre, '', $name);
-		}
+		$name = explode('\\', $name);
+		$name = $name[count($name) - 1];
 
 		if(!isset($this->table)) {
 			$this->table = strtolower(str_replace('Model', '', $name)).'s'; // If no table is set for this model, just guess for its table

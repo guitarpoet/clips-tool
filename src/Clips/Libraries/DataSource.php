@@ -81,6 +81,7 @@ class DataSource implements ToolAware {
 			$type = $tool->library($config->type, false, 'DataSource');
 			$type = $tool->load_class($config->type, false, new \Clips\LoadConfig($tool->config->datasources_dir, "DataSource", "DataSources\\"));
 			$this->$name = new $type($config);
+			$this->tool->enhance($this->$name);
 			return $this->$name;
 		}
 		else {
