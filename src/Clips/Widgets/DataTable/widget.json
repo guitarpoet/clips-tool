@@ -13,7 +13,13 @@
 	},
 	"css": {
 		"files": [
-			"jquery.dataTables.css"
+			"jquery.dataTables"
+		]
+	},
+	"scss": {
+		"files": [
+			"pinet_datatables_mixin",
+            "pinet_datatables"
 		]
 	},
 	"context": {

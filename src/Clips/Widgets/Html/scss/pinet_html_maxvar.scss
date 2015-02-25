@@ -1,0 +1,67 @@
+// 213213px, (480: 450px, 720: 823px, 960: 12123px, 1280: 21323px);
+// 961 ~ 1280 21323px
+// 721 ~ 960  12123px
+// 481 ~ 720  823px;
+
+@function maxcal($args...) {
+	$result: null;
+	$argslength: length($args);
+	@if $argslength < 2 {
+		$firstarg: nth($args, 1);
+		@if unit($firstarg) == % {
+			@return $firstarg;
+		}
+		@else {
+			$result: ($firstarg * $screen-width) / strip-unit($max-screen-width);
+			@return $result;
+		}
+	}
+	@else if $argslength == 2 {
+		$firstarg: nth($args, 1);
+		$secondarg: nth($args, 2);
+		@if unit($firstarg) == % {
+			@return $firstarg;
+		}
+		@else {
+			$result: ($firstarg * $screen-width) / strip-unit($secondarg);
+			@return $result;
+		}
+	}
+	@else {
+		@return 0;
+	}
+}
+
+@function maxvar($args...) {
+	$result: null;
+	$argslength: length($args);
+
+	$max: false;
+	@if $argslength == 1 {
+		@return  call(maxcal, $args...);
+	}
+	@else {
+		$second-arg: nth($args, 2);
+		@if type-of($second-arg) == number {
+			$max: true;
+			// $params: func_replace_arg(2, maxcal, $args...);
+			$params: list-set($args, 2, maxcal);
+		}
+		@else {
+			// $params: func_set_arg(maxcal, $args...);
+			$params: list-splice($args, $argslength, 0, maxcal);
+		}
+
+		$params: list-splice($params, 0, 0, max);
+		$result: _std-autos($params...);
+
+		@if $max == true {
+			@if $result > $second-arg {
+				$result: $second-arg;
+			}
+		}
+
+		@return $result;
+	}
+	@return false;
+}

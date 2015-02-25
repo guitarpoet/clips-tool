@@ -198,13 +198,13 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 					$this->tool->enhance($a);
 					context('form', $a);
 				}
+                else if(get_class($a) == 'Clips\\Widget') {
+                    $this->tool->widget($a->value);
+                }
 				else if(get_class($a) == 'Clips\\Widgets\\DataTable') {
 					// If this is the datatable annotation, initialize it and set it to the context
 					$this->tool->enhance($a);
 					context('datatable', $a);
-				}
-				else if(get_class($a) == 'Clips\\Widget') {
-					$this->tool->widget($a->value);
 				}
 				else if(get_class($a) == 'Clips\\Model') {
 					if(isset($a->value)) {

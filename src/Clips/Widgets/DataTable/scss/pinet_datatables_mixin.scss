@@ -1,0 +1,23 @@
+@mixin mixin-sorting($bg) {
+  &.sorting_1 {
+    background-color: $bg;
+    color: #3d8dc6;
+    a {
+      color: #3d8dc6;
+    }
+  }
+  &.sorting_2 {
+    background-color: $bg;
+    color: #3d8dc6;
+    a {
+      color: #3d8dc6;
+    }
+  }
+  &.sorting_3 {
+    background-color: $bg;
+    color: #3d8dc6;
+    a {
+      color: #3d8dc6;
+    }
+  }
+}

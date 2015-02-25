@@ -1,0 +1,64 @@
+// 30px, (480: 450px, 720: 823px, 960: 12123px, 1280: 21323px);
+@function mincal($args...) {
+	$result: null;
+	$argslength: length($args);
+	@if $argslength < 2 {
+		$firstarg: nth($args, 1);
+		@if unit($firstarg) == % {
+			@return $firstarg;
+		}
+		@else {
+			$result: $firstarg * (strip-unit($screen-width) / strip-unit($min-screen-width));
+			@return $result;
+		}
+	}
+	@else if $argslength == 2 {
+		$firstarg: nth($args, 1);
+		$secondarg: nth($args, 2);
+		@if unit($firstarg) == % {
+			@return $firstarg;
+		}
+		@else {
+			$result: $firstarg * (strip-unit($screen-width) / strip-unit($secondarg));
+			@return $result;
+		}
+	}
+	@else {
+		@return 0;
+	}
+}
+
+@function minvar($args...) {
+	$result: null;
+	$argslength: length($args);
+
+	$max: false;
+	@if $argslength == 1 {
+		$result: call(mincal, $args...);
+		@return $result;
+	}
+	@else {
+		$second-arg: nth($args, 2);
+		@if type-of($second-arg) == number {
+			$max: true;
+			// $params: func_replace_arg(2, mincal, $args...);
+			$params: list-set($args, 2, mincal);
+		}
+		@else {
+			// $params: func_set_arg(mincal, $args...);
+			$params: list-splice($args, $argslength, 0, mincal);
+		}
+
+		$params: list-splice($args, 0, 0, min);
+		$result: _std-autos($params...);
+
+		@if $max == true {
+			@if $result > $second-arg {
+				$result: $second-arg;
+			}
+		}
+
+		@return $result;
+	}
+	@return false;
+}

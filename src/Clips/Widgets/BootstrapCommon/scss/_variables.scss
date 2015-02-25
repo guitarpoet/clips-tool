@@ -1,52 +1,12 @@
 // When true, asset path helpers are used, otherwise the regular CSS `url()` is used.
 // When there no function is defined, `fn('')` is parsed as string that equals the right hand side
 // NB: in Sass 3.3 there is a native function: function-exists(twbs-font-path)
-@function php_site_url($url) {
-  @return php(site_url, unquote($url)) + '/';
-}
-
 $bootstrap-sass-asset-helper: (twbs-font-path("") != unquote('twbs-font-path("")')) !default;
 
 //
 // Variables
 // --------------------------------------------------
 
-$pinet-blue: #1d99d2;
-$pinet-blue-hover: #0d8bc5;
-$pinet-blue-active: #087eb5;
-
-$pinet-cyan: #1dd2af;
-$pinet-cyan-hover: #0dc5a1;
-$pinet-cyan-active: #07ba97;
-
-$pinet-green: #55d684;
-$pinet-green-hover: #42cb74;
-$pinet-green-active: #33bc65;
-
-$pinet-grey: #c3c9cf;
-$pinet-grey-hover: #b9c0c7;
-$pinet-grey-active: #afb7bf;
-
-$pinet-orange: #ffb24d;
-$pinet-orange-hover: #fca32f;
-$pinet-orange-active: #fc9714;
-
-$pinet-red: #f9845b;
-$pinet-red-hover: #fc622b;
-$pinet-red-active: #f84e12;
-
-$pinet-white: #ffffff;
-$pinet-white-hover: #b9c0c7;
-$pinet-white-active: #afb7bf;
-
-$pinet-delete: #f2f3f5;
-$pinet-delete-hover: #d3dadd;
-$pinet-delete-active: #bfc7cb;
-
-//== System
-//
-//## Settings for responsive
-$max-screen-width: 		 2880px !default;
 
 //== Colors
 //
@@ -123,7 +83,7 @@ $headings-color:          inherit !default;
 //** Load fonts from this directory.
 
 // [converter] Asset helpers such as Sprockets and Node.js Mincer do not resolve relative paths
-$icon-font-path: if($bootstrap-sass-asset-helper, "bootstrap/", php_site_url("pinet/static/fonts/bootstrap/")) !default;
+$icon-font-path: if($bootstrap-sass-asset-helper, "bootstrap/", "../fonts/bootstrap/") !default;
 
 //** File name for all font files.
 $icon-font-name:          "glyphicons-halflings-regular" !default;
@@ -902,7 +862,3 @@ $page-header-border-color:    $gray-lighter !default;
 $dl-horizontal-offset:        $component-offset-horizontal !default;
 //** Horizontal line color.
 $hr-border:                   $gray-lighter !default;
-
-$max-screen-width:            2880px;
-
-

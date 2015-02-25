@@ -1,0 +1,124 @@
+@function _std-min-autocheck($args...) {
+	$select: nth($args, 2);
+	$select-length: length($select);
+	@for $i from $select-length to 0 {
+		$select-item: nth($select, $i);
+		@if type-of($select-item) == list {
+			$width: nth($select-item, 1);
+			@if type-of($width) == string {
+				$width: php(get_width_by_alias, $width);
+			}
+			@if $width <= $screen-width {
+				@return true, nth($select-item, 2), $width;
+			}			
+		}
+		@else {
+			@return false, nth($args, 1);
+		}
+	}
+	@return false, nth($args, 1);
+}
+
+@function _std-max-autocheck($args...) {
+	$select: nth($args, 2);
+	$select-length: length($select);
+	@for $i from 1 through $select-length  {
+		$select-item: nth($select, $i);
+		@if type-of($select-item) == list {
+			@if nth($select-item, 1) >= $screen-width {
+				@return true, nth($select-item, 2), nth($select-item, 1);
+			}			
+		}
+		@else {
+			@return false, nth($args, 1);
+		}
+	}
+	@return false, nth($args, 1);
+}
+
+@function _std-autocheck($args...) {
+	$params: list-splice($args, 0, 1);  //删除第一个参数
+	$type: nth($args, 1);
+	@if $type == max {
+		@return _std-max-autocheck($params...);
+	}
+	@else if $type == min {
+		@return _std-min-autocheck($params...);
+	}
+}
+
+
+// @type 第一个参数 是类型 (min, max)
+
+@function _std-autos($args...)  {
+	$result: null;
+	$argslength: length($args);
+
+	@if $argslength < 2 {
+		@return null;
+	}
+	@else if $argslength == 2 {
+		@return last($args);
+	}
+	@else if $argslength >= 2 {
+		$params: list-splice($args);
+		$lastarg: last($args);
+
+		@if $argslength == 3 {
+			@if type-of($lastarg) == string {
+				$callback: $lastarg;
+				$result: _std-autocheck($type, nth($args, 2));
+			}
+			@else {
+				$callback: -1;
+				$result: _std-autocheck($args...);
+			}
+		}
+		@else if $argslength  == 4 {
+			@if type-of($lastarg) == string {
+				$callback: $lastarg;
+				$thparams: list-splice($params, $argslength, 1);
+			}
+			@else {
+				$callback: -1;
+				$thparams: $args;
+			}
+			$result: _std-autocheck($thparams...);
+		}
+		// Handle callback (type: bool, value)
+		@if nth($result, 1) == false {
+			$num: nth($args, 2);
+			@if $callback != -1 {
+				//Todo args num
+				@return call($callback, $num);
+			}
+			@else {
+				@return $num;
+			}
+		}
+		@else {
+			// $num: nth(nth($result, 2), 1); //fix nth bug ?(libsass 3.1)
+			// $maxwidth: nth(nth($result, 3), 1); //fix nth bug ?(libsass 3.1)
+			@if $callback != -1 {
+				$num: nth($result, 2), nth($result, 3);
+				//Todo args num
+				@return call($callback, $num...);
+			}
+			@else {
+				@return nth($result, 2);
+			}
+		}
+	}
+}
+
+@function autos($args...) {
+	$params: null;
+	$firstArg: nth($args, 1);
+	@if index((min, max), $firstArg) == null {
+		$params: list-splice($args, 0, 0, min);
+	}
+	@else {
+		$params: list-splice($args);
+	}
+	@return _std-autos($params...);
+}
