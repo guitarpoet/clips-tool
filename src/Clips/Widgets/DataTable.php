@@ -33,7 +33,7 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 
 				// Setting the default values for the datatable configuration
 				if(!isset($config->ajax))
-					$config->ajax = '#';
+					$config->ajax = $name;
 
 				$config->processing = true;
 				$config->serverSide = true;

@@ -95,6 +95,8 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 			throw new \Clips\DataSourceException('Didn\'t connect to database.');
 		}
 
+		$this->logger->debug('Executing sql [{0}] with args', array($sql, $args));
+
 		$stmt = $this->db->prepare($sql);
 
 		if($stmt) {
@@ -180,7 +182,6 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 		$sql []= implode(', ', $values);
 		$sql []= ')';
 		$sql = implode(' ', $sql);
-		$this->logger->debug('Ready to insert data using sql [{0}]', array($sql, $data));
 		$this->execute($sql, $data);
 		return $this->db->insert_id;
 	}
@@ -213,7 +214,6 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 		if(isset($this->sql) && isset($this->context)) {
 			$sql = $this->sql->select('*')->from($this->context)
 				->where($args)->sql();
-			$this->logger->debug('Querying using sql [{0}]', $sql);
 			switch(count($sql)) {
 			case 0:
 				throw new Exception('Can\'t do the query since no query generated!');
