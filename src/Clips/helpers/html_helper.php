@@ -93,7 +93,7 @@ function create_tag($tag = 'div', $attr = array(), $default = array(), $content 
 	else
 		$level = count($level);
 
-	// Check for row
+	// Check for auto layout for grid system
 	$row = context_peek('row');
 	if($row && $level == $row->level) {
 		// This is row's direct child, let's apply the layout
