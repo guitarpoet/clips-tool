@@ -21,6 +21,7 @@
 	"form_config_dir": ["application/config/form"],
 	"pagination_config_dir": ["application/config/pagination"],
 	"cache_dir": "application/cache",
+	"widget_dir": ["src/Clips/Widgets", "application/Widgets"],
 	"smarty_compile_dir": ["application/cache/smarty/templates_c"],
 	"smarty_config_dir": ["application/config/smarty"],
 	"smarty_cache_dir": ["application/cache/smarty"],

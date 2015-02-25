@@ -161,7 +161,13 @@ function content_relative($name, $obj) {
  * @date Sat Feb 21 10:24:10 2015
  */
 function current_user() {
-	$user = \posix_getpwuid(\posix_geteuid());
+	if(\extension_loaded('posix')) { // Try intl extension first
+		$user = \posix_getpwuid(\posix_geteuid());
+	}
+	else {
+		$user = array();
+		$user['name'] = exec('whoami');
+	}
 	return $user['name'];
 }
 
