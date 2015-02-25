@@ -7,7 +7,7 @@
  * @date Mon Feb 23 15:30:39 2015
  */
 class FakeData {
-	const FAKE_NAMES = array('Steve Jobs', 'Bill Gates', 'Bill Cliton', 'George Bush', 'Barack Obama', 'Elten Sweet', 'Drew Clayton', 'Millson Stampes', 'Melvin Goodwin', 'Dwite Harding', 'Norton Atterton', 'Lindon Atherton', 'Brian Mitchell', 'Marsdon Holton', 'Jean Barney', 'Mina Eastoft', 'Kasandra Nottley', 'Christian Prescott', 'Riley Read', 'Corinne Southey', 'Kenzie Knotley', 'Bobby Snape', 'Berthe Smithies', 'Breana Nash', 'Jazmyne Smith', 'Normal Blackwood', 'Rawson Harrington', 'Wingate Benson', 'Forbes Spaulding', 'Raleigh Foy', 'Jack Burlingame', 'Waylon Altham', 'Herbert Royston', 'Quintin Sutton', 'Abraham Harding', 'Arthur Pendragon', 'Ambrosius Aurelianus', 'Lancelot Lac', 'Frodo Baggins', 'Bilbo Baggins');
+	public $fakeNames = array('Steve Jobs', 'Bill Gates', 'Bill Cliton', 'George Bush', 'Barack Obama', 'Elten Sweet', 'Drew Clayton', 'Millson Stampes', 'Melvin Goodwin', 'Dwite Harding', 'Norton Atterton', 'Lindon Atherton', 'Brian Mitchell', 'Marsdon Holton', 'Jean Barney', 'Mina Eastoft', 'Kasandra Nottley', 'Christian Prescott', 'Riley Read', 'Corinne Southey', 'Kenzie Knotley', 'Bobby Snape', 'Berthe Smithies', 'Breana Nash', 'Jazmyne Smith', 'Normal Blackwood', 'Rawson Harrington', 'Wingate Benson', 'Forbes Spaulding', 'Raleigh Foy', 'Jack Burlingame', 'Waylon Altham', 'Herbert Royston', 'Quintin Sutton', 'Abraham Harding', 'Arthur Pendragon', 'Ambrosius Aurelianus', 'Lancelot Lac', 'Frodo Baggins', 'Bilbo Baggins');
 
 	/**
 	 * Generate the fake name for test
@@ -23,7 +23,7 @@ class FakeData {
 	 */
 	public function fakeName($name = null) {
 		if(!$name) {
-			$name = choice(FakeData::FAKE_NAMES);
+			$name = choice($this->fakeNames);
 		}
 
 		$fake = new \stdclass();
