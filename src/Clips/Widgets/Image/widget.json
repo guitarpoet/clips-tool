@@ -9,6 +9,6 @@
 		"files": ["jquery-picture"]
 	},
 	"context": {
-		"jquery_init": "$('figure').picture();"
+		"jquery_init": "$('figure,picture').picture();"
 	}
 }

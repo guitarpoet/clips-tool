@@ -24,8 +24,8 @@ function smarty_block_figure($params, $content = '', $template, &$repeat) {
 			$attr['data-media'.$res] = Clips\site_url('responsive/size/'.(float)$res / 2880 * (float)$size .'/'.$src);
 		}
 	}
-
-	$attr = array('path' => Clips\site_url($path));
+	else
+		$attr = array('path' => Clips\site_url($path));
 	foreach($params as $key => $value) {
 		if($key == 'path') {
 			continue;
@@ -39,7 +39,14 @@ function smarty_block_figure($params, $content = '', $template, &$repeat) {
 	}
 
 	$caption = Clips\create_tag_with_content('figcaption', $content);
-	$img = Clips\create_tag('img', array('src' => Clips\static_url('application/static/img/'.$src)));
+	$image_dir = Clips\config('image_dir');
+	if($image_dir) {
+		$image_dir = $image_dir[0];
+	}
+	else {
+		$image_dir = 'application/static/img/';
+	}
+	$img = Clips\create_tag('img', array('src' => Clips\static_url(Clips\path_join($image_dir, $src))));
 	$noscript = Clips\create_tag_with_content('noscript', $img);
 
 	$level = Clips\context('indent_level');
