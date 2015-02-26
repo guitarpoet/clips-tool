@@ -94,6 +94,7 @@
 )
 
 (defrule if-is-pagination-and-no-pagination-suffix-method-use-default-pagination-method
+	(segments $?segs)
 	(RequestType "ajax")
 	(Parameter "draw" ?)
 	(Parameter "start" ?)
@@ -103,7 +104,15 @@
 	=>
 	(retract ?method)
 	(assert (method "pagination"))
-	(modify ?r (args (create$ ?m)))
+	(if (and 
+			(> (length$ $?segs) 2)
+			(numberp (member$ ?m $?segs))
+			(>= (length$ $?segs) (+ (member$ ?m $?segs) 1)))
+	then 
+		(modify ?r (args (subseq$ $?segs (+ (member$ ?m $?segs) 1) (length$ $?segs))))
+	else 
+		(modify ?r (args (create$ ?m)))
+	)
 )
 
 (defrule if-is-post-prefer-form-suffix-method
@@ -136,7 +145,7 @@
 	(segments $?segs)
 	(test (> (length$ $?segs) 2))
 	(test (numberp (member$ ?m $?segs)))
-	(test (> (length$ $?segs) (+ (member$ ?m $?segs) 1)))
+	(test (>= (length$ $?segs) (+ (member$ ?m $?segs) 1)))
 	=>
 	(modify ?r (args (subseq$ $?segs (+ (member$ ?m $?segs) 1) (length$ $?segs))))
 )
