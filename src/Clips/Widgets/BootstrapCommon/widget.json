@@ -14,8 +14,12 @@
 			,"mixins/_background-variant"
 			,"mixins/_text-overflow"
 			,"mixins/_clearfix"
-			,"mixins/_tab-focus.scss"
+			,"mixins/_tab-focus"
+			,"mixins/_opacity"
+			,"mixins/_reset-filter"
+			,"mixins/_border-radius"
 			,"mixins/_image"
+			,"_close"
 			,"_scaffolding"
 			,"_type"
 		]

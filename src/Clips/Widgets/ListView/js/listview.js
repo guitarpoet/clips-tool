@@ -50,16 +50,16 @@
 			select_options: [5,10,20,50],
 			selectable_prefix: 'select',
 			template: '<li class="item listview_item_template">_(content)</li>',
-			pagination_template: '<div class="dataTables_paginate"></div>',
+			pagination_template: '<div class="listview_paginate"></div>',
 			pagination_previous_template: '<a class="paginate_button previous" aria-controls="listview"><i class="glyphicon glyphicon-backward"></i></a>',
 			pagination_button_template: '<a class="paginate_button" data-dt-idx="_(index)" tabindex="0" aria-controls="listview">_(index)</a>',
 			pagination_button_group_template: '<span></span>',
 			pagination_next_template: '<a class="paginate_button next" aria-controls="listview"><i class="glyphicon glyphicon-forward"></i></a>',
-			length_select_template: '<div class="dataTables_length">Show<label><select class="" name="datatable_length" aria-controls="datatable"></select></label>entries</div>',
-			fliter_template: '<div class="dataTables_filter">Search<label><input class="" type="search" placeholder="" aria-controls="datatable"></input></label></div>',
+			length_select_template: '<div class="listview_length">Show<label><select class="" name="listview_length" aria-controls="datatable"></select></label>entries</div>',
+			fliter_template: '<div class="listview_filter">Search<label><input class="" type="search" placeholder="" aria-controls="datatable"></input></label></div>',
 			wrap: '<div class="dataTables_wrapper listview_wrapper"/>',
-			order_box: '<select id="listview_orderbox" class="orderbox"></select>',
-			order_dir_box: '<select id="listview_order" class="orderbox"><option id="asc">ASC</option><option id="desc">DESC</option></select>'
+			order_box: '<select id="listview_orderbox" class="listview_orderbox"></select>',
+			order_dir_box: '<select id="listview_order" class="listview_orderbox"><option id="asc">ASC</option><option id="desc">DESC</option></select>'
 		};
 
 		var settings = $.extend(true, {}, defaults, args);

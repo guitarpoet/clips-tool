@@ -4,8 +4,16 @@
 	"version": "1.0",
 	"name": "clips.html",
 	"doc":"The basic html widgets",
+    "depends": [],
 	"scss": {
-		"dependes": [],
-		"files": ["clips.html"]
+		"depends": [],
+		"files": [
+            "pinet_html_std",
+            "pinet_html_autos",
+            "pinet_html_minvar",
+            "pinet_html_maxvar",
+            "pinet_html_res"
+        ]
 	}
 }
+

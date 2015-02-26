@@ -1,0 +1,35 @@
+// res(number num)                => num
+// res(number num, number minnum) => if (num < minnum)  minnum
+
+@function cal($args...) {
+	$firstarg: nth($args, 1);
+	@if unit($firstarg) == % {
+		@return $firstarg;
+	}
+	@else {
+		@return ($firstarg * $screen-width) / strip-unit($max-screen-width);
+	}
+}
+
+@function res($args...) {
+	$result: null;
+	$argslength: length($args);
+
+	@if $argslength == 1 {
+		@return  cal($args...);
+	}
+	@else {
+		$second-arg: nth($args, 2);
+		@if type-of($second-arg) == number {
+			$result: cal(nth($args, 1));
+			@return  max($result, nth($args, 2));
+		}
+		@else {
+			$params: list-splice($args, $argslength, 0, cal);
+			$params: list-splice($params, 0, 0, max);
+			$result: _std-autos($params...);
+			@return $result;
+		}
+	}
+	@return false;
+}

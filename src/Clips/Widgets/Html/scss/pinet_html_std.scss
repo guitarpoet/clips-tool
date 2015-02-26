@@ -1,0 +1,37 @@
+//@function site_url($url) {
+//	$params: $url;
+//	$laststr: str-get(unquote($params), str-length($params));
+//	$list: unquote("/"), '/', "/";
+//	$result: php(site_url, unquote($url));
+//	@if index($list, $laststr) {
+//		@return unquote( $result + "/");
+//	}
+//	@else {
+//		@return $result;
+//	}
+//}
+//
+//@function base_path($path) {
+//	@return php(constant, FCPATH) + $path;
+//}
+
+@function strip-units($val) {
+	@return ($val / ($val * 0 + 1));
+}
+
+@function map-swap($map) {
+	$newmap: ();
+	@each $key,$value in $map {
+		$new: ($value: $key);
+		$newmap: map-merge($newmap, $new);
+	}
+	@return $newmap;
+}
+
+@function str-remove-first($value) {
+	@return str-slice($value, 2, str-length($value) );
+}
+
+@function str-remove-last($value) {
+	@return str-slice($value, 1, str-length($value) - 1);
+}

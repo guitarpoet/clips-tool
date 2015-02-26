@@ -1,0 +1,16 @@
+{
+	"author": "Andy (andy.pinet@pinet.co)",
+	"date": "Thu Feb  5 15:58:28 2015",
+	"version": "1.0",
+	"name": "demo.jqueryuicommon",
+	"doc":"Jqueryuicommon widget",
+	"depends": ["Jquery"],
+	"js": {
+		"files": [
+            "core",
+            "widget",
+            "mouse",
+            "selectable"
+        ]
+	}
+}

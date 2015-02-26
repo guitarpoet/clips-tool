@@ -17,7 +17,7 @@ define("SASS_FORMAT_FORMATTED", 4);
  * @author Jack
  * @date Tue Jan 13 10:53:34 2015
  */
-class Sass extends \Clips\Libraries\ConsoleBase {
+class Sass extends \Clips\Libraries\ConsoleBase implements \Psr\Log\LoggerAwareInterface {
 
 	protected $options = array();
 
@@ -28,6 +28,10 @@ class Sass extends \Clips\Libraries\ConsoleBase {
 	public $error;
 
 	protected $includePathes;
+
+    public function setLogger(\Psr\Log\LoggerInterface $logger) {
+        $this->logger = $logger;
+    }
 
 	protected function prompt($continue = false) {
 		if($continue)
