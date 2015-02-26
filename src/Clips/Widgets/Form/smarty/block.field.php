@@ -33,8 +33,8 @@ function smarty_block_field($params, $content = '', $template, &$repeat) {
 			$f = Clips\clips_context('current_field');
 
 			$layout = Clips\get_default($params, 'layout', array());
-			$label_layout_class = 'col-1280-2';
-			$element_layout_class = 'col-1280-10';
+			$label_layout_class = '';
+			$element_layout_class = '';
 
 			if(is_array($layout)) {
 				if(isset($layout['label']))
