@@ -207,7 +207,7 @@ class Sass extends \Clips\Libraries\ConsoleBase implements \Psr\Log\LoggerAwareI
 		$this->include_path = (implode(PATH_SEPARATOR, $this->includePathes));
 		$ret = sass_compile("data", $content, $this->options, $this->error);
 
-		if($ret) {
+		if($ret || !$this->error) {
 			return $ret;
 		}
 
