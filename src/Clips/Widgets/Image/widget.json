@@ -7,5 +7,8 @@
 	"depends": ["Jquery","BootstrapCommon"],
 	"js": {
 		"files": ["jquery-picture"]
+	},
+	"context": {
+		"jquery_init": "$('figure').picture();"
 	}
 }

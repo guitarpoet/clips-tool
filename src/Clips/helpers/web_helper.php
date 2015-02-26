@@ -222,3 +222,31 @@ function require_widget_smarty_plugin($widget, $name) {
 	}
 	return false;
 }
+
+/**
+ * Find the image at image locations
+ *
+ * @author Jack
+ * @date Thu Feb 26 18:03:10 2015
+ */
+function find_image($img) {
+	$dir = config('image_dir');
+	if($dir) {
+		foreach($dir as $d) {
+			$p = try_path(path_join($d, $img));
+			if($p) {
+				return $p;
+			}
+		}
+	}
+	return false;
+}
+
+function image_size($p) {
+	if(file_exists($p)) {
+		$tool = &get_clips_tool();
+		$util = $tool->library('ImageUtils');
+		return $util->size($p);
+	}
+	return false;
+}
