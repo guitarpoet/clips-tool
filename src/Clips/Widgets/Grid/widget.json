@@ -4,5 +4,14 @@
 	"version": "1.0",
 	"name": "Grid",
 	"doc":"The grid system based on bootstrap.",
-	"depends": ["bootstrap"]
+    "scss": {
+        "files": [
+            "_normalize",
+            "_clearfix",
+            "_grid-framework",
+            "_grid-mixin",
+            "_grid",
+            "pinet_grid"
+        ]
+    }
 }
