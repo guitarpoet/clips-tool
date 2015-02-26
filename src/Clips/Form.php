@@ -18,6 +18,7 @@ class Form extends \Addendum\Annotation implements Initializable, ToolAware {
 	const FORM_FIELD = '_clips_form';
 
 	public $get = false;
+	public $state;
 
 	public function setTool($tool) {
 		$this->tool = $tool;
@@ -34,6 +35,24 @@ class Form extends \Addendum\Annotation implements Initializable, ToolAware {
 			$this->value = array(default_form_name());
 		}
 		$this->fieldMap = array();
+	}
+
+	public function state($name, $value = null) {
+		if($value) {
+			if(!isset($this->state)) {
+				$this->state = array();
+			}
+			$this->state[$name] = $value;
+			return $value;
+		}
+		if(isset($this->state)) {
+			if(is_array($this->state) && isset($this->state[$name])) {
+				return $this->state[$name];
+			}
+			else
+				return $this->state;
+		}
+		return null;
 	}
 
 	public function field($name) {
