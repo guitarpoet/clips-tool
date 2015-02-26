@@ -32,8 +32,20 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 			if($config) {
 
 				// Setting the default values for the datatable configuration
-				if(!isset($config->ajax))
-					$config->ajax = $name;
+				if(!isset($config->ajax)) {
+					$controller = \Clips\context('controller_class');
+					$controller = explode('Controllers', $controller);
+					// Get the name after controllers
+					$controller = $controller[count($controller) - 1];
+					
+					if(strpos($controller, '\\') !== false) {
+						// We really have name spaces
+						$ns = explode('\\', $controller);
+						$config->ajax = str_replace('controller', '', strtolower(array_pop($ns))).'/'.$name;
+					}	
+					else
+						$config->ajax = $name;
+				}
 
 				$config->processing = true;
 				$config->serverSide = true;

@@ -18,6 +18,11 @@ function smarty_block_field($params, $content = '', $template, &$repeat) {
 			}
 			// Put the current field to the context
 			Clips\clips_context('current_field', $f);
+
+			$data = Clips\context('current_form_data');
+			if($data && isset($data->$field)) {
+				Clips\context('current_form_field_data', $data->$field);
+			}
 		}
 		else {
 			Clips\show_error('No form configuration found for this field!');
@@ -82,6 +87,7 @@ function smarty_block_field($params, $content = '', $template, &$repeat) {
 			
 			// Altogether
 			Clips\context_pop('indent_level');
+			CLips\context_pop('current_form_field_data');
 			return Clips\create_tag_with_content('div', $content, $params, array('class' => array('form-group', 'control-group')));
 		}
 	}

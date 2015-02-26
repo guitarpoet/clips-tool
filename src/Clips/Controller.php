@@ -180,6 +180,10 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 		return $this->render("", $data, 'json');
 	}
 
+	protected function formData($form, $data) {
+		context('form_'.$form, $data);
+	}
+
 	/**
 	 * Send the image file
 	 */

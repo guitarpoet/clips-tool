@@ -132,11 +132,13 @@
 )
 
 (defrule set-the-args-to-the-result
-	?r <- (Clips\RouteResult (controller ~nil) (method ~nil) (args $?args&:(= (length$ $?args) 0)))
+	?r <- (Clips\RouteResult (controller ~nil) (method ?m) (args $?args&:(= (length$ $?args) 0)))
 	(segments $?segs)
 	(test (> (length$ $?segs) 2))
+	(test (numberp (member$ ?m $?segs)))
+	(test (> (length$ $?segs) (+ (member$ ?m $?segs) 1)))
 	=>
-	(modify ?r (args (rest$ (rest$ $?segs))))
+	(modify ?r (args (subseq$ $?segs (+ (member$ ?m $?segs) 1) (length$ $?segs))))
 )
 
 (defrule if-the-method-is-not-found-at-all-then-error
