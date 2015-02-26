@@ -1,0 +1,19 @@
+{
+	"author": "Jack",
+	"date": "Wed Feb 25 21:32:34 2015",
+	"version": "1.0",
+	"name": "ListView",
+	"doc":"The list view widget.",
+	"depends": ["JqueryUI", "StoreJS", "StringJs", "DataTable"],
+	"js": {
+		"files": [
+			"listview.layout.js",
+			"listview.js"
+		]
+	},
+	"scss": {
+		"files": [
+			"listview.scss"
+		]
+	}
+}

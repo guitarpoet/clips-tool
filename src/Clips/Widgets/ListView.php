@@ -6,8 +6,7 @@ use Clips\Interfaces\ToolAware;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 
-class DataTable extends Annotation implements Initializable, ToolAware, LoggerAwareInterface {
-
+class ListView extends Annotation implements Initializable, ToolAware, LoggerAwareInterface {
 	public function setLogger(LoggerInterface $logger) {
 		$this->logger = $logger;
 	}
@@ -17,7 +16,7 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 	}
 
 	public function init() {
-		$this->tool->widget('DataTable');
+		$this->tool->widget('ListView');
 		if(isset($this->value)) {
 			if(!is_array($this->value)) {
 				$this->value = array($this->value);
@@ -27,25 +26,13 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 			$this->value = array(\Clips\default_form_name());
 		}
 
-		// Initialize the datatable in javacript
+		// Initialize the ListView in javacript
 		foreach($this->getConfig() as $name => $config) {
 			if($config) {
 
 				// Setting the default values for the datatable configuration
-				if(!isset($config->ajax)) {
-					$controller = \Clips\context('controller_class');
-					$controller = explode('Controllers', $controller);
-					// Get the name after controllers
-					$controller = $controller[count($controller) - 1];
-					
-					if(strpos($controller, '\\') !== false) {
-						// We really have name spaces
-						$ns = explode('\\', $controller);
-						$config->ajax = str_replace('controller', '', strtolower(array_pop($ns))).'/'.$name;
-					}	
-					else
-						$config->ajax = $name;
-				}
+				if(!isset($config->ajax))
+					$config->ajax = $name;
 
 				$config->processing = true;
 				$config->serverSide = true;
@@ -67,7 +54,7 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 				}
 
 				// Adding the initialize script to jquery init
-				\Clips\context('jquery_init', '$("table[name='.\Clips\to_flat($name).']").DataTable('.str_replace('"datatable_action_column"', 'datatable_action_column', json_encode($config)).')');
+				\Clips\context('jquery_init', '$("ul[name='.\Clips\to_flat($name).']").listview('.json_encode($config).')');
 			}
 		}
 	}

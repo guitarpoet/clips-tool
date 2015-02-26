@@ -202,6 +202,11 @@ function context($key = null, $value = null, $append = false) {
 	return clips_context($key, $value, $append);
 }
 
+function context_peek($key) {
+	$tool = &get_clips_tool();
+	return $tool->context_peek($key);
+}
+
 /**
  * Test the path before adding extension to it
  *

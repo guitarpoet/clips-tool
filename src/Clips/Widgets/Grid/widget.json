@@ -1,0 +1,8 @@
+{
+	"author": "Jack",
+	"date": "Wed Feb 25 19:57:25 2015",
+	"version": "1.0",
+	"name": "Grid",
+	"doc":"The grid system based on bootstrap.",
+	"depends": ["bootstrap"]
+}

@@ -87,11 +87,42 @@ function create_tag_with_content($tag, $content, $attr = array(), $default = arr
  *
  */
 function create_tag($tag = 'div', $attr = array(), $default = array(), $content = null, $close = false) {
-	$level = clips_context('indent_level');
+	$level = context('indent_level');
 	if($level === null)
 		$level = 0; // Default level is 0
 	else
 		$level = count($level);
+
+	// Check for auto layout for grid system
+	$row = context_peek('row');
+	if($row && $level == $row->level) {
+		// This is row's direct child, let's apply the layout
+		$class = array('column');
+		$index = $row->index;
+		$row->index++;
+		foreach($row as $k => $v) {
+			if(strpos($k, 'layout') === 0) { // The key begin with layout
+				// Let's apply the layout
+				if($k == 'layout') {
+					if(isset($v[$index]))
+						$class []= 'col-xs-'.$v[$index];
+				}
+				else {
+					$data = explode('-', $k);
+					if(isset($v[$index]))
+						$class []= 'col-'.$data[1].'-'.$v[$index];
+				}
+			}
+		}
+		if(isset($default['class'])) {
+			if(!is_array($default['class']))
+				$default['class'] = array($default['class']);
+			$default['class'] = array_merge($default['class'], $class);
+		}
+		else {
+			$default['class'] = $class;
+		}
+	}
 
 	$indent = '';
 	for($i = 0; $i < $level; $i++) {

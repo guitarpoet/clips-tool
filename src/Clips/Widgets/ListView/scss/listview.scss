@@ -1,0 +1,93 @@
+.listview {
+	padding: 0;
+	overflow: hidden;
+	.listview_item {
+		position: relative;
+		float: left;
+		display: block;
+		&.edge {
+			margin-right: 0;
+		}
+	}
+
+	.listview_item_template {
+		display: none;
+	}
+
+	.listview_data {
+		margin-top: 20px;
+	}
+
+	li {
+		&.ui-selecting {
+			background: #000;
+		}
+		&.ui-selected {
+			background: #ddd;
+		}
+	}
+}
+
+
+div.dataTables_paginate.listview_pagination {
+	span {
+		a.dataTables_paginate {
+			background: none;
+		}
+
+		a.paginate_button {
+			background: none !important;
+			color: #5c5e5f !important;
+			border-color: transparent !important;
+
+			&:hover {
+				border-color: transparent !important;
+				background: #9ea3a6 !important;                        
+			}
+		}
+
+		a.paginate_button.current {
+			color: #ffffff !important;
+			background: #9ea3a6 !important;
+		}
+	}
+	a.paginate_button {
+		&.previous, &.next {
+			color: #5c5e5f; 
+			i {
+				color: #5c5e5f;
+			}
+			&.disabled {
+				color: #9ea3a6; 
+				i {
+					color: #9ea3a6;
+				}                       
+			}
+			&:hover {
+				border-color: transparent;
+				background: none;
+				i {
+					color: #9ea3a6;
+				}
+			}
+		}
+	}
+}
+
+
+.orderbox {
+	float: left;
+	margin-left: 20px;
+}
+
+.dataTables_filter {
+    float: none !important;
+}
+
+.listview_item_template {
+	display: none;
+}
+
+.listview_length_template {
+    display: none;
+}

@@ -6,5 +6,10 @@ function smarty_function_input($params, $template) {
 	if($f) {
 		$default = $f->getDefault($default);
 	}
+
+	$data = Clips\context('current_form_field_data');
+	if($data) {
+		$default['value'] = $data;
+	}
 	return Clips\create_tag('input', $params, $default);
 }
