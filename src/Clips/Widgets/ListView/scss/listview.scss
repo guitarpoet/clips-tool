@@ -1,93 +1,120 @@
-.listview {
-	padding: 0;
-	overflow: hidden;
-	.listview_item {
-		position: relative;
-		float: left;
-		display: block;
-		&.edge {
-			margin-right: 0;
-		}
-	}
-
+.listview_wrapper {
+	position: relative;
 	.listview_item_template {
 		display: none;
 	}
 
-	.listview_data {
-		margin-top: 20px;
+	.listview_length_template {
+		display: none;
 	}
 
-	li {
-		&.ui-selecting {
-			background: #000;
-		}
-		&.ui-selected {
-			background: #ddd;
-		}
+	%inlinetable {
+		display: inline-table;
+		vertical-align: middle;
+		float: none;
 	}
-}
 
+	.listview_length {
+		@extend %inlinetable;
+		margin: 0 10px;
+	}
 
-div.dataTables_paginate.listview_pagination {
-	span {
-		a.dataTables_paginate {
-			background: none;
-		}
+	.listview_orderbox {
+		@extend %inlinetable;
+		margin: 0 10px;
+	}
 
-		a.paginate_button {
-			background: none !important;
-			color: #5c5e5f !important;
-			border-color: transparent !important;
+	.listview_filter {
+		@extend %inlinetable;
+		position: absolute;
+		right: 0;
+		margin: 0px 15px;
+	}
 
-			&:hover {
-				border-color: transparent !important;
-				background: #9ea3a6 !important;                        
+	.listview {
+		padding: 0;
+		overflow: hidden;
+		.listview_item {
+			position: relative;
+			float: left;
+			display: block;
+			&.edge {
+				margin-right: 0;
 			}
 		}
 
-		a.paginate_button.current {
-			color: #ffffff !important;
-			background: #9ea3a6 !important;
+		.listview_item_template {
+			display: none;
+		}
+
+		.listview_data {
+			margin-top: 20px;
+		}
+
+		li {
+			&.ui-selecting {
+				background: #000;
+			}
+			&.ui-selected {
+				background: #ddd;
+			}
 		}
 	}
-	a.paginate_button {
-		&.previous, &.next {
-			color: #5c5e5f; 
-			i {
-				color: #5c5e5f;
-			}
-			&.disabled {
-				color: #9ea3a6; 
-				i {
-					color: #9ea3a6;
-				}                       
-			}
-			&:hover {
-				border-color: transparent;
+
+	.listview_pagination {
+		display: inline-table;
+		position: absolute;
+		right: 0;
+		.paginate_button {
+			padding: 5px 10px;
+			margin: 0px 5px;
+		}
+		span {
+			a.dataTables_paginate {
 				background: none;
-				i {
-					color: #9ea3a6;
+			}
+
+			a.paginate_button {
+				background: none;
+				color: #5c5e5f;
+				border-color: transparent;
+
+				&:hover {
+					border-color: transparent;
+					background: #9ea3a6;
 				}
 			}
+
+			a.paginate_button.current {
+				color: #ffffff;
+				background: #9ea3a6;
+			}
+		}
+		a.paginate_button {
+			&.previous, &.next {
+				color: #5c5e5f;
+				i {
+					color: #5c5e5f;
+				}
+				&.disabled {
+					color: #9ea3a6;
+					i {
+						color: #9ea3a6;
+					}
+				}
+				&:hover {
+					border-color: transparent;
+					background: none;
+					i {
+						color: #9ea3a6;
+					}
+				}
+			}
+			&:hover {
+				text-decoration: none;
+				color: #ffffff;
+			}
 		}
 	}
 }
 
-
-.orderbox {
-	float: left;
-	margin-left: 20px;
-}
-
-.dataTables_filter {
-    float: none !important;
-}
-
-.listview_item_template {
-	display: none;
-}
-
-.listview_length_template {
-    display: none;
-}
