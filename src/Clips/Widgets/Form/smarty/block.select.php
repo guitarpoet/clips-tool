@@ -12,25 +12,53 @@ function smarty_block_select($params, $content = '', $template, &$repeat) {
 	$blank = Clips\get_default($params, 'blank');
 
 	if($options) {
-		$content = array();
 		if($blank) {
 			if(is_bool($blank)) {
 				$blank = array();
 				$blank[$label] = '-- Please Select --';
-				$blank[$value] = -1;
+				$blank[$value] = '-- Please Select --';
 			}
-			array_unshift($options, $blank);
+			array_unshift($options, (object) $blank);
 		}
+
+		$data = Clips\context('current_form_field_data');
+
+
+		if(trim($content)) {
+			$tpl = 'string:'.trim($content);
+		}
+		$content = array();
 		foreach($options as $option) {
 			Clips\context('indent_level', 1, true);
-			if(is_string($option)) {
-				$content []= Clips\create_tag_with_content('option', $option);
+			if(isset($tpl)) {
+				// We do have template here
+				$content []= $template->fetch($tpl, array('option' => $option));
 			}
-			else if(is_array($option)) {
-				$content []= Clips\create_tag_with_content('option', $option[$label], array('value' => $option[$value]));
-			}
-			else if(is_object($option)) {
-				$content []= Clips\create_tag_with_content('option', $option->$label, array('value' => $option->$value));
+			else {
+				$content = array();
+				if(is_string($option)) {
+					$l = $option;
+					if($data && $data == $option) {
+						$default = array('selected');
+					}
+					else
+						$default = array();
+				}
+				else if(is_array($option)) {
+					$l = $option[$label];
+					$default = array('value' => $option[$value]);
+					if($data && $data == $option[$value]) {
+						$default []= 'selected';
+					}
+				}
+				else if(is_object($option)) {
+					$l = $option->$label;
+					$default = array('value' => $option->$value);
+					if($data && $data == $option->$value) {
+						$default []= 'selected';
+					}
+				}
+				$content []= Clips\create_tag_with_content('option', $l, $default);
 			}
 			Clips\context_pop('indent_level');
 		}
