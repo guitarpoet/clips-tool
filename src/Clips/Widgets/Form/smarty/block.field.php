@@ -2,9 +2,9 @@
 
 function smarty_block_field($params, $content = '', $template, &$repeat) {
 	if($repeat) {
-		Clips\clips_context('indent_level', 1, true);
-		Clips\clips_context('current_field', null); // Remove the last current field
-		$form = Clips\clips_context('form');
+		Clips\context('indent_level', 1, true);
+		Clips\context('current_field', null); // Remove the last current field
+		$form = Clips\context('form');
 		if($form) {
 			$field = Clips\get_default($params, 'field', null);
 
@@ -17,7 +17,15 @@ function smarty_block_field($params, $content = '', $template, &$repeat) {
 				Clips\show_error('No field configuration found for field %s!', $field);
 			}
 			// Put the current field to the context
-			Clips\clips_context('current_field', $f);
+			Clips\context('current_field', $f);
+
+			$state = Clips\get_default($params, 'state');
+			if(!$state) {
+				$state = Clips\field_state($f);
+			}
+			if($state) {
+				Clips\context('current_form_field_state', $state);
+			}
 
 			$data = Clips\context('current_form_data');
 			if($data && isset($data->$field)) {
@@ -88,6 +96,7 @@ function smarty_block_field($params, $content = '', $template, &$repeat) {
 			// Altogether
 			Clips\context_pop('indent_level');
 			CLips\context_pop('current_form_field_data');
+			CLips\context_pop('current_form_field_state');
 			return Clips\create_tag_with_content('div', $content, $params, array('class' => array('form-group', 'control-group')));
 		}
 	}

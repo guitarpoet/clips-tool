@@ -242,6 +242,18 @@ function find_image($img) {
 	return false;
 }
 
+function field_state($field) {
+	// TODO Using security manager to get the field's state
+	if(isset($field->state)) { // Honor the state of the field
+		return $field->state;
+	}
+	$form = Clips\context('form'); // Using form's state
+	if(isset($form->state))
+		return $form->state;
+
+	return null;
+}
+
 function image_size($p) {
 	if(file_exists($p)) {
 		$tool = &get_clips_tool();

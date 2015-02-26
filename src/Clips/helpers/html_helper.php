@@ -57,8 +57,8 @@ function to_name($str) {
  * @author Jack
  * @date Sat Feb 21 11:24:03 2015
  */
-function create_tag_with_content($tag, $content, $attr = array(), $default = array()) {
-	return create_tag($tag, $attr, $default, $content);
+function create_tag_with_content($tag, $content, $attr = array(), $default = array(), $no_indent = false) {
+	return create_tag($tag, $attr, $default, $content, false, $no_indent);
 }
 
 
@@ -86,7 +86,7 @@ function create_tag_with_content($tag, $content, $attr = array(), $default = arr
  * 		If this tag is closed
  *
  */
-function create_tag($tag = 'div', $attr = array(), $default = array(), $content = null, $close = false) {
+function create_tag($tag = 'div', $attr = array(), $default = array(), $content = null, $close = false, $no_indent = false) {
 	$level = context('indent_level');
 	if($level === null)
 		$level = 0; // Default level is 0
@@ -135,7 +135,10 @@ function create_tag($tag = 'div', $attr = array(), $default = array(), $content 
 	if($attr)
 		$ret .= ' '.$attr;
 	if($content !== null) {
-		$ret .= ">\n\t$indent".trim($content)."\n$indent".'</'.$tag.'>'; 
+		if($no_indent)
+			$ret .= '>'.trim($content).'</'.$tag.'>'; 
+		else
+			$ret .= ">\n\t$indent".trim($content)."\n$indent".'</'.$tag.'>'; 
 	}
 	else {
 		if($close)

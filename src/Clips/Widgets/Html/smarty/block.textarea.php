@@ -1,7 +1,13 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
-function smarty_function_input($params, $template) {
+function smarty_block_textarea($params, $content = '', $template, &$repeat) {
+	if($repeat) {
+		Clips\clips_context('indent_level', 1, true);
+		return;
+	}
+
 	$default = array('class' => array('form-input', 'form-control'));
+
 	$f = Clips\clips_context('current_field');
 	if($f) {
 		$default = $f->getDefault($default);
@@ -9,16 +15,15 @@ function smarty_function_input($params, $template) {
 
 	$data = Clips\context('current_form_field_data');
 	if($data) {
-		$default['value'] = $data;
+		$content = $data;
 	}
 
 	$state = Clips\context('current_form_field_state');
 	if($state && $state == 'readonly') {
-		 $value = Clips\get_default($default, 'value');
-		 if($value)
-			 return "<span>$value</span>";
-
-		 return "<span>".Clips\get_default($params, 'value', '')."</span>";
+		 return "<p>$content</p>";
 	}
-	return Clips\create_tag('input', $params, $default);
+
+	$ret = Clips\create_tag_with_content('textarea', $content, $params, $default, true);
+	Clips\context_pop('indent_level');
+	return $ret;
 }
