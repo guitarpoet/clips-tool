@@ -128,6 +128,11 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 		if($config_dir) {
 			$config_dir = $config_dir[0];
 			$p = path_join($config_dir, $config.'.json');
+
+			if(!file_exists($p) && func_num_args() >= 2) {
+				// Try find the configuration by remove the first part
+				$p = path_join($config_dir, func_get_arg(1).'.json');
+			}
 			if(file_exists($p)) {
 				$pagination = Pagination::fromJson(file_get_contents($p));
 				$pagination->update($this->request->param());

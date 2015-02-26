@@ -16,7 +16,7 @@
 		"monolog/monolog": "1.12.0",
 		"nikic/php-parser": "1.1.0",
         "smarty/smarty": "3.1.21",
-        "gitonomy/gitlib": "v0.1.7",
+        "gitonomy/gitlib": "0.1.7",
 		"robmorgan/phinx": "0.4.3",
 		"seld/jsonlint": "1.3.1"
 	},
