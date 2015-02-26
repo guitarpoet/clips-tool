@@ -1,4 +1,4 @@
-<?php namespace Demo\Sass; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
+<?php namespace Clips\Libraries\Sass; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
 /**
  *	Author: andy
@@ -10,7 +10,7 @@
  *	$resolutions = array('device1'=>320, 480, 640);
  */
 
-class AutoResolution extends \Clips\Libraries\Sass\SassPlugin {
+class AutoResolution extends SassPlugin {
 
     public function prefix($compiler) {
         $this->appendVariables($this->getResolutions($compiler),
