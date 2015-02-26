@@ -150,7 +150,7 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 					else
 						$result = $datasource->query($query[0]);
 					if($result) {
-						return $this->render("", array('data' => $result, 'recordsTotal' => $count, 'recordsFiltered' => $count), 'json');
+						return $this->render("", array('data' => $result, 'start' => $pagination->offset, 'length' => $pagination->length, 'recordsTotal' => $count, 'recordsFiltered' => $count), 'json');
 					}
 				}
 			}

@@ -1,2 +1,17 @@
-#! /bin/bash 
-env php $PHP_OPTS -r "require_once('`dirname $(readlink $0)`/vendor/autoload.php'); new Clips\\Console('$0 $*');"
+#! /bin/bash
+
+CLIPS_DIR=`dirname $(readlink $0)`
+
+LOAD_FILE=$CLIPS_DIR/vendor/autoload.php
+if [[ ! -f $LOAD_FILE ]];
+then
+	# We are in the composer vendor folder
+	LOAD_FILE="vendor/autoload.php"
+fi
+
+if [[ -f $LOAD_FILE ]];
+then
+	env php $PHP_OPTS -r "require_once('$LOAD_FILE'); new Clips\\Console('$0 $*');"
+else
+	echo "No autoload file found, please use composer update"
+fi

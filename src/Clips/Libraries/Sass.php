@@ -201,7 +201,7 @@ class Sass extends \Clips\Libraries\ConsoleBase implements \Psr\Log\LoggerAwareI
 				$this->addSass($sass);
 			}
 		}
-        
+
 		$content = $this->precompile();
 
 		$this->include_path = (implode(PATH_SEPARATOR, $this->includePathes));

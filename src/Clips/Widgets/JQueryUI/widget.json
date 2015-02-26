@@ -1,0 +1,16 @@
+{
+	"author": "Jack",
+	"date": "Wed Feb 25 22:00:19 2015",
+	"version": "1.11.0",
+	"name": "JQueryUI",
+	"doc":"The JQueryUI",
+	"depends": ["Jquery"],
+	"js": {
+		"files": ["jquery-ui"]
+	},
+	"css": {
+		"files": [
+			"jquery-ui"
+		]
+	}
+}

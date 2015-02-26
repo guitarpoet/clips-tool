@@ -6,6 +6,12 @@ function smarty_block_container($params, $content = '', $template, &$repeat) {
 		return;
 	}
 
+	$fluid = Clips\get_default($params, 'fluid', false);
+	$class = 'container';
+
+	if($fluid)
+		$class = 'container-fluid';
+
 	Clips\context_pop('indent_level');
-	return Clips\create_tag_with_content('div', $content, $params, array('class' => 'container'));
+	return Clips\create_tag_with_content('div', $content, $params, array('class' => $class));
 }

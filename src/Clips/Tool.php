@@ -477,6 +477,18 @@ class Tool implements Interfaces\Initializable {
 		trigger_error('No command named '.$command.' found!');
 	}
 
+	public function context_peek($key) {
+		if(isset($this->_context[$key])) {
+			$arr = $this->_context[$key];
+			if(is_array($arr) && $arr) {
+				return $arr[count($arr) - 1];
+			}
+			else
+				return $arr;
+		}
+		return null;
+	}
+
 	public function context_pop($key) {
 		if(isset($this->_context[$key])) {
 			$arr = $this->_context[$key];
