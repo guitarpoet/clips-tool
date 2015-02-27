@@ -1,0 +1,10 @@
+{
+	"author": "Jack",
+	"date": "Fri Feb 27 17:39:52 2015",
+	"version": "1.0.2",
+	"name": "SprintfJS",
+	"doc":"The SprintfJS widget.",
+	"js": {
+		"files": ["sprintf.js"]
+	}
+}
