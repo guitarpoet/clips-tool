@@ -59,7 +59,9 @@ class MigrationTool {
 				$table->addColumn($colname, $type, (array) $opts);
 			}
 
-			$table->addIndex($keys);
+			foreach($keys as $key) {
+				$table->addIndex($key);
+			}
 
 			foreach($foreign_keys as $fk) {
 				$table->addForeignKey($fk[0], $fk[1], $fk[2]);

@@ -28,21 +28,34 @@ function smarty_block_select($params, $content = '', $template, &$repeat) {
 			$tpl = 'string:'.trim($content);
 		}
 		$content = array();
-		foreach($options as $option) {
-			Clips\context('indent_level', 1, true);
+		foreach($options as $key => $option) {
+		//	Clips\context('indent_level', 1, true);
 			if(isset($tpl)) {
 				// We do have template here
 				$content []= $template->fetch($tpl, array('option' => $option));
 			}
 			else {
-				$content = array();
-				if(is_string($option)) {
+				if(is_string($key) && !is_string($option)) {
+					$l = $key;
+					if($data && $data == $option) {
+						$default = array('selected');
+					}
+					else
+						$default = array();
+					if(is_string($key)) {
+						$default['value'] = $option;
+					}
+				}
+				else if(is_string($option)) {
 					$l = $option;
 					if($data && $data == $option) {
 						$default = array('selected');
 					}
 					else
 						$default = array();
+					if(is_string($key)) {
+						$default['value'] = $key;
+					}
 				}
 				else if(is_array($option)) {
 					$l = $option[$label];
@@ -60,7 +73,7 @@ function smarty_block_select($params, $content = '', $template, &$repeat) {
 				}
 				$content []= Clips\create_tag_with_content('option', $l, $default);
 			}
-			Clips\context_pop('indent_level');
+			//Clips\context_pop('indent_level');
 		}
 
 		$level = Clips\context('indent_level');
@@ -76,7 +89,6 @@ function smarty_block_select($params, $content = '', $template, &$repeat) {
 		unset($params['options']);
 	}
 
-	$ret = Clips\create_tag_with_content('select', $content, $params);
 	Clips\context_pop('indent_level');
-	return $ret;
+	return Clips\create_tag_with_content('select', $content, $params);
 }

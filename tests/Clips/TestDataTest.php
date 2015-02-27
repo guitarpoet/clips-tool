@@ -18,4 +18,11 @@ class TestDataTest extends Clips\TestCase {
 		$this->assertNotNull($this->data->jack->groups);
 		$this->assertEquals(count($this->data->jack->groups), 1);
 	}
+
+	/**
+	 * @Clips\Model("view")
+	 */
+	public function testModelTest() {
+		$this->assertNotNull($this->view);
+	}
 }
