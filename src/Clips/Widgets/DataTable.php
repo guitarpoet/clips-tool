@@ -67,7 +67,7 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 				}
 
 				// Adding the initialize script to jquery init
-				\Clips\context('jquery_init', '$("table[name='.\Clips\to_flat($name).']").DataTable('.str_replace('"datatable_action_column"', 'datatable_action_column', json_encode($config)).')');
+				\Clips\context('jquery_init', '$("table[name='.\Clips\to_flat($name).']").DataTable('.str_replace('"datatable_action_column"', 'datatable_action_column', json_encode($config)).')', true);
 			}
 		}
 	}
