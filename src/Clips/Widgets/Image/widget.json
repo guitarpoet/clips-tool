@@ -9,6 +9,6 @@
 		"files": ["jquery-picture"]
 	},
 	"context": {
-		"jquery_init": "$('figure,picture').picture();"
+        "jquery_init": "setTimeout(function(){$('figure,picture').picture()}, 300);"
 	}
 }
