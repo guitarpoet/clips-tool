@@ -51,36 +51,51 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 		if($store)
 			$stmt->store_result();
 
-		$variables = array();
-		$data = array();
-		$meta = $stmt->result_metadata();
-
-		while($field = $meta->fetch_field()) {
-			$variables[] = &$data[$field->name];
-		}
-
-		call_user_func_array(array($stmt, 'bind_result'), $variables);
-
 		if(!$callback)
 			$array = array();
 
-		while($stmt->fetch()) {
-			$tmp = array();
-
-			foreach($data as $k=>$v)
-				$tmp[$k] = $v;
-
-			if(!$callback) {
-				$array []= $tmp;
+		if(method_exists($stmt, 'get_result')) {
+			$stmt->execute();
+			$result = $stmt->get_result();
+			while($obj = $result->fetch_object()) {
+				if(!$callback) {
+					$array []= $obj;
+				}
+				else {
+					$callback($obj, $context);
+				}
 			}
-			else {
-				$callback((object) $tmp, $context);
+		}
+		else {
+			$variables = array();
+			$data = array();
+			$meta = $stmt->result_metadata();
+
+			while($field = $meta->fetch_field()) {
+				$variables[] = &$data[$field->name];
+			}
+
+			call_user_func_array(array($stmt, 'bind_result'), $variables);
+
+			while($stmt->fetch()) {
+				$tmp = array();
+
+				foreach($data as $k=>$v)
+					$tmp[$k] = $v;
+
+				if(!$callback) {
+					$array []= $tmp;
+				}
+				else {
+					$callback((object) $tmp, $context);
+				}
 			}
 		}
 
 		if(!$callback) {
 			return $array;
 		}
+
 		return true;
 	}
 

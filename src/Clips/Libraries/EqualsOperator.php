@@ -9,14 +9,22 @@ class EqualsOperator extends WhereOperator {
 	}
 
 	public function getArgs() {
-		if($this->arg)
+		if($this->arg) {
 			return $this->right;
+		}
 		return null;
 	}
 
 	public function toString() {
-		if($this->arg)
+		if($this->arg) {
+			if($this->right === null)
+				return $this->left.' is null';
 			return $this->left.' = ?';
+		}
+
+		if($this->right === null)
+			return $this->left.' is null';
+
 		return $this->left.' = '.$this->right;
 	}
 }
