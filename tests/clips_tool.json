@@ -21,7 +21,7 @@
 		"mysql": {
 			"table_prefix":"",
 			"context": "user",
-			"type": "mysqli",
+			"type": "MySQLi",
 			"database": "mysql"
 		}
 	}
