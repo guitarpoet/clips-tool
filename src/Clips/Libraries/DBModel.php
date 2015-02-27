@@ -70,7 +70,6 @@ class DBModel extends Sql implements ToolAware, Initializable {
 
 	public function init() {
 		$tool = $this->tool;
-		$tool->library('datasource'); // Load the datasource library
 
 		$config = $tool->config;
 		$name = get_class($this);
@@ -99,12 +98,13 @@ class DBModel extends Sql implements ToolAware, Initializable {
 			}
 		}
 
+		$ds = $tool->library('DataSource'); // Load the datasource library
 		if(!isset($datasource)) {
 			// There is still no datasource information, let's try using first one of the datasource
-			$this->db = $tool->datasource->first();
+			$this->db = $ds->first();
 		}
 		else {
-			$this->db = $tool->datasource->get($datasource);
+			$this->db = $ds->get($datasource);
 		}
 		if(isset($this->db)) {
 			parent::__construct($this->db->type);
