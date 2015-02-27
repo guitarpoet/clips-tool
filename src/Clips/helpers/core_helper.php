@@ -77,7 +77,13 @@ function get_locale() {
 						foreach ($langs as $lang => $val) {
 							if ($val === '') {
 								$langs[$lang] = 1;
-								$locale = $lang;
+								if(strpos($lang, '-')) {
+									$data = explode('-', $lang);
+									$data[1] = strtoupper($data[1]);
+									$locale = implode('-', $data);
+								}
+								else
+									$locale = $lang;
 							}
 						}
 
