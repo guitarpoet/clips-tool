@@ -191,18 +191,21 @@ class AutoResolution extends SassPlugin {
     }
 
     protected function getResolutions($compiler) {
-        foreach(array('\Clips\get_default', '\Clips\clips_config') as $func) {
-            $res = null;
-            if($func == '\Clips\get_default') {
-                $res = \Clips\get_default($compiler, 'resolutions', null);
-            }
-            else {
-                $res = call_user_func_array($func, array('resolutions', null));
+        if (\Clips\context('resolutions') && is_array(\Clips\context('resolutions'))) {
+            return \Clips\context('resolutions');
+        } else {
+            foreach(array('\Clips\get_default', '\Clips\clips_config') as $func) {
+                $res = null;
+                if($func == '\Clips\get_default') {
+                    $res = \Clips\get_default($compiler, 'resolutions', null);
+                }
+                else {
+                    $res = call_user_func_array($func, array('resolutions', null));
+                }
             }
             if($res) {
                 return $res;
             }
-
         }
         trigger_error('you must need resolutions, you can put in clips_config or ci_config or complier');
         return false;
