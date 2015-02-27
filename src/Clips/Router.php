@@ -150,6 +150,8 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 				else if(get_class($a) == 'Clips\\MessageBundle') {
 					$this->tool->enhance($a);
 					$controller->bundle = $a;
+					if(isset($a->name))
+						Clips\context('current_bundle', $a->name);
 				}
 				else if(get_class($a) == 'Clips\\Meta') {
 					if(isset($a->value) && is_array($a->value)) {
