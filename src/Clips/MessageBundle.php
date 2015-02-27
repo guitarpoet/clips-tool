@@ -74,6 +74,12 @@ class MessageBundle extends Annotation implements Initializable, LoggerAwareInte
 		return false;
 	}
 
+	public function all() {
+		$locale = $this->loadLocale($this->locale);
+		$default = $this->loadLocale('default');
+		return extend_arr($default, $locale);
+	}
+
 	private function _process() {
 		$args = func_get_args();
 		$func = array_shift($args);

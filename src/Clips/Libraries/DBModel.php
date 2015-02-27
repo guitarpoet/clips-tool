@@ -79,7 +79,7 @@ class DBModel extends Sql implements ToolAware, Initializable {
 		$name = $name[count($name) - 1];
 
 		if(!isset($this->table)) {
-			$this->table = strtolower(str_replace('Model', '', $name)).'s'; // If no table is set for this model, just guess for its table
+			$this->table = \Clips\to_flat(str_replace('Model', '', $name)).'s'; // If no table is set for this model, just guess for its table
 		}
 
 		// Check for models config first

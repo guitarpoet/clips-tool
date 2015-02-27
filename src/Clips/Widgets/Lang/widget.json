@@ -3,5 +3,9 @@
 	"date": "Mon Feb 23 13:50:07 2015",
 	"version": "1.0",
 	"name": "Lang",
-	"doc":"The language support using MessageBundle"
+	"doc":"The language support using MessageBundle",
+	"depends": ["SprintfJS", "Jquery"],
+	"js": {
+		"files": ["clips.lang.js"]
+	}
 }
