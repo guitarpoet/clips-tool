@@ -12,6 +12,7 @@ class Sql {
 		$this->clips->template(array('Clips\\Libraries\\Select', 'Clips\\Libraries\\From', 'Clips\\Libraries\\Join', 'Clips\\Libraries\\Where', 'Clips\\Libraries\\GroupBy', 'Clips\\Libraries\\OrderBy', 'Clips\\Libraries\\Limit', 'Clips\\Libraries\\SqlTable', 'Clips\\Libraries\\SqlResult'));
 
 		if(isset($type)) {
+			$type = strtolower($type);
 			$this->type = $type;
 			$this->clips->load('/config/rules/sql/'.$type.'.rules');
 		}

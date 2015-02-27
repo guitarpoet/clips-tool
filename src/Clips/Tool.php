@@ -294,7 +294,7 @@ class Tool implements Interfaces\Initializable {
 		// Process message bundle
 		$a = get_annotation(get_class($obj), 'Clips\\MessageBundle');
 		
-		if($a) {
+		if($a && !valid_obj($obj, 'Clips\\Controller')) {
 			$this->enhance($a);
 			$obj->bundle = $a;
 		}

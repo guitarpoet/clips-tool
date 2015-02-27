@@ -8,6 +8,9 @@
 	"where": {
 		"user.username": "Jack"
 	},
-	"join": ["groups", {"users.group_id": "groups.id"}],
+	"join": [
+		["groups", {"users.group_id": "groups.id"}],
+		["orders", {"orders.user_id": "user.id"}]
+	],
 	"groupBy": ["users.id"]
 }

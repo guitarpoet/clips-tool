@@ -5,6 +5,9 @@ function smarty_block_lang($params, $content = '', $template, &$repeat) {
 		return;
 	// Get the format from parameters, if no format parameter, use content instead
 	$format = Clips\get_default($params, 'format', $content);
-	$bundle = Clips\bundle(Clips\get_default($params, 'bundle', ''));
+	$bundle_name = Clips\context('current_bundle');
+	if(!$bundle_name)
+		$bundle_name = '';
+	$bundle = Clips\bundle(Clips\get_default($params, 'bundle', $bundle_name));
 	return $bundle->message($format, $content);
 }

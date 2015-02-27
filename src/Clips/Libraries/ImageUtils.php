@@ -15,7 +15,7 @@ class ImageUtils implements Initializable {
 		if (\extension_loaded('imagick')) {
 			$this->type = 'imagick';
 		}
-		if (\extension_loaded('gd')) {
+		else if (\extension_loaded('gd')) {
 			$this->type = 'gd';
 		}
 		\Clips\log('Using php extension {0} as image processing library.', array($this->type));

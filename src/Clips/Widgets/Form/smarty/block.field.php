@@ -5,8 +5,8 @@ function smarty_block_field($params, $content = '', $template, &$repeat) {
 	Clips\require_widget_smarty_plugin('Html', 'label');
 
 	// Global variables
-	$labelClass = Clips\get_default($params, 'labelClass', 'form-label');
-	$inputClass = Clips\get_default($params, 'inputClass', 'form-input');
+	$labelClass = Clips\get_default($params, 'label-class', 'form-label');
+	$inputClass = Clips\get_default($params, 'input-class', 'form-input');
 	$glyphicon = Clips\get_default($params, 'glyphicon', null);
 
 	if($repeat) { // The header part
