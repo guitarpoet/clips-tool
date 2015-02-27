@@ -53,6 +53,11 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 				foreach($config->columns as $col) {
 					if(isset($col->data)) {
 						// Must smooth the data
+						if(strpos($col->data, " as ")) {
+							$d = explode(' as ', $col->data);
+							if($d)
+								$col->data = trim($d[1]);
+						}
 						$col->data = \Clips\smooth($col->data);
 					}
 
