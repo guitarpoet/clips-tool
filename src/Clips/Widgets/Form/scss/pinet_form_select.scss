@@ -1,0 +1,43 @@
+@mixin mixin-pinet-form-select() {
+	.selectboxit-container {
+		span {
+			height: res(75px);
+			line-height: res(75px);
+		}
+		.selectboxit-options {
+			border-radius: 0;
+			a {
+				height: res(75px);
+				line-height: res(75px);
+			}
+		} 
+		.selectboxit-btn {
+			background-color: #ffffff;
+			background-image: none;	
+			margin-top: 2px;
+			margin-bottom: 2px;
+			color: #6f767e;
+			&.selectboxit-enabled:hover,
+			&.selectboxit-enabled:focus,
+			&.selectboxit-enabled:active {
+				color: #6f767e;
+				background-color: #ffffff;
+			}
+			&.selectboxit-open {
+				margin-bottom: 2px;
+			}
+		}
+		.selectboxit-list {
+			.selectboxit-option-anchor {
+				color: #6f767e;
+			}
+			& > .selectboxit-focus {
+				& > .selectboxit-option-anchor {
+					background-color: #41b6eb;
+					background-image: none;
+					color: #ffffff;
+				}				
+			}
+		}
+	}
+} 

@@ -4,10 +4,19 @@
 	"version": "1.0",
 	"name": "clips.form",
 	"doc":"The form widgets",
-	"depends": ["Html", "Jquery", "BootstrapSass"],
+	"depends": ["Html", "Jquery", "SelectBoxIt"],
 	"js": {
-		"files": ["jqBootstrapValidation-1.3.7"]
+		"files": [
+            "jqBootstrapValidation-1.3.7",
+            "pinet_form"
+        ]
 	},
+    "scss": {
+        "files": [
+            "pinet_form_select",
+            "pinet_form"
+        ]
+    },
 	"context": {
 		"jquery_init": "$('input,select,textarea').not('[type=submit]').jqBootstrapValidation();"
 	}
