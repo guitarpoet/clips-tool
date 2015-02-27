@@ -34,7 +34,7 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 		$index = config('use_rewrite')? '': '/index.php';
 		if(!isset($this->base))
 			$this->base = dirname($_SERVER['SCRIPT_NAME']);
-		return $this->base.$index.'/'.$url;
+		return path_join($this->base.$index, $url);
 	}
 
 	public function setLogger(\Psr\Log\LoggerInterface $logger) {
