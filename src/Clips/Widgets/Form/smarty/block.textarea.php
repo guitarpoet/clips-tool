@@ -23,7 +23,6 @@ function smarty_block_textarea($params, $content = '', $template, &$repeat) {
 		 return "<p>$content</p>";
 	}
 
-	$ret = Clips\create_tag_with_content('textarea', $content, $params, $default, true);
 	Clips\context_pop('indent_level');
-	return $ret;
+	return Clips\create_tag_with_content('textarea', $content, $params, $default, true);
 }

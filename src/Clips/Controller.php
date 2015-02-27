@@ -124,7 +124,7 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 	 * The overall paginate query support.
 	 */
 	public function pagination($config) {
-		$config_dir = clips_config('pagination_config_dir');
+		$config_dir = config('pagination_config_dir');
 		if($config_dir) {
 			$config_dir = $config_dir[0];
 			$p = path_join($config_dir, $config.'.json');
