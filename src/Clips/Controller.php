@@ -146,10 +146,15 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
                 }
 
 				$query = $sql->count($pagination);
-				if(isset($query[1]))
-					$result = $datasource->query($query[0], $query[1]);
-				else
-					$result = $datasource->query($query[0]);
+				if(is_string($query)) {
+					$result = $datasource->query($query);
+				}
+				else {
+					if(isset($query[1]))
+						$result = $datasource->query($query[0], $query[1]);
+					else
+						$result = $datasource->query($query[0]);
+				}
 
 				if($result) {
 					$count = $result[0]->count;
