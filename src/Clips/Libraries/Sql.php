@@ -113,8 +113,6 @@ class Sql {
 						$p->join = array($p->join);
 					}
 				}
-				// Make the join more comfortable
-				$p->join = array_reverse($p->join);
 				foreach($p->join as $j) {
 					switch(count($j)) {
 					case 0:
