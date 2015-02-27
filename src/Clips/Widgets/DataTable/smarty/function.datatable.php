@@ -6,5 +6,5 @@ function smarty_function_datatable($params, $template) {
 		'cellspacing' => '0'
 	);
 
-	return \Clips\create_tag('table', $params, $default);
+	return \Clips\create_tag_with_content('table', '', $params, $default, true);
 }

@@ -41,7 +41,7 @@ class WhereOperator {
 			$ret = array();
 			foreach($this->operators as $o) {
 				$args = $o->getArgs();
-				if(!$args)
+				if($args === null)
 					continue;
 				if(is_array($args))
 					$ret = array_merge($ret, $args);
