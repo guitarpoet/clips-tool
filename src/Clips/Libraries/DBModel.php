@@ -126,7 +126,7 @@ class DBModel extends Sql implements ToolAware, Initializable {
 		return null;
 	}
 
-	protected function isWhereOper($arg) {
+	protected function isWhereOper($table) {
 		return is_array($table) || (is_object($table) && is_subclass_of($table, 'Where_Operator'));
 	}
 
