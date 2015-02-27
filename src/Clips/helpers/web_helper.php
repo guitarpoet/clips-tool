@@ -117,6 +117,8 @@ function add_js($js, $index = true) {
 
 function clips_add_js($js, $index = true) {
 	$jses = context('js');
+	if(!is_array($jses))
+		$jses = array($jses);
 	if(!isset($jses) || array_search($js, $jses) === false) {
 		context('js', $js, $index);
 	}
