@@ -5,7 +5,7 @@ class Widget extends \Clips\Widget {
         $js = <<<TEXT
             $('input,select,textarea').not('[type=submit]').jqBootstrapValidation();
             if($.isFunction($.fn.selectBoxIt)){
-                $('select:not([data-no-selectBoxIt])').each(function(){
+                $('form select:not([data-no-selectBoxIt])').each(function(){
                     $(this).selectBoxIt({});
                 });
             }
