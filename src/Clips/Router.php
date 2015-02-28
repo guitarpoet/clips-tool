@@ -93,7 +93,9 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 		$this->clips->template("Clips\\RouteResult");
 		$this->clips->load(clips_config('route_rules', array('/rules/route.rules')));
 		// Assert the uris
-		$this->clips->assertFacts(array('uri', $this->getRequestURI()), array('RequestType', $request->getType()), array('RequestMethod', $request->method));
+		$uri = $this->getRequestURI();
+		context('uri', $uri);
+		$this->clips->assertFacts(array('uri', $uri), array('RequestType', $request->getType()), array('RequestMethod', $request->method));
 
 		// Assert the parameters
 		$params = array();
