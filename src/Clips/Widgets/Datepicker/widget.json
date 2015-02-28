@@ -1,0 +1,18 @@
+{
+	"author": "andy",
+	"date": "Sat Feb 28 09:19:29 2015",
+	"version": "1.0",
+	"name": "Datepicker",
+	"doc":"datepicker",
+    "depends": ["Moment"],
+    "css": {
+        "files": [
+            "bootstrap-datetimepicker"
+        ]
+    },
+    "js": {
+        "files": [
+            "bootstrap-datetimepicker.min"
+        ]
+    }
+}
