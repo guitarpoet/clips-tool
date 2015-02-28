@@ -12,10 +12,10 @@ function datatable_action_column(data, type, row, meta) {
 	return "<a href='"+ actionUrl + "/" + data +"'>"+ data +"</a>"
 }
 
-$(".datatable").on('init.dt', function(){
-    $(this).each(function(){
+$('.datatable').each(function(){
+    $(this).on('init.dt', function(){
         var self = $(this);
-        
+
         self.find("tbody").selectable({
             delay: 1
         });
@@ -25,5 +25,6 @@ $(".datatable").on('init.dt', function(){
         });
     });
 });
+
 
 
