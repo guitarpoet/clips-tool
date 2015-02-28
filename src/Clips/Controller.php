@@ -138,11 +138,8 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 		}
 		return null;
 	}
-	/**
-	 * The overall paginate query support.
-	 */
-	public function pagination($config) {
-		$pagination = $this->getPagination($config);
+
+	protected function processPagination($pagination) {
 		if($pagination) {
 			$sql = $this->tool->library('sql');
 
@@ -179,6 +176,14 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 		}
 		// Output empty by default
 		return $this->render("", array('data' => array(), 'recordsTotal' => 0, 'recordsFiltered' => 0), 'json');
+	}
+
+	/**
+	 * The overall paginate query support.
+	 */
+	public function pagination($config) {
+		$pagination = $this->getPagination($config);
+		return $this->processPagination($pagination);
 	}
 
 	/**
