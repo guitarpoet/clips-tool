@@ -281,13 +281,27 @@ class Tool implements Interfaces\Initializable {
 			$obj->setTool($this);
 		}
 
-		// Process requires annotation
+		// Process library annotation
 		$a = get_annotation(get_class($obj), 'Clips\\Library');
 		if($a) {
 			if(!is_array($a->value))
 				$a->value = array($a->value);
 			foreach($a->value as $r) {
 				$obj->$r = $this->library($r);
+			}
+		}
+
+		if(!valid_obj($obj, 'Clips\\DBModel')) {
+			// Process model annotation
+			$a = get_annotation(get_class($obj), 'Clips\\Model');
+			if($a) {
+				if($a->value) {
+					if(!is_array($a->value))
+						$a->value = array($a->value);
+					foreach($a->value as $r) {
+						$obj->$r = $this->model($r);
+					}
+				}
 			}
 		}
 

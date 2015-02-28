@@ -93,7 +93,9 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 		$this->clips->template("Clips\\RouteResult");
 		$this->clips->load(clips_config('route_rules', array('/rules/route.rules')));
 		// Assert the uris
-		$this->clips->assertFacts(array('uri', $this->getRequestURI()), array('RequestType', $request->getType()), array('RequestMethod', $request->method));
+		$uri = $this->getRequestURI();
+		context('uri', $uri);
+		$this->clips->assertFacts(array('uri', $uri), array('RequestType', $request->getType()), array('RequestMethod', $request->method));
 
 		// Assert the parameters
 		$params = array();
@@ -231,6 +233,17 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 						foreach($a->value as $c) {
 							$h = strtolower($this->tool->getHandleName($c));
 							$controller->$h = $this->tool->load_class($c, true);
+						}
+					}
+				}
+				else if(get_class($a) == 'Clips\\Library') {
+					if(isset($a->value)) {
+						if(!\is_array($a->value))
+							$a->value = array($a->value);
+
+						foreach($a->value as $c) {
+							$h = strtolower($this->tool->getHandleName($c));
+							$controller->$h = $this->tool->library($c);
 						}
 					}
 				}
