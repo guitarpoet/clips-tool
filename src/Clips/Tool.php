@@ -305,7 +305,7 @@ class Tool implements Interfaces\Initializable {
 		if($a) {
 			if(!is_array($a->value))
 				$a->value = array($a->value);
-			foreach($a->value as $r) {
+			foreach($a->value as $c) {
 				$h = strtolower($this->getHandleName($c));
 				$obj->$h = $this->load_class($c, true);
 			}
