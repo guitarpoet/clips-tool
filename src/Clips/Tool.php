@@ -291,13 +291,17 @@ class Tool implements Interfaces\Initializable {
 			}
 		}
 
-		// Process model annotation
-		$a = get_annotation(get_class($obj), 'Clips\\Model');
-		if($a) {
-			if(!is_array($a->value))
-				$a->value = array($a->value);
-			foreach($a->value as $r) {
-				$obj->$r = $this->model($r);
+		if(!valid_obj($obj, 'Clips\\DBModel')) {
+			// Process model annotation
+			$a = get_annotation(get_class($obj), 'Clips\\Model');
+			if($a) {
+				if($a->value) {
+					if(!is_array($a->value))
+						$a->value = array($a->value);
+					foreach($a->value as $r) {
+						$obj->$r = $this->model($r);
+					}
+				}
 			}
 		}
 
