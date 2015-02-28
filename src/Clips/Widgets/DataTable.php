@@ -53,6 +53,11 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 				foreach($config->columns as $col) {
 					if(isset($col->data)) {
 						// Must smooth the data
+						if(strpos($col->data, " as ")) {
+							$d = explode(' as ', $col->data);
+							if($d)
+								$col->data = trim($d[1]);
+						}
 						$col->data = \Clips\smooth($col->data);
 					}
 
@@ -67,7 +72,7 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 				}
 
 				// Adding the initialize script to jquery init
-				\Clips\context('jquery_init', '$("table[name='.\Clips\to_flat($name).']").DataTable('.str_replace('"datatable_action_column"', 'datatable_action_column', json_encode($config)).')');
+				\Clips\context('jquery_init', '$("table[name='.\Clips\to_flat($name).']").DataTable('.str_replace('"datatable_action_column"', 'datatable_action_column', json_encode($config)).')', true);
 			}
 		}
 	}

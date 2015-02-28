@@ -141,11 +141,20 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 				// Get the first datasource
 				$datasource = $this->tool->library('dataSource')->first();
 
+				if(isset($pagination->join) && is_array($pagination->join)) {
+                    $pagination->join = array_reverse($pagination->join);
+                }
+
 				$query = $sql->count($pagination);
-				if(isset($query[1]))
-					$result = $datasource->query($query[0], $query[1]);
-				else
-					$result = $datasource->query($query[0]);
+				if(is_string($query)) {
+					$result = $datasource->query($query);
+				}
+				else {
+					if(isset($query[1]))
+						$result = $datasource->query($query[0], $query[1]);
+					else
+						$result = $datasource->query($query[0]);
+				}
 
 				if($result) {
 					$count = $result[0]->count;

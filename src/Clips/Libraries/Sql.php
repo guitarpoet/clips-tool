@@ -149,6 +149,20 @@ class Sql {
 	}
 
 	public function count($p) {
+		if(isset($p->groupBy) && $p->groupBy) {
+			$q = $this->_pagi($p);
+            if(is_string($q))
+			    $query = 'select count(*) as count from ('.$q.') as inner_query';
+			else {
+				$query = 'select count(*) as count from ('.$q[0].') as inner_query';
+            }
+
+			if(count($q) == 1) {
+				return array($query);
+			}
+			else
+				return array($query, $q[1]);
+		}	
 		return $this->_pagi($p, true);
 	}
 

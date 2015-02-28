@@ -2,11 +2,13 @@
 
 function smarty_block_script($params, $content = '', $template, &$repeat) {
 	if($repeat) {
+		Clips\clips_context('indent_level', 1, true);
 		return;
 	}
 
+	Clips\context_pop('indent_level');
 	if($content) {
-		return Clips\create_tag_with_content('script', trim($content), array('type' => 'text/javascript'));
+		return Clips\create_tag_with_content('script', trim($content), $params, array('type' => 'text/javascript'));
 	}
 	return '';
 }
