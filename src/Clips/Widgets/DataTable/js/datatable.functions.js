@@ -11,3 +11,19 @@ function datatable_action_column(data, type, row, meta) {
 	}
 	return "<a href='"+ actionUrl + "/" + data +"'>"+ data +"</a>"
 }
+
+$(".datatable").on('init.dt', function(){
+    $(this).each(function(){
+        var self = $(this);
+        
+        self.find("tbody").selectable({
+            delay: 1
+        });
+
+        self.on('click', 'tr', function(){
+            $(this).addClass('ui-selected').siblings().removeClass('ui-selected');
+        });
+    });
+});
+
+
