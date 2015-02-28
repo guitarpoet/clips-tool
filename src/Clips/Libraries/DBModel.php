@@ -353,6 +353,31 @@ class DBModel extends Sql implements ToolAware, Initializable {
 		return array();
 	}
 
+	public function clear($table = null) {
+		if($table == null) {
+			if(isset($this->table)) {
+				return $this->doClear($this->table);
+			}
+		}
+		else {
+			return $this->doClear($table);
+		}
+	}
+
+	protected function doClear($table) {
+		$orig = $this->db->context;
+		$this->db->context = $table;
+		$ret = false;
+		try{
+			$this->db->clear();
+			$ret = true;
+		}
+		catch(Exception $e) {
+		}
+		$this->db->context = $orig;
+		return $ret;
+	}
+
 	public function result() {
 		$sql = $this->sql();
 		switch(count($sql)) {

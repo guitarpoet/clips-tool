@@ -267,8 +267,126 @@ class Tool implements Interfaces\Initializable {
 		return $this->_init_class($class, true, "__created__", $args);
 	}
 
+	public function annotationEnhance($a, $obj) {
+		$class = get_class($a);
+
+		// Context is special
+		if($class == 'Clips\\Context') {
+			if(isset($a->value) && is_array($a->value)) {
+				// This must be the set by array
+				context($a->value, null, $a->append);
+			}
+			else {
+				if(isset($a->key) && $a->key)
+					context($a->key, $a->value, $a->append);
+			}
+		}
+		else if($class == 'Clips\\Meta') {
+			if(isset($a->value) && is_array($a->value)) {
+				foreach($a->value as $k => $v) {
+					html_meta($k, $v);
+				}
+			}
+			else {
+				if(isset($a->key))
+					html_meta($a->key, $a->value);
+			}
+		}
+		else if($class == 'Clips\\HttpSession') {
+			$controller = context('controller');
+			if($controller) {
+				if(isset($a->value) && is_array($a->value)) {
+					foreach($a->value as $k => $v) {
+						$controller->request->session($k, $v);
+					}
+				}
+				else {
+					if(isset($a->key))
+						$controller->request->session($a->key, $a->value);
+				}
+			}
+		}
+		else {
+			// Fix the value of annotation first
+			if(isset($a->value) && !is_array($a->value))
+				$a->value = array($a->value);
+
+			switch($class) {
+				case "Clips\\MessageBundle": // The message bundle support
+					$this->enhance($a);
+					$obj->bundle = $a;
+					if(isset($a->name))
+						context('current_bundle', $a->bundle);
+					break;
+				case "Clip\\Object": // The clips object support
+					foreach($a->value as $c) {
+						$h = strtolower($this->getHandleName($c));
+						$obj->$h = $this->load_class($c, true);
+					}
+					break;
+				case "Clips\\Library": // The clips library support
+					foreach($a->value as $c) {
+						$h = strtolower($this->getHandleName($c));
+						$obj->$h = $this->library($c);
+					}
+					break;
+				case "Clips\\Model": // The clips library support
+					if(valid_obj($obj, "Clips\\Libraries\\DBModel")) {
+						// If this is model itself, set the table field and append it to model context
+						if(isset($a->table)) {
+							$obj->table = $a->table;
+						}
+						if(isset($a->name)) {
+							$obj->name = $a->name;
+						}
+						clips_context('models', $obj, true);
+					}
+					else {
+						// Adding the model dependency
+						foreach($a->value as $c) {
+							$h = strtolower($this->getHandleName($c));
+							$obj->$h = $this->library($c);
+						}
+					}
+					break;
+				case "Clips\\Js":
+					foreach($a->value as $j) {
+						add_js($j);
+					}
+					break;
+				case "Clips\\Css":
+					foreach($a->value as $j) {
+						add_css($j);
+					}
+					break;
+				case "Clips\\Scss":
+					foreach($a->value as $j) {
+						add_scss($j);
+					}
+					break;
+				case "Clips\\Form":
+					// If this is the form annotation, initialize it and set it to the context
+					$this->enhance($a);
+					context('form', $a);
+					break;
+				case "Clips\\Widget":
+					$this->widget($a->value);
+					break;
+				case "Clips\\Widgets\\DataTable":
+					$this->enhance($a);
+					context('datatable', $a);
+					break;
+				case "Clips\\Widgets\\ListView":
+					$this->enhance($a);
+					context('listview', $a);
+					break;
+			}
+		}
+		return $obj;
+	}
+
 	public function enhance($obj) {
-		// Setting the log
+		// Interface enhances
 		if(is_subclass_of($obj, 'Psr\\Log\\LoggerAwareInterface')) {
 			$obj->setLogger($this->getLogger(get_class($obj))); // Setting the logger according to the class name
 		}
@@ -281,58 +399,10 @@ class Tool implements Interfaces\Initializable {
 			$obj->setTool($this);
 		}
 
-		// Process library annotation
-		$a = get_annotation(get_class($obj), 'Clips\\Library');
-		if($a) {
-			if(!is_array($a->value))
-				$a->value = array($a->value);
-			foreach($a->value as $r) {
-				$obj->$r = $this->library($r);
-			}
-		}
-
-		// Process message bundle
-		$a = get_annotation(get_class($obj), 'Clips\\MessageBundle');
-		
-		if($a && !valid_obj($obj, 'Clips\\Controller')) {
-			$this->enhance($a);
-			$obj->bundle = $a;
-		}
-
-		// Process object annotation
-		$a = get_annotation(get_class($obj), 'Clips\\Object');
-
-		if($a) {
-			if(!is_array($a->value))
-				$a->value = array($a->value);
-			foreach($a->value as $c) {
-				$h = strtolower($this->getHandleName($c));
-				$obj->$h = $this->load_class($c, true);
-			}
-		}
-
-		// Process model annotation
-		$a = get_annotation(get_class($obj), 'Clips\\Model');
-
-		if($a) {
-			if(valid_obj($obj, "Clips\\Libraries\\DBModel")) {
-				if(isset($a->table)) {
-					$obj->table = $a->table;
-				}
-				if(isset($a->name)) {
-					$obj->name = $a->name;
-				}
-				clips_context('models', $obj, true);
-			}
-			else {
-				if($a->value) {
-					if(!is_array($a->value))
-						$a->value = array($a->value);
-					foreach($a->value as $r) {
-						$obj->$r = $this->model($r);
-					}
-				}
-			}
+		// Enhance the object using the annotation
+		$re = new \Addendum\ReflectionAnnotatedClass($obj);
+		foreach($re->getAnnotations() as $a) {
+			$this->annotationEnhance($a, $obj);
 		}
 
 		// Process initialize
@@ -349,10 +419,11 @@ class Tool implements Interfaces\Initializable {
 			// We got the class
 			if($init) {
 				// Construct the class
-				$this->$name = $this->createInstance($class, $args);
-				$this->enhance($this->$name);
+				$obj = $this->createInstance($class, $args);
+				$this->$name = $obj;
+				$this->enhance($obj);
 				$this->_loaded_classes[$name] = $class;
-				return $this->$name;	
+				return $obj;	
 			}
 			return $class;
 		}
