@@ -13,6 +13,6 @@ class CommonOperator extends WhereOperator {
 	}
 
 	public function toString() {
-		return $this->left.' '.$operator.' ?';
+		return $this->left.' '.$this->operator.' ?';
 	}
 }
