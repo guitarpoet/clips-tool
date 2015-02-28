@@ -141,7 +141,8 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 				// Get the first datasource
 				$datasource = $this->tool->library('dataSource')->first();
 
-				if(isset($pagination->join) && is_array($pagination->join)) {
+				if(isset($pagination->join) && is_array($pagination->join) 
+					&& is_array($pagination->join[0])) {
                     $pagination->join = array_reverse($pagination->join);
                 }
 
