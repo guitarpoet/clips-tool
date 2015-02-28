@@ -316,7 +316,7 @@ class Tool implements Interfaces\Initializable {
 					$this->enhance($a);
 					$obj->bundle = $a;
 					if(isset($a->name))
-						context('current_bundle', $a->bundle);
+						context('current_bundle', $a->name);
 					break;
 				case "Clip\\Object": // The clips object support
 					foreach($a->value as $c) {
@@ -345,7 +345,7 @@ class Tool implements Interfaces\Initializable {
 						// Adding the model dependency
 						foreach($a->value as $c) {
 							$h = strtolower($this->getHandleName($c));
-							$obj->$h = $this->library($c);
+							$obj->$h = $this->model($c);
 						}
 					}
 					break;
