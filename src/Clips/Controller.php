@@ -133,6 +133,12 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 			if(file_exists($p)) {
 				$pagination = Pagination::fromJson(file_get_contents($p));
 				$pagination->update($this->request->param());
+
+				// Update the pagination using session where
+				$conf = $this->request->session($config);
+				if($conf) {
+					$pagination->where []= new Libraries\AndOperator($conf);
+				}
 				return $pagination;
 			}
 		}
@@ -169,7 +175,23 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 					$result = $datasource->query($query[0], $query[1]);
 				else
 					$result = $datasource->query($query[0]);
+
 				if($result) {
+					if($pagination->bundleFields()) {
+						// We need to translate some fields using bundle
+						foreach($pagination->bundleFields() as $f) {
+							$bundle = bundle($f->bundle);
+							foreach($result as $row) {
+								$name = smooth($f->data);
+								if(isset($row->$name)) {
+									if(isset($f->format))
+										$row->$name = $bundle->message($f->format, $row->$name);
+									else
+										$row->$name = $bundle->message($row->$name);
+								}
+							}
+						}
+					}
 					return $this->render("", array('data' => $result, 'start' => $pagination->offset, 'length' => $pagination->length, 'recordsTotal' => $count, 'recordsFiltered' => $count), 'json');
 				}
 			}

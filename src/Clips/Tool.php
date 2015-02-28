@@ -557,7 +557,7 @@ class Tool implements Interfaces\Initializable {
 	public function command($command) {
 		$class = $this->load_class($command, false, new LoadConfig($this->config->command_dir, "Command", "Clips\\Commands\\"));
 		if($class)
-			return new $class();
+			return $this->create($class);
 
 		return null;
 	}

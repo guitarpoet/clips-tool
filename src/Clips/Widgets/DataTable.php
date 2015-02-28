@@ -35,8 +35,10 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 				if(!isset($config->ajax)) {
 					$method = \Clips\context('controller_method');
 					$uri = \Clips\context('uri');
-					if(strpos($uri, $method) !== false)
-						$config->ajax = \Clips\site_url(str_replace($method, $name, $uri));
+					if(strpos($uri, $method) !== false) {
+						$d = explode($method, $uri);
+						$config->ajax = \Clips\site_url(\Clips\path_join($d[0], $name));
+					}
 					else
 						$config->ajax = \Clips\site_url(\Clips\path_join($uri, $name));
 				}
@@ -63,6 +65,12 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 						// If has action, use action render
 						$col->render = 'datatable_action_column';
 					}
+				}
+
+				// Clean the where data stored in the session
+				$controller = \Clips\context('controller');
+				if($controller) {
+					$controller->request->session($name, null);
 				}
 
 				// Adding the initialize script to jquery init

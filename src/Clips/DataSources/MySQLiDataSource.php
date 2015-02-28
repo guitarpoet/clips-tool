@@ -252,6 +252,17 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 		}
 	}
 
+	public function doClear() {
+		if(isset($this->context)) {
+			if(isset($this->table_prefix)) {
+				$this->execute('delete from '.$this->table_prefix.$this->context);
+			}
+			else {
+				$this->execute('delete from '.$this->context);
+			}
+		}
+	}
+
 	/**
 	 * Start the batch execution using mysql's transaction support.
 	 * Only start the transaction when the transaction is not opened, or

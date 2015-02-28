@@ -33,7 +33,7 @@ class Sql {
 		return $this;
 	}
 	public function where($where = array()) {
-		if($where instanceof WhereOperator) {
+		if(\Clips\valid_obj($where, 'Clips\\Libraries\\WhereOperator')) {
 			$this->clips->assertFacts('fact_where', array(new Where($where->toString())));
 			$this->args = $where->getArgs();
 			return $this;
@@ -103,7 +103,7 @@ class Sql {
 
 			// For where
 			if(isset($p->where) && $p->where) {
-				$this->where((array) $p->where);
+				$this->where($p->where);
 			}
 
 			// For joins
