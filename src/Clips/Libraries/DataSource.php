@@ -134,6 +134,12 @@ class DataSource implements ToolAware {
 	}
 
 	/**
+	 * Interface method, clear the datasource
+	 */
+	protected function doClear() {
+	}
+
+	/**
 	 * Interface method, let the datasource do the iterate operation.
 	 * The iterate operation is used for big result sets(for example database).
 	 * By using the cursor of the large resultset, will save lots of memory and
@@ -264,5 +270,12 @@ class DataSource implements ToolAware {
 			trigger_error('No query found!');
 			return array();
 		}
+	}
+
+	/**
+	 * Clear all the data in this datasource
+	 */
+	public function clear() {
+		$this->doClear();
 	}
 }
