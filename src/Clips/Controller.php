@@ -133,6 +133,12 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 			if(file_exists($p)) {
 				$pagination = Pagination::fromJson(file_get_contents($p));
 				$pagination->update($this->request->param());
+
+				// Update the pagination using session where
+				$conf = $this->request->session($config);
+				if($conf) {
+					$pagination->where []= new Libraries\AndOperator($conf);
+				}
 				return $pagination;
 			}
 		}

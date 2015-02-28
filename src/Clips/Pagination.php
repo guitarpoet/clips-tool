@@ -176,6 +176,7 @@ class Pagination {
 		$this->offset = $params['start'];
 		$this->length = $params['length'];
 
+		// Update the where configuration using request columns
 		$i = 0;
 		foreach($params['columns'] as $col) {
 			$search = $col['search'];
