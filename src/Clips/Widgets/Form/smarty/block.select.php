@@ -89,6 +89,11 @@ function smarty_block_select($params, $content = '', $template, &$repeat) {
 		unset($params['options']);
 	}
 
+	$f = Clips\clips_context('current_field');
+	if($f) {
+		$default = $f->getDefault($default);
+	}
+
 	Clips\context_pop('indent_level');
-	return Clips\create_tag_with_content('select', $content, $params);
+	return Clips\create_tag_with_content('select', $content, $params, $default);
 }
