@@ -291,20 +291,6 @@ class Tool implements Interfaces\Initializable {
 			}
 		}
 
-		if(!valid_obj($obj, 'Clips\\DBModel')) {
-			// Process model annotation
-			$a = get_annotation(get_class($obj), 'Clips\\Model');
-			if($a) {
-				if($a->value) {
-					if(!is_array($a->value))
-						$a->value = array($a->value);
-					foreach($a->value as $r) {
-						$obj->$r = $this->model($r);
-					}
-				}
-			}
-		}
-
 		// Process message bundle
 		$a = get_annotation(get_class($obj), 'Clips\\MessageBundle');
 		
@@ -313,17 +299,40 @@ class Tool implements Interfaces\Initializable {
 			$obj->bundle = $a;
 		}
 
+		// Process object annotation
+		$a = get_annotation(get_class($obj), 'Clips\\Object');
+
+		if($a) {
+			if(!is_array($a->value))
+				$a->value = array($a->value);
+			foreach($a->value as $r) {
+				$h = strtolower($this->getHandleName($c));
+				$obj->$h = $this->load_class($c, true);
+			}
+		}
+
 		// Process model annotation
 		$a = get_annotation(get_class($obj), 'Clips\\Model');
 
-		if($a && valid_obj($obj, "Clips\\Libraries\\DBModel")) {
-			if(isset($a->table)) {
-				$obj->table = $a->table;
+		if($a) {
+			if(valid_obj($obj, "Clips\\Libraries\\DBModel")) {
+				if(isset($a->table)) {
+					$obj->table = $a->table;
+				}
+				if(isset($a->name)) {
+					$obj->name = $a->name;
+				}
+				clips_context('models', $obj, true);
 			}
-			if(isset($a->name)) {
-				$obj->name = $a->name;
+			else {
+				if($a->value) {
+					if(!is_array($a->value))
+						$a->value = array($a->value);
+					foreach($a->value as $r) {
+						$obj->$r = $this->model($r);
+					}
+				}
 			}
-			clips_context('models', $obj, true);
 		}
 
 		// Process initialize
@@ -555,7 +564,7 @@ class Tool implements Interfaces\Initializable {
 	}
 
 	public function command($command) {
-		$class = $this->load_class($command, false, new LoadConfig($this->config->command_dir, "Command", "Clips\\Commands\\"));
+		$class = $this->load_class($command, false, new LoadConfig($this->config->command_dir, "Command", "Commands\\"));
 		if($class)
 			return $this->create($class);
 
