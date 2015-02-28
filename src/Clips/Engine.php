@@ -103,6 +103,7 @@ class Engine extends ConsoleBase {
 				$ret = call_user_func_array($callback, array($this, $args));
 			}
 			catch(Exception $ex) {
+				trigger_error($ex->getMessage());
 			}
 
 		 	$env = array_pop($this->env_stack);

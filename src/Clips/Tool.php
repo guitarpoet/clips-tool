@@ -217,6 +217,8 @@ class Tool implements Interfaces\Initializable {
 			$clips->run();
 			return $clips->queryfacts('Clips\\Config');
 		});
+		if(!$this->config)
+			die('Error in reading configuration!');
 		$this->config = $this->config[0];
 		$this->config->load(); // Load the configurations
 		$this->load_class(array('template', 'validator'), true, new LoadConfig($this->config->core_dir)); // Load the template
