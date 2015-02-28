@@ -236,6 +236,17 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 						}
 					}
 				}
+				else if(get_class($a) == 'Clips\\Library') {
+					if(isset($a->value)) {
+						if(!\is_array($a->value))
+							$a->value = array($a->value);
+
+						foreach($a->value as $c) {
+							$h = strtolower($this->tool->getHandleName($c));
+							$controller->$h = $this->tool->library($c);
+						}
+					}
+				}
 			}
 		}
 
