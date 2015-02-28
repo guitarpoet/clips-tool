@@ -3,7 +3,7 @@
 class WhereOperator {
 
 	protected function isWhere($v) {
-		return (is_object($v) || (is_string($v) && class_exists($v))) && is_subclass_of($v, "WhereOperator");
+		return \Clips\valid_obj($v, 'Clips\\Libraries\\WhereOperator');
 	}
 
 	public function __construct($operators = array(), $arg = true) {

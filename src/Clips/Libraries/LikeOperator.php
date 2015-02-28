@@ -12,7 +12,6 @@ class LikeOperator extends WhereOperator {
 	}
 
 	public function toString() {
-		return $left.' like ?';
+		return $this->left.' like ?';
 	}
 }
-

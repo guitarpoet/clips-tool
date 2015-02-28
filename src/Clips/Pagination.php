@@ -172,8 +172,29 @@ class Pagination {
 	}
 
 	public function update($params) {
+		clips_library('sql');
 		$this->offset = $params['start'];
 		$this->length = $params['length'];
+
+		$i = 0;
+		foreach($params['columns'] as $col) {
+			$search = $col['search'];
+			if($search['value']) {
+				$field = $this->columns[$i];
+				if(isset($field->refer)) {
+					$f = $field->refer;
+				}
+				else {
+					$f = $field->data;
+				}
+				if($search['regex'] && $search['regex'] != 'false') {
+					$this->where []= Libraries\_like($f, $search['value']);
+				}
+				else
+					$this->where[$f] = $search['value'];
+			}
+			$i++;
+		}
 
 		$order = $params['order'];
 		$arr = array();
