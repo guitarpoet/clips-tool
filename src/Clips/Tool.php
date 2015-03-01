@@ -320,7 +320,7 @@ class Tool implements Interfaces\Initializable {
 					if(isset($a->name))
 						context('current_bundle', $a->name);
 					break;
-				case "Clip\\Object": // The clips object support
+				case "Clips\\Object": // The clips object support
 					foreach($a->value as $c) {
 						$h = strtolower($this->getHandleName($c));
 						$obj->$h = $this->load_class($c, true);
