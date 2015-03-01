@@ -119,11 +119,14 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 		}
 		else {
 			$result = $this->clips->queryFacts("Clips\\RouteResult");
+			$controller_seg = $this->clips->queryFacts("controller");
 			$result = $result[0];
+			$controller_seg = $controller_seg[0][0];
 		}
 		$controller = $this->tool->create($result->controller);
 		$this->tool->context(array(
 			'controller_class' => $result->controller,
+			'controller_seg' => $controller_seg,
 			'controller' => $controller,
 			'controller_method' => $result->method,
 			'args' => $result->args
