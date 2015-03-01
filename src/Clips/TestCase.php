@@ -7,71 +7,44 @@ class TestCase extends \PHPUnit_Framework_TestCase {
         $func = $this->getName();
         if(!$mute && $func != 'testStub')
             echo "\n----------".$ref->name." | ".$func."----------\n";
-		$this->tool = &Tool::get_instance();
+		$this->tool = &get_clips_tool();
 		$this->clips = new Engine();
 
-		// Check for model
-		$a = get_annotation($this, "Clips\\Model", $func); // Check for method first
-		if(!$a)
-			$a = get_annotation($this, "Clips\\Model"); // Check for class if there is no annotation on method
+        $re = new \Addendum\ReflectionAnnotatedClass($this);
 
-		if($a) {
-			if(!is_array($a->value))
-				$a->value = array($a->value);
-			
-			foreach($a->value as  $model) {
-				$this->$model = $this->tool->model($model);
-			}
-		}
-		// Check for test data
-		$a = get_annotation($this, "Clips\\TestData", $func); // Check for method first
-		if(!$a)
-			$a = get_annotation($this, "Clips\\TestData"); // Check for class if there is no annotation on method
-
-		if($a) {
-			$this->data = $this->tool->enhance($a);
-		}
-
-		$a = get_annotation($this, "Clips\\MessageBundle", $func); // Check for method first
-		if(!$a)
-			$a = get_annotation($this, "Clips\\MessageBundle"); // Check for class if there is no annotation on method
-
-		if($a) {
-			$this->bundle = $this->tool->enhance($a);
-		}
-
-		$a = get_annotation($this, "Clips\\TestValue", $func); // Check for method first
-		if(!$a)
-			$a = get_annotation($this, "Clips\\TestValue"); // Check for class if there is no annotation on method
-
-		if($a) {
-			if(isset($a->file)) {
-				$test_config_dir = clips_config('test_data_dir');
-				if(!$test_config_dir) {
-					$test_config_dir = clips_config('test_dir');
-					$test_config_dir = path_join($test_config_dir[0], 'data');
-				}
-				else {
-					$test_config_dir = $test_config_dir[0];
-				}
-				$p = path_join($test_config_dir, $a->file);
-				if(\file_exists($p)) {
-					$this->value = \file_get_contents($p);
+		foreach(array($re,$re->getMethod($func)) as $m) {
+			foreach($m->getAnnotations() as $a) {
+				switch(get_class($a)) {
+				case "Clips\\TestData":
+					$this->data = $this->tool->enhance($a);
+					break;
+				case "Clips\\TestValue":
+					if(isset($a->file)) {
+						$test_config_dir = clips_config('test_data_dir');
+						if(!$test_config_dir) {
+							$test_config_dir = clips_config('test_dir');
+							$test_config_dir = path_join($test_config_dir[0], 'data');
+						}
+						else {
+							$test_config_dir = $test_config_dir[0];
+						}
+						$p = path_join($test_config_dir, $a->file);
+						if(\file_exists($p)) {
+							$this->value = \file_get_contents($p);
+						}
+					}
+					else if(isset($a->context)) {
+						$this->value = clips_context($a->context);
+					}
+					else if(isset($a->value)) {
+						$this->value = $a->value;
+					}
+					break;
+				default:
+					$this->tool->annotationEnhance($a, $this);
 				}
 			}
-			else if(isset($a->context)) {
-				$this->value = clips_context($a->context);
-			}
-			else if(isset($a->value)) {
-				$this->value = $a->value;
-			}
 		}
-
-		$this->processObject(get_annotation($this, 
-			"Clips\\Object", $func)); // Check for method first
-
-		$this->processObject(get_annotation($this, 
-			"Clips\\Object")); // Check for class as the global
 
 		$this->doSetUp();
     }

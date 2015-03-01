@@ -1,12 +1,14 @@
 <?php namespace Clips\Libraries; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+use Clips\Interfaces\Initializable;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
 /**
  * This is the repository facade for store files in repository
  *
  * @Clips\Library({"git"})
  */
-class Repository implements \Psr\Log\LoggerAwareInterface, 
-	\Clips\Interfaces\Initializable {
+class Repository implements LoggerAwareInterface, Initializable {
 
 	public function __construct($path = null, $readonly = true) {
 		if($path)
@@ -137,7 +139,7 @@ class Repository implements \Psr\Log\LoggerAwareInterface,
 		return $r->getLog($path)->count() > 0;
 	}
 
-	public function setLogger(\Psr\Log\LoggerInterface $logger) {
+	public function setLogger(LoggerInterface $logger) {
 		$this->logger = $logger;
 	}
 }

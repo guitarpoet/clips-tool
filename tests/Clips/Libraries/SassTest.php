@@ -1,11 +1,9 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+/**
+ * @Clips\Library('sass')
+ */
 class SassTest extends Clips\TestCase {
-	public function doSetup() {
-		$this->tool = &Clips\get_clips_tool();
-		$this->sass = $this->tool->library('Sass');
-	}
-
 	public function testSassLoadPlugins() {
 		$this->assertNotNull($this->sass);
 	}

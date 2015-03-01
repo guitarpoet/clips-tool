@@ -310,8 +310,12 @@ class Tool implements Interfaces\Initializable {
 		}
 		else {
 			// Fix the value of annotation first
-			if(isset($a->value) && !is_array($a->value))
-				$a->value = array($a->value);
+			if(isset($a->value)) {
+			   if(!is_array($a->value))
+					$a->value = array($a->value);
+			}
+			else
+				$a->value = array();
 
 			switch($class) {
 				case "Clips\\MessageBundle": // The message bundle support
@@ -323,13 +327,13 @@ class Tool implements Interfaces\Initializable {
 				case "Clips\\Object": // The clips object support
 					foreach($a->value as $c) {
 						$h = strtolower($this->getHandleName($c));
-						$obj->$h = $this->load_class($c, true);
+						$obj->$h = $this->load_class($c, true, null, $a->args);
 					}
 					break;
 				case "Clips\\Library": // The clips library support
 					foreach($a->value as $c) {
 						$h = strtolower($this->getHandleName($c));
-						$obj->$h = $this->library($c);
+						$obj->$h = $this->library($c, true);
 					}
 					break;
 				case "Clips\\Model": // The clips library support
@@ -421,10 +425,16 @@ class Tool implements Interfaces\Initializable {
 			// We got the class
 			if($init) {
 				// Construct the class
+				if(isset($this->{ strtolower($name) })) {
+					$obj = $this->{ strtolower($name) };
+					if(valid_obj($obj, $class))
+						return $obj;
+				}
+
 				$obj = $this->createInstance($class, $args);
-				$this->$name = $obj;
+				$this->{ strtolower($name) } = $obj;
 				$this->enhance($obj);
-				$this->_loaded_classes[$name] = $class;
+				$this->_loaded_classes[lcfirst($name)] = $class;
 				return $obj;	
 			}
 			return $class;
@@ -453,6 +463,9 @@ class Tool implements Interfaces\Initializable {
 		return array_pop($arr);
 	}
 
+	/**
+	 * TODO There is a very big bug in the load php using require once for this loading
+	 */
 	public function load_class($class, $init = false, $loadConfig = null, $args = null) {
 		if(!isset($loadConfig)) {
 			$loadConfig = $this->config->getLoadConfig();
@@ -469,12 +482,14 @@ class Tool implements Interfaces\Initializable {
 		// We must find out the handle name first, in case to get it from the tool
 		$handle_name = $this->getHandleName($class);
 
-		if(isset($this->_loaded_classes[$class])) { // If this class is loaded
-			if($init && is_object($this->$handle_name))
-				return $this->$handle_name;
+		/*
+		if(isset($this->_loaded_classes[ lcfirst($class)] )) { // If this class is loaded
+			if($init && is_object($this->{ strtolower($handle_name) }))
+				return $this->{ strtolower($handle_name) };
 			else
-				return $this->_loaded_classes[$class];
+				return $this->_loaded_classes[lcfirst($class)];
 		}
+		 */
 
 		// Let's try load using namespace
 		
@@ -564,7 +579,7 @@ class Tool implements Interfaces\Initializable {
 				$this->execute($dep, $args);
 			}
 			$reflection = new \Addendum\ReflectionAnnotatedClass($c);
-			if(!$reflection->hasAnnotation('FullArgs')) {
+			if(!$reflection->hasAnnotation('Clips\\FullArgs')) {
 				array_shift($args); // For the clips script
 				array_shift($args); // For the command
 			}

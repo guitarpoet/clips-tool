@@ -136,7 +136,7 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 		$this->filterChain = $this->tool->load_class('FilterChain', true);
 		$this->filterChain->addFilter(config('filters'));
 
-        $re = new \Addendum\ReflectionAnnotatedClass(get_class($controller));
+        $re = new \Addendum\ReflectionAnnotatedClass($controller);
 		// Trying to get the definition from class and the method annotation
 		$m = $re->getMethod($result->method);
 		foreach($m->getAnnotations() as $a) {
