@@ -7,7 +7,14 @@ function smarty_block_label($params, $content = '', $template, &$repeat) {
 	}
 
 	Clips\context_pop('indent_level');
-	Clips\require_widget_smarty_plugin('Lang', 'lang');	
-	return Clips\create_tag_with_content('label', 
-		smarty_block_lang($params, $content, $template, $repeat), $params);
+
+	$bundle_name = Clips\context('current_bundle');
+	$bundle = Clips\get_default($params, 'bundle', $bundle_name);
+
+	if($bundle !== null) {
+		$bundle = Clips\bundle($bundle);
+		$content = $bundle->message($content);
+	}
+
+	return Clips\create_tag_with_content('label', $content, $params);
 }
