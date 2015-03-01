@@ -38,6 +38,14 @@ class HttpSession extends Annotation implements Initializable {
 		return false;
 	}
 
+	public function keys() {
+		return array_keys($_SESSION);
+	}
+
+	public function all() {
+		return copy_arr($_SESSION);
+	}
+
 	public function abort() {
 		if(function_exists('session_abort'))
 			session_abort();
