@@ -69,7 +69,7 @@ class ListView extends Annotation implements Initializable, ToolAware, LoggerAwa
 				}
 
 				// Adding the initialize script to jquery init
-				\Clips\context('jquery_init', '$("ul[name='.\Clips\to_flat($name).']").listview('.json_encode($config).')');
+				\Clips\context('jquery_init', '$("ul[name='.\Clips\to_flat($name).']").listview('.json_encode($config).')', true);
 			}
 		}
 	}

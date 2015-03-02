@@ -11,3 +11,7 @@ function datatable_action_column(data, type, row, meta) {
 	}
 	return "<a href='"+ actionUrl + "/" + data +"'>"+ data +"</a>"
 }
+
+
+
+

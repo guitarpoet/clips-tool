@@ -1,0 +1,10 @@
+{
+	"author": "andy",
+	"date": "Sat Feb 28 09:29:25 2015",
+	"version": "1.0",
+	"name": "Moment",
+	"doc":"moment",
+    "js": {
+        "files" : ["moment-with-locales"]
+    }
+}

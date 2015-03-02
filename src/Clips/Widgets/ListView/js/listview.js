@@ -57,7 +57,7 @@
 			pagination_next_template: '<a class="paginate_button next" aria-controls="listview"><i class="glyphicon glyphicon-forward"></i></a>',
 			length_select_template: '<div class="listview_length">Show<label><select class="" name="listview_length" aria-controls="datatable"></select></label>entries</div>',
 			fliter_template: '<div class="listview_filter">Search<label><input class="" type="search" placeholder="" aria-controls="datatable"></input></label></div>',
-			wrap: '<div class="dataTables_wrapper listview_wrapper"/>',
+			wrap: '<div class="listview_wrapper"/>',
 			order_box: '<div class="listview_orderbox"><select id="listview_orderbox" class="listview_orderbox_select"></select></div>',
 			order_dir_box: '<div class="listview_orderbox"><select id="listview_order" class="listview_orderbox_select"><option id="asc">ASC</option><option id="desc">DESC</option></select></div>'
 		};
