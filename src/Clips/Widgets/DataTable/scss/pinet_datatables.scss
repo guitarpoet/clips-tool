@@ -1,4 +1,14 @@
 @mixin responsive_pinet_datatables($args...) {
+	.ui-selectable {
+		-ms-touch-action: none;
+		touch-action: none;
+	}
+	.ui-selectable-helper {
+		position: absolute;
+		z-index: 100;
+		border: 1px dotted black;
+	}
+
 	.dataTables_wrapper.no-footer {
 		border-radius: res(7px);
 		background: #ffffff;
@@ -60,7 +70,7 @@
 
 			a.paginate_button {
 				&.previous, &.next {
-					color: #5c5e5f;
+					color: #5c5e5f !important;
 					i {
 					  color: #5c5e5f;
 					}
@@ -79,6 +89,9 @@
 					}
 				}
 			}
+		}
+		.selectboxit-container {
+			vertical-align: middle;
 		}
 	}
 
@@ -186,6 +199,18 @@
 					td {
 				  		background-color: #eef0f2;
 		  				@include mixin-sorting(#eef0f2);
+					}
+				}
+			}
+			tr.ui-selecting {
+				td {
+					background-color: #eef0f2;
+					@include mixin-sorting(#eef0f2);
+				}
+				&:hover {
+					td {
+						background-color: #eef0f2;
+						@include mixin-sorting(#eef0f2);
 					}
 				}
 			}

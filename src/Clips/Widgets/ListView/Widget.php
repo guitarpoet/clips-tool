@@ -7,13 +7,8 @@ class Widget extends \Clips\Widget {
 				var self = $(this);
 				if($.isFunction($.fn.selectBoxIt)){
 					self.parents('.listview_wrapper').find('select:not([data-no-selectBoxIt])').each(function(){
-						console.log($(this));
 						$(this).selectBoxIt({});
 					});
-//					$(this).parentsUntil('.listview_wrapper').text(1);
-//					$(this).parentsUntil('.listview_wrapper').find('select:not([data-no-selectBoxIt])').each(function(){
-//						$(this).selectBoxIt({});
-//					});
 				}
 			});
 TEXT;

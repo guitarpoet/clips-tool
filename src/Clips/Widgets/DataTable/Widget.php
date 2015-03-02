@@ -17,6 +17,12 @@ class Widget extends \Clips\Widget {
 						self.on('click', 'tr', function(){
 							$(this).addClass('ui-selected').siblings().removeClass('ui-selected');
 						});
+
+						if($.isFunction($.fn.selectBoxIt)){
+							self.parents('.dataTables_wrapper').find('select:not([data-no-selectBoxIt])').each(function(){
+								$(this).selectBoxIt({});
+							});
+						}
 					});
 				});
 TEXT;
