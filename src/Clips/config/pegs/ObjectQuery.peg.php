@@ -14,6 +14,7 @@ ANY: /./
 Word: /[a-zA-Z_]/
 Number: /[0-9]/
 
+Operator: '=' | '>' | '<' | '>=' | '<=' | '~=' | 'like' | 'not' > 'like' | '!='
 Name: Word ( Word | Number ) *
 ClassName: ( Name '\\' ) * Name
 Alias: DLR Name
@@ -24,7 +25,11 @@ QuotedValue: Value | QUOTE > Value > QUOTE
 		$result['val'] = $sub['text'];
 	}
 
-Condition: (Name | Alias) > '=' > QuotedValue
+Condition: (Name | Alias) > Operator > QuotedValue
+	function Operator(&$result, $sub) {
+		$result['op'] = $sub['text'];
+	}
+
 	function Name(&$result, $sub) {
 		$result['var'] = $sub['text'];
 	}

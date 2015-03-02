@@ -11,7 +11,3 @@ function datatable_action_column(data, type, row, meta) {
 	}
 	return "<a href='"+ CLips.siteUrl(actionUrl) + "/" + data +"'>"+ data +"</a>"
 }
-
-
-
-
