@@ -33,7 +33,7 @@ class Sql {
 		return $this;
 	}
 	public function where($where = array()) {
-		if($where instanceof WhereOperator) {
+		if(\Clips\valid_obj($where, 'Clips\\Libraries\\WhereOperator')) {
 			$this->clips->assertFacts('fact_where', array(new Where($where->toString())));
 			$this->args = $where->getArgs();
 			return $this;
@@ -103,7 +103,7 @@ class Sql {
 
 			// For where
 			if(isset($p->where) && $p->where) {
-				$this->where((array) $p->where);
+				$this->where($p->where);
 			}
 
 			// For joins
@@ -149,6 +149,20 @@ class Sql {
 	}
 
 	public function count($p) {
+		if(isset($p->groupBy) && $p->groupBy) {
+			$q = $this->_pagi($p);
+            if(is_string($q))
+			    $query = 'select count(*) as count from ('.$q.') as inner_query';
+			else {
+				$query = 'select count(*) as count from ('.$q[0].') as inner_query';
+            }
+
+			if(count($q) == 1) {
+				return array($query);
+			}
+			else
+				return array($query, $q[1]);
+		}	
 		return $this->_pagi($p, true);
 	}
 

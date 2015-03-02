@@ -1,0 +1,27 @@
+{
+	"label": "root",
+	"children": [
+		{
+			"label": "branch 1",
+			"children": [
+				{
+					"label": "Leaf 1.1"
+				},
+				{
+					"label": "Leaf 1.2"
+				}
+			]
+		},
+		{
+			"label": "branch 2",
+			"children": [
+				{
+					"label": "Leaf 2.1"
+				},
+				{
+					"label": "Leaf 2.2"
+				}
+			]
+		}
+	]
+}

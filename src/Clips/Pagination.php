@@ -140,15 +140,24 @@ class Pagination {
 		return 0;
 	}
 
+	public function bundleFields() {
+		return $this->_bundleFields;
+	}
+
 	public function fields() {
 		if(isset($this->columns)) {
 			$fields = array();
+			$this->_bundleFields = array();
 			foreach($this->columns as $i) {
 				if(strpos($i->data, ' ') === false) {
 					$fields []= $i->data.' as '.smooth($i->data);
 				}
 				else
 				   	$fields []= $i->data; 
+
+				if(isset($i->bundle)) {
+					$this->_bundleFields []= $i;
+				}
 
 				if(isset($i->refer)) {
 					if(strpos($i->refer, ' ') === false) {
@@ -172,8 +181,30 @@ class Pagination {
 	}
 
 	public function update($params) {
+		clips_library('sql');
 		$this->offset = $params['start'];
 		$this->length = $params['length'];
+
+		// Update the where configuration using request columns
+		$i = 0;
+		foreach($params['columns'] as $col) {
+			$search = $col['search'];
+			if($search['value']) {
+				$field = $this->columns[$i];
+				if(isset($field->refer)) {
+					$f = $field->refer;
+				}
+				else {
+					$f = $field->data;
+				}
+				if($search['regex'] && $search['regex'] != 'false') {
+					$this->where []= Libraries\_like($f, $search['value']);
+				}
+				else
+					$this->where[$f] = $search['value'];
+			}
+			$i++;
+		}
 
 		$order = $params['order'];
 		$arr = array();

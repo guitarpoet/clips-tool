@@ -4,7 +4,7 @@
 	"version": "1.0",
 	"name": "DataTable",
 	"doc":"The datatable widget.",
-	"depends": ["Html", "Jquery"],
+	"depends": ["Html", "Jquery", "JQueryUICommon"],
 	"js": {
 		"files": [
 			"jquery.dataTables.js",
@@ -21,8 +21,5 @@
 			"pinet_datatables_mixin",
             "pinet_datatables"
 		]
-	},
-	"context": {
-		"jquery_init": "$('.clips-datatable').DataTable();"
 	}
 }

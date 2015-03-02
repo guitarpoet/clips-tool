@@ -29,7 +29,10 @@ class HttpSession extends Annotation implements Initializable {
 
 	public function __set($property, $value) {
 		if(HttpSession::status() == 'active') {
-			$_SESSION[$property] = $value;
+			if($value !== null)
+				$_SESSION[$property] = $value;
+			else
+				session_unset($property);
 			return true;
 		}
 		return false;
@@ -43,8 +46,6 @@ class HttpSession extends Annotation implements Initializable {
 	public function reset() {
 		if(function_exists('session_reset'))
 			session_reset();
-		else
-			session_unset($property);
 	}
 
 	public static function status() {

@@ -120,10 +120,7 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 		context('html_meta', $res);
 	}
 
-	/**
-	 * The overall paginate query support.
-	 */
-	public function pagination($config) {
+	protected function getPagination($config) {
 		$config_dir = config('pagination_config_dir');
 		if($config_dir) {
 			$config_dir = $config_dir[0];
@@ -136,32 +133,79 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 			if(file_exists($p)) {
 				$pagination = Pagination::fromJson(file_get_contents($p));
 				$pagination->update($this->request->param());
-				$sql = $this->tool->library('sql');
 
-				// Get the first datasource
-				$datasource = $this->tool->library('dataSource')->first();
+				// Update the pagination using session where
+				$conf = $this->request->session($config);
+				if($conf) {
+					$pagination->where []= new Libraries\AndOperator($conf);
+				}
+				return $pagination;
+			}
+		}
+		return null;
+	}
 
-				$query = $sql->count($pagination);
+	protected function processPagination($pagination) {
+		if($pagination) {
+			$sql = $this->tool->library('sql');
+
+			// Get the first datasource
+			$datasource = $this->tool->library('dataSource')->first();
+
+			if(isset($pagination->join) && is_array($pagination->join) 
+				&& is_array($pagination->join[0])) {
+				$pagination->join = array_reverse($pagination->join);
+			}
+
+			$query = $sql->count($pagination);
+			if(is_string($query)) {
+				$result = $datasource->query($query);
+			}
+			else {
+				if(isset($query[1]))
+					$result = $datasource->query($query[0], $query[1]);
+				else
+					$result = $datasource->query($query[0]);
+			}
+
+			if($result) {
+				$count = $result[0]->count;
+				$query = $sql->pagination($pagination);
 				if(isset($query[1]))
 					$result = $datasource->query($query[0], $query[1]);
 				else
 					$result = $datasource->query($query[0]);
 
 				if($result) {
-					$count = $result[0]->count;
-					$query = $sql->pagination($pagination);
-					if(isset($query[1]))
-						$result = $datasource->query($query[0], $query[1]);
-					else
-						$result = $datasource->query($query[0]);
-					if($result) {
-						return $this->render("", array('data' => $result, 'start' => $pagination->offset, 'length' => $pagination->length, 'recordsTotal' => $count, 'recordsFiltered' => $count), 'json');
+					if($pagination->bundleFields()) {
+						// We need to translate some fields using bundle
+						foreach($pagination->bundleFields() as $f) {
+							$bundle = bundle($f->bundle);
+							foreach($result as $row) {
+								$name = smooth($f->data);
+								if(isset($row->$name)) {
+									if(isset($f->format))
+										$row->$name = $bundle->message($f->format, $row->$name);
+									else
+										$row->$name = $bundle->message($row->$name);
+								}
+							}
+						}
 					}
+					return $this->render("", array('data' => $result, 'start' => $pagination->offset, 'length' => $pagination->length, 'recordsTotal' => $count, 'recordsFiltered' => $count), 'json');
 				}
 			}
 		}
 		// Output empty by default
 		return $this->render("", array('data' => array(), 'recordsTotal' => 0, 'recordsFiltered' => 0), 'json');
+	}
+
+	/**
+	 * The overall paginate query support.
+	 */
+	public function pagination($config) {
+		$pagination = $this->getPagination($config);
+		return $this->processPagination($pagination);
 	}
 
 	/**

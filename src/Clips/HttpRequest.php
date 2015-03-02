@@ -39,19 +39,23 @@ class HttpRequest extends Request {
 	 * 		The value of the session data, if no value is given, will just return
 	 * 		the value of the session data
 	 */
-	public function session($key = null, $value = null) {
+	public function session() {
 		if(!isset($this->_session)) {
 			$this->_session = $this->tool->load_class('HttpSession', true);
 		}
 
-		if(!$key)
+		switch(func_num_args()) {
+		case 0:
 			return $this->_session;
-
-		if(!$value)
+		case 1:
+			$key = func_get_arg(0);
 			return $this->_session->$key;
-
-		$this->_session->$key = $value;
-		return true;
+		case 2:
+			$key = func_get_arg(0);
+			$value = func_get_arg(1);
+			$this->_session->$key = $value;
+			return $value;
+		}
 	}
 
 	/**

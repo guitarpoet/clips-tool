@@ -33,18 +33,14 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 
 				// Setting the default values for the datatable configuration
 				if(!isset($config->ajax)) {
-					$controller = \Clips\context('controller_class');
-					$controller = explode('Controllers', $controller);
-					// Get the name after controllers
-					$controller = $controller[count($controller) - 1];
-					
-					if(strpos($controller, '\\') !== false) {
-						// We really have name spaces
-						$ns = explode('\\', $controller);
-						$config->ajax = str_replace('controller', '', strtolower(array_pop($ns))).'/'.$name;
-					}	
+					$method = \Clips\context('controller_method');
+					$uri = \Clips\context('uri');
+					if(strpos($uri, $method) !== false) {
+						$d = explode($method, $uri);
+						$config->ajax = \Clips\site_url(\Clips\path_join($d[0], $name));
+					}
 					else
-						$config->ajax = $name;
+						$config->ajax = \Clips\site_url(\Clips\path_join($uri, $name));
 				}
 
 				$config->processing = true;
@@ -53,6 +49,11 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 				foreach($config->columns as $col) {
 					if(isset($col->data)) {
 						// Must smooth the data
+						if(strpos($col->data, " as ")) {
+							$d = explode(' as ', $col->data);
+							if($d)
+								$col->data = trim($d[1]);
+						}
 						$col->data = \Clips\smooth($col->data);
 					}
 
@@ -66,8 +67,14 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 					}
 				}
 
+				// Clean the where data stored in the session
+				$controller = \Clips\context('controller');
+				if($controller) {
+					$controller->request->session($name, null);
+				}
+
 				// Adding the initialize script to jquery init
-				\Clips\context('jquery_init', '$("table[name='.\Clips\to_flat($name).']").DataTable('.str_replace('"datatable_action_column"', 'datatable_action_column', json_encode($config)).')');
+				\Clips\context('jquery_init', '$("table[name='.\Clips\to_flat($name).']").DataTable('.str_replace('"datatable_action_column"', 'datatable_action_column', json_encode($config)).')', true);
 			}
 		}
 	}

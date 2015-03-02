@@ -6,6 +6,15 @@ class SqlTest extends Clips\TestCase {
 		$this->sql = new Clips\Libraries\Sql();
 	}
 
+	public function testGenerateSqlWithNullArg() {
+		$sql = $this->sql->select('name as n', 'shit as t')
+			->from('poi')->where(array('name' => ''))->sql();
+		var_dump($sql);
+		$sql = $this->sql->select('name as n', 'shit as t')
+			->from('poi')->where(array('name' => null))->sql();
+		var_dump($sql);
+	}
+
 	public function testGenerateSql() {
 		$this->assertNotNull($this->sql);
 		$this->sql->select('name as n', 'shit as t')

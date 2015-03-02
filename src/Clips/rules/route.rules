@@ -99,7 +99,7 @@
 	(Parameter "draw" ?)
 	(Parameter "start" ?)
 	(Parameter "length" ?)
-	?method <- (method ?m&:(not (eq "pagination" ?m)))
+	?method <- (method ?m&:(and (not (eq "pagination" ?m)) (not (str-index "_pagination" ?m))))
 	?r <- (Clips\RouteResult (controller ?c&~nil) (method nil))
 	=>
 	(retract ?method)
