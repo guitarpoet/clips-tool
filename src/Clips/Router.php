@@ -139,7 +139,7 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
         $re = new \Addendum\ReflectionAnnotatedClass($controller);
 		// Trying to get the definition from class and the method annotation
 		$m = $re->getMethod($result->method);
-		foreach($m->getAnnotations() as $a) {
+		foreach($m->getAllAnnotations() as $a) {
 			$this->tool->annotationEnhance($a, $controller);
 		}
 

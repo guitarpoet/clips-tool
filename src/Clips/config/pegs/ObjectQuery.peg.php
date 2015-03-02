@@ -14,7 +14,7 @@ ANY: /./
 Word: /[a-zA-Z_]/
 Number: /[0-9]/
 
-Operator: '=' | '>' | '<' | '>=' | '<=' | '~=' | 'like' | 'not' > 'like' | '!='
+Operator: '=' | '>' | '<' | '>=' | '<=' | '~=' | 'like' | 'not like' | '!='
 Name: Word ( Word | Number ) *
 ClassName: ( Name '\\' ) * Name
 Alias: DLR Name

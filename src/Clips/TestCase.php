@@ -19,6 +19,9 @@ class TestCase extends \PHPUnit_Framework_TestCase {
 					$this->data = $this->tool->enhance($a);
 					break;
 				case "Clips\\TestValue":
+					if(isset($a->json))
+						$a->file = $a->json;
+
 					if(isset($a->file)) {
 						$test_config_dir = clips_config('test_data_dir');
 						if(!$test_config_dir) {
@@ -31,6 +34,9 @@ class TestCase extends \PHPUnit_Framework_TestCase {
 						$p = path_join($test_config_dir, $a->file);
 						if(\file_exists($p)) {
 							$this->value = \file_get_contents($p);
+							if(isset($a->json)) {
+								$this->value = parse_json($this->value);
+							}
 						}
 					}
 					else if(isset($a->context)) {
