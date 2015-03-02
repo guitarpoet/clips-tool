@@ -2,6 +2,7 @@
 	"label": "root",
 	"children": [
 		{
+			"id": 1,
 			"label": "branch 1",
 			"children": [
 				{
@@ -13,6 +14,7 @@
 			]
 		},
 		{
+			"id": 2,
 			"label": "branch 2",
 			"children": [
 				{
@@ -20,6 +22,18 @@
 				},
 				{
 					"label": "Leaf 2.2"
+				}
+			]
+		},
+		{
+			"id": 3,
+			"label": "branch 3",
+			"children": [
+				{
+					"label": "Leaf 3.1"
+				},
+				{
+					"label": "Leaf 3.2"
 				}
 			]
 		}

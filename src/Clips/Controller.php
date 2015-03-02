@@ -243,7 +243,7 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 			$re = new \Addendum\ReflectionAnnotatedClass($this);
 			$m = $re->getMethod($method);
 			foreach($m->getAnnotations() as $a) {
-				$this->tool->annotationEnhance($a, $controller);
+				$this->tool->annotationEnhance($a, $this);
 			}
 			return call_user_func_array(array($this, $method), $args);
 		}

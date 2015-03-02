@@ -7,5 +7,6 @@ use Addendum\Annotation;
  */
 class TestValue extends Annotation {
 	public $file;
+	public $json;
 	public $context;
 }

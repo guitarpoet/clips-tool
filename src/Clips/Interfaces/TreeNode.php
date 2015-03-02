@@ -56,15 +56,17 @@ interface TreeNode {
 	 *
 	 * <code>
 	 * 		$alias = array('action' => 'Clips\\Action');
-	 * 		$node->query('$action[status=active] > *');
+	 * 		$node->query('$action[status=?] > *');
 	 * </code>
 	 *
 	 * @param filter
 	 * 		The filter string
+	 * @param args
+	 * 		The args of the query
 	 * @param alias
 	 * 		The alias array
 	 */
-	public function query($filter = null, array $alias = array());
+	public function query($filter = null, $args = array(), array $alias = array());
 
 	/**
 	 * Get all the children of this node using filter pattern.

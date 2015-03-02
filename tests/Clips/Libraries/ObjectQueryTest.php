@@ -36,6 +36,7 @@ class ObjectQueryTest extends Clips\TestCase {
 			'_matchrule' => 'Condition',
 			'name' => 'Condition',
 			'text' => 'name = ?',
+			'op' => '=',
 			'var' => 'name',
 			'val' => '?'
 		));
@@ -97,14 +98,16 @@ class ObjectQueryTest extends Clips\TestCase {
 			'name' => 'Condition',
 			'text' => 'name = ?',
 			'var' => 'name',
+			'op' => '=',
 			'val' => '?'
 		));
 	}
 
 	public function testComplexQuery() {
-		$this->query = new ObjectQuery('$obj[ name = ? ] > $action[ status = $active ], $action[ disabled = $true ]');
+		$this->query = new ObjectQuery('$obj[ name = ? ] > * > $action[ status = $active ], $action[ disabled = $true ]');
 		$result = $this->query->match_Expr();
-		$this->assertTrue($result);
+		$this->assertTrue(!!$result);
 		$result = $result['expr'];
+		print_r($result);
 	}
 }

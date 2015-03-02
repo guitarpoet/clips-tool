@@ -407,7 +407,7 @@ class Tool implements Interfaces\Initializable {
 
 		// Enhance the object using the annotation
 		$re = new \Addendum\ReflectionAnnotatedClass($obj);
-		foreach($re->getAnnotations() as $a) {
+		foreach($re->getAllAnnotations() as $a) {
 			$this->annotationEnhance($a, $obj);
 		}
 
