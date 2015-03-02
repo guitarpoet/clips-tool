@@ -1,5 +1,17 @@
+.ui-selectable {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+
+.ui-selectable-helper {
+	position: absolute;
+	z-index: 100;
+	border: 1px dotted black;
+}
+
 .listview_wrapper {
 	position: relative;
+
 	.listview_item_template {
 		display: none;
 	}
@@ -53,10 +65,10 @@
 
 		li {
 			&.ui-selecting {
-				background: #000;
+				background: #d3d3d3;
 			}
 			&.ui-selected {
-				background: #ddd;
+				background: #d3d3d3;
 			}
 		}
 	}
@@ -68,6 +80,8 @@
 		.paginate_button {
 			padding: 5px 10px;
 			margin: 0px 5px;
+			border-radius: 3px;
+			cursor: pointer;
 		}
 		span {
 			a.dataTables_paginate {

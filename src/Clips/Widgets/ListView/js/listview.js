@@ -500,7 +500,7 @@
 					if(order && order == i) {
 						option.attr('selected','');
 					}
-					orderBox.append(option);
+					orderBox.children('select').append(option);
 				}
 			});
 			orderDirBox.find('option').each(function(i, dir) {
