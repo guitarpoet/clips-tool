@@ -31,8 +31,23 @@ class ListView extends Annotation implements Initializable, ToolAware, LoggerAwa
 			if($config) {
 
 				// Setting the default values for the datatable configuration
-				if(!isset($config->ajax))
-					$config->ajax = $name;
+				if(!isset($config->ajax)) {
+					$controller_class = \Clips\context('controller_seg');
+					$method = \Clips\context('controller_method');
+					$uri = \Clips\context('uri');
+					if(strpos($uri, $method) !== false) {
+						$d = explode($method, $uri);
+						$config->ajax = \Clips\site_url(\Clips\path_join($d[0], $name));
+					}
+					else {
+						if(strpos($uri, $controller_class) !== false) {
+							$config->ajax = \Clips\site_url(\Clips\path_join($uri, $name));
+						}
+						else {
+							$config->ajax = \Clips\site_url(\Clips\path_join($uri, $controller_class, $name));
+						}
+					}
+				}
 
 				$config->processing = true;
 				$config->serverSide = true;

@@ -50,7 +50,7 @@ class ResponsiveController extends Controller {
 			$folder = '';
 		}
 
-		$cache = $this->fileCache->cacheDir();
+		$cache = $this->filecache->cacheDir();
 
 		$folder = \Clips\path_join($cache, 'img', $folder, $size);
 
@@ -58,9 +58,9 @@ class ResponsiveController extends Controller {
 			mkdir($folder, 0777, true);
 		}
 
-		$name = $this->fileCache->fileName($n, $folder);
-		if($this->fileCache->shouldUpdate($n, $folder, $path)) {
-			$this->imageUtils->thumbnail($path, $name, $size);
+		$name = $this->filecache->fileName($n, $folder);
+		if($this->filecache->shouldUpdate($n, $folder, $path)) {
+			$this->imageutils->thumbnail($path, $name, $size);
 		}
 		return $this->image($name);
 	}

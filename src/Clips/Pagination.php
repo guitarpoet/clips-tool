@@ -188,22 +188,24 @@ class Pagination {
 		// Update the where configuration using request columns
 		$i = 0;
 		foreach($params['columns'] as $col) {
-			$search = $col['search'];
-			if($search['value']) {
-				$field = $this->columns[$i];
-				if(isset($field->refer)) {
-					$f = $field->refer;
+			if(isset($col['search'])) {
+				$search = $col['search'];
+				if($search['value']) {
+					$field = $this->columns[$i];
+					if(isset($field->refer)) {
+						$f = $field->refer;
+					}
+					else {
+						$f = $field->data;
+					}
+					if($search['regex'] && $search['regex'] != 'false') {
+						$this->where []= Libraries\_like($f, $search['value']);
+					}
+					else
+						$this->where[$f] = $search['value'];
 				}
-				else {
-					$f = $field->data;
-				}
-				if($search['regex'] && $search['regex'] != 'false') {
-					$this->where []= Libraries\_like($f, $search['value']);
-				}
-				else
-					$this->where[$f] = $search['value'];
+				$i++;
 			}
-			$i++;
 		}
 
 		$order = $params['order'];

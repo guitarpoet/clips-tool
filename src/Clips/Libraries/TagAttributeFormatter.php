@@ -18,6 +18,7 @@ class TagAttributeFormatter extends \Clips\Formatter {
 				$str = $v;
 				if(is_string($k)) {
 					$name = \Clips\to_name($k);
+
 					if(is_object($v)) {
 						$result []= $this->processObject($v);
 					}
@@ -25,7 +26,20 @@ class TagAttributeFormatter extends \Clips\Formatter {
 						$result []= $name . '="'.implode(' ', $v).'"';
 					}
 					else {
-						$result []= $name. '="'.$v.'"';
+						// For i18n
+						if($k == 'placeholder'
+							|| $k == 'title'
+							|| $k == 'alt') {
+							$bundle_name = \Clips\context('current_bundle');
+							if($bundle_name !== null) {
+								$bundle = \Clips\bundle($bundle_name);
+								$result []= $name. '="'.$bundle->message($v).'"';
+							}
+							else
+								$result []= $name. '="'.$v.'"';
+						}
+						else
+							$result []= $name. '="'.$v.'"';
 					}
 				}
 				else {

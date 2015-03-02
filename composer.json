@@ -22,7 +22,8 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Clips\\": "src/Clips/"
+			"Clips\\": "src/Clips/",
+			"hafriedlander\\": "src/hafriedlander/"
 		},
 		"files": ["src/Clips/helpers/core_helper.php"]
 	},

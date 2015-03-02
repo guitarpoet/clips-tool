@@ -1,9 +1,11 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+/**
+ * @Clips\Library("repository")
+ */
 class RepositoryTest extends Clips\TestCase {
 	public function doSetUp() {
-		$this->tool = &Clips\get_clips_tool();
-		$this->repo = $this->tool->library("Repository");
+		$this->repo = $this->repository;
 	}
 
 	public function testRepo() {

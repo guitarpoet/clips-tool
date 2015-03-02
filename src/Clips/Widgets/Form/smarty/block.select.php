@@ -10,6 +10,7 @@ function smarty_block_select($params, $content = '', $template, &$repeat) {
 	$label = Clips\get_default($params, 'label-field', 'label');
 	$value = Clips\get_default($params, 'value-field', 'value');
 	$blank = Clips\get_default($params, 'blank');
+	$default = array();
 
 	if($options) {
 		if($blank) {

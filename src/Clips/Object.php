@@ -10,4 +10,5 @@ use Addendum\Annotation;
  */
 class Object extends Annotation {
 	public $name;
+	public $args = null;
 }

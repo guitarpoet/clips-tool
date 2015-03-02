@@ -27,5 +27,6 @@
 	"smarty_cache_dir": ["application/cache/smarty"],
 	"test_data_dir": "tests/data",
     "resolutions": [480, 640, 720, 1280, 1440, 1280, 2880],
-    "sass_plugins": ["Sass\\AutoConstruct", "Sass\\AutoResolution"]
+    "sass_plugins": ["Sass\\AutoConstruct", "Sass\\AutoResolution"],
+    "peg_dir": ["config/pegs/", "application/config/pegs/"]
 }

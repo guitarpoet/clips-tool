@@ -5,6 +5,8 @@ define('DEFAULT_COUNT', 15);
 use Clips\Libraries\Sql;
 use Clips\Interfaces\ToolAware;
 use Clips\Interfaces\Initializable;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * The model that supports sql query.
@@ -25,7 +27,7 @@ use Clips\Interfaces\Initializable;
  * @author Jack
  * @date Sat Feb 21 12:14:53 2015
  */
-class DBModel extends Sql implements ToolAware, Initializable {
+class DBModel extends Sql implements ToolAware, Initializable, LoggerAwareInterface {
 
 	/**
 	 * Clean the object(or array) using the fields table has(removing all the needless fields)
@@ -353,6 +355,31 @@ class DBModel extends Sql implements ToolAware, Initializable {
 		return array();
 	}
 
+	public function clear($table = null) {
+		if($table == null) {
+			if(isset($this->table)) {
+				return $this->doClear($this->table);
+			}
+		}
+		else {
+			return $this->doClear($table);
+		}
+	}
+
+	protected function doClear($table) {
+		$orig = $this->db->context;
+		$this->db->context = $table;
+		$ret = false;
+		try{
+			$this->db->clear();
+			$ret = true;
+		}
+		catch(Exception $e) {
+		}
+		$this->db->context = $orig;
+		return $ret;
+	}
+
 	public function result() {
 		$sql = $this->sql();
 		switch(count($sql)) {
@@ -363,5 +390,9 @@ class DBModel extends Sql implements ToolAware, Initializable {
 		default:
 			return $this->db->query($sql[0], $sql[1]);
 		}
+	}
+
+	public function setLogger(LoggerInterface $logger) {
+		$this->logger = $logger;
 	}
 }

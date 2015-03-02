@@ -12,8 +12,7 @@ use Clips\Interfaces\ToolAware;
 class SmartyViewFilter extends ViewFilter implements Initializable, ToolAware {
 
 	public function init() {
-		$this->engine = $this->tool->create('Smarty');
-		$this->tool->context('smarty', $this->engine); // Make the smarty public, so that the customize can be easier
+		$this->engine = \Clips\context('smarty');
         $this->engine->template_dir = \Clips\clips_config('template_dir');
 		$this->engine->compile_dir = \Clips\clips_config('smarty_compile_dir')[0];
 		$this->engine->config_dir = \Clips\clips_config('smarty_config_dir');

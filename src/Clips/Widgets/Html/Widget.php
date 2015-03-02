@@ -4,6 +4,7 @@ class Widget extends \Clips\Widget {
 	protected function doInit() {
 		// Added the clips object to JavaScript
 		$router = \Clips\context('router');
-		\Clips\add_init_js(\Clips\clips_out('clips_js', array('base' => $router->staticUrl('/'), 'site' => $router->baseUrl('/')), false));
+		if($router) 
+			\Clips\add_init_js(\Clips\clips_out('clips_js', array('base' => $router->staticUrl('/'), 'site' => $router->baseUrl('/')), false));
 	}
 }

@@ -32,10 +32,18 @@ class HttpSession extends Annotation implements Initializable {
 			if($value !== null)
 				$_SESSION[$property] = $value;
 			else
-				session_unset($property);
+				unset($_SESSION[$property]);
 			return true;
 		}
 		return false;
+	}
+
+	public function keys() {
+		return array_keys($_SESSION);
+	}
+
+	public function all() {
+		return copy_arr($_SESSION);
 	}
 
 	public function abort() {
