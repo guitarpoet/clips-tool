@@ -19,7 +19,7 @@ Name: Word ( Word | Number ) *
 ClassName: ( Name '\\' ) * Name
 Alias: DLR Name
 Value: Alias | QM
-Type: ClassName | Alias
+Type: ClassName | Alias | '*'
 QuotedValue: Value | QUOTE > Value > QUOTE
 	function Value(&$result, $sub) {
 		$result['val'] = $sub['text'];

@@ -8,5 +8,7 @@ class SearcherTest extends Clips\TestCase {
 	 * @Clips\TestValue(json="tree.json")
 	 */
 	public function testSimpleQuery() {
+		$children = $this->value->children;
+		print_r($this->searcher->search('* [id = ? name = ?] , * [label = ?]', $children, array(1, 'branch 3')));
 	}
 }

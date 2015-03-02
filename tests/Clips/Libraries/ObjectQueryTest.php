@@ -104,9 +104,10 @@ class ObjectQueryTest extends Clips\TestCase {
 	}
 
 	public function testComplexQuery() {
-		$this->query = new ObjectQuery('$obj[ name = ? ] > $action[ status = $active ], $action[ disabled = $true ]');
+		$this->query = new ObjectQuery('$obj[ name = ? ] > * > $action[ status = $active ], $action[ disabled = $true ]');
 		$result = $this->query->match_Expr();
 		$this->assertTrue(!!$result);
 		$result = $result['expr'];
+		print_r($result);
 	}
 }

@@ -41,7 +41,7 @@ class SimpleTreeNode implements TreeNode {
 		return null;
 	}
 
-	public function query($filter = null, array $alias = array()) {
+	public function query($filter = null, $args = array(), array $alias = array()) {
 		return null;
 	}
 

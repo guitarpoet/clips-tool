@@ -45,33 +45,31 @@ class Searcher implements LoggerAwareInterface {
 		return $value;
 	}
 
-	public function matches($selectors, $obj, $args, $alias) {
+	public function matches($selectors, $obj, &$args, $alias) {
 		if(is_array($selectors) && $selectors) {
-			if(isset($selectors['conditions'])) {
+			if(isset($selectors['type'])) {
 				// This is selector
-				$conditions = $selectors['conditions'];
-				$type = $this->val($selectors['type']);
+				$conditions = get_default($selectors, 'conditions', array());
+				$type = $this->val($selectors['type'], $alias);
 
 				// Test for type
-				if(!valid_obj($obj, $type)) {
+				if($type != '*' && !valid_obj($obj, $type)) {
 					return false;
 				}
 
 				// Test for conditions
-				$i = 0;
 				foreach($conditions as $condition) {
-					$var = $this->val($condition['var']);
-					$val = $this->val($condition['val']);
+					$var = $this->val($condition['var'], $alias);
+					$val = $this->val($condition['val'], $alias);
 
 					if($val == '?') { // The value is prepare parameter
-						$val = $arg[$i];
-						$i++;
+						$val = array_shift($args);
 					}
 
 					$op = $condition['op'];
 
 					$obj_val = get_default($obj, $var);
-					if(!$obj_var) { // If object don't have this attribute
+					if(!$obj_val) { // If object don't have this attribute
 						return false;
 					}
 
@@ -114,13 +112,19 @@ class Searcher implements LoggerAwareInterface {
 						break;
 					}
 				}
+
+				// Return the object by default
+				return $obj;
 			}
 			else {
+				$ret = null;
+				$args_copy = copy_arr($args);
 				foreach($selectors as $selector) {
-					$match = $this->matches($selector, $obj);
+					$match = $this->matches($selector, $obj, $args_copy, $alias);
 					if($match)
-						return $obj;
+						$ret = $obj;
 				}
+				return $ret;
 			}
 		}
 	}
@@ -146,7 +150,7 @@ class Searcher implements LoggerAwareInterface {
 			$selectors = $layer['selectors'];
 			$ret = array();
 			foreach($collection as $obj) {
-				if($this->matches($selectors, $obj)) {
+				if($this->matches($selectors, $obj, $args, $alias)) {
 					$ret []= $obj;
 				}
 			}
