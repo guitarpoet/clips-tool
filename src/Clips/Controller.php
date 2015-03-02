@@ -234,6 +234,22 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 	}
 
 	/**
+	 * Forward to another controller method
+	 */
+	protected function forward() {
+		$args = func_get_args();
+		if($args) {
+			$method = array_shift($args);
+			$re = new \Addendum\ReflectionAnnotatedClass($this);
+			$m = $re->getMethod($method);
+			foreach($m->getAnnotations() as $a) {
+				$this->tool->annotationEnhance($a, $controller);
+			}
+			return call_user_func_array(array($this, $method), $args);
+		}
+	}
+
+	/**
 	 * Send the image file
 	 */
 	protected function image($img) {
