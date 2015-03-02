@@ -22,7 +22,7 @@ class Searcher implements LoggerAwareInterface {
 	 * Create and parse the query
 	 */
 	public function parseQuery($query) {
-		if(isset($this->cache->has($query)))
+		if($this->cache->has($query))
 			return $this->cache->get($query);
 		$q = new ObjectQuery($query);
 		$r =  $q->match_Expr();
@@ -41,6 +41,7 @@ class Searcher implements LoggerAwareInterface {
 	protected function val($value, $alias) {
 		if(strpos($value, '$') !== false) {
 			return $this->processAlias($value, $alias);
+		}
 		return $value;
 	}
 
