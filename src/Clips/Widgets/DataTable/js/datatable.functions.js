@@ -5,11 +5,11 @@ function datatable_action_column(data, type, row, meta) {
 	console.info('The refer for col ' + col.data + ' is ' + refer);
 	if(refer) {
 		if(actionUrl)
-			return "<a data-id='" + row[refer] + "' href='"+ actionUrl + "/" + row[refer] +"'>"+ data +"</a>"
+			return "<a data-id='" + row[refer] + "' href='"+ Clips.siteUrl(actionUrl) + "/" + row[refer] +"'>"+ data +"</a>"
 		else
 			return "<a class='no_text_decoration' data-id='" + row[refer] + "'>"+ data +"</a>"
 	}
-	return "<a href='"+ actionUrl + "/" + data +"'>"+ data +"</a>"
+	return "<a href='"+ CLips.siteUrl(actionUrl) + "/" + data +"'>"+ data +"</a>"
 }
 
 

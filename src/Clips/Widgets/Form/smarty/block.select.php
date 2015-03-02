@@ -10,9 +10,49 @@ function smarty_block_select($params, $content = '', $template, &$repeat) {
 	$label = Clips\get_default($params, 'label-field', 'label');
 	$value = Clips\get_default($params, 'value-field', 'value');
 	$blank = Clips\get_default($params, 'blank');
+	$prepend = Clips\get_default($params, 'prepend');
+	$append = Clips\get_default($params, 'append');
 	$default = array();
 
 	if($options) {
+		if($prepend) {
+			$prepend = array_reverse($prepend);
+			foreach($prepend as $k => $v) {
+				if(is_string($k)) { // This is key => value
+					$d = array();
+					$d[$label] = $k;
+					$d[$value] = $v;
+					array_unshift($options, (object) $d);
+				}
+				else {
+					if(is_array($v) || is_object($v)) { // This array
+						array_unshift($options, (object) $v);
+					}
+					else { // This is string
+						array_unshift($options, $v);
+					}
+				}
+			}
+		}
+		if($append) {
+			foreach($append as $k => $v) {
+				if(is_string($k)) { // This is key => value
+					$d = array();
+					$d[$label] = $k;
+					$d[$value] = $v;
+					$options []= (object)$d;
+				}
+				else {
+					if(is_array($v) || is_object($v)) { // This array
+						$options []= (object)$v;
+					}
+					else { // This is string
+						$options []= $v;
+					}
+				}
+			}
+		}
+
 		if($blank) {
 			if(is_bool($blank)) {
 				$blank = array();
@@ -30,7 +70,6 @@ function smarty_block_select($params, $content = '', $template, &$repeat) {
 		}
 		$content = array();
 		foreach($options as $key => $option) {
-		//	Clips\context('indent_level', 1, true);
 			if(isset($tpl)) {
 				// We do have template here
 				$content []= $template->fetch($tpl, array('option' => $option));
@@ -74,7 +113,6 @@ function smarty_block_select($params, $content = '', $template, &$repeat) {
 				}
 				$content []= Clips\create_tag_with_content('option', $l, $default);
 			}
-			//Clips\context_pop('indent_level');
 		}
 
 		$level = Clips\context('indent_level');
@@ -86,7 +124,7 @@ function smarty_block_select($params, $content = '', $template, &$repeat) {
 		for($i = 0; $i < $level; $i++) {
 			$indent .= "\t";
 		}
-		$content = implode("\n\t$indent", $content);
+		$content = implode("\n$indent", $content);
 		unset($params['options']);
 	}
 
