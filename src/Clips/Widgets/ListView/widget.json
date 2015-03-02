@@ -4,7 +4,7 @@
 	"version": "1.0",
 	"name": "ListView",
 	"doc":"The list view widget.",
-	"depends": ["JqueryUICommon", "StoreJS", "StringJs"],
+	"depends": ["JQueryUICommon", "StoreJS", "StringJs"],
 	"js": {
 		"files": [
 			"listview.layout.js",
