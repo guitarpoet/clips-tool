@@ -5,13 +5,6 @@ use Clips\Interfaces\ClipsAware;
 use Clips\Interfaces\ToolAware;
 use Clips\Models\ViewModel;
 
-class RouteResult {
-	public $controller;
-	public $method;
-	/** @Clips\Multi */
-	public $args;
-}
-
 /**
  * Routing the http request using routing rules(default rules for routing is same as CI)
  *
