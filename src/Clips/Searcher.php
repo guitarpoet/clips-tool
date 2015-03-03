@@ -51,10 +51,11 @@ class Searcher implements LoggerAwareInterface {
 				// This is selector
 				$conditions = get_default($selectors, 'conditions', array());
 				$type = $this->val($selectors['type'], $alias);
+				$failed = false;
 
 				// Test for type
 				if($type != '*' && !valid_obj($obj, $type)) {
-					return false;
+					$failed = true;
 				}
 
 				// Test for conditions
@@ -70,45 +71,46 @@ class Searcher implements LoggerAwareInterface {
 
 					$obj_val = get_default($obj, $var);
 					if(!$obj_val) { // If object don't have this attribute
-						return false;
+						$failed = true;
 					}
+
 
 					switch($op) {
 					case '>':
-						if($val <= $obj_val)
-							return false;
+						if($obj_val <= $val)
+							$failed = true;
 						break;
 					case '>=':
-						if($val < $obj_val)
-							return false;
+						if($obj_val < $val)
+							$failed = true;
 						break;
 					case '<':
-						if($val >= $obj_val)
-							return false;
+						if($obj_val >= $val)
+							$failed = true;
 						break;
 					case '<=':
-						if($val > $obj_val)
-							return false;
+						if($obj_val > $val)
+							$failed = true;
 						break;
 					case '=':
 						if($val != $obj_val)
-							return false;
+							$failed = true;
 						break;
 					case '~=':
 						if(preg_match('/'.$val.'/', $obj_val) === false)
-							return false;
+							$failed = true;
 						break;
 					case '!=':
-						if($val == $obj_val)
-							return false;
+						if($val != $obj_val)
+							$failed = true;
 						break;
 					case 'like':
 						if(preg_match('/'.str_replace('%', '.*', $val).'/', $obj_val) === false)
-							return false;
+							$failed = true;
 						break;
 					case 'not like':
 						if(preg_match('/'.str_replace('%', '.*', $val).'/', $obj_val) !== false)
-							return false;
+							$failed = true;
 						break;
 					}
 				}
