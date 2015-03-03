@@ -61,6 +61,11 @@ class MessageBundle extends Annotation implements Initializable, LoggerAwareInte
 			$this->logger->info('Creating bundle {0} with locale {1} at folder {2}.', array($this->name, $locale, $this->folder));
 	}
 
+	public function isEmpty() {
+		// If we didn't found the folder, we have an empty bundle
+		return !isset($this->folder);
+	}
+
 	public function loadLocale($locale) {
 		if(isset($this->localeData[$locale]))
 			return $this->localeData[$locale]; 

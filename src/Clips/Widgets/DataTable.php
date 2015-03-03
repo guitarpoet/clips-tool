@@ -7,6 +7,7 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 
 class DataTable extends Annotation implements Initializable, ToolAware, LoggerAwareInterface {
+	public $bundle;
 
 	public function setLogger(LoggerInterface $logger) {
 		$this->logger = $logger;
@@ -53,7 +54,32 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 				$config->processing = true;
 				$config->serverSide = true;
 
+				// The bundle configuration in anntation has the highest priority
+				$bundle = \Clips\get_default($this, 'bundle', null);
+
+				if($bundle === null) {
+					// Try configuration's bundle settings
+					$bundle = \Clips\get_default($config, 'bundle', null);
+
+					if($bundle === null) {
+						// We can't find the bundle in annotation, try to find it using default name
+						$bundle_name = 'pagination/'.$name;
+						$bundle = $this->tool->bundle($bundle_name);
+						if($bundle->isEmpty()) {
+							// All default bundle can't be found, try current controller's bundle
+							$bundle = \Clips\context('current_bundle');
+							if($bundle === null)
+								$bundle = '';
+						}
+					}
+				}
+				$bundle = \Clips\bundle($bundle);
+
 				foreach($config->columns as $col) {
+					if(isset($col->title)) {
+						$col->title = $bundle->message($col->title);
+					}
+
 					if(isset($col->data)) {
 						// Must smooth the data
 						if(strpos($col->data, " as ")) {
