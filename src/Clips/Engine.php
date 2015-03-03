@@ -578,18 +578,11 @@ class Engine extends ConsoleBase {
 			$clips->reset(); // Reset the envrionment for calculate
 			$clips->assertFacts($facts);
 			$clips->run();
-			return $clips->queryFacts('command');
+			return $clips->queryFacts();
 		}, $facts);
 
 		foreach($commands as $command) { // Let's run the commands
-			$str = '';
-			foreach(explode("\n", $command[0]) as $c) {
-				$str .= $c."\n";
-				if(clips_is_command_complete($str)) {
-					$this->command($str);
-					$str = '';
-				}
-			}
+			\clips_load($command[0]);
 		}
 	}
 }

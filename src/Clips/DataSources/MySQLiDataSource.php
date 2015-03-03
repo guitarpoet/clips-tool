@@ -231,7 +231,7 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 				->where($args)->sql();
 			switch(count($sql)) {
 			case 0:
-				throw new Exception('Can\'t do the query since no query generated!');
+				throw new \Exception('Can\'t do the query since no query generated!');
 			case 1:
 				return $this->doQuery($sql[0]);
 			default:

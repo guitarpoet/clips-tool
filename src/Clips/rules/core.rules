@@ -18,27 +18,12 @@
 ;===============================================================================
 (deffunction clips-tool-path (?path) (php_call "clips_tool_path" ?path))
 
-(defrule if-the-load-begin-with-ci-load-using-ci
-	?l <- (load_arg ?file)
-	(test (str-index "ci://" ?file))
-	=>
-	(retract ?l)
-	(assert (ci_load_arg ?file))
-)
-
-(defrule if-use-ci-to-load-the-commands
-	?arg <- (ci_load_arg ?file)
-	=>
-	(retract ?arg)
-	(assert (command (file-contents ?file)))
-)
-
 (defrule if-file-exists-in-clips-path-then-load-it
     (declare (salience ?*low*))
 	?a <- (load_arg ?file)
 	(test (file-exists (clips-path ?file)))
 	=>
-	(assert (command (file-contents (clips-path ?file))))
+	(assert (file (clips-path ?file)))
 	(retract ?a)
 )
 
@@ -47,7 +32,7 @@
 	?a <- (load_arg ?file)
 	(test (file-exists (clips-tool-path ?file)))
 	=>
-	(assert (command (file-contents (clips-tool-path ?file))))
+	(assert (file (clips-tool-path ?file)))
 	(retract ?a)
 )
 
@@ -55,7 +40,7 @@
 	?a <- (load_arg ?file)
 	(test (file-exists (str-cat (cwd) ?file)))
 	=>
-	(assert (command (file-contents (str-cat (cwd) ?file))))
+	(assert (file (str-cat (cwd) ?file)))
 	(retract ?a)
 )
 
@@ -64,7 +49,7 @@
 	?a <- (load_arg ?file)
 	(test (file-exists ?file))
 	=>
-	(assert (command (file-contents ?file)))
+	(assert (file ?file))
 	(retract ?a)
 )
 
