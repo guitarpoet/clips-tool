@@ -115,8 +115,6 @@ class Searcher implements LoggerAwareInterface {
 					}
 				}
 
-				if($failed)
-					return false;
 				// Return the object by default
 				return $obj;
 			}

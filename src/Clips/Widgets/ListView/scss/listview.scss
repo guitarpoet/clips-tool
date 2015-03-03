@@ -29,6 +29,12 @@
 	.listview_length {
 		@extend %inlinetable;
 		margin: 0 10px;
+		> label {
+			display: inline-table;
+			vertical-align: middle;
+			margin-left: 10px;
+			margin-right: 10px;
+		}
 	}
 
 	.listview_orderbox {
