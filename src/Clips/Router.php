@@ -189,10 +189,8 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 		}
 
 		profile_end('route');
-		$time = microtime();
 		// Always run filter after(since the filter after will render the views)
 		$this->filterChain->filter_after($this->filterChain, $controller, $result->method, $result->args, $request, $ret);
-		var_dump(microtime() - $time);
 	}
 
 	public function setTool($tool) {
