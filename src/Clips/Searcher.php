@@ -160,6 +160,10 @@ class Searcher implements LoggerAwareInterface {
 	public function search($query, $collection, $args = array(), $alias = array()) {
 		$result = $this->parseQuery($query);
 		if($result && is_array($collection) && $collection) {
+			$argc = get_default($result, 'args');
+			if($argc != count($args)) {
+				throw new Exception('Argument count '.$argc.' is not equals parameter count '.count($args).'!');
+			}
 			return $this->matchCollection($result['expr']['layers'][0]
 				['selectors'], $collection, $args, $alias);
 		}
