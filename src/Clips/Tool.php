@@ -11,11 +11,11 @@ class Library extends Annotation { }
 class FullArgs extends Annotation { }
 
 class LoadConfig {
-	/** @Multi */
+	/** @Clips\Multi */
 	public $dirs = array();
 	public $suffix = "";
 	public $prefix = "";
-	/** @Multi */
+	/** @Clips\Multi */
 	public $args;
 
 	public function __construct($dirs = array(), $suffix = "", $prefix = "", $args = null) {
@@ -28,7 +28,7 @@ class LoadConfig {
 
 class Config extends Annotation {
 
-	/** @Multi */
+	/** @Clips\Multi */
 	public $files = array();
 
 	private $config;

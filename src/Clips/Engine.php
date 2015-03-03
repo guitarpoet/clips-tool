@@ -8,16 +8,6 @@ if(!defined('CLIPS_CORE_ENV'))
 if(!defined('CLIPS_MAIN_ENV'))
 	define('CLIPS_MAIN_ENV', 'MAIN');
 
-class Multi extends \Addendum\Annotation {}
-
-class Symbol extends \Addendum\Annotation {
-
-	public static function symbol($value) {
-		$s = new Symbol();
-		$s->value = $value;
-		return $s;
-	}
-} 
 
 /**
  *  The clips extension engine and execution context
