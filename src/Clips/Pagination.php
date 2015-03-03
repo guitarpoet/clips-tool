@@ -175,6 +175,9 @@ class Pagination {
 
 	public static function fromJson($json) {
 		$obj = parse_json($json);
+		if(isset($obj->where)) {
+			$obj->where = (array)$obj->where;
+		}
 		if($obj)
 			return copy_new($obj, "Clips\\Pagination");
 		return null;

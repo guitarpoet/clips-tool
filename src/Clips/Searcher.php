@@ -189,6 +189,7 @@ class Searcher implements LoggerAwareInterface {
 					array_merge($ret, $this->matchChildren($layers, $child, $args, $alias));
 				}
 			}
+			return $ret;
 		}
 		return array();
 	}
