@@ -8,7 +8,7 @@ use Clips\Models\ViewModel;
 class RouteResult {
 	public $controller;
 	public $method;
-	/** @Multi */
+	/** @Clips\Multi */
 	public $args;
 }
 
