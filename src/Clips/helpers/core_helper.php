@@ -1057,3 +1057,29 @@ function property($query, $obj) {
 	}
 	return null;
 }
+
+function profile_start($name = 'main') {
+	$profile = config('profile');
+	if($profile) {
+		$name = 'profile_'.$name;
+		context($name, array(
+			'cpu' => sys_getloadavg(),
+			'memory' => memory_get_usage(),
+			'time' => microtime()
+		));
+	}
+}
+
+function profile_end($name = 'main') {
+	$profile = config('profile');
+	if($profile) {
+		$n = 'profile_'.$name;
+		$info = context($n);
+		if($info) {
+			$info['time'] = microtime() - $info['time'];
+			$info['name'] = $name;
+			$info['cpu'] = $info['cpu'][0];
+			log('Name: {name}, Time: {time}, CPU: {cpu}, Memory: {memory}', $info);
+		}
+	}
+}

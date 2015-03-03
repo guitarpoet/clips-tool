@@ -684,7 +684,15 @@ class Tool implements Interfaces\Initializable {
 			return true;
 		}
 
-		return $this->create($this->widgetClass($widget));
+		$class = $this->widgetClass($widget);
+		if(isset($this->$class))
+			return $this->$class;
+		if(class_exists($class)) {
+			$w = new $class();
+			$this->enhance($w);
+			$this->$class = $w;
+		}
+		return null;
 	}
 
 	/**

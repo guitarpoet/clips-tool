@@ -14,6 +14,7 @@ use Addendum\Annotation;
 class Widget extends Annotation implements Initializable, ToolAware, LoggerAwareInterface {
 
 	public function init() {
+		context('widgets', $this, true);
 		$this->base_dir = dirname(class_script_path($this));
 		if(strpos($this->base_dir, FCPATH) === false) {
 			// We might be in the soft link(in development mode)

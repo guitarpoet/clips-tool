@@ -81,6 +81,8 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 	}
 
 	public function route() {
+		profile_start('route');
+		profile_start('load_controller');
 		$request = $this->tool->create('Clips\\HttpRequest');
 
 		$this->tool->context(array(
@@ -124,6 +126,8 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 			$result = $result[0];
 			$controller_seg = $controller_seg[0][0];
 		}
+		profile_end('load_controller');
+		profile_start('controller_init');
 		$cc = $result->controller;
 		$controller = new $cc();
 		$this->tool->context(array(
@@ -146,11 +150,16 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 			$this->tool->annotationEnhance($a, $controller);
 		}
 
+		profile_end('controller_init');
+		profile_start('filter_before');
 		$ret = null;
 		if($this->filterChain->filter_before($this->filterChain, $controller, $result->method, $result->args, $request)) {
 			// Let the filter before can prevent the run of the controller method
 			try { 
+				profile_end('filter_before');
+				profile_start('controller');
 				$ret = call_user_func_array(array($controller, $result->method), $result->args);
+				profile_end('controller');
 			}
 			catch(\Exception $e) {
 				error(get_class($e), array($e->getMessage()), true);
@@ -179,8 +188,11 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 				$this->logger->error('Getting an error when serving the request.', array('error' => $error));
 		}
 
+		profile_end('route');
+		$time = microtime();
 		// Always run filter after(since the filter after will render the views)
 		$this->filterChain->filter_after($this->filterChain, $controller, $result->method, $result->args, $request, $ret);
+		var_dump(microtime() - $time);
 	}
 
 	public function setTool($tool) {
