@@ -115,6 +115,8 @@ class Searcher implements LoggerAwareInterface {
 					}
 				}
 
+				if($failed)
+					return false;
 				// Return the object by default
 				return $obj;
 			}
@@ -161,6 +163,7 @@ class Searcher implements LoggerAwareInterface {
 			$argc = get_default($result, 'args');
 			if($argc != count($args)) {
 				throw new Exception('Argument count '.$argc.' is not equals parameter count '.count($args).'!');
+				return array();
 			}
 			return $this->matchCollection($result['expr']['layers'][0]
 				['selectors'], $collection, $args, $alias);
