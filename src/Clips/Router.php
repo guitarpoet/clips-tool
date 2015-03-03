@@ -114,6 +114,7 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 			$result->controller = $this->tool->controller('error');
 			$result->method = 'show';
 			$result->args = $error[0];
+			$controller_seg = 'error';
 			http_response_code(404);
 			error('RouteError', array($error[0][0]));
 		}
