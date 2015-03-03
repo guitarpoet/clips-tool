@@ -19,7 +19,7 @@ Name: Word ( Word | Number ) *
 ClassName: ( Name '\\' ) * Name
 Alias: DLR Name
 Value: Alias | QM
-Type: ClassName | Alias | '*'
+Type: ClassName | Alias | '*' | '**'
 QuotedValue: Value | QUOTE > Value > QUOTE
 	function Value(&$result, $sub) {
 		$result['val'] = $sub['text'];
@@ -47,7 +47,15 @@ Conditions: Condition ( > Condition )*
 		if(!isset($result['conditions'])) {
 			$result['conditions'] = array();
 		}
+
+		if(!isset($result['args'])) {
+			$result['args'] = 0;
+		}
+
 		$result['conditions'] []= $sub;
+
+		if($sub['val'] == '?')
+			$result['args'] = $result['args'] + 1;
 	}
 
 Selector: Type ( > LB > Conditions > RB )?
@@ -56,28 +64,47 @@ Selector: Type ( > LB > Conditions > RB )?
 	}
 
 	function Conditions(&$result ,$sub) {
-		if(isset($sub['conditions']))
+		if(isset($sub['conditions'])) {
 			$result['conditions'] = $sub['conditions'];
+			if(isset($sub['args']))
+				$result['args'] = $sub['args'];
+		}
 	}
+
 
 Selectors: ( Selector > ',' > )* Selector
 	function Selector(&$result, $sub) {
 		if(!isset($result['selectors'])) {
 			$result['selectors'] = array();
 		}
+
+		if(!isset($result['args'])) {
+			$result['args'] = 0;
+		}
+
 		$result['selectors'] []= $sub;
+		if(isset($sub['args']))
+			$result['args'] += $sub['args'];
 	}
+
 
 TreeSelector: ( Selectors > '>' > )* Selectors
 	function Selectors(&$result, $sub) {
 		if(!isset($result['layers'])) {
 			$result['layers'] = array();
 		}
+		if(!isset($result['args'])) {
+			$result['args'] = 0;
+		}
+		if(isset($sub['args']))
+			$result['args'] += $sub['args'];
 		$result['layers'] []= $sub;
 	}
 
 Expr: TreeSelector
 	function TreeSelector(&$result, $sub) {
+		if(isset($sub['args']))
+			$result['args'] = $sub['args'];
 		$result['expr'] = $sub;
 	}
 

@@ -133,6 +133,16 @@ class Searcher implements LoggerAwareInterface {
 		}
 	}
 
+	protected function matchCollection($selectors, $collection, $args, $alias) {
+		$ret = array();
+		foreach($collection as $obj) {
+			if($this->matches($selectors, $obj, $args, $alias)) {
+				$ret []= $obj;
+			}
+		}
+		return $ret;
+	}
+
 	/**
 	 * Query the collection using the args and aliases
 	 *
@@ -150,15 +160,8 @@ class Searcher implements LoggerAwareInterface {
 	public function search($query, $collection, $args = array(), $alias = array()) {
 		$result = $this->parseQuery($query);
 		if($result && is_array($collection) && $collection) {
-			$layer = $result['expr']['layers'][0]; // Only use first layer
-			$selectors = $layer['selectors'];
-			$ret = array();
-			foreach($collection as $obj) {
-				if($this->matches($selectors, $obj, $args, $alias)) {
-					$ret []= $obj;
-				}
-			}
-			return $ret;
+			return $this->matchCollection($result['expr']['layers'][0]
+				['selectors'], $collection, $args, $alias);
 		}
 		return array();
 	}
@@ -167,5 +170,22 @@ class Searcher implements LoggerAwareInterface {
 	 * Searching using the tree
 	 */
 	public function treeSearch($query, TreeNode $node, $args = array(), $alias = array()) {
+		$result = $this->parseQuery($query);
+		if($result && valid_obj($node, 'Clips\\Interfaces\\TreeNode')) {
+			$layers = $result['expr']['layers'];
+			$found = false;
+			while(true) {
+				$args_copy = copy_arr($args);
+				$children = $node->children();
+				$layer = array_shift($layers);
+
+				$match = $this->matchCollection($layer['selectors'], $children, $args, $alias);
+				foreach($selectors as $selector) {
+					if($select['type'] == '**') {
+						// This is wildcard
+					}
+				}
+			}
+		}
 	}
 }
