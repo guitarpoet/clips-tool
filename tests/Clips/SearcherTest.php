@@ -59,4 +59,13 @@ class SearcherTest extends Clips\TestCase {
 		print_r($result);
 		$this->assertEquals(count($result), 3);
 	}
+
+	/**
+	 * @Clips\TestValue(json="tree.json")
+	 */
+	public function testSimepleTreeSearch() {
+		$node = new Clips\SimpleTreeNode($this->value);
+		$result = $this->searcher->treeSearch('* > *', $node);
+		var_dump($result);
+	}
 }

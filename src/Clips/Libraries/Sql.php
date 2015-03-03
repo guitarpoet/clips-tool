@@ -38,9 +38,9 @@ class Sql {
 			$this->args = $where->getArgs();
 			return $this;
 		}
-		if(is_array($where)) {
+		if(is_array($where) || is_object($where)) {
 			// Using and as default
-			return $this->where(_and($where));
+			return $this->where(_and((array) $where));
 		}
 		return $this;
 	}

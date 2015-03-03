@@ -188,8 +188,8 @@ function current_user() {
  * 		The object's class or super class
  */
 function valid_obj($obj, $class) {
-	return \is_object($obj) && \class_exists($class) 
-		&& (\get_class($obj) == $class || \is_subclass_of($obj, $class));
+	return is_object($obj) && (class_exists($class) || interface_exists($class))
+		&& (get_class($obj) == $class || is_subclass_of($obj, $class));
 }
 
 /**
