@@ -124,7 +124,8 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 			$result = $result[0];
 			$controller_seg = $controller_seg[0][0];
 		}
-		$controller = $this->tool->create($result->controller);
+		$cc = $result->controller;
+		$controller = new $cc();
 		$this->tool->context(array(
 			'controller_class' => $result->controller,
 			'controller_seg' => $controller_seg,
@@ -133,6 +134,7 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 			'args' => $result->args
 		));
 		$controller->request = $request;
+		$this->tool->enhance($controller);
 
 		$this->filterChain = $this->tool->load_class('FilterChain', true);
 		$this->filterChain->addFilter(config('filters'));
