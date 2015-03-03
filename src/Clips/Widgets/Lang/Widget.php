@@ -8,6 +8,6 @@ class Widget extends \Clips\Widget {
 		\Clips\context('jquery_init', <<<TEXT
 $.get(Clips.siteUrl('bundle/show/$current_bundle'), function(data) { Clips.bundle = data;}, 'json');
 TEXT
-);
+, true);
 	}
 }
