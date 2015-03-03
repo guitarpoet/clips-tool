@@ -1,5 +1,6 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+use Clips\Libraries\PropertyQuery;
 use Clips\Libraries\ObjectQuery;
 use Clips\Interfaces\TreeNode;
 use Psr\Log\LoggerAwareInterface;
@@ -18,10 +19,23 @@ class Searcher implements LoggerAwareInterface {
 		$this->logger = $logger;
 	}
 
+	public function parsePropertyQuery($query) {
+		if($this->cache->has($query))
+			return $this->cache->get($query);
+		$q = new PropertyQuery($query);
+		$r =  $q->match_Expr();
+		if($r) {
+			$this->cache->put($query, $r);
+		}
+		else
+			$this->cache->put($query, false);
+		return $r;
+	}
+
 	/**
-	 * Create and parse the query
+	 * Create and parse the object query
 	 */
-	public function parseQuery($query) {
+	public function parseObjectQuery($query) {
 		if($this->cache->has($query))
 			return $this->cache->get($query);
 		$q = new ObjectQuery($query);
@@ -159,7 +173,7 @@ class Searcher implements LoggerAwareInterface {
 	 * 		The result
 	 */
 	public function search($query, $collection, $args = array(), $alias = array()) {
-		$result = $this->parseQuery($query);
+		$result = $this->parseObjectQuery($query);
 		if($result && is_array($collection) && $collection) {
 			$argc = get_default($result, 'args');
 			if($argc != count($args)) {
@@ -194,11 +208,73 @@ class Searcher implements LoggerAwareInterface {
 		return array();
 	}
 
+	protected function propertyGet($oper, $obj) {
+		if(is_string($oper)) {
+			if($oper == '*') {
+				// This is for wildcard
+				return array_values((array) $obj);
+			}
+			else {
+				// This is for property
+				return array(get_default($obj, $oper));
+			}
+		}
+		else {
+			if(is_array($oper)) {
+				switch($oper['name']) {
+				case 'ObjOper':
+					return $this->propertyGet($oper['property'], $obj);
+				case 'ArrOper':
+					$index = $oper['index'];
+					if($index == '*')
+						return array_values((array) $obj);
+					return array(get_default($obj, $index));
+				}
+			}
+		}
+		return null;
+	}
+
+	public function property($query, $obj) {
+		return $this->propertySearch($query, $obj);
+	}
+
+	public function propertySearch($query, $obj) {
+		$result = $this->parsePropertyQuery($query);
+		if($result) {
+			$expr = $result['expr'];
+			$prop = get_default($expr, 'property');
+			$opers = get_default($expr, 'opers', array());
+			if($prop) {
+				$objs = $this->propertyGet($prop, $obj);
+				while(true) {
+					if($opers && $objs) {
+						$arr = array();
+						$oper = array_shift($opers);
+						// If we still have opers and object to test
+						foreach($objs as $o) {
+							$arr = array_merge($arr, $this->propertyGet($oper,$o));
+						}
+						$objs = $arr;
+					}
+					else {
+						break;
+					}
+				}
+				if(count($objs) == 1)
+					return $objs[0];
+				return $objs;
+			}
+			return $ret;
+		}
+		return null;
+	}
+
 	/**
 	 * Searching using the tree
 	 */
 	public function treeSearch($query, TreeNode $node, $args = array(), $alias = array()) {
-		$result = $this->parseQuery($query);
+		$result = $this->parseObjectQuery($query);
 		if($result && valid_obj($node, 'Clips\\Interfaces\\TreeNode')) {
 			$layers = $result['expr']['layers'];
 			return $this->matchChildren($layers, $node, $args, $alias);

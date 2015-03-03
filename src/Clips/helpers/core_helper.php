@@ -1037,3 +1037,23 @@ function password($password, $hash = null, $force_hash = false) {
 		}
 	}
 }
+
+/**
+ * Query the object using the property query
+ *
+ * The query should be something like this:
+ *
+ * a.b[1].*.c[2].d.e[3]
+ *
+ * The '.' notation will refer to hash operation, and the [] notation
+ * will refer to collection operation
+ *
+ * @author Jack
+ * @date Tue Mar  3 13:54:24 2015
+ */
+function property($query, $obj) {
+	if($query && $obj) {
+
+	}
+	return null;
+}

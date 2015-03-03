@@ -68,4 +68,25 @@ class SearcherTest extends Clips\TestCase {
 		$result = $this->searcher->treeSearch('* > *', $node);
 		var_dump($result);
 	}
+
+	/**
+	 * @Clips\TestValue(json="tree.json")
+	 */
+	public function testSimplePropertySearch() {
+		$result = $this->searcher->propertySearch('label', $this->value);
+		$this->assertEquals($result, 'root');
+
+		$result = $this->searcher->propertySearch('children[0].label', $this->value);
+		$this->assertEquals($result, 'branch 1');
+
+		$result = $this->searcher->propertySearch('children[0].*', $this->value);
+		$this->assertEquals($result, array(1, 'branch 1', array((object) array(
+			'label' => 'Leaf 1.1'), (object) array('label' => 'Leaf 1.2'))));
+
+		$result = $this->searcher->propertySearch('children[*]', $this->value);
+		$this->assertEquals($result, $this->value->children);
+
+		$result = $this->searcher->propertySearch('children[*].id', $this->value);
+		$this->assertEquals($result, array(1,2,3));
+	}
 }
