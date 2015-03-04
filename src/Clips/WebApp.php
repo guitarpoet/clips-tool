@@ -8,7 +8,7 @@
  */
 class WebApp {
 	public function __construct($name = '') {
-		$this->tool = get_clips_tool();
+		$this->tool = &get_clips_tool();
 		context('app', $this);
 		context('smarty', $this->tool->create('Smarty'));
 		$this->name = $name;
