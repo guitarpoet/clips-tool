@@ -32,10 +32,24 @@ class JsFilter extends AbstractFilter {
 
 			$js = array_map(function($item) {
 				if(is_array($item)) {
-					return '<script type="text/javascript">'.$item['script'].'</script>';
+					$js = explode("\n", $item['script']);
+					$ret = array('<script type="text/javascript">');
+					foreach($js as $line) {
+						$ret []= "\t".$line;
+					}
+					$ret []= '</script>';
+
+					return implode("\n\t\t", $ret);
 				}
 				if(is_object($item)) {
-					return '<script type="text/javascript">'.$item->script.'</script>';
+					$js = explode("\n", $item->script);
+					$ret = array('<script type="text/javascript">');
+					foreach($js as $line) {
+						$ret []= "\t".trim($line);
+					}
+					$ret []= '</script>';
+
+					return implode("\n\t\t", $ret);
 				}
 				else {
 					$path = \Clips\safe_add_extension($item, 'js');

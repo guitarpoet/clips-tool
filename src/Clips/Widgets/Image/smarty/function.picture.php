@@ -16,11 +16,23 @@ function smarty_function_picture($params, $template) {
 	$size = $size['width'];
 
 	$content = array();
+	$level = Clips\context('indent_level');
+	if($level === null)
+		$level = 0; // Default level is 0
+	else
+		$level = count($level);
+
+	$indent = '';
+	for($i = 0; $i < $level; $i++) {
+		$indent .= "\t";
+	}
+
 	if($resolutions || $medias) {
+
 		if($resolutions) { // If we are using auto resizing, skip the resolutions
 			unset($params['resolutions']);
 			foreach($resolutions as $res) {
-				$content []= Clips\create_tag('source', array(
+				$content []= "\t".Clips\create_tag('source', array(
 					'src' => Clips\site_url('responsive/size/'.(float)$res / 2880 * (float)$size .'/'.$src),
 					'media' => '(min-width:'.$res.'px)'
 				));
@@ -30,7 +42,7 @@ function smarty_function_picture($params, $template) {
 		if($medias) {
 			unset($params['medias']);
 			foreach($medias as $media => $res) {
-				$content []= Clips\create_tag('source', array(
+				$content []= "\t".Clips\create_tag('source', array(
 					'src' => Clips\site_url('responsive/size/'.$res.'/'.$src),
 					'media' => '(min-width:'.$media.'px)'
 				));
@@ -49,9 +61,9 @@ function smarty_function_picture($params, $template) {
 	}
 	Clips\clips_context('indent_level', 1, true);
 	$img = Clips\create_tag('img', array('src' => Clips\static_url(Clips\path_join($image_dir, $src))));
-	$content []= Clips\create_tag_with_content('noscript', $img);
+	$content []= "\t".Clips\create_tag_with_content('noscript', $img);
 	Clips\context_pop('indent_level');
 
 
-	return Clips\create_tag_with_content('picture', implode("\n", $content), $params);
+	return Clips\create_tag_with_content('picture', implode("\n$indent", $content), $params);
 }
