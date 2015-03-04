@@ -6,7 +6,6 @@ class Widget extends \Clips\Widget {
 			$('.listview.clips-listview').on('list.init', function(){
 				var self = $(this);
 				if($.isFunction($.fn.selectBoxIt)){
-					console.log(self.parents('.listview_wrapper'));
 					self.parents('.listview_wrapper').find('select:not([data-no-selectBoxIt])').each(function(){
 						$(this).selectBoxIt({});
 					});
