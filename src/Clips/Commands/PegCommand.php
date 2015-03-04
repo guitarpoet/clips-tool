@@ -5,7 +5,7 @@ use Clips\Command;
 use hafriedlander\Peg\Compiler;
 
 /**
- * @FullArgs
+ * @Clips\FullArgs
  */
 class PegCommand extends Command {
 	public function execute($args) {

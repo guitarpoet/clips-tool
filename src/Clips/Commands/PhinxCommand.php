@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\ArgvInput;
 /**
  * Proxy to the phinx command, to run the phinx through clips comamnd interface
  *
- * @FullArgs
+ * @Clips\FullArgs
  */
 class PhinxCommand extends Command {
 	public function execute($args) {
