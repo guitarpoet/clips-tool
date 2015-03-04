@@ -552,6 +552,7 @@
 			createItemlengthbox(list);	 // Create the length choice box
 			setSelectablePlugin(list); // Initilize the selectable function for listview
 			self.data('api', new Api(list));
+            self.trigger('list.init', [list]);
 			// Getting the list's basic informations
 			$(window).resize(function(){ // If the size of the list has been changed, relayout the items
 				layoutItems(list);
