@@ -27,6 +27,35 @@ class SimpleTreeNode implements TreeNode {
 		}
 	}
 
+	public function childAt($index) {
+		$c = $this->children();
+		if($index >= 0 && count($c) > $index)
+			return $c[$index];
+		return null;
+	}
+
+	public function iterator($mode = 'width') {
+		return new SimpleTreeNodeIterator($this, $mode);
+	}
+
+	public function nextSibling() {
+		$p = $this->parent();
+		if($p) {
+			$index = $p->hasChild($this);
+			return $p->childAt($index + 1);
+		}
+		return null;
+	}
+
+	public function prevSibling() {
+		$p = $this->parent();
+		if($p) {
+			$index = $p->hasChild($this);
+			return $p->childAt($index - 1);
+		}
+		return null;
+	}
+
 	protected function getSearcher() {
 		if(!isset($this->_searcher)) {
 			$this->_searcher = searcher();
@@ -57,7 +86,7 @@ class SimpleTreeNode implements TreeNode {
 
 	public function hasChild(TreeNode $child) {
 		$children_field = get_default($this, 'children_field', 'children');
-		return array_search($child, $this->$children_field) !== false;
+		return array_search($child, $this->$children_field);
 	}
 
 	public function children($filter = null, $args = array(), $alias = array()) {
@@ -77,7 +106,7 @@ class SimpleTreeNode implements TreeNode {
 	}
 
 	public function append(TreeNode $child, $index = -1) {
-		if($this->hasChild($child))
+		if($this->hasChild($child) !== false)
 			return false;
 
 		// Setting the parent of child
@@ -96,7 +125,7 @@ class SimpleTreeNode implements TreeNode {
 
 	public function detach() {
 		$parent = $this->parent();
-		if($parent && $parent->hasChild($this)) {
+		if($parent && $parent->hasChild($this) !== false) {
 			$children_field = get_default($parent, 'children_field', 'children');
 			$index = array_search($this, $parent->$children_field);
 			$parent->$children_field = array_splice($parent->$children_field, $index, 1);
