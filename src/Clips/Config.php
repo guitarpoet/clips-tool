@@ -2,7 +2,7 @@
 
 use Addendum\Annotation;
 
-class Config extends Annotation {
+class Config {
 
 	/** @Clips\Multi */
 	public $files = array();
