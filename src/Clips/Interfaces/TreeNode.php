@@ -79,11 +79,14 @@ interface TreeNode {
 	 *
 	 * @param filter
 	 * 		The filter pattern for get the children,
-	 *
+	 * @param args
+	 * 		The filter args
+	 * @param alias
+	 * 		The filter aliases
 	 * @return Array
 	 * 		The children of this Node
 	 */
-	public function children($filter = null);
+	public function children($filter = null, $args = array(), $alias = array());
 
 	/**
 	 * Append the child TreeNode

@@ -27,6 +27,13 @@ class SimpleTreeNode implements TreeNode {
 		}
 	}
 
+	protected function getSearcher() {
+		if(!isset($this->_searcher)) {
+			$this->_searcher = searcher();
+		}
+		return $this->_searcher;
+	}
+
 	public function label() {
 		$label_field = get_default($this, 'label_field', 'label');
 		if(isset($this->$label_field))
@@ -42,7 +49,10 @@ class SimpleTreeNode implements TreeNode {
 	}
 
 	public function query($filter = null, $args = array(), array $alias = array()) {
-		return null;
+		if($filter) {
+			return $this->getSearcher()->tree($filter, $this, $args, $alias);
+		}
+		return $this->children();
 	}
 
 	public function hasChild(TreeNode $child) {
@@ -50,12 +60,16 @@ class SimpleTreeNode implements TreeNode {
 		return array_search($child, $this->$children_field) !== false;
 	}
 
-	public function children($filter = null) {
+	public function children($filter = null, $args = array(), $alias = array()) {
 		$children_field = get_default($this, 'children_field', 'children');
 		if(isset($this->$children_field)) {
 			$c = $this->$children_field;
 			if(!is_array($c)) {
 				$this->$children_field = array($c);
+			}
+
+			if($filter) {
+				return $this->getSearcher()->search($filter, $this, $args, $alias);
 			}
 			return $this->$children_field;
 		}
