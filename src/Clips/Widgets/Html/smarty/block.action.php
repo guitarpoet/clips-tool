@@ -1,9 +1,33 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+use Clips\Interfaces\Action;
+
 function smarty_block_action($params, $content = '', $template, &$repeat) {
 	if($repeat) {
 		Clips\clips_context('indent_level', 1, true);
 		return;
+	}
+
+	$action = Clips\get_default($params, 'action');
+
+	if($action && Clips\valid_obj($action, 'Clips\\Interfaces\\Action')) {
+		// This is valid action object
+		switch($action->type()) {
+		case Action::CLIENT:
+			$params['caption'] = $action->label();
+			$content = $action->content();
+			break;
+		case Action::SERVER:
+			$content = $action->label();
+			$params['uri'] = $action->content();
+			break;
+		case Action::EXTERNAL:
+			$content = $action->label();
+			$params['href'] = $action->content();
+			break;
+		}
+
+		unset($params['action']);
 	}
 
 	$value = Clips\get_default($params, 'caption');
