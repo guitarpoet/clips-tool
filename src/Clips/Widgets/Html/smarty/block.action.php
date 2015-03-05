@@ -1,6 +1,6 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
-function smarty_block_button($params, $content = '', $template, &$repeat) {
+function smarty_block_action($params, $content = '', $template, &$repeat) {
 	if($repeat) {
 		Clips\clips_context('indent_level', 1, true);
 		return;
@@ -8,23 +8,24 @@ function smarty_block_button($params, $content = '', $template, &$repeat) {
 
 	$value = Clips\get_default($params, 'caption');
 	if($value) { // We did have value, so the content is the JavaScript
-		$id = Clips\get_default($params, 'id', 'clips_button_'.Clips\sequence('button'));
+		$id = Clips\get_default($params, 'id', 'clips_action_'.Clips\sequence('action'));
 		$js = "$(\"#$id\").click(function(){\n\t\t".trim($content)."\n\t});";
 		$content = $value;
 		unset($params['caption']);
 		$params['id'] = $id;
+		if(!isset($params['title'])) // Add tooltip
+			$params['title'] = $value;
+		$params['href'] = 'javascript:void(0)';
 		Clips\context('jquery_init', $js, true);
 	}
-
-	// For i18n
-	$bundle_name = Clips\context('current_bundle');
-	$bundle = Clips\get_default($params, 'bundle', $bundle_name);
-
-	if($bundle !== null) {
-		$bundle = Clips\bundle($bundle);
-		$content = $bundle->message($content);
+	else {
+		// Check for action uri
+		$uri = Clips\get_default($params, 'uri');
+		if($uri) {
+			$params['href'] = Clips\site_url($uri);
+			unset($params['uri']);
+		}
 	}
-
 	Clips\context_pop('indent_level');
-	return Clips\create_tag_with_content('button', $content, $params);
+	return Clips\create_tag_with_content('a', $content, $params);
 }
