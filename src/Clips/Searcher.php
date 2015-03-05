@@ -199,8 +199,12 @@ class Searcher implements LoggerAwareInterface {
 			$result = $this->matchCollection($selectors, $children, $layer_args, $alias);
 			$ret = array();
 			if($result) {
+				if(count($layers) == 0) {
+					return $result;
+				}
+
 				foreach($result as $child) {
-					array_merge($ret, $this->matchChildren($layers, $child, $args, $alias));
+					$ret = array_merge($ret, $this->matchChildren(copy_arr($layers), $child, copy_arr($args), $alias));
 				}
 			}
 			return $ret;
@@ -270,12 +274,16 @@ class Searcher implements LoggerAwareInterface {
 		return null;
 	}
 
+	public function tree($query, TreeNode $node, $args = array(), $alias = array()) {
+		return $this->treeSearch($query, $node, $args, $alias);
+	}
+
 	/**
 	 * Searching using the tree
 	 */
 	public function treeSearch($query, TreeNode $node, $args = array(), $alias = array()) {
 		$result = $this->parseObjectQuery($query);
-		if($result && valid_obj($node, 'Clips\\Interfaces\\TreeNode')) {
+		if($result && $node) {
 			$layers = $result['expr']['layers'];
 			return $this->matchChildren($layers, $node, $args, $alias);
 		}

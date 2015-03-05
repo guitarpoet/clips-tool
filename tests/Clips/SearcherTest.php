@@ -65,8 +65,10 @@ class SearcherTest extends Clips\TestCase {
 	 */
 	public function testSimepleTreeSearch() {
 		$node = new Clips\SimpleTreeNode($this->value);
-		$result = $this->searcher->treeSearch('* > *', $node);
-		var_dump($result);
+		$result = $this->searcher->tree('* > *', $node);
+		$this->assertEquals(count($result), 6);
+		$result = $this->searcher->tree('* [id = ?] > *', $node, array(2));
+		$this->assertTrue(!!$result);
 	}
 
 	/**

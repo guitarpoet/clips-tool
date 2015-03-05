@@ -1070,6 +1070,16 @@ function profile_start($name = 'main') {
 	}
 }
 
+function searcher() {
+	$tool = &get_clips_tool();
+	return $tool->load_class('Searcher', true);
+}
+
+function sequence($name) {
+	$tool = &get_clips_tool();
+	return $tool->sequence($name);
+}
+
 function profile_end($name = 'main') {
 	$profile = config('profile');
 	if($profile) {

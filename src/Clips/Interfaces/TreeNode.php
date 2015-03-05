@@ -79,11 +79,29 @@ interface TreeNode {
 	 *
 	 * @param filter
 	 * 		The filter pattern for get the children,
-	 *
+	 * @param args
+	 * 		The filter args
+	 * @param alias
+	 * 		The filter aliases
 	 * @return Array
 	 * 		The children of this Node
 	 */
-	public function children($filter = null);
+	public function children($filter = null, $args = array(), $alias = array());
+
+	/**
+	 * Get the child at index
+	 */
+	public function childAt($index);
+
+	/**
+	 * Get the next sibling, if there is no sibling, return null
+	 */
+	public function nextSibling();
+
+	/**
+	 * Get the previous sibling, if there is no sibling, return null
+	 */
+	public function prevSibling();
 
 	/**
 	 * Append the child TreeNode
@@ -96,7 +114,9 @@ interface TreeNode {
 	public function detach();
 
 	/**
-	 * Test if has this child
+	 * Test if has this child, if not exists will return false
+	 * But, may return the index of the child, so please check this return
+	 * using === false
 	 */
 	public function hasChild(TreeNode $child);
 }
