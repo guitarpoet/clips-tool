@@ -17,6 +17,9 @@ class TestDataTest extends Clips\TestCase {
 		$this->assertTrue(get_class($this->data->jack) == 'UserSample');
 		$this->assertNotNull($this->data->jack->groups);
 		$this->assertEquals(count($this->data->jack->groups), 1);
+		$this->assertNotNull($this->data->user1);
+		$this->assertEquals($this->data->user1->name, 'user1');
+		print_r($this->data->all());
 	}
 
 	/**

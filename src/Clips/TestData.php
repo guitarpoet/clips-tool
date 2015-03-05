@@ -24,6 +24,10 @@ class TestData extends Annotation implements Initializable, ToolAware {
 		return null;
 	}
 
+	public function all() {
+		return $this->_data;
+	}
+
 	public function init() {
 		$this->_data = array();
 		$this->_storage_ids = array();
@@ -44,7 +48,8 @@ class TestData extends Annotation implements Initializable, ToolAware {
 	}
 
 	protected function processObjs($tpls, $objs) {
-		// Process templates
+		$seq = array();
+		// Process templates and sequence
 		foreach($objs as $name => $obj) {
 			if(isset($obj->{TestData::TPL_NAME})) {
 				// This object has a template
@@ -53,6 +58,42 @@ class TestData extends Annotation implements Initializable, ToolAware {
 				$tpl = $tpls[$tpl];
 				$obj = copy_object($tpl, $obj);
 				$this->_data[$name] = $obj;
+			}
+			if(str_end_with($name, '*')) {
+				// This is sequence
+				$seq []= $name;
+			}
+		}
+
+		foreach($seq as $s) {
+			$name = substr($s, 0, strlen($s) - 1);
+			$sequence = $this->_data[$s];
+			unset($this->_data[$s]);
+			// Default sequence count is 5
+			$count = get_default($sequence, '$count', 5);
+			if(isset($sequence->{'$count'}))
+				unset($sequence->{'$count'});
+
+			if(!is_numeric($count) && strpos($count, '!') === 0) {
+				$count = substr($count, 1);
+				$count = eval('return '.$count.';');
+			}
+			else {
+				$count = 5;
+			}
+
+			$numbers = array();
+			foreach($sequence as $k => $v) {
+				if(is_string($v) && strpos($v, '@') !== false) {
+					$numbers []= $k;
+				}
+			}
+			for($i = 0; $i < $count; $i++) {
+				$data = copy_object($sequence);
+				foreach($numbers as $n) {
+					$data->$n = str_replace('@', $i + 1, $sequence->$n);
+				}
+				$this->_data[$name.($i + 1)] = $data;
 			}
 		}
 
@@ -63,24 +104,30 @@ class TestData extends Annotation implements Initializable, ToolAware {
 	}
 
 	protected function processReference($obj) {
-		if(is_string($obj) && strpos($obj, '$') === 0) {
-			$name = substr($obj, 1);
-			if(isset($this->_data[$name]))
-				return $this->processReference($this->_data[$name]);
+		if(is_string($obj)) {
+			if(strpos($obj, '$') === 0) {
+				$name = substr($obj, 1);
+				if(isset($this->_data[$name]))
+					return $this->processReference($this->_data[$name]);
+			}
+			else if(strpos($obj, '!') === 0) {
+				$name = substr($obj, 1);
+				return eval('return '.$name.';');
+			}
 		}
-		if(is_array($obj)) {
+		else if(is_array($obj)) {
 			foreach($obj as $k => $v) {
 				$obj[$k] = $this->processReference($v);
 			}
 		}
 		else if(is_object($obj)) {
+			foreach($obj as $k => $v) {
+				$obj->$k = $this->processReference($v);
+			}
+
 			if(isset($obj->{'$type'})) {
 				$obj = copy_object($obj,  null, $obj->{'$type'});
 				unset($obj->{'$type'});
-			}
-
-			foreach($obj as $k => $v) {
-				$obj->$k = $this->processReference($v);
 			}
 
 			if(isset($obj->{'$storage'}) && $obj->{'$storage'}) {
