@@ -50,7 +50,7 @@ function smarty_block_action($params, $content = '', $template, &$repeat) {
 			unset($params['uri']);
 	}
 	if(!isset($params['title'])) // Add tooltip
-		$params['title'] = $content;
+		$params['title'] = trim($content);
 	}
 	Clips\context_pop('indent_level');
 	return Clips\create_tag_with_content('a', $content, $params);
