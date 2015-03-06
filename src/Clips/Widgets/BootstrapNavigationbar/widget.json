@@ -1,0 +1,14 @@
+{
+	"author": "andy",
+	"date": "Fri Mar  6 10:59:10 2015",
+	"version": "1.0",
+	"name": "BootstrapNavigationbar",
+	"doc":"bootstrap navigation",
+    "depends": ["BootstrapCommon"],
+    "scss": {
+        "files": [
+            "_simpleforms",
+            "_navbar"
+        ]
+    }
+}

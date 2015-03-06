@@ -1,0 +1,15 @@
+{
+	"author": "andy",
+	"date": "Fri Mar  6 10:49:03 2015",
+	"version": "1.0",
+	"name": "BootstrapNavigation",
+	"doc":"bootstrap navigation",
+    "depends": ["BootstrapCommon"],
+    "scss": {
+        "files": [
+            "mixins/_nav-divider",
+            "mixins/_nav-vertical-align",
+            "_navs"
+        ]
+    }
+}

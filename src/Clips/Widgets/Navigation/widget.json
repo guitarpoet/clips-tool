@@ -4,5 +4,5 @@
 	"version": "1.0",
 	"name": "Navigation",
 	"doc":"The navigation widget.",
-	"depends": ["bootstrap"]
+	"depends": ["BootstrapNavigation"]
 }

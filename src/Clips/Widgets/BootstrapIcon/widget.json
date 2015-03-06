@@ -1,0 +1,13 @@
+{
+	"author": "Andy (andy.pinet@pinet.co)",
+	"date": "Thu Feb  5 15:00:35 2015",
+	"version": "1.0",
+	"name": "bootstrap icon",
+	"doc":"Bootstrap Icon widget",
+	"depends": ["BootstrapCommon"],
+	"scss": {
+		"files": [
+            "_glyphicons"
+        ]
+	}
+}

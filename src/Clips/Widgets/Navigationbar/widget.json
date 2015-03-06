@@ -1,0 +1,13 @@
+{
+	"author": "andy",
+	"date": "Fri Mar  6 11:37:38 2015",
+	"version": "1.0",
+	"name": "Navigationbar",
+	"doc":"navigationbar",
+    "depends": ["BootstrapIcon", "BootstrapCollapse", "BootstrapDropdown", "BootstrapNavigationbar"],
+    "scss": {
+        "files": [
+            "dropdown_menu"
+        ]
+    }
+}
