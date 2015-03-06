@@ -7,8 +7,12 @@
     "depends": ["BootstrapCommon"],
     "js": {
         "files": [
-            "_component-animations",
             "collapse"
+        ]
+    },
+    "scss": {
+        "files": [
+            "_component-animations"
         ]
     }
 }
