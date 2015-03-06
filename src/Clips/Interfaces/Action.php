@@ -22,6 +22,11 @@ interface Action extends TreeNode {
 	public function type();
 
 	/**
+	 * Test if the action is active
+	 */
+	public function active();
+
+	/**
 	 * The content of the action, will be like this:
 	 *
 	 * client => JavaScript
