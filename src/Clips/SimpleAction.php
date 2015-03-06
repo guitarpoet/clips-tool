@@ -14,6 +14,9 @@ class SimpleAction extends SimpleTreeNode implements Action {
 	public $params = array();
 
 	public function __construct($data = array()) {
+		if(!isset($data['type']))
+			$this->type = Action::SERVER;
+
 		parent::__construct($data);
 	}
 

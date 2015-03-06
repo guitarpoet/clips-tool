@@ -12,21 +12,46 @@ function smarty_block_action($params, $content = '', $template, &$repeat) {
 	$action = Clips\get_default($params, 'action');
 
 	if($action && Clips\valid_obj($action, 'Clips\\Interfaces\\Action')) {
+		$ps = $action->params();
 		// This is valid action object
 		switch($action->type()) {
 		case Action::CLIENT:
 			$params['caption'] = $action->label();
+			if($ps) {
+				foreach($ps as $k => $v) {
+					$params['data-'.$k] = $v;
+				}
+			}
 			$content = $action->content();
 			break;
 		case Action::SERVER:
 			$content = $action->label();
-			$params['uri'] = $action->content();
+			$suffix = array();
+			foreach($ps as $k => $v) {
+				$suffix []= urlencode($k).'='.urlencode($v);
+			}
+			if($suffix) {
+				$suffix = implode('&', $suffix);
+				$params['uri'] = $action->content().'?'.$suffix;
+			}
+			else
+				$params['uri'] = $action->content();
 			break;
 		case Action::EXTERNAL:
 			$content = $action->label();
-			$params['href'] = $action->content();
+			$suffix = array();
+			foreach($ps as $k => $v) {
+				$suffix []= urlencode($k).'='.urlencode($v);
+			}
+			if($suffix) {
+				$suffix = implode('&', $suffix);
+				$params['href'] = $action->content().'?'.$suffix;
+			}
+			else
+				$params['href'] = $action->content();
 			break;
 		}
+
 
 		unset($params['action']);
 	}
