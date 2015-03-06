@@ -21,35 +21,70 @@ class Tool implements Interfaces\Initializable {
 		return new Resource($uri);
 	}
 
+	public function sequence($name = "") {
+		$sn = "_seq_".$name;
+		if(!isset($this->$sn)) {
+			$this->$sn = 0;
+		}
+		return ++$this->$sn;
+	}
+	public function log($message, $context = array()) {
+		$this->info($message, $context);
+	}
+
 	public function emergency($message, $context = array()) {
+		if(!is_array($context)) {
+			$context = array($context);
+		}
 		$this->getLogger()->emergency($message, $context);
 	}
 
 	public function critical($message, $context = array()) {
+		if(!is_array($context)) {
+			$context = array($context);
+		}
 		$this->getLogger()->critical($message, $context);
 	}
 
 	public function notice($message, $context = array()) {
+		if(!is_array($context)) {
+			$context = array($context);
+		}
 		$this->getLogger()->notice($message, $context);
 	}
 
 	public function info($message, $context = array()) {
+		if(!is_array($context)) {
+			$context = array($context);
+		}
 		$this->getLogger()->notice($message, $context);
 	}
 
 	public function debug($message, $context = array()) {
+		if(!is_array($context)) {
+			$context = array($context);
+		}
 		$this->getLogger()->notice($message, $context);
 	}
 
 	public function error($message, $context = array()) {
+		if(!is_array($context)) {
+			$context = array($context);
+		}
 		$this->getLogger()->error($message, $context);
 	}
 
 	public function warning($message, $context = array()) {
+		if(!is_array($context)) {
+			$context = array($context);
+		}
 		$this->getLogger()->error($message, $context);
 	}
 
 	public function alert($message, $context = array()) {
+		if(!is_array($context)) {
+			$context = array($context);
+		}
 		$this->getLogger()->alert($message, $context);
 	}
 

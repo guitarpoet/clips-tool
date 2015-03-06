@@ -1,6 +1,12 @@
 {
 	"%obj": {
-		"id": 0
+		"id": "!Clips\\sequence('id')"
+	},
+	"user*": {
+		"$count": "!rand(1,5)",
+		"$template": "%obj",
+		"name": "user@",
+		"real_name": "!Clips\\fake_name()"
 	},
 	"jack": {
 		"$template": "%obj",

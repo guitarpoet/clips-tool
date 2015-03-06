@@ -1,0 +1,8 @@
+{
+	"author": "Jack",
+	"date": "Thu Mar  5 18:58:17 2015",
+	"version": "1.0",
+	"name": "Navigation",
+	"doc":"The navigation widget.",
+	"depends": ["bootstrap"]
+}

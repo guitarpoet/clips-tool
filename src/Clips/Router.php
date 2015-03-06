@@ -73,6 +73,30 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 		return str_replace(array('//', '../'), '/', trim($uri, '/'));
 	}
 
+	public function routeResult($uri, $params = array(), $method = 'get', $type = 'http') {
+		$this->clips->clear();
+		$this->clips->template("Clips\\RouteResult");
+		$this->clips->load(clips_config('route_rules', array('/rules/route.rules')));
+		$this->clips->assertFacts(array('uri', $uri), array('RequestType', $type), array('RequestMethod', $method));
+
+		// Assert the parameters
+		$p = array();
+		if($params) {
+			foreach($params as $k => $v) {
+				$p []= array('Parameter', $k, $v);
+			}
+			$this->clips->assertFacts($params);
+		}
+
+		$this->clips->run();
+		$error = $this->clips->queryFacts("RouteError");
+
+		if($error)
+			return $error;
+
+		return $this->clips->queryFacts("Clips\\RouteResult");
+	}
+
 	public function route() {
 		profile_start('route');
 		profile_start('load_controller');
