@@ -19,6 +19,7 @@
 			,"mixins/_reset-filter"
 			,"mixins/_border-radius"
 			,"mixins/_image"
+            ,"mixins/_forms"
 			,"_close"
 			,"_scaffolding"
 			,"_type"
