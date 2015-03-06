@@ -12,7 +12,6 @@ class TestData extends Annotation implements Initializable, ToolAware {
 	private $_storage_ids;
 	private $tool;
 
-
 	public function setTool($tool) {
 		$this->tool = $tool;
 	}
@@ -29,6 +28,9 @@ class TestData extends Annotation implements Initializable, ToolAware {
 	}
 
 	public function init() {
+		if(!isset($this->value)) {
+			$this->value = context('test_data');
+		}
 		$this->_data = array();
 		$this->_storage_ids = array();
 		// Read the configurations
@@ -78,12 +80,13 @@ class TestData extends Annotation implements Initializable, ToolAware {
 				$tmp_name = substr($count, 1);
 				$count = get_default($this->_data, $tmp_name, $count);
 			}
-			if(!is_numeric($count) && strpos($count, '!') === 0) {
-				$count = substr($count, 1);
-				$count = eval('return '.$count.';');
-			}
-			else {
-				$count = 5;
+			if(!is_numeric($count)) {
+				if(strpos($count, '!') === 0) {
+					$count = substr($count, 1);
+					$count = eval('return '.$count.';');
+				}
+				else
+					$count = 5;
 			}
 
 			$numbers = array();
@@ -183,6 +186,18 @@ class TestData extends Annotation implements Initializable, ToolAware {
 			}
 		}
 		return $this->_config;
+	}
+
+	public function get($class = '') {
+		$ret = array();
+		foreach($this->_data as $k => $v) {
+			if($class) {
+				if(!valid_obj($v, $class))
+					continue;
+			}
+			$ret []= $v;
+		}
+		return $ret;
 	}
 
 	public function config($name = null) {

@@ -1,34 +1,53 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
+Clips\require_widget_smarty_plugin('Html', 'li');
+Clips\require_widget_smarty_plugin('Html', 'ul');
+Clips\require_widget_smarty_plugin('Html', 'action');
+
+function _smarty_block_navigation_tree_node($action, $indent, $template, $repeat) {
+	$f = true;
+	// Start the li
+	smarty_block_li(array(), '', $template, $f);
+
+	// Start the action
+	smarty_block_action(array(), '', $template, $f);
+
+	// Close the action
+	$a = smarty_block_action(array('action' => $action), '', $template, $repeat);
+
+	$children = $action->children();
+	if($children) {
+		$sub = array();
+		smarty_block_ul(array('class' => 'sub-navi'), '', $template, $f);
+		foreach($children as $c) {
+			$sub []= _smarty_block_navigation_tree_node($c, $indent."\t\t", $template, $repeat);
+		}
+		$a .= "\n$indent\t".smarty_block_ul(array('class' => 'sub-navi'), implode("", $sub), $template, $repeat);
+	}
+
+	// Close the li
+ 	return "\n$indent".smarty_block_li(array(), $a, $template, $repeat);
+}
+
 function smarty_block_navigation($params, $content = '', $template, &$repeat) {
 
-	Clips\require_widget_smarty_plugin('Html', 'div');
-	Clips\require_widget_smarty_plugin('Html', 'ul');
-	Clips\require_widget_smarty_plugin('Html', 'li');
-	Clips\require_widget_smarty_plugin('Html', 'a');
-	Clips\require_widget_smarty_plugin('Grid', 'container');
 
 	if($repeat) {
+		// Start the navigation ul
 		Clips\clips_context('indent_level', 1, true);
 		return;
 	}
 
 	$default = array(
-		'class' => array('navbar', 'navbar-default')
+		'class' => array('nav', 'navbar')
 	);
 
 	$f = true;
 
-	// Start the div
-	smarty_block_container(array('fluid' => true), $content, $template, $f);
-
 	$actions = Clips\get_default($params, 'actions');
+
 	if($actions) {
 		unset($params['actions']);
-		// Start the collapse div
-		smarty_block_div(array('class' => array('collapse', 'navbar-collapse')), $content, $template, $f);
-		// Start the navigation ul
-		smarty_block_ul(array(), $content, $template, $f);
 
 		$content = '';
 
@@ -46,29 +65,11 @@ function smarty_block_navigation($params, $content = '', $template, &$repeat) {
 		foreach($actions as $action) {
 			// Only if the object is the valid action
 			if(Clips\valid_obj($action, 'Clips\\Interfaces\\Action')) {
-
-				// Start the li
-				smarty_block_li(array(), '', $template, $f);
-
-				// Start the action
-				smarty_block_action(array(), '', $template, $f);
-
-				// Close the action
-				$a = smarty_block_action(array('action' => $action), '', $template, $repeat);
-
-				// Close the li
-				$content .= "\n$indent".smarty_block_li(array('class' => 'active'), $a, $template, $repeat);
+				$content .= _smarty_block_navigation_tree_node($action, $indent, $template, $repeat);
 			}
 		}
-		// End the navigation ul
-		$content = smarty_block_ul(array('class' => array('nav', 'nav-bar')), $content, $template, $repeat);
-
-		// Close the collacpse div
-		$content = smarty_block_div(array('class' => array('collapse', 'navbar-collapse')), $content, $template, $repeat);
 	}
 
-	// Close the div
-	$div = smarty_block_container(array('fluid' => true), $content, $template, $repeat);
 	Clips\context_pop('indent_level');
-	return Clips\create_tag_with_content('nav', $div, $params, $default);
+	return Clips\create_tag_with_content('ul', $content, $params, $default);
 }
