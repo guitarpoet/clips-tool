@@ -8,6 +8,7 @@ class TestCase extends \PHPUnit_Framework_TestCase {
         if(!$mute && $func != 'testStub')
             echo "\n----------".$ref->name." | ".$func."----------\n";
 		$this->tool = &get_clips_tool();
+		$this->tool->helper('fake');
 		$this->clips = new Engine();
 
         $re = new \Addendum\ReflectionAnnotatedClass($this);

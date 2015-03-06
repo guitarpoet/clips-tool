@@ -963,7 +963,7 @@ function copy_object($src, $dest = null, $class = null) {
 
 	if($dest == null) {
 		if($class == null)
-			$dest = new stdclass();
+			$dest = new \stdclass();
 		else
 			$dest = new $class();
 	}
