@@ -57,12 +57,12 @@ class TestData extends Annotation implements Initializable, ToolAware {
 				unset($obj->{TestData::TPL_NAME});
 				$tpl = $tpls[$tpl];
 				$obj = copy_object($tpl, $obj);
-				$this->_data[$name] = $obj;
 			}
 			if(str_end_with($name, '*')) {
 				// This is sequence
 				$seq []= $name;
 			}
+			$this->_data[$name] = $obj;
 		}
 
 		foreach($seq as $s) {
@@ -74,6 +74,10 @@ class TestData extends Annotation implements Initializable, ToolAware {
 			if(isset($sequence->{'$count'}))
 				unset($sequence->{'$count'});
 
+			if(strpos($count, '$') === 0) {
+				$tmp_name = substr($count, 1);
+				$count = get_default($this->_data, $tmp_name, $count);
+			}
 			if(!is_numeric($count) && strpos($count, '!') === 0) {
 				$count = substr($count, 1);
 				$count = eval('return '.$count.';');

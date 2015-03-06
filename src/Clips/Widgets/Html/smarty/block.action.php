@@ -35,7 +35,7 @@ function smarty_block_action($params, $content = '', $template, &$repeat) {
 	if($value) { // We did have value, so the content is the JavaScript
 		$id = Clips\get_default($params, 'id', 'clips_action_'.Clips\sequence('action'));
 		$js = "$(\"#$id\").click(function(){\n\t\t".trim($content)."\n\t});";
-		$content = $value;
+		$content = $template->fetch('string:'.$value);
 		unset($params['caption']);
 		$params['id'] = $id;
 		if(!isset($params['title'])) // Add tooltip
