@@ -8,6 +8,7 @@ function smarty_block_action($params, $content = '', $template, &$repeat) {
 		return;
 	}
 
+	$default = array('class' => 'action');
 	$action = Clips\get_default($params, 'action');
 
 	if($action && Clips\valid_obj($action, 'Clips\\Interfaces\\Action')) {
@@ -53,5 +54,5 @@ function smarty_block_action($params, $content = '', $template, &$repeat) {
 		$params['title'] = trim($content);
 	}
 	Clips\context_pop('indent_level');
-	return Clips\create_tag_with_content('a', $content, $params);
+	return Clips\create_tag_with_content('a', $content, $params, $default);
 }
