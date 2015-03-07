@@ -177,6 +177,28 @@ function get_widget_path($widget) {
 }
 
 /**
+ * Get the uri relative to widget's path
+ *
+ * @author Jack
+ * @date Sat Mar  7 10:03:19 2015
+ */
+function widget_uri($widget, $uri = '/') {
+	$path = get_widget_path($widget);
+	if($path) {
+		if(strpos($path, FCPATH) === false) {
+			// We might be in the soft link(in development mode)
+			$base_dir = dirname(dirname(dirname(class_script_path('Clips\\Widget'))));
+			$base = path_join('vendor/guitarpoet/clips-tool/', substr($path, strlen($base_dir)));
+		}
+		else
+			$base = substr($path, strlen(FCPATH));
+
+		return path_join($base, $uri);
+	}
+	return false;
+}
+
+/**
  * Get default form's configuration name(pagination use this too).
  *
  * The default name is controller's name and the method's name.

@@ -13,4 +13,8 @@ class WebHelpersTest extends Clips\TestCase {
 	public function testToHeader() {
 		$this->assertEquals(Clips\to_header('content_type'), "Content-Type");
 	}
+
+	public function testWidgetUri() {
+		echo Clips\widget_uri('html');
+	}
 }

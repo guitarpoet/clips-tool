@@ -18,6 +18,7 @@ class RouterTest extends Clips\TestCase {
 		$result = $this->router->routeResult('no/this/controller/');
 		$this->assertEquals(count($result), 1);
 		$result = $result[0];
-		$this->assertEquals($result[0], 'RouteError');
+		$result = $result['__template__'];
+		$this->assertEquals($result, 'RouteError');
 	}
 }
