@@ -73,7 +73,7 @@ class Pagination {
 		if($length != -1)
 			$this->length = $length;
 		else {
-			$pagination_length = clips_config('pagination_length');
+			$pagination_length = config('pagination_length');
 			if($pagination_length) {
 				$pagination_length = $pagination_length[0];
 			}
@@ -144,11 +144,41 @@ class Pagination {
 		return $this->_bundleFields;
 	}
 
+	/**
+	 * Get the filtered columns using security engine
+	 *
+	 * @return
+	 * 		The filtered columns
+	 */
+	public function columns() {
+		if(!isset($this->columns))
+			return null;
+
+		if(isset($this->_filtered_columns))
+			return $this->_filtered_columns;
+
+		if(!isset($this->security)) {
+			return $this->columns;
+		}
+
+		$this->_filtered_columns = array();
+		foreach($this->columns as $col) {
+			$c = copy_object($col);
+			$c->name = get_default($this, 'name');
+			$result = $this->security->test($c);
+			if($result) // This result has eject in it.
+				continue;
+			$this->_filtered_columns []= $col;
+		}
+		return $this->_filtered_columns;
+	}
+
 	public function fields() {
-		if(isset($this->columns)) {
+		$columns = $this->columns();
+		if($columns) {
 			$fields = array();
 			$this->_bundleFields = array();
-			foreach($this->columns as $i) {
+			foreach($columns as $i) {
 				if(strpos($i->data, ' ') === false) {
 					$fields []= $i->data.' as '.smooth($i->data);
 				}
@@ -223,6 +253,11 @@ class Pagination {
 	}
 
 	public function toJson() {
-		return json_encode($this);
+		$obj = copy_object($this);
+		if(isset($obj->security)) {
+			unset($obj->security);
+			unset($obj->_filtered_columns);
+		}
+		return json_encode($obj);
 	}
 }

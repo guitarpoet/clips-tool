@@ -6,6 +6,9 @@ use Clips\Interfaces\ToolAware;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @Clips\Object("securityEngine")
+ */
 class DataTable extends Annotation implements Initializable, ToolAware, LoggerAwareInterface {
 	public $bundle;
 
@@ -31,6 +34,10 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 		// Initialize the datatable in javacript
 		foreach($this->getConfig() as $name => $config) {
 			if($config) {
+				// Enforce security by default for DataTable
+				$config->security = $this->securityengine;
+
+				$config->name = $name;
 
 				// Setting the default values for the datatable configuration
 				if(!isset($config->ajax)) {
@@ -75,6 +82,9 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 				}
 				$bundle = \Clips\bundle($bundle);
 
+				// Update the columns configuration to the filtered columns configuration
+				$config->columns = $config->columns();
+
 				foreach($config->columns as $col) {
 					if(isset($col->title)) {
 						$col->title = $bundle->message($col->title);
@@ -107,7 +117,7 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 				}
 
 				// Adding the initialize script to jquery init
-				\Clips\context('jquery_init', '$("table[name='.\Clips\to_flat($name).']").DataTable('.str_replace('"datatable_action_column"', 'datatable_action_column', json_encode($config)).')', true);
+				\Clips\context('jquery_init', '$("table[name='.\Clips\to_flat($name).']").DataTable('.str_replace('"datatable_action_column"', 'datatable_action_column', ($config->toJson())).')', true);
 			}
 		}
 	}
@@ -122,7 +132,7 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 					$datatable_config_dir = $datatable_config_dir[0];
 					$p = \Clips\path_join($datatable_config_dir, $config.'.json');
 					if(file_exists($p)) {
-						$this->_config[$config] = \Clips\parse_json(file_get_contents($p));
+						$this->_config[$config] = \Clips\Pagination::fromJson(file_get_contents($p));
 					}
 				}
 			}
