@@ -25,8 +25,9 @@ function _smarty_block_navigation_tree_node($action, $indent, $template, $repeat
 		$a .= "\n$indent\t".smarty_block_ul(array('class' => 'sub-navi'), implode("", $sub), $template, $repeat);
 	}
 
+	$p = $action->active()? array('class' => 'active'): array();
 	// Close the li
- 	return "\n$indent".smarty_block_li(array(), $a, $template, $repeat);
+ 	return "\n$indent".smarty_block_li($p, $a, $template, $repeat);
 }
 
 function smarty_block_navigation($params, $content = '', $template, &$repeat) {

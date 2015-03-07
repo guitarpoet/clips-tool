@@ -20,6 +20,42 @@ class SimpleAction extends SimpleTreeNode implements Action {
 		parent::__construct($data);
 	}
 
+	public function active() {
+		if(isset($this->_active))
+			return $this->_active;
+
+		$children = $this->children();
+		if($children) {
+			foreach($children as $c) {
+				if($c->active()) { // If children is active, then this one is active.
+					$this->_active = true;
+					return true;
+				}
+			}
+		}
+
+		if($this->type() == Action::SERVER) { // Only action is at server, can be active
+			$router = context('router');
+			if($router) {
+				// Test if the route result of this action is equals to current uri
+				$r = $router->routeResult(trim($this->content()), $this->params());
+				$r = $r[0];
+				if(valid_obj($r, 'Clips\\RouteResult')) {
+					$controller_class = context('controller_class');
+					$controller_method = context('controller_method');
+					$args = context('args');
+					if($controller_class == $r->controller &&
+						$controller_method = $r->method) {
+						$this->_active = true;
+						return true;
+					}
+				}
+			}
+			$this->_active = false;
+		}
+		return false;
+	}
+
 	public function type() {
 		return get_default($this, 'type');
 	}
