@@ -86,7 +86,7 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 			foreach($params as $k => $v) {
 				$p []= array('Parameter', $k, $v);
 			}
-			$this->clips->assertFacts($params);
+			$this->clips->assertFacts($p);
 		}
 
 		$this->clips->run();
@@ -144,7 +144,7 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 			$server_uri = $this->clips->queryFacts("server-uri");
 			$result = $result[0];
 			$controller_seg = $controller_seg[0][0];
-			$server_uri = $server_uri[0][0];
+			$server_uri = strtolower(str_replace('\\', '/', $server_uri[0][0]));
 		}
 		profile_end('load_controller');
 		profile_start('controller_init');
