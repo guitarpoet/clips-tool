@@ -18,8 +18,6 @@ class FormField {
 
 	public function init() {
 		$this->name = $this->field;
-		if(!isset($this->state))
-			$this->state = 'default';
 		if(!isset($this->placeholder))
 			$this->placeholder = $this->label;
 	}

@@ -75,6 +75,7 @@ class Form extends \Addendum\Annotation implements Initializable, ToolAware {
 						// Create the field
 						$field = copy_new($f, "Clips\\FormField");
 						$field->init();
+						$field->form = $current;
 						$map[$name] = $field;
 						$this->fieldMap[$current] = $map;
 						return $field;

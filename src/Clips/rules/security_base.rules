@@ -15,6 +15,10 @@
 ;===============================================================================
 
 (deffunction reject (?reason) (assert (Clips\Reject (reason ?reason))))
+(deffunction state (?state) (assert (Clips\Reject (state ?state))))
+(deffunction readonly () (assert (Clips\Reject (state "readonly"))))
+(deffunction none () (assert (Clips\Reject (state "none"))))
+(deffunction hidden () (assert (Clips\Reject (state "hidden"))))
 
 ;===============================================================================
 ;

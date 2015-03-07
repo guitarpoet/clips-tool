@@ -22,8 +22,9 @@ class SecurityItem {
 			}
 			else if(valid_obj($item, 'Clips\\FormField')) { // If this item is form field
 				$this->type = self::FIELD;
-				$this->name = get_default($item, 'name');
-				$this->content = get_default($item, 'value');
+				$this->name = get_default($item, 'form');
+				$this->content = get_default($item, 'name');
+				$this->params = array(get_default($item, 'value'));
 			}
 			else { // This must be the column of pagination
 				$this->type = self::COLUMN;

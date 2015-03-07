@@ -267,11 +267,24 @@ function find_image($img) {
 }
 
 function field_state($field) {
-	// TODO Using security manager to get the field's state
 	if(isset($field->state)) { // Honor the state of the field
 		return $field->state;
 	}
-	$form = Clips\context('form'); // Using form's state
+
+	// Test for security engine next
+	$tool = &get_clips_tool();
+	$security = $tool->load_class('securityEngine', true);
+	$result = $security->test($field);
+	if($result) {
+		$result = $result[0];
+		$state = get_default($result, 'state');
+
+		// Will update field's state to this state
+		$field->state = $state;
+		return $state;
+	}
+
+	$form = context('form'); // Using form's state
 	if(isset($form->state))
 		return $form->state;
 
