@@ -53,7 +53,7 @@ class FilterChain extends AbstractFilter implements ToolAware {
 			}
 
 			if($f->accept($chain, $controller, $method, $args, $request)) {
-				$f->filter_before($chain, $controller, $method, $args, $request);
+				$this->succeed = $f->filter_before($chain, $controller, $method, $args, $request);
 			}
 		}
 		if(isset($this->succeed))

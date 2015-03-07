@@ -140,6 +140,13 @@
 	(modify ?r (method ?m))
 )
 
+(defrule add-the-uri-if-method-found
+	(controller ?c&~"")
+	(Clips\RouteResult (controller ~nil) (method ?m&~nil))
+	=>
+	(assert (server-uri (str-cat ?c "/" ?m)))
+)
+
 (defrule set-the-args-to-the-result
 	?r <- (Clips\RouteResult (controller ~nil) (method ?m) (args $?args&:(= (length$ $?args) 0)))
 	(segments $?segs)

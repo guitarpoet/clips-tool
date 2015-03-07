@@ -26,13 +26,9 @@ function smarty_block_action($params, $content = '', $template, &$repeat) {
 			break;
 		case Action::SERVER:
 			$content = $action->label();
-			$suffix = array();
-			foreach($ps as $k => $v) {
-				$suffix []= urlencode($k).'='.urlencode($v);
-			}
-			if($suffix) {
-				$suffix = implode('&', $suffix);
-				$params['uri'] = $action->content().'?'.$suffix;
+			if($ps) {
+				$suffix = implode('/', array_map(function($item){ return urlencode($item); }, $ps));
+				$params['uri'] = \Clips\path_join($action->content(), $suffix);
 			}
 			else
 				$params['uri'] = $action->content();

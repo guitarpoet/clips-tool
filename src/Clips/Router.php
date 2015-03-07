@@ -3,6 +3,7 @@
 use Psr\Log\LoggerAwareInterface;
 use Clips\Interfaces\ClipsAware;
 use Clips\Interfaces\ToolAware;
+use Clips\Interfaces\Action;
 use Clips\Models\ViewModel;
 
 /**
@@ -140,8 +141,10 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 		else {
 			$result = $this->clips->queryFacts("Clips\\RouteResult");
 			$controller_seg = $this->clips->queryFacts("controller");
+			$server_uri = $this->clips->queryFacts("server-uri");
 			$result = $result[0];
 			$controller_seg = $controller_seg[0][0];
+			$server_uri = $server_uri[0][0];
 		}
 		profile_end('load_controller');
 		profile_start('controller_init');
@@ -152,7 +155,12 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 			'controller_seg' => $controller_seg,
 			'controller' => $controller,
 			'controller_method' => $result->method,
-			'args' => $result->args
+			'args' => $result->args,
+			'action' => new SimpleAction(array(
+				'type' => Action::SERVER,
+				'content' => $server_uri,
+				'params' => $result->args
+			))
 		));
 		$controller->request = $request;
 		$this->tool->enhance($controller);
