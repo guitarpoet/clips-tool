@@ -47,9 +47,9 @@ function smarty_block_field($params, $content = '', $template, &$repeat) {
 			}
 
 			// Processing the form data
-			$data = Clips\context('current_form_data');
-			if($data && isset($data->$field)) {
-				Clips\context('current_form_field_data', $data->$field);
+			$data = Clips\get_default(Clips\context('current_form_data'), $field);
+			if($data) {
+				Clips\context('current_form_field_data', $data);
 			}
 		}
 		else {
@@ -61,6 +61,11 @@ function smarty_block_field($params, $content = '', $template, &$repeat) {
 			Clips\context_pop('indent_level');
 			$f = Clips\clips_context('current_field');
 
+			if(\Clips\get_default($f, 'hidden')) {
+				Clips\context_pop('indent_level');
+				Clips\require_widget_smarty_plugin('Form', 'input');	
+				return smarty_function_input(array('type' => 'hidden'), $template);
+			}
 			// Now for rendering
 			$ret = array();
 
@@ -113,5 +118,4 @@ function smarty_block_field($params, $content = '', $template, &$repeat) {
 			return Clips\create_tag_with_content('div', implode("\n$indent", $ret), $params, array('class' => array('form-group', 'control-group')));
 		}
 	}
-
 }

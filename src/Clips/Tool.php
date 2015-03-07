@@ -573,6 +573,7 @@ class Tool implements Interfaces\Initializable {
 				$ret = $arr;
 				unset($this->_context[$key]);
 			}
+			return $ret;
 		}
 		return null;
 	}

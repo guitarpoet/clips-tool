@@ -32,6 +32,9 @@ class FormField {
 		$default['id'] = $this->getId();
 		$default['name'] = $this->name;
 		$default['placeholder'] = $this->placeholder;
+		if(isset($this->type)) {
+			$default['type'] = $this->type;
+		}
 		if(isset($this->defaultValue))
 			$default['value'] = $this->defaultValue;
 		if(isset($this->value))

@@ -62,8 +62,7 @@ function smarty_block_select($params, $content = '', $template, &$repeat) {
 			array_unshift($options, (object) $blank);
 		}
 
-		$data = Clips\context('current_form_field_data');
-
+		$data = Clips\context_pop('current_form_field_data');
 
 		if(trim($content)) {
 			$tpl = 'string:'.trim($content);
