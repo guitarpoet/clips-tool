@@ -279,6 +279,8 @@ function field_state($field) {
 		$result = $result[0];
 		$state = get_default($result, 'state');
 
+		log('Filtering field {0} of form {1} with state {2}', array($field->name, $field->form, $state));
+
 		// Will update field's state to this state
 		$field->state = $state;
 		return $state;

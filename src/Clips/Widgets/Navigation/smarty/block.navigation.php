@@ -5,6 +5,14 @@ Clips\require_widget_smarty_plugin('Html', 'ul');
 Clips\require_widget_smarty_plugin('Html', 'action');
 
 function _smarty_block_navigation_tree_node($action, $indent, $template, $repeat, $li_class = array()) {
+	$tool = &Clips\get_clips_tool();
+	$security = $tool->load_class('securityEngine', true);
+	$result = $security->test($action);
+	if($result) { // If rejected this action
+		Clips\log('Rejected action [{0}] for reasion [{1}]', array($action->label(), $result[0]->reason, $action));
+		return '';
+	}
+	
 	$f = true;
 	// Start the li
 	smarty_block_li(array(), '', $template, $f);
@@ -25,20 +33,17 @@ function _smarty_block_navigation_tree_node($action, $indent, $template, $repeat
 		$a .= "\n$indent\t".smarty_block_ul(array('class' => 'sub-navi'), implode("", $sub), $template, $repeat);
 	}
 
-	$p = $action->active()? array('class' => 'active'): array();
-
+	$class = array();
 	if($li_class) {
-		if(isset($p['class'])) {
-			if(is_array($li_class))
-				$p['class'] = array_merge(array($p['class']), $li_class);
-			else
-				$p['class'] = array($p['class'], $li_class);
-		}
-		else
-			$p['class'] = $li_class;
+		if(!is_array($li_class))
+			 $li_class = array($li_class);
+		$class = $li_class;
+	}
+	if($action->active()) {
+		$class []= 'active';
 	}
 	// Close the li
- 	return "\n$indent".smarty_block_li($p, $a, $template, $repeat);
+ 	return "\n$indent".smarty_block_li(array('class' => $class), $a, $template, $repeat);
 }
 
 function smarty_block_navigation($params, $content = '', $template, &$repeat) {

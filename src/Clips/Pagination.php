@@ -166,8 +166,10 @@ class Pagination {
 			$c = copy_object($col);
 			$c->name = get_default($this, 'name');
 			$result = $this->security->test($c);
-			if($result) // This result has eject in it.
+			if($result) { // This result has eject in it.
+				log('Rejecting column [{0}] of pagination [{1}] for reason [{2}]', array($c->data, $c->name, $result[0]->reason));
 				continue;
+			}
 			$this->_filtered_columns []= $col;
 		}
 		return $this->_filtered_columns;
