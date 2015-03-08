@@ -324,6 +324,7 @@ with name clips_tool.json. And if you have multiple of these, don't worry, clips
 the configurations to you(say, you have a /etc/clips_tools.json as system wide configuration, and a project's own configuration).
 
 And the configuration should be something like this(a simple configuration from a demo site):
+
 	{
 		"table_prefix":"cms_",
 		"namespace": ["Clips\\Cms\\"],
