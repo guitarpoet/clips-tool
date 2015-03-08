@@ -9,6 +9,24 @@ class GenerateCommand extends Command {
 		$this->output(\Clips\clips_out('widget', $ret, false));
 	}
 
+	public function command() {
+		$config = \Clips\interactive('interactive/command', $this);
+		$config->date = strftime("%a %b %e %H:%M:%S %Y");
+
+		// Setup the Command folder
+		$folder = $config->folder;
+		if(!file_exists($folder)) {
+			mkdir($folder, 0755, true);
+		}
+
+		$name = ucfirst($config->command)."Command";
+		$path = \Clips\path_join($folder, $name.'.php');
+		$config->name = $name;
+
+		file_put_contents($path, \Clips\clips_out('command', $config, false));
+		echo 'Done!';
+	}
+
 	public function widget() {
 		$config = \Clips\interactive('interactive/widget', $this);
 		$config->date = strftime("%a %b %e %H:%M:%S %Y");
@@ -47,6 +65,8 @@ class GenerateCommand extends Command {
 			switch($args[0]) {
 			case 'widget':
 				return $this->widget();
+			case 'command':
+				return $this->command();
 			}
 		}
 	}

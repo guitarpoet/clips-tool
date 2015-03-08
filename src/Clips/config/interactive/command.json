@@ -1,0 +1,43 @@
+{
+	"header": "Clips Command Generator v1.0",
+	"steps": [
+		{
+			"prompt": "The name of the command:",
+			"field": "command",
+			"rules": {
+				"minlength": 4,
+				"maxlength": 10
+			}
+		},
+		{
+			"prompt": "Command Author:",
+			"field": "author",
+			"default": "!Clips\\current_user"
+		},
+		{
+			"prompt": "Command Version:",
+			"default": "1.0",
+			"field": "version"
+		},
+		{
+			"prompt": "Command Doc:",
+			"field": "doc"
+		},
+		{
+			"prompt": "Command Folder:",
+			"default": "commands",
+			"field": "folder"
+		},
+		{
+			"prompt": "The Command configuration is:",
+			"call": "dump"
+		},
+		{
+			"prompt": "Are you sure:",
+			"confirm": true,
+			"condition": {
+				"cancel": [{"jump": 0}]
+			}
+		}
+	]
+}
