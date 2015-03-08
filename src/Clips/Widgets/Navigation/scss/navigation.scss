@@ -1,5 +1,30 @@
-.nav.nav-pills.nav-stacked {
-  .sub-nav {
-    padding-left: 20px;
+.nav {
+  .sub-navi {
   }
 }
+
+.nav.nav-tabs {
+  .sub-navi {
+    @include nav-tabs();
+  }
+}
+
+.nav.nav-pills {
+  .sub-navi {
+    @include nav-pills();
+  }
+}
+
+.nav.nav-stacked {
+  .sub-navi {
+    @include nav-stacked();
+  }
+}
+
+.nav.nav-justified {
+  .sub-navi {
+    @include nav-justified();
+  }
+}
+
+

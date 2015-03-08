@@ -7,6 +7,7 @@
 	"depends": ["BootstrapNavigation"],
     "scss": {
         "files": [
+            "mixins/navigation_mixin",
             "navigation"
         ]
     }
