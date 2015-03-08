@@ -1,7 +1,6 @@
 <?php namespace Clips\Commands; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
 use Clips\Command;
-use cebe\markdown\GithubMarkdown;
 
 /**
  * This command will generate the output using markdown
