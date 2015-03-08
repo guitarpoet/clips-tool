@@ -45,7 +45,7 @@ class SimpleAction extends SimpleTreeNode implements Action {
 					$controller_method = context('controller_method');
 					$args = context('args');
 					if($controller_class == $r->controller &&
-						$controller_method = $r->method) {
+						$controller_method == $r->method) {
 						$this->_active = true;
 						return true;
 					}

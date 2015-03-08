@@ -7,7 +7,7 @@ function smarty_function_input($params, $template) {
 		$default = $f->getDefault($default);
 	}
 
-	$data = Clips\context('current_form_field_data');
+	$data = Clips\context_pop('current_form_field_data');
 	if($data) {
 		$default['value'] = $data;
 	}

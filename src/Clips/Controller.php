@@ -11,6 +11,7 @@ use Clips\Models\ViewModel;
  *
  * @author Jack
  * @date Mon Feb 23 14:40:28 2015
+ *
  */
 class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 
@@ -127,11 +128,14 @@ class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
 			$p = path_join($config_dir, $config.'.json');
 
 			if(!file_exists($p) && func_num_args() >= 2) {
+				$config = func_get_arg(1);
 				// Try find the configuration by remove the first part
-				$p = path_join($config_dir, func_get_arg(1).'.json');
+				$p = path_join($config_dir, $config.'.json');
 			}
 			if(file_exists($p)) {
 				$pagination = Pagination::fromJson(file_get_contents($p));
+				$pagination->name = $config;
+				$pagination->security = $this->tool->load_class('securityEngine', true);
 				$pagination->update($this->request->param());
 
 				// Update the pagination using session where
