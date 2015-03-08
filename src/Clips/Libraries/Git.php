@@ -25,6 +25,10 @@ class Git implements LoggerAwareInterface {
 		return exec(implode(' ', $cmd));
 	}
 
+	public function branch($repo) {
+		return $this->exec($repo, 'symbolic-ref', array('--short', 'HEAD'));
+	}
+
 	/**
 	 * Create the git repository support
 	 */

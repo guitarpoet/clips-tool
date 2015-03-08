@@ -280,6 +280,9 @@ class Tool implements Interfaces\Initializable {
 				$a->value = array();
 
 			switch($class) {
+				case "Clips\\Description":
+					html_meta('description', $a->value);
+					break;
 				case "Clips\\MessageBundle": // The message bundle support
 					$this->enhance($a);
 					$obj->bundle = $a;

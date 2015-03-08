@@ -19,6 +19,10 @@ class Repository implements LoggerAwareInterface, Initializable {
 		$this->readonly = $readonly;
 	}
 
+	public function getBranch() {
+		return $this->git->branch($this);
+	}
+
 	public function repo($path, $readonly = true) {
 		$tool = &\Clips\get_clips_tool();
 		return $tool->create('Clips\\Libraries\\Repository', array($path, $readonly));
@@ -91,6 +95,13 @@ class Repository implements LoggerAwareInterface, Initializable {
 				unlink($p);
 			}
 		}
+	}
+
+	public function getHeadCommit() {
+		if(isset($this->gitrepo)) {
+			return $this->gitrepo->getHeadCommit();
+		}
+		return null;
 	}
 
 	public function has($path) {

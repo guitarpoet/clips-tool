@@ -986,6 +986,20 @@ function bundle($name = '') {
 }
 
 /**
+ * Get the language message using current bundle
+ *
+ * @author Jack
+ * @date Sun Mar  8 20:00:39 2015
+ */
+function lang() {
+	$bundle_name = Clips\context('current_bundle');
+	if(!$bundle_name)
+		$bundle_name = '';
+	$bundle = bundle($bundle);
+	return call_user_func_array(array($bundle, 'message'), func_get_args());
+}
+
+/**
  * Generate a random string
  *
  * @author Jack

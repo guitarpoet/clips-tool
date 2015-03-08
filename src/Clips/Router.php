@@ -11,6 +11,8 @@ use Clips\Models\ViewModel;
  *
  * @author Jack
  * @date Mon Feb 23 16:11:24 2015
+ *
+ * @Clips\Object("frameworkMeta")
  */
 class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 
@@ -102,7 +104,8 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 		profile_start('route');
 		profile_start('load_controller');
 		$request = $this->tool->create('Clips\\HttpRequest');
-
+		html_meta('generator', 'clips-tool '.$this->frameworkmeta->branch.'('.
+			$this->frameworkmeta->commit.')');
 		$this->tool->context(array(
 			'request' => $request,
 			'router' => $this
