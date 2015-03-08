@@ -683,6 +683,19 @@ class Tool implements Interfaces\Initializable {
 		return $this->load_class($model, true, new LoadConfig($this->config->model_dir, '_model', 'Models\\'));
 	}
 
+	public function object($obj) {
+		if(is_array($obj)) {
+			$ret = array();
+			foreach($obj as $o) {
+				$tmp = $this->object($o);
+				if($tmp)
+					$ret []= $tmp;
+			}
+			return $ret;
+		}
+		return $this->load_class($obj, true);
+	}
+
 	public function library($library, $init = true, $suffix = "", $args = null, $prefix = "Libraries\\") {
 		return $this->load_class($library, $init, new LoadConfig($this->config->library_dir, $suffix, $prefix), $args);
 	}
