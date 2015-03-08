@@ -1,4 +1,4 @@
-Clips Tool (A too based on rule engine [Clips](http://clipsrules.sourceforge.net))
+Clips Tool (A tool based on rule engine [Clips](http://clipsrules.sourceforge.net))
 ==================================================================================
 
 Requirements
