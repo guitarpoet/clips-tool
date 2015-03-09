@@ -1,79 +1,4 @@
-//
-// Navs
-// --------------------------------------------------
-
-
-// Base class
-// --------------------------------------------------
-
-.nav, .sub-navi {
-  margin-bottom: 0;
-  padding-left: 0; // Override default ul/ol
-  list-style: none;
-  @include clearfix;
-
-  > li {
-    position: relative;
-    display: block;
-
-    > a {
-      position: relative;
-      display: block;
-      padding: $nav-link-padding;
-      &:hover,
-      &:focus {
-        text-decoration: none;
-        background-color: $nav-link-hover-bg;
-      }
-    }
-
-    // Disabled state sets text to gray and nukes hover/tab effects
-    &.disabled > a {
-      color: $nav-disabled-link-color;
-
-      &:hover,
-      &:focus {
-        color: $nav-disabled-link-hover-color;
-        text-decoration: none;
-        background-color: transparent;
-        cursor: $cursor-disabled;
-      }
-    }
-  }
-
-  // Open dropdowns
-  .open > a {
-    &,
-    &:hover,
-    &:focus {
-      background-color: $nav-link-hover-bg;
-      border-color: $link-color;
-    }
-  }
-
-  // Nav dividers (deprecated with v3.0.1)
-  //
-  // This should have been removed in v3 with the dropping of `.nav-list`, but
-  // we missed it. We don't currently support this anywhere, but in the interest
-  // of maintaining backward compatibility in case you use it, it's deprecated.
-  .nav-divider {
-    @include nav-divider;
-  }
-
-  // Prevent IE8 from misplacing imgs
-  //
-  // See https://github.com/h5bp/html5-boilerplate/issues/984#issuecomment-3985989
-  > li > a > img {
-    max-width: none;
-  }
-}
-
-
-// Tabs
-// -------------------------
-
-// Give the tabs something to sit on
-.nav-tabs {
+@mixin nav-tabs() {
   border-bottom: 1px solid $nav-tabs-border-color;
   > li {
     float: left;
@@ -111,10 +36,7 @@
   }
 }
 
-
-// Pills
-// -------------------------
-.nav-pills {
+@mixin nav-pills() {
   > li {
     float: left;
 
@@ -138,9 +60,7 @@
   }
 }
 
-
-// Stacked pills
-.nav-stacked {
+@mixin nav-stacked() {
   > li {
     float: none;
     + li {
@@ -150,14 +70,7 @@
   }
 }
 
-
-// Nav variations
-// --------------------------------------------------
-
-// Justified nav links
-// -------------------------
-
-.nav-justified {
+@mixin nav-justified() {
   width: 100%;
 
   > li {
@@ -184,10 +97,7 @@
   }
 }
 
-// Move borders to anchors instead of bottom of list
-//
-// Mixin for adding on top the shared `.nav-justified` styles for our tabs
-.nav-tabs-justified {
+@mixin nav-tabs-justified() {
   border-bottom: 0;
 
   > li > a {
@@ -215,12 +125,7 @@
   }
 }
 
-
-// Tabbable tabs
-// -------------------------
-
-// Hide tabbable panes to start, show them when `.active`
-.tab-content {
+@mixin tab-cocntent() {
   > .tab-pane {
     display: none;
     visibility: hidden;
@@ -229,16 +134,4 @@
     display: block;
     visibility: visible;
   }
-}
-
-
-// Dropdowns
-// -------------------------
-
-// Specific dropdowns
-.nav-tabs .dropdown-menu {
-  // make dropdown border overlap tab border
-  margin-top: -1px;
-  // Remove the top rounded corners here since there is a hard edge above the menu
-  @include border-top-radius(0);
 }
