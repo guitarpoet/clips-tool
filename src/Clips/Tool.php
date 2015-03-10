@@ -477,6 +477,11 @@ class Tool implements Interfaces\Initializable {
 		// Let's try loading the class without prefix for plain php file
 		$orig_prefix = $loadConfig->prefix;
 
+		// Try the default clips classes
+		$result = $this->_init_class("Clips\\".$orig_prefix.ucfirst($class).$loadConfig->suffix, $init, $handle_name, $args);
+		if($result)
+			return $result;
+
 		// First with no prefix
 		$loadConfig->prefix = '';
 		$class_name = $loadConfig->prefix.$handle_name.$loadConfig->suffix;
@@ -499,11 +504,6 @@ class Tool implements Interfaces\Initializable {
 			if($result)
 				return $result;
 		}
-
-		// Try the default clips classes
-		$result = $this->_init_class("Clips\\".$orig_prefix.ucfirst($class).$loadConfig->suffix, $init, $handle_name, $args);
-		if($result)
-			return $result;
 		return false;
 	}
 

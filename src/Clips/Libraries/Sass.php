@@ -1,7 +1,7 @@
 <?php namespace Clips\Libraries; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
 
 if(!extension_loaded('sass')) {
-	Clips\show_error('Cant\'t find any sass plugin installed!!');
+	\Clips\show_error('Cant\'t find any sass plugin installed!!');
 	die;
 }
 
