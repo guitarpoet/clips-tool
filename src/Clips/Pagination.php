@@ -216,13 +216,24 @@ class Pagination {
 	}
 
 	public function update($params) {
-		clips_library('sql');
+		$tool = &get_clips_tool();
+		$tool->library('sql');
 		$this->offset = $params['start'];
 		$this->length = $params['length'];
 
+		if(isset($params['search']) && $params['search']['value']) {
+			$or = array();
+			$or_value = $params['search']['value'];
+		}
+		foreach($this->columns as $col) {
+			if(isset($or)) {
+				$or[$col->data] = $or_value;
+			}
+		}
 		// Update the where configuration using request columns
 		$i = 0;
 		foreach($params['columns'] as $col) {
+
 			if(isset($col['search'])) {
 				$search = $col['search'];
 				if($search['value']) {
@@ -241,6 +252,10 @@ class Pagination {
 				}
 				$i++;
 			}
+		}
+
+		if(isset($or)) {
+			$this->where []= Libraries\_or($or);
 		}
 
 		$order = $params['order'];
