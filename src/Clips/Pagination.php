@@ -225,9 +225,11 @@ class Pagination {
 			$or = array();
 			$or_value = $params['search']['value'];
 		}
-		foreach($this->columns as $col) {
-			if(isset($or)) {
-				$or[$col->data] = $or_value;
+		foreach($this->columns() as $col) {
+			if(get_default($col, 'searchable', true)) {
+				if(isset($or)) {
+					$or[$col->data] = $or_value;
+				}
 			}
 		}
 		// Update the where configuration using request columns

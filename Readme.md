@@ -146,6 +146,7 @@ Pretty simple, huh?
 Let's begin with a little template thing.
 
 Say you want to transfer a name to the hello world command, then you can change the code to this:
+
 	<?php in_array(__FILE__, get_included_files()) or exit("exitNo direct sript access allowed");
 
 	use Clips\Command;
