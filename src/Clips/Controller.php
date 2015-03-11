@@ -5,6 +5,7 @@ use Clips\Interfaces\ClipsAware;
 use Psr\Log\LoggerInterface;
 use Clips\Interfaces\ToolAware;
 use Clips\Models\ViewModel;
+use Addendum\Annotation;
 
 /**
  * The base class for all the controllers
@@ -13,7 +14,7 @@ use Clips\Models\ViewModel;
  * @date Mon Feb 23 14:40:28 2015
  *
  */
-class Controller implements ClipsAware, LoggerAwareInterface, ToolAware {
+class Controller extends Annotation implements ClipsAware, LoggerAwareInterface, ToolAware {
 
 	protected function title($title, $translate = false) {
 		if($translate && isset($this->bundle)) {

@@ -105,7 +105,7 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 		}, $this);
 	}
 
-	private function execute($sql, $args, $callback = null, $context = array()) {
+	private function execute($sql, $args = array(), $callback = null, $context = array()) {
 		if(!$this->db) {
 			throw new \Clips\DataSourceException('Didn\'t connect to database.');
 		}

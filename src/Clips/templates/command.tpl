@@ -9,7 +9,7 @@ use Clips\Command;
  * @version {{version}}
  * @date {{date}}
  */
-class {{name}} extends Command {
+class {{command}}Command extends Command {
 	public function execute($args) {
 	}
 }

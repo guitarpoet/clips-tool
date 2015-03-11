@@ -174,7 +174,7 @@ function current_user() {
 		$user = array();
 		$user['name'] = exec('whoami');
 	}
-	return $user['name'];
+	return ucfirst($user['name']);
 }
 
 /**
@@ -1106,4 +1106,28 @@ function profile_end($name = 'main') {
 			log('Name: {name}, Time: {time}, CPU: {cpu}, Memory: {memory}', $info);
 		}
 	}
+}
+
+/**
+ * Get the current timestamp in string format
+ *
+ * @author Jack
+ * @date Wed Mar 11 08:55:14 2015
+ */
+function timestamp() {
+	return strftime("%a %b %e %H:%M:%S %Y");
+}
+
+/**
+ * Read and parse the yaml file, if not exists, return false
+ *
+ * @author Jack
+ * @date Wed Mar 11 08:55:39 2015
+ */
+function yaml($path) {
+	$path = try_path($path);
+	if($path) {
+		return \Symfony\Component\Yaml\Yaml::parse(file_get_contents($path));
+	}
+	return false;
 }
