@@ -97,6 +97,24 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 				$engine = $default[0];
 			}
 		}
+
+		$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
+		foreach($trace as $t) {
+			if($t['class'] == get_class($this)) {
+				$method = $t['function'];
+				$actions = get_annotation($this, 'Clips\\Actions', $method);
+				if($actions) {
+					$f = get_annotation($this, 'Clips\\Form', $method);
+					if($f) {
+						$data = $this->formData($f->value);
+						$args['edit'] = $this->_action($actions->value.'/edit', $data, 'Edit');
+						$args['delete'] = $this->_action($actions->value.'/delete', $data, 'Delete');
+					}
+					$args['create'] = $this->_action($actions->value.'/create', null, 'Create');
+				}
+				break;
+			}
+		}
 		return new ViewModel($template, $args, $engine, $headers);
 	}
 
@@ -234,8 +252,16 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 		return $this->render("", $data, 'json');
 	}
 
-	protected function formData($form, $data) {
-		context('form_'.$form, $data);
+	protected function formData($form, $data = null) {
+		if($data)
+			context('form_'.$form, $data);
+		return context('form_'.$form);
+	}
+
+	protected function _action($uri, $data, $label) {
+		if(isset($data->id))
+			return new SimpleAction(array('content' => $uri, 'params' => array($data->id), 'label' => $label));
+		return new SimpleAction(array('content' => $uri, 'params' => array(), 'label' => $label));
 	}
 
 	/**

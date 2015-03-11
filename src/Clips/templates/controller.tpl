@@ -16,6 +16,7 @@ class {{controller_name}} extends Controller {
 
 	/**
 	 * @Clips\Widgets\DataTable("{{table_name}}")
+	 * @Clips\Actions("{{refer_name}}")
 	 */
 	public function index() {
 		return $this->render('{{refer_name}}/index');
@@ -23,6 +24,7 @@ class {{controller_name}} extends Controller {
 
 	/**
 	 * @Clips\Form("{{table_name}}_edit")
+	 * @Clips\Actions("{{refer_name}}")
 	 */
 	public function show($id) {
 		$data = $this->{{refer_name}}->load($id);
@@ -32,6 +34,7 @@ class {{controller_name}} extends Controller {
 
 	/**
 	 * @Clips\Form("{{table_name}}_create")
+	 * @Clips\Actions("{{refer_name}}")
 	 */
 	public function create() {
 		return $this->render('{{refer_name}}/create', array({{#refers}}{{^first}}, {{/first}}'{{key}}' => $this->{{model}}->get(){{/refers}}));
@@ -47,6 +50,7 @@ class {{controller_name}} extends Controller {
 
 	/**
 	 * @Clips\Form("{{table_name}}_edit")
+	 * @Clips\Actions("{{refer_name}}")
 	 */
 	public function edit($id) {
 		$data = $this->{{refer_name}}->load($id);
