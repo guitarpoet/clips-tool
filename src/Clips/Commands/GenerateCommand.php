@@ -2,26 +2,74 @@
 
 use Clips\Command;
 
+/**
+ * @Clips\Library("scaffold")
+ */
 class GenerateCommand extends Command {
 
-	public function dump($ret) {
-		$ret['date'] = strftime("%a %b %e %H:%M:%S %Y");
-		$this->output(\Clips\clips_out('widget', $ret, false));
+	public function dump($ret, $type) {
+		$ret['date'] = \Clips\timestamp();
+		$this->output(\Clips\clips_out($type, $ret, false));
+	}
+
+	public function dump_widget($ret) {
+		$this->dump($ret, 'widget');
+	}
+
+	public function dump_command($ret) {
+		$ret['command'] = ucfirst($ret['command']);
+		$this->dump($ret, 'command');
+	}
+
+	protected function tryFolder($folder, $file) {
+		if(!file_exists($folder)) {
+			mkdir($folder, 0755, true);
+		}
+
+		$path = \Clips\path_join($folder, $file);
+
+		if(\Clips\try_path($path)) { // If we can't find this file.
+			$this->output('File %s exists!'.PHP_EOL, $path);
+			return false;
+		}
+		
+		return $path;
+	}
+
+	public function form() {
+		$config = \Clips\interactive('interactive/form', $this);
+		$data = \Clips\yaml('migrations/schemas/'.$config->schema.'.yml');
+		if($data) {
+			$this->scaffold->form($data, $config);
+		}
+		else {
+			$this->output('Can\'t find the schema configuration file for %s!'.PHP_EOL, $config->schema);
+		}
+		echo "Done!";
+	}
+
+	public function model() {
+		$config = \Clips\interactive('interactive/model', $this);
+		$data = \Clips\yaml('migrations/schemas/'.$config->schema.'.yml');
+		if($data) {
+			$this->scaffold->model($data, $config);
+		}
+		else {
+			$this->output('Can\'t find the schema configuration file for %s!'.PHP_EOL, $config->schema);
+		}
+		echo "Done!";
 	}
 
 	public function command() {
 		$config = \Clips\interactive('interactive/command', $this);
 		$config->date = strftime("%a %b %e %H:%M:%S %Y");
 
-		// Setup the Command folder
-		$folder = $config->folder;
-		if(!file_exists($folder)) {
-			mkdir($folder, 0755, true);
-		}
+		$path = $this->tryFolder($config->folder, $config->command.'Command.php');
 
-		$name = ucfirst($config->command)."Command";
-		$path = \Clips\path_join($folder, $name.'.php');
-		$config->name = $name;
+		if(!$path) {
+			$this->output("Generate Failed!".PHP_EOL);
+			return -1;
+		}
 
 		file_put_contents($path, \Clips\clips_out('command', $config, false));
 		echo 'Done!';
@@ -62,11 +110,9 @@ class GenerateCommand extends Command {
 	public function execute($args) {
 		if($args) {
 			$this->tool->helper('console');
-			switch($args[0]) {
-			case 'widget':
-				return $this->widget();
-			case 'command':
-				return $this->command();
+			$method = $args[0];
+			if(method_exists($this, $method)) {
+				return call_user_func(array($this, $method));
 			}
 		}
 	}

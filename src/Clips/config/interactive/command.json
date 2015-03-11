@@ -29,8 +29,8 @@
 			"field": "folder"
 		},
 		{
-			"prompt": "The Command configuration is:",
-			"call": "dump"
+			"prompt": "The Command preview is:",
+			"call": "dump_command"
 		},
 		{
 			"prompt": "Are you sure:",

@@ -25,7 +25,7 @@
 		},
 		{
 			"prompt": "The widget configuration is:",
-			"call": "dump"
+			"call": "dump_widget"
 		},
 		{
 			"prompt": "Are you sure:",
