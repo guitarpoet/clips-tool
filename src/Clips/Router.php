@@ -117,6 +117,15 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 		$this->clips->load(clips_config('route_rules', array('/rules/route.rules')));
 		// Assert the uris
 		$uri = $this->getRequestURI();
+
+		// Record the breadscrumb
+		if($request->method == 'get' && $request->getType() != 'ajax' && strpos($uri, 'responsive/size') === false) {
+			$bs = $request->breadscrumb();
+			if($bs[count($bs) - 1] != $uri) {
+				$request->breadscrumb($uri);
+			}
+		}
+	
 		context('uri', $uri);
 		$this->clips->assertFacts(array('uri', $uri), array('RequestType', $request->getType()), array('RequestMethod', $request->method));
 

@@ -71,8 +71,13 @@ class {{controller_name}} extends Controller {
 		}
 	}
 
-	public function delete() {
-		$ret = $this->{{refer_name}}->delete($this->post('ids'));
-		return $this->json($ret);
+	public function delete($id = null) {
+		if($id) {
+			$this->{{refer_name}}->delete($id);
+		}
+		else {
+			 $this->{{refer_name}}->delete($this->post('ids'));
+		}
+		return $this->redirect(\Clips\site_url('{{refer_name}}/index'));
 	}
 }

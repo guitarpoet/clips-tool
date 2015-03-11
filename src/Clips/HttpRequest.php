@@ -29,6 +29,38 @@ class HttpRequest extends Request {
 		return $this->_param($_GET, $param, $default);
 	}
 
+	public function breadscrumb($uri = null) {
+		if($uri) {
+			$breadscrumb = $this->session('breadscrumb');
+
+			// Get the breadscrumb length
+			$breadscrumb_len = config('breadscrumb_length');
+			if($breadscrumb_len) {
+				$breadscrumb_len = $breadscrumb_len[0];
+			}
+			else {
+				$breadscrumb_len = 10;
+			}
+
+			if($breadscrumb) {
+				$bs = explode(':|:|:', $breadscrumb);
+				if(count($bs) == $breadscrumb_len)
+					array_shift($bs);
+				$bs []= $uri;
+				$this->session('breadscrumb', implode(':|:|:', $bs));
+			}
+			else
+				$this->session('breadscrumb', $uri);
+		}
+		else {
+			$b = $this->session('breadscrumb');
+			if($b) {
+				return explode(':|:|:', $b);
+			}
+			return array();
+		}
+	}
+
 	/**
 	 * Get the session values
 	 *

@@ -346,9 +346,10 @@ class Scaffold extends BaseService {
 
 			if(\Clips\try_path($file)) {
 				echo "Controller $controller_name exists in file $file!".PHP_EOL;
-				return false;
+				continue;
 			}
 			else {
+				echo "Creating controller $controller_name...".PHP_EOL;
 				file_put_contents($file, \Clips\clips_out('controller', array(
 					'namespace' => $namespace[0],
 					'controller_name' => $controller_name,
