@@ -25,6 +25,26 @@ $('.datatable').each(function(){
 		}
 	});
 });
+
+$('[role=datatable-delete]').on('click', function(){
+    var forname = $(this).attr('for');
+    var datatable = $('.datatable[name='+forname+']');
+    var settings = datatable.DataTable.settings[0];
+    var ajaxurl = Clips.siteUrl($(this).attr('uri'));
+    var pks = window.DataTableManager.getSelectedItemsPrimaryKeys(datatable, settings);
+    if(pks) {
+	    $.ajax({
+	        type: "POST",
+	        url: ajaxurl,
+	        data: {
+	            ids: pks
+	        },
+	        dataType: "json"
+	    }).success(function(data){
+	        datatable.DataTable().draw();
+	    });
+    }
+});
 TEXT;
 		\Clips\context('jquery_init', $js, true);
 	}
