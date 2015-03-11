@@ -4,5 +4,11 @@
 	"version": "1.0",
 	"name": "Navigation",
 	"doc":"The navigation widget.",
-	"depends": ["BootstrapNavigation"]
+	"depends": ["BootstrapNavigation"],
+    "scss": {
+        "files": [
+            "mixins/navigation_mixin",
+            "navigation"
+        ]
+    }
 }

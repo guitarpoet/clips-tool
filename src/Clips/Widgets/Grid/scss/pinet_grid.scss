@@ -1,40 +1,50 @@
 @mixin responsive_pinet_grid($args...) {
-	$grid-col-rs: strip-unit($screen-width);
-	@if type-of($alias-width) == number {
-		$grid-sel: $grid-col-rs;
-	}
-	@else {
-		$grid-sel: $grid-col-rs, $alias-width;
-	}
 
-	@for $i from 1 through $grid-columns {
-		$grid-col-width: percentage(($i / $grid-columns));
+	@if type-of($screen-width) == number {
+		$grid-col-rs: strip-unit($screen-width);
+		@if type-of($alias-width) == number {
+			$grid-sel: $grid-col-rs;
+		}
+		@else {
+			$grid-sel: $grid-col-rs, $alias-width;
+		}
 
-		@each $sel in $grid-sel {
-			.col-#{$sel}-#{$i} {
-				float: left;
-				min-height: 1px;
-				width: $grid-col-width;
-				padding-left: ($grid-gutter-width / 2);
-				padding-right: ($grid-gutter-width / 2);
-				position: relative;
-			}
+		@for $i from 1 through $grid-columns {
+			$grid-col-width: percentage(($i / $grid-columns));
 
-			.col-#{$sel}-offset-#{$i} {
-				margin-left: $grid-col-width;
-			}
+			@each $sel in $grid-sel {
+				.col-#{$sel}-#{$i} {
+					width: $screen-width;
+					float: left;
+					min-height: 1px;
+					width: $grid-col-width;
+					padding-left: ($grid-gutter-width / 2);
+					padding-right: ($grid-gutter-width / 2);
+					position: relative;
+				}
 
-			.col-#{$sel}-push-#{$i} {
-				left: $grid-col-width;
-			}
+				.col-#{$sel}-offset-#{$i} {
+					margin-left: $grid-col-width;
+				}
 
-			.col-#{$sel}-pull-#{$i} {
-				right: $grid-col-width;
-			}
+				.col-#{$sel}-push-#{$i} {
+					left: $grid-col-width;
+				}
 
-			.col-#{$sel}-#{$i}.col-center {
-				left: (100% - $grid-col-width) / 2;
+				.col-#{$sel}-pull-#{$i} {
+					right: $grid-col-width;
+				}
+
+				.col-#{$sel}-#{$i}.col-center {
+					left: (100% - $grid-col-width) / 2;
+				}
 			}
 		}
 	}
+	@else {
+		[DEBUG-reponsive_pinet_grid] {
+			width: $screen-width;
+		}
+	}
+
 }

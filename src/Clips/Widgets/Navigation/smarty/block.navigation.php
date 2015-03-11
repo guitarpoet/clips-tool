@@ -55,7 +55,7 @@ function smarty_block_navigation($params, $content = '', $template, &$repeat) {
 	}
 
 	$default = array(
-		'class' => array('nav', 'navbar')
+		'class' => array('nav')
 	);
 
 	$f = true;

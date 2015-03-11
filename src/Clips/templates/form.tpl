@@ -5,8 +5,8 @@
 		{{#state}}
 		"state": "{{state}}",
 		{{/state}}
-		"rules": [{{#rules}}{{^first}},{{/first}}
-			"{{key}}"{{#value}}:"{{value}}"{{/value}}{{/rules}}
+		"rules": [{{#rules}}{{^ffirst}},{{/ffirst}}
+			{{#value}}{ "{{key}}":"{{value}}" }{{/value}}{{^value}}"{{key}}"{{/value}}{{/rules}}
 		]
 	}{{/.}}
 ]
