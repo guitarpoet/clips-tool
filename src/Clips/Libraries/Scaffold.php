@@ -61,14 +61,14 @@ class Scaffold extends BaseService {
 		// Add the type as the default rule
 		if($input_type) {
 			$r []= array(
-				'first' => true,
+				'ffirst' => true,
 				'key' => 'type',
 				'value' => $input_type
 			);
 		}
 		else {
 			$r []= array(
-				'first' => true,
+				'ffirst' => true,
 				'key' => 'type',
 				'value' => $type
 			);
@@ -208,6 +208,10 @@ class Scaffold extends BaseService {
 					'ffirst' => true,
 					'key' => 'data',
 					'value' => $table.'.id'
+				),
+				array(
+					'key' => 'action',
+					'value' => $name.'/show'
 				),
 				array(
 					'key' => 'title',
