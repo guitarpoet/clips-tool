@@ -1,4 +1,4 @@
-<?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
+<?php in_array(__FILE__, get_included_files()) or exit("No direct script access allowed");
 
 class SqlTest extends Clips\TestCase {
 	public function doSetUp() {

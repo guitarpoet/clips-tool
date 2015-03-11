@@ -1,4 +1,4 @@
-<?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
+<?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct script access allowed");
 
 /**
  * The http request wrapper same as CI's CI_Input, but nicer api

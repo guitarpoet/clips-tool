@@ -1,4 +1,4 @@
-<?php namespace Clips\Commands; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
+<?php namespace Clips\Commands; in_array(__FILE__, get_included_files()) or exit("No direct script access allowed");
 
 if(!extension_loaded('mmseg')) {
 	show_error('Cant\'t find any mmseg plugin installed!!');

@@ -1,4 +1,4 @@
-<?php namespace Clips\Filters; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
+<?php namespace Clips\Filters; in_array(__FILE__, get_included_files()) or exit("No direct script access allowed");
 
 /**
  * This is a straight view render, mainly used for simple usage, redirect for example

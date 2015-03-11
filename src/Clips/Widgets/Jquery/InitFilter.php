@@ -1,4 +1,4 @@
-<?php namespace Clips\Widgets\Jquery; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
+<?php namespace Clips\Widgets\Jquery; in_array(__FILE__, get_included_files()) or exit("No direct script access allowed");
 
 /**
  * This filter will construct the jquery initialize function using jquery_init context

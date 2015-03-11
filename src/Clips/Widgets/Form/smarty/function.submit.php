@@ -1,4 +1,4 @@
-<?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
+<?php in_array(__FILE__, get_included_files()) or exit("No direct script access allowed");
 
 function smarty_function_submit($params, $template) {
 	$bundle_name = Clips\context('current_bundle');

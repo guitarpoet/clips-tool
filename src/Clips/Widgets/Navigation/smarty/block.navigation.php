@@ -1,4 +1,4 @@
-<?php in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
+<?php in_array(__FILE__, get_included_files()) or exit("No direct script access allowed");
 
 Clips\require_widget_smarty_plugin('Html', 'li');
 Clips\require_widget_smarty_plugin('Html', 'ul');

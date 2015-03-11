@@ -1,4 +1,4 @@
-<?php namespace Clips\Filters; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
+<?php namespace Clips\Filters; in_array(__FILE__, get_included_files()) or exit("No direct script access allowed");
 
 /**
  * This filter will render the data using mustache template(using clips_out utilities)

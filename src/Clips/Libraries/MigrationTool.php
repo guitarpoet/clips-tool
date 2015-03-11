@@ -1,4 +1,4 @@
-<?php namespace Clips\Libraries; in_array(__FILE__, get_included_files()) or exit("No direct sript access allowed");
+<?php namespace Clips\Libraries; in_array(__FILE__, get_included_files()) or exit("No direct script access allowed");
 
 /**
  * The helper library for Phinx migration, will take a json configuration file to make the migration
