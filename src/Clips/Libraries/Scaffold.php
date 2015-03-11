@@ -312,6 +312,59 @@ class Scaffold extends BaseService {
 		}
 	}
 
+	public function controller($schema, $config) {
+		$namespace = \Clips\config('namespace');
+		foreach($schema as $table => $options) {
+			$table_name = $this->tableName($table);
+			$model_name = \Clips\to_camel($table_name);
+			$controller_name = ucfirst($model_name).'Controller';
+			$refer_name = strtolower($model_name);
+
+			$models = array(
+				array(
+					'model' => lcfirst($model_name),
+					'first' => true
+				)
+			);
+			$refers = array();
+			foreach($options as $col => $o) {
+				$foreign_key = \Clips\get_default($o, 'foreign_key');
+				if($foreign_key) {
+					$models []= array('model' => $this->tableName($foreign_key));
+					$refers []= array(
+						'key' => $foreign_key,
+						'model' => $this->tableName($foreign_key)
+					);
+				}
+			}
+
+			if($refers) {
+				$refers[0]['first'] = true;
+			}
+
+			$file = 'application/Controllers/'.$controller_name.'.php';
+
+			if(\Clips\try_path($file)) {
+				echo "Controller $controller_name exists in file $file!".PHP_EOL;
+				return false;
+			}
+			else {
+				file_put_contents($file, \Clips\clips_out('controller', array(
+					'namespace' => $namespace[0],
+					'controller_name' => $controller_name,
+					'refer_name' => $refer_name,
+					'refers' => $refers,
+					'table_name' => $table_name,
+					'table' => $table,
+					'author' => $config->author,
+					'version' => $config->version,
+					'date' => \Clips\timestamp(),
+					'models' => $models
+				), false));
+			}
+		}
+	}
+
 	public function form($schema, $config) {
 		$namespace = \Clips\config('namespace');
 

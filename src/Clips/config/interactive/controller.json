@@ -1,0 +1,30 @@
+{
+	"header": "Clips Controller Generator v1.0",
+	"steps": [
+		{
+			"prompt": "The name of the schema:",
+			"field": "schema",
+			"rules": {
+				"minlength": 2,
+				"maxlength": 10
+			}
+		},
+		{
+			"prompt": "Author:",
+			"field": "author",
+			"default": "!Clips\\current_user"
+		},
+		{
+			"prompt": "Version:",
+			"default": "1.0",
+			"field": "version"
+		},
+		{
+			"prompt": "Are you sure:",
+			"confirm": true,
+			"condition": {
+				"cancel": [{"jump": 0}]
+			}
+		}
+	]
+}

@@ -119,6 +119,18 @@ class GenerateCommand extends Command {
 		$this->output("Done!".PHP_EOL);
 	}
 
+	public function controller() {
+		$config = \Clips\interactive('interactive/controller', $this);
+		$data = \Clips\yaml('migrations/schemas/'.$config->schema.'.yml');
+		if($data) {
+			$this->scaffold->controller($data, $config);
+		}
+		else {
+			$this->output('Can\'t find the schema configuration file for %s!'.PHP_EOL, $config->schema);
+		}
+		$this->output("Done!".PHP_EOL);
+	}
+
 	public function execute($args) {
 		if($args) {
 			$this->tool->helper('console');
