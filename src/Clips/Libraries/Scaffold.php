@@ -39,28 +39,24 @@ class Scaffold extends BaseService {
 		}
 	}
 
+	/**
+	 * Wrap the form field to fit form configuration generation template
+	 */
 	protected function wrapField($field) {
 		// The default type is number
 		$type = \Clips\get_default($field, 'type', 'number');
 		// The default label of the field is the camel form of the field
 		$label = \Clips\get_default($field, 'label', \Clips\to_camel($field['field']));
-
 		$rules = \Clips\get_default($field, 'rules', array());
-
 		$options = \Clips\get_default($field, 'options');
-
 		$state = \Clips\get_default($field, 'state');
-
 		$first = \Clips\get_default($field, 'first');
-
 		$foreign_key = \Clips\get_default($field, 'foreign_key');
-
+		$nullable = \Clips\get_default($field, 'null');
 		$input_type = \Clips\get_default($field, 'input_type');
-
 		$required = false;
 
 		$r = array();
-
 
 		// Add the type as the default rule
 		if($input_type) {
@@ -92,7 +88,6 @@ class Scaffold extends BaseService {
 			if($rule == 'required')
 				$required = true;
 
-
 			// Add each rule to it
 			if(is_numeric($key)) {
 				// This is only the value
@@ -108,8 +103,8 @@ class Scaffold extends BaseService {
 			}
 		}
 
-		// All foreign key will be required
-		if(!$required && $foreign_key)
+		// All foreign key and not null field will be required
+		if(!$required && ($foreign_key || !$nullable))
 			$r []= array('key' => 'required');
 
 		$ret = array('label' => $label, 'rules' => $r, 'field' => $field['field']);
@@ -121,6 +116,18 @@ class Scaffold extends BaseService {
 		return $ret;
 	}
 
+	/**
+	 * Turn the table configuration to form configuration
+	 *
+	 * @param table
+	 * 		The table name
+	 * @param options
+	 * 		The options
+	 * @param form_folder
+	 * 		The form folder to store the configuration
+	 * @param create (default true)
+	 * 		If this configuration is create form or edit form
+	 */
 	protected function tableToForm($table, $options, $form_folder, $create = true) {
 		if(\Clips\str_end_with($table, 's')) {
 			// Remove the trailing s
@@ -178,6 +185,126 @@ class Scaffold extends BaseService {
 		else {
 			echo "Creating config $file...".PHP_EOL;
 			file_put_contents($file, \Clips\clips_out('form', $fields, false));
+		}
+	}
+
+	protected function tableName($table) {
+		if(\Clips\str_end_with($table, 's')) {
+			// Remove the trailing s
+			return substr($table, 0, strlen($table) - 1);
+		}
+		else
+			return $table;
+	}
+
+	protected function tableToPagination($table, $options, $schema, $pagi_folder) {
+		$name = $this->tableName($table);
+		$data = array('from' => $table);
+		$columns = array();
+		$columns []= array(
+			'first' => true,
+			'fields' => array(
+				array(
+					'ffirst' => true,
+					'key' => 'data',
+					'value' => $table.'.id'
+				),
+				array(
+					'key' => 'title',
+					'value' => 'ID'
+				)
+			),
+		);
+		$joins = array();
+
+		foreach($options as $col => $config) {
+			if(!\Clips\get_default($config, 'pagination', true)) {
+				continue;
+			}
+			$col_name = $table.'.'.$col;
+			// By default the title of this columns is TableName ColumnName
+			$title = \Clips\get_default($config, 'label', \Clips\to_camel($name).' '.\Clips\to_camel($col));
+			$foreign_key = \Clips\get_default($config, 'foreign_key');
+
+			$c = array();
+
+			$c['fields'] = array(
+				array(
+					'ffirst' => true,
+					'key' => 'data',
+					'value' => $col_name
+				),
+				array(
+					'key' => 'title',
+					'value' => $title
+				)
+			);
+
+			// Processing for foreign keys
+			if($foreign_key) {
+				$c['fields'] []= array(
+					'key' => 'action',
+					'value' => $this->tableName($foreign_key).'/show'
+				);
+				$c['fields'] []= array(
+					'key' => 'refer',
+					'value' => $foreign_key.'.id'
+				);
+				$joins []= array(
+					'table' => $foreign_key,
+					'left' => $col_name,
+					'right' => $foreign_key.'.id'
+				);
+
+				// Finally, let's find the refer
+				$foreign_table_config = \Clips\get_default($schema, $foreign_key);
+				if($foreign_table_config) {
+					foreach($foreign_table_config as $foreign_col => $fconfig) {
+						if(\Clips\get_default($fconfig, 'refer')) {
+							$c['fields'][0]['value'] = $foreign_key.'.'.$foreign_col;
+						}
+					}
+				}
+			}
+
+			// Add the customize action
+			$action = \Clips\get_default($config, 'action');
+			if($action) {
+				$c['action'] = $action;
+			}
+
+			$columns []= $c;
+		}
+
+		if($joins) {
+			$joins[0]['first'] = true;
+		}
+
+		$file = \Clips\path_join($pagi_folder, $name.'.json');
+
+		if(\Clips\try_path($file)) {
+			echo "The pagination configuration for table $table exists at $file!".PHP_EOL;
+		}
+		else {
+			echo "Creating config $file...".PHP_EOL;
+			file_put_contents($file, \Clips\clips_out('pagination', array(
+				'from' => $table,
+				'columns' => $columns,
+				'joins' => $joins
+			), false));
+		}
+	}
+
+	public function pagination($schema, $config) {
+		$namespace = \Clips\config('namespace');
+		$pagi_folder = \Clips\config('pagination_config_dir');
+		$pagi_folder = $pagi_folder[0];
+		$this->logger->debug('Using pagination folder {0}.', array($pagi_folder));
+
+		foreach($schema as $table => $options) {
+			if(\Clips\get_default($options, 'pagination') !== false) {
+				$this->tableToPagination($table, $options, $schema, $pagi_folder);
+			}
 		}
 	}
 

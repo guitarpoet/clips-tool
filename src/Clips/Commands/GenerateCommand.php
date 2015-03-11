@@ -45,7 +45,7 @@ class GenerateCommand extends Command {
 		else {
 			$this->output('Can\'t find the schema configuration file for %s!'.PHP_EOL, $config->schema);
 		}
-		echo "Done!";
+		$this->output("Done!".PHP_EOL);
 	}
 
 	public function model() {
@@ -57,7 +57,7 @@ class GenerateCommand extends Command {
 		else {
 			$this->output('Can\'t find the schema configuration file for %s!'.PHP_EOL, $config->schema);
 		}
-		echo "Done!";
+		$this->output("Done!".PHP_EOL);
 	}
 
 	public function command() {
@@ -72,7 +72,7 @@ class GenerateCommand extends Command {
 		}
 
 		file_put_contents($path, \Clips\clips_out('command', $config, false));
-		echo 'Done!';
+		$this->output('Done!'.PHP_EOL);
 	}
 
 	public function widget() {
@@ -107,12 +107,28 @@ class GenerateCommand extends Command {
 		$this->output('Done!');
 	}
 
+	public function pagination() {
+		$config = \Clips\interactive('interactive/pagination', $this);
+		$data = \Clips\yaml('migrations/schemas/'.$config->schema.'.yml');
+		if($data) {
+			$this->scaffold->pagination($data, $config);
+		}
+		else {
+			$this->output('Can\'t find the schema configuration file for %s!'.PHP_EOL, $config->schema);
+		}
+		$this->output("Done!".PHP_EOL);
+	}
+
 	public function execute($args) {
 		if($args) {
 			$this->tool->helper('console');
 			$method = $args[0];
 			if(method_exists($this, $method)) {
 				return call_user_func(array($this, $method));
+			}
+			else {
+				$this->output("Can't find command for $method".PHP_EOL);
+				return -1;
 			}
 		}
 	}
