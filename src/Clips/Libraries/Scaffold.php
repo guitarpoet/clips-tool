@@ -39,6 +39,88 @@ class Scaffold extends BaseService {
 		}
 	}
 
+	protected function wrapField($field) {
+		// The default type is number
+		$type = \Clips\get_default($field, 'type', 'number');
+		// The default label of the field is the camel form of the field
+		$label = \Clips\get_default($field, 'label', \Clips\to_camel($field['field']));
+
+		$rules = \Clips\get_default($field, 'rules', array());
+
+		$options = \Clips\get_default($field, 'options');
+
+		$state = \Clips\get_default($field, 'state');
+
+		$first = \Clips\get_default($field, 'first');
+
+		$foreign_key = \Clips\get_default($field, 'foreign_key');
+
+		$input_type = \Clips\get_default($field, 'input_type');
+
+		$required = false;
+
+		$r = array();
+
+
+		// Add the type as the default rule
+		if($input_type) {
+			$r []= array(
+				'first' => true,
+				'key' => 'type',
+				'value' => $input_type
+			);
+		}
+		else {
+			$r []= array(
+				'first' => true,
+				'key' => 'type',
+				'value' => $type
+			);
+		}
+
+		if($options) {
+			$limit = \Clips\get_default($options, 'limit');
+			if($limit) {
+				$r []= array(
+					'key' => 'maxlengh',
+					'value' => $limit
+				);
+			}
+		}
+
+		foreach($rules as $key => $rule) {
+			if($rule == 'required')
+				$required = true;
+
+
+			// Add each rule to it
+			if(is_numeric($key)) {
+				// This is only the value
+				$r []= array(
+					'key' => $rule
+				);
+			}
+			else {
+				$r []= array(
+					'key' => $key,
+					'value' => $rule
+				);
+			}
+		}
+
+		// All foreign key will be required
+		if(!$required && $foreign_key)
+			$r []= array('key' => 'required');
+
+		$ret = array('label' => $label, 'rules' => $r, 'field' => $field['field']);
+		if($state)
+			$ret['state'] = $state;
+		if($first)
+			$ret['first'] = true;
+
+		return $ret;
+	}
+
 	protected function tableToForm($table, $options, $form_folder, $create = true) {
 		if(\Clips\str_end_with($table, 's')) {
 			// Remove the trailing s
@@ -67,33 +149,36 @@ class Scaffold extends BaseService {
 		}
 		else {
 			// This is edit, add id to it
-			$fields []= array(
-				'field' => 'id',
-				'label' => 'ID',
-				'state' => 'readonly',
-				'first' => true,
-				'rules' => array(
-					array('key' => 'type', 'value' => 'number', 'rfirst' => true),
-					array('key' => 'required')
+			$fields []= $this->wrapField(
+				array(
+					'field' => 'id',
+					'label' => 'ID',
+					'state' => 'readonly',
+					'first' => true,
+					'type' => 'number',
+					'rules' => array('required')
 				)
 			);
 			$first = false;
 		}
 
 		foreach($options as $field => $config) {
-			$f = array();
 			if($first) {
-				$f['first'] = true;
+				$config['first'] = true;
 				$first = false;
 			}
-
-			$f['type'] = \Clips\get_default($config, 'type', 'number');
-			$f['field'] = $field;
-			$f['label'] = \Clips\get_default($config, 'label', \Clips\to_camel($field));
-			$fields []= $f;
+			$config['field'] = $field;
+			$fields []= $this->wrapField($config);
 		}
-		echo $file;
-		echo \Clips\clips_out('form', $fields);
+		$p = \Clips\try_path($file);
+
+		if(\Clips\try_path($file)) {
+			echo "The form configuration for table $table exists at $file!".PHP_EOL;
+		}
+		else {
+			echo "Creating config $file...".PHP_EOL;
+			file_put_contents($file, \Clips\clips_out('form', $fields, false));
+		}
 	}
 
 	public function form($schema, $config) {
@@ -104,8 +189,10 @@ class Scaffold extends BaseService {
 		$this->logger->debug('Using form folder {0}.', array($form_folder));
 
 		foreach($schema as $table => $options) {
-			$this->tableToForm($table, $options, $form_folder);
-			$this->tableToForm($table, $options, $form_folder, false);
+			if(\Clips\get_default($options, 'form') !== false) {
+				$this->tableToForm($table, $options, $form_folder);
+				$this->tableToForm($table, $options, $form_folder, false);
+			}
 		}
 	}
 }
