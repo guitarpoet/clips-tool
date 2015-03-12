@@ -85,10 +85,7 @@ $('[role="datatable-action"], button[type=ajax], .action').each(function(){
 			}
 		});
 	}
-
 });
-
-
 TEXT;
 		\Clips\context('jquery_init', $js, true);
 	}

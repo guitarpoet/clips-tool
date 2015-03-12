@@ -37,6 +37,7 @@ $base-navigation-bg: #50ACE2;
 
 		#navigation {
 			min-width: 270px;
+			height: 100%;
 			display: table-cell;
 			color: #ffffff;
 			background: $base-navigation-bg;
@@ -78,18 +79,11 @@ $base-navigation-bg: #50ACE2;
 			}
 		}
 
-		@mixin content-style() {
-			width: 100%;
-			margin: 0;
-			padding: 0;
-			padding-left: 40px;
-			padding-right: 40px;
-		}
-
 		#content {
 			display: table-cell;
 			width: 100%;
 			vertical-align: top;
+			height: 100%;
 			> .row {
 				margin: 0;
 				padding: 0;
@@ -153,7 +147,6 @@ $base-navigation-bg: #50ACE2;
 						height: 100%;
 					}
 				}
-
 
 				#toolbar {
 					@include content-style();

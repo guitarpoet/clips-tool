@@ -13,9 +13,13 @@ $fx-brand-warning:         #f0ad4e !default;
 $fx-brand-danger:          #d9534f !default;
 
 /// form
-$form-control-border-color: $fx-gray-lighter !default;
+$form-control-border-color: #E1E5EC !default;
 $form-control-color: #666666 !default;
 $form-control-padding: 7px 15px !default;
+$form-input-height: 35px !default;
+$form-select-height: 35px !default;
+$form-select-padding: 0px 10px !default;
+$form-select-border-color: #E1E5EC !default;
 
 /// btn
 $btn-padding: 7px 10px !default;

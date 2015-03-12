@@ -25,7 +25,32 @@
 	font-size: $btn-font-size;
 	min-width: 60px;
 	text-align: center;
+	cursor: pointer;
 	@content;
+}
+
+@mixin arrow-top($width, $height, $color) {
+	width: 0;
+	height: 0;
+	border-bottom: $height solid $color;
+	border-right: $width solid transparent;
+	border-left: $width solid transparent;
+}
+
+@mixin arrow-bottom($width, $height, $color) {
+	width: 0;
+	height: 0;
+	border-top: $height solid $color;
+	border-right: $width solid transparent;
+	border-left: $width solid transparent;
+}
+
+@mixin content-style() {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	padding-left: 40px;
+	padding-right: 40px;
 }
 
 @mixin get-btn-property($state, $property) {
