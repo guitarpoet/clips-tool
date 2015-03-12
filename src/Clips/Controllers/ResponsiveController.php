@@ -13,7 +13,7 @@ use Clips\Controller;
  * @date Sat Feb 21 12:56:47 2015
  *
  * @Clips\Library({"fileCache", "imageUtils"})
- * @Clips\Widget("Html")
+ * @Clips\Widget("html")
  */
 class ResponsiveController extends Controller {
 	public function size() {
