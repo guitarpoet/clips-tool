@@ -26,25 +26,69 @@ $('.datatable').each(function(){
 	});
 });
 
-$('[role=datatable-delete]').on('click', function(){
-    var forname = $(this).attr('for');
-    var datatable = $('.datatable[name='+forname+']');
-    var settings = datatable.DataTable.settings[0];
-    var ajaxurl = Clips.siteUrl($(this).attr('uri'));
-    var pks = window.DataTableManager.getSelectedItemsPrimaryKeys(datatable, settings);
-    if(pks) {
-	    $.ajax({
-	        type: "POST",
-	        url: ajaxurl,
-	        data: {
-	            ids: pks
-	        },
-	        dataType: "json"
-	    }).success(function(data){
-	        datatable.DataTable().draw();
-	    });
+window.UrlManager = {};
+
+window.UrlManager.serialize = function(obj) {
+  var str = [];
+  for(var p in obj)
+    if (obj.hasOwnProperty(p)) {
+      str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
     }
+  return str.join("&");
+}
+
+$('[role="datatable-action"], button[type=ajax], .action').each(function(){
+	var self = $(this);
+	var forname = self.attr('for');
+    var datatable = $('.datatable[name='+forname+']');
+    var type = self.attr("type");
+	var url = self.attr("href");
+	if (!url) {
+		var uri = self.attr('uri');
+		if(!uri) {
+			return false;
+		}
+		else {
+			url = Clips.siteUrl(uri);
+		}
+	}
+
+	if(type && type == 'ajax') {
+		self.on('click', function(e){
+			e.preventDefault();
+			var settings = datatable.DataTable.settings[0];
+			var pks = window.DataTableManager.getSelectedItemsPrimaryKeys(datatable, settings);
+		    if(pks) {
+			    $.ajax({
+			        type: "POST",
+			        url: url,
+			        data: {
+			            ids: pks
+			        },
+			        dataType: "json"
+			    }).success(function(data){
+			        datatable.DataTable().draw();
+			    });
+		    }
+		});
+	}
+	else {
+		self.on('click', function(e){
+			e.preventDefault();
+			var settings = datatable.DataTable.settings[0];
+			var pks = window.DataTableManager.getSelectedItemsPrimaryKeys(datatable, settings);
+			if(pks) {
+		//		var params = '?' + window.UrlManager.serialize({
+		//			id: pks[0]
+		//		});
+				window.location.href = url + '/' + pks[0];
+			}
+		});
+	}
+
 });
+
+
 TEXT;
 		\Clips\context('jquery_init', $js, true);
 	}
