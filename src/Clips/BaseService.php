@@ -38,4 +38,15 @@ class BaseService implements Initializable, ToolAware, ClipsAware, LoggerAwareIn
 	public function setLogger(LoggerInterface $logger) {
 		$this->logger = $logger;
 	}
+
+	public function config($name, $one = false) {
+		$config = config($name);
+		if($one) {
+			if($config) {
+				return $config[0];
+			}
+			return null;
+		}
+		return $config;
+	}
 }

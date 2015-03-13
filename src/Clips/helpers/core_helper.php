@@ -1131,3 +1131,8 @@ function yaml($path) {
 	}
 	return false;
 }
+
+function current_env() {
+	$tool = &get_clips_tool();
+	return $tool->clips->current_env;
+}
