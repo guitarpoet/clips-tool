@@ -572,7 +572,7 @@ class Engine extends ConsoleBase {
 		}, $facts);
 
 		foreach($commands as $command) { // Let's run the commands
-			\clips_load($command[0]);
+			clips_load($command[0]);
 		}
 	}
 }
