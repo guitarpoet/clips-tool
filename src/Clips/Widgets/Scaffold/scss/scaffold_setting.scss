@@ -62,3 +62,35 @@ $btn-theme: (
 		color: #58B7EC
 	)
 ) !default;
+
+/// datatable
+$trodd-bg-color: #f3f3f3;
+$trodd-color: $fx-gray;
+$trodd-children-color: $fx-gray;
+$trodd-hover-bg-color: lighten(#ffffff, 10%);
+$trodd-hover-color: $fx-gray;
+$trodd-hover-children-color: $fx-gray;
+
+$treven-bg-color: #fafafa;
+$treven-color: $fx-gray;
+$treven-children-color: $fx-gray;
+$treven-hover-bg-color: lighten(#ffffff, 10%);
+$treven-hover-color: $fx-gray;
+$treven-hover-children-color: $fx-gray;
+
+$tr-ui-selected-bg-color: #23CFBF;
+$tr-ui-selected-color: #ffffff;
+$tr-ui-selected-children-color: #ffffff;
+$tr-ui-selected-hover-bg-color: lighten(#23CFBF, 10%);
+$tr-ui-selected-hover-color: #ffffff;
+$tr-ui-selected-hover-children-color: #ffffff;
+
+$tr-ui-selecting-bg-color: #C4E2E4;
+$tr-ui-selecting-color: #ffffff;
+$tr-ui-selecting-children-color: #ffffff;
+$tr-ui-selecting-hover-bg-color: lighten(#C4E2E4, 10%);
+$tr-ui-selecting-hover-color: #ffffff;
+$tr-ui-selecting-hover-children-color: #ffffff;
+
+$paginate-button-current-bg-color: $fx-brand-primary;
+$paginate-button-disabled-color: $fx-gray-lighter;

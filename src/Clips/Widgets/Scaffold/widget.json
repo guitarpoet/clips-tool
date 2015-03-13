@@ -10,6 +10,7 @@
             "scaffold_setting",
             "mixins/scaffold_mixin",
             "scaffold_componet",
+            "scaffold_datatable",
             "scaffold_layout"
         ]
     }

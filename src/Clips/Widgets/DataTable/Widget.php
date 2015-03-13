@@ -37,7 +37,7 @@ window.UrlManager.serialize = function(obj) {
   return str.join("&");
 }
 
-$('[role="datatable-action"], button[type=ajax], .action').each(function(){
+$('[role="datatable-action"]').each(function(){
 	var self = $(this);
 	var forname = self.attr('for');
     var datatable = $('.datatable[name='+forname+']');

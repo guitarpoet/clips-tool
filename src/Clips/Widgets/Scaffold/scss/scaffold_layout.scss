@@ -35,23 +35,33 @@ $base-navigation-bg: #50ACE2;
 			}
 		}
 
-		#navigation {
+		#navigationbar {
 			min-width: 270px;
 			height: 100%;
-			display: table-cell;
+			display: table;
 			color: #ffffff;
 			background: $base-navigation-bg;
 			vertical-align: top;
-			#brand {
+			&:before, &:after {
+				content: none;
+			}
+			.navbar-header {
 				width: 100%;
 				margin: 0;
 				padding: 0;
-				height: 75px;
-				line-height: 75px;
-				text-align: center;
+				display: table-row;
+				#brand {
+					width: 100%;
+					margin: 0;
+					padding: 0;
+					height: 75px;
+					line-height: 75px;
+					text-align: center;
+				}
 			}
 
-			#menu {
+			.navbar-section {
+				display: table-row;
 				@if mixin-exists(multilevel-nav-pills) {
 					@include multilevel-nav-pills();
 				}
@@ -64,7 +74,10 @@ $base-navigation-bg: #50ACE2;
 				background-color: #3A4F72;
 				text-align: center;
 				height: 100%;
-				.action {
+			}
+
+			#menu {
+				> .action {
 					width: 100%;
 					height: 65px;
 					padding: 0;
@@ -77,6 +90,7 @@ $base-navigation-bg: #50ACE2;
 					}
 				}
 			}
+
 		}
 
 		#content {
@@ -117,12 +131,14 @@ $base-navigation-bg: #50ACE2;
 				.navbar {
 					height: 100%;
 					@include content-style();
-					&-header {
-						display: inline-table;
-						vertical-align: top;
-						margin: 0;
-						height: 100%;
-						line-height: 75px;
+					.navbar-header {
+						h3 {
+							display: inline-table;
+							vertical-align: top;
+							margin: 0;
+							height: 100%;
+							line-height: 75px;
+						}
 					}
 				}
 
