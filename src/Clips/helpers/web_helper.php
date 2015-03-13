@@ -10,6 +10,27 @@ function html_title($title) {
 	context('html_title', $title);
 }
 
+function post_redirect($url, $params = array(), $title = 'redirecting') {
+	if(strpos($url, '://') === false) { // If it is not external link
+		$url = site_url($url);
+	}
+
+	$data = array();
+	$fields = array();
+
+	foreach($params as $k => $v) {
+		$fields []= array(
+			'name' => $k,
+			'value' => $v
+		);
+	}
+
+	$data['fields'] = $fields;
+	$data['url'] = $url;
+
+	return clips_out('autopost_form', $data, false);
+}
+
 /**
  * This is the helper function for ul and ol smarty plugin.
  * Will take the template loated in the literal tag for the list.

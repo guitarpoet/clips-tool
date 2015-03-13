@@ -158,6 +158,8 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 			$controller_seg = $controller_seg[0][0];
 			$server_uri = strtolower(str_replace('\\', '/', $server_uri[0][0]));
 		}
+		if(!isset($server_uri))
+			$server_uri = 'error';
 		profile_end('load_controller');
 		profile_start('controller_init');
 		$cc = $result->controller;
