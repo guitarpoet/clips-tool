@@ -4,16 +4,12 @@
 		border: 1px solid transparent;
 		border-radius: 4px;
 
-		@mixin datatable-sorting($bg, $color, $chcolor) {
-			@for $i from 1 through 3 {
-				&.sorting_#{$i} {
-					background-color: $bg;
-					color: $color;
-					> * {
-						color: $chcolor;
-					}
-				}
-			}
+		.dataTables_length {
+			display: none;
+		}
+
+		.dataTables_filter {
+			display: none;
 		}
 
 		.datatable {
@@ -170,6 +166,8 @@
 			}
 
 			a.paginate_button {
+				padding-top: 5px;
+				padding-bottom: 5px;
 				&.previous, &.next {
 					i {
 						color: #5c5e5f;

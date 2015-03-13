@@ -21,6 +21,11 @@ $form-select-height: 35px !default;
 $form-select-padding: 0px 10px !default;
 $form-select-border-color: #E1E5EC !default;
 
+/// tooltip
+$tooltip-width: 10px;
+$tooltip-height: 10px;
+$tooltip-left: 10px;
+
 /// btn
 $btn-padding: 7px 10px !default;
 $btn-font-size: 12px !default;
@@ -63,6 +68,7 @@ $btn-theme: (
 	)
 ) !default;
 
+
 /// datatable
 $trodd-bg-color: #f3f3f3;
 $trodd-color: $fx-gray;
@@ -94,3 +100,7 @@ $tr-ui-selecting-hover-children-color: #ffffff;
 
 $paginate-button-current-bg-color: $fx-brand-primary;
 $paginate-button-disabled-color: $fx-gray-lighter;
+
+
+/// layout
+$base-navigation-bg: #50ACE2;

@@ -11,29 +11,35 @@ if($.isFunction($.fn.selectBoxIt)){
 		});
 	});
 }
-$('[role="form-action"]').each(function(){
+$('[form-for]').each(function(){
 	var self = $(this);
-	var forname = self.attr('for');
+	var forname = self.attr('form-for');
     var form = $('form[name='+forname+']');
-    var type = self.attr("type");
-	var url = self.attr("href");
-	if (!url) {
-		var uri = self.attr('uri');
-		if(!uri) {
-//			return false;
+
+	if(form.length > 0) {
+        var type = self.attr("action");
+		var url = self.attr("href");
+		if(!type || type == 'ajax') {
+			if (!url) {
+				var uri = self.attr('uri');
+				if(!uri) {
+//							return false;
+				}
+				else {
+					url = Clips.siteUrl(uri);
+				}
+			}
+		}
+
+		if(type && type == 'ajax') {
+//		    ajax
 		}
 		else {
-			url = Clips.siteUrl(uri);
+			self.on('click', function(e){
+				e.preventDefault();
+				form.submit();
+			});
 		}
-	}
-
-	if(type && type == 'ajax') {
-	}
-	else {
-		self.on('click', function(e){
-			e.preventDefault();
-			form.submit();
-		});
 	}
 });
 TEXT;

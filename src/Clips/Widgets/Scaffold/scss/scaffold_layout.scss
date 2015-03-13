@@ -1,5 +1,3 @@
-$base-navigation-bg: #50ACE2;
-
 @mixin init_scaffold_layout() {
 
 	* {
@@ -144,6 +142,74 @@ $base-navigation-bg: #50ACE2;
 
 			}
 
+			#toolbar {
+				@include content-style();
+				background-color: #FAF9F8;
+				.btn {
+					margin-right: 5px;
+					margin-top: 17px;
+					margin-bottom: 17px;
+				}
+
+				form {
+					display: inline-table;
+					.form-group {
+						//							display: inline-table;
+						position: relative;
+						display: inline-block;
+						margin-right: 10px;
+						.form-label {
+							margin-right: 10px;
+						}
+						.form-input {
+							display: inline-block;
+						}
+						.help-block {
+							display: inline-block;
+							position: absolute;
+							z-index: 1;
+							right: 0;
+							left: auto;
+							top: -165%;
+							bottom: auto;
+							> ul {
+								&:before {
+									position: absolute;
+									content: " ";
+									@include arrow-bottom($tooltip-width - 1, $tooltip-height - 1, $fx-brand-warning);
+									left: auto;
+									right: $tooltip-left + 1;
+									top: auto;
+									bottom: -$tooltip-height + 1 !important;
+									z-index: 1;
+								}
+								&:after {
+									position: absolute;
+									content: " ";
+									@include arrow-bottom($tooltip-width, $tooltip-height, $fx-brand-warning);
+									left: auto;
+									right: $tooltip-left;
+									top: auto;
+									bottom: -$tooltip-height !important;
+								}
+							}
+						}
+						//							.help-block {
+						//								position: absolute;
+						//								z-index: 1;
+						//								width: 100%;
+						//								left: 0;
+						//								> ul {
+						//									text-align: left;
+						//								}
+						//							}
+						.selectboxit-container {
+							vertical-align: middle;
+						}
+					}
+				}
+			}
+
 			#workbench {
 				position: relative;
 				display: table-row;
@@ -164,29 +230,12 @@ $base-navigation-bg: #50ACE2;
 					}
 				}
 
-				#toolbar {
-					@include content-style();
-					background-color: #FAF9F8;
-					.btn {
-						margin-right: 5px;
-						margin-top: 17px;
-						margin-bottom: 17px;
-					}
-				}
-
 				#editarea {
 					@include content-style();
 					padding-top: 23px;
 					padding-bottom: 23px;
-					.dataTables_wrapper {
-						.dataTables_length {
-							display: none;
-						}
-						.dataTables_filter {
-							display: none;
-						}
-					}
-
+//					overflow: auto;
+//					height: 100%;
 				}
 			}
 
