@@ -3,12 +3,16 @@
 class Widget extends \Clips\Widget {
     protected function doInit() {
         $js = <<<TEXT
-$('input,select,textarea').not('[type=submit]').jqBootstrapValidation();
-if($.isFunction($.fn.selectBoxIt)){
-	$('form select:not([data-no-selectBoxIt])').each(function(){
-		$(this).selectBoxIt({});
-	});
-}
+
+	//====================================
+	// Initializing Form
+	//====================================
+	$('input,select,textarea').not('[type=submit]').jqBootstrapValidation();
+	if($.isFunction($.fn.selectBoxIt)){
+		$('form select:not([data-no-selectBoxIt])').each(function(){
+			$(this).selectBoxIt({});
+		});
+	}
 TEXT;
         \Clips\context('jquery_init', $js, true);
     }
