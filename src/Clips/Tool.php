@@ -312,12 +312,10 @@ class Tool implements Interfaces\Initializable {
 						}
 						clips_context('models', $obj, true);
 					}
-					else {
-						// Adding the model dependency
-						foreach($a->value as $c) {
-							$h = strtolower($this->getHandleName($c));
-							$obj->$h = $this->model($c);
-						}
+					// Adding the model dependency
+					foreach($a->value as $c) {
+						$h = strtolower($this->getHandleName($c));
+						$obj->$h = $this->model($c);
 					}
 					break;
 				case "Clips\\Js":

@@ -287,6 +287,18 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 		}
 	}
 
+	protected function actions() {
+		$ret = array();
+		foreach(func_get_args() as $a) {
+			$ret []= call_user_func_array(array($this, 'action'), $a);
+		}
+		return $ret;
+	}
+
+	protected function action($content, $label = '', $type = 'server') {
+		return new SimpleAction(array('content' => $content, 'label' => $label, 'type' => $type));
+	}
+
 	/**
 	 * Send the image file
 	 */
