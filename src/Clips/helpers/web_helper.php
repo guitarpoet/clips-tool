@@ -57,7 +57,7 @@ function process_list_items($params, $content, $template) {
 		// We do have items
 		if(trim($content)) {
 			// Use the content as the template
-			$tmp = $content;
+			$tmp = trim($content);
 		}
 		else {
 			$tmp = '{li}{$item}{/li}'; // The default template

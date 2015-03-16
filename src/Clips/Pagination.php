@@ -221,9 +221,11 @@ class Pagination {
 		$this->offset = $params['start'];
 		$this->length = $params['length'];
 
-		if(isset($params['search']) && $params['search']['value']) {
-			$or = array();
-			$or_value = $params['search']['value'];
+		if(isset($params['search']))  {
+			if(isset($params['search']['value'])) {
+				$or = array();
+				$or_value = $params['search']['value'];
+			}
 		}
 		foreach($this->columns() as $col) {
 			if(get_default($col, 'searchable', true)) {

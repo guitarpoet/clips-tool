@@ -572,7 +572,15 @@ class Engine extends ConsoleBase {
 		}, $facts);
 
 		foreach($commands as $command) { // Let's run the commands
-			clips_load($command[0]);
+			$lines = explode("\n", file_get_contents($command[0]));
+			$str = '';
+			foreach($lines as $c) {
+				$str .= $c."\n";
+				if(clips_is_command_complete($str)) {
+					$this->command($str);
+					$str = '';
+				}
+			}
 		}
 	}
 }

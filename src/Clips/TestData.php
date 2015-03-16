@@ -31,6 +31,8 @@ class TestData extends Annotation implements Initializable, ToolAware {
 		if(!isset($this->value)) {
 			$this->value = context('test_data');
 		}
+		// Auto add fake helper
+		$this->tool->helper('fake');
 		$this->_data = array();
 		$this->_storage_ids = array();
 		// Read the configurations

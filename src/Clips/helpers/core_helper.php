@@ -1118,6 +1118,13 @@ function timestamp() {
 	return strftime("%a %b %e %H:%M:%S %Y");
 }
 
+function now($time = null) {
+	if($time) {
+		return strftime("%Y-%m-%d %H:%M:%S", strtotime($time));
+	}
+	return strftime("%Y-%m-%d %H:%M:%S");
+}
+
 /**
  * Read and parse the yaml file, if not exists, return false
  *
