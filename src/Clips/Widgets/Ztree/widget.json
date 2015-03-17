@@ -1,0 +1,18 @@
+{
+	"author": "Lbc",
+	"date": "Tue Mar 17 20:33:30 2015",
+	"version": "1.0",
+	"name": "Ztree",
+	"doc":"ztree",
+    "depends": ["jquery"],
+    "css": {
+        "files": [
+            "zTreeStyle"
+        ]
+    },
+    "js": {
+        "files": [
+            "jquery.ztree.core-3.5"
+        ]
+    }
+}
