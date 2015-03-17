@@ -97,15 +97,15 @@ function static_url($uri) {
  * @author Jack
  * @date Sat Feb 21 11:49:30 2015
  */
-function base_url($uri) {
+function base_url($uri, $full = false) {
 	$router = context('router');
 	if($router)
-		return $router->baseUrl($uri);
+		return $router->baseUrl($uri, $full);
 	return $uri;
 }
 
-function site_url($uri) {
-	return base_url($uri);
+function site_url($uri, $full = false) {
+	return base_url($uri, $full);
 }
 
 /**

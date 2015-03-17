@@ -26,10 +26,21 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 		return path_join($this->base, $url);
 	}
 
-	public function baseUrl($url = '') {
+	public function baseUrl($url = '', $full = false) {
 		$index = config('use_rewrite')? '': '/index.php';
+		$this->logger->debug('The uri is {0}', array($_SERVER['REQUEST_URI'], $_SERVER));
 		if(!isset($this->base))
 			$this->base = dirname($_SERVER['SCRIPT_NAME']);
+		if($full) {
+			$host = $_SERVER['SERVER_NAME'];
+			$port = $_SERVER['SERVER_PORT'];
+			if($port != 80) {
+				return "http://".path_join($host.':'.$port, $this->base.$index, $url);
+			}
+			else {
+				return "http://".path_join($host, $this->base.$index, $url);
+			}
+		}
 		return path_join($this->base.$index, $url);
 	}
 
