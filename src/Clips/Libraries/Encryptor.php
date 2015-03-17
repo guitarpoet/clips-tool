@@ -30,7 +30,7 @@ class Encryptor extends BaseService {
 	}
 
 	public function privateEncrypt($message) {
-		$key = get_default($this, 'privateKey');
+		$key = \Clips\get_default($this, 'privateKey');
 		if($key) {
 			$ret = '';
 			if(openssl_private_encrypt($message, $ret, $key)) {
@@ -41,7 +41,7 @@ class Encryptor extends BaseService {
 	}
 
 	public function privateDecrypt($message) {
-		$key = get_default($this, 'privateKey');
+		$key = \Clips\get_default($this, 'privateKey');
 		if($key) {
 			$ret = '';
 			if(openssl_private_decrypt(base64_decode($message), $ret, $key)) {
@@ -52,7 +52,7 @@ class Encryptor extends BaseService {
 	}
 
 	public function publicEncrypt($message) {
-		$key = get_default($this, 'publicKey');
+		$key = \Clips\get_default($this, 'publicKey');
 		if($key) {
 			$ret = '';
 			if(openssl_public_encrypt($message, $ret, $key)) {
@@ -63,7 +63,7 @@ class Encryptor extends BaseService {
 	}
 
 	public function publicDecrypt($message) {
-		$key = get_default($this, 'publicKey');
+		$key = \Clips\get_default($this, 'publicKey');
 		if($key) {
 			$ret = '';
 			if(openssl_public_decrypt(base64_decode($message), $ret, $key)) {
