@@ -10,6 +10,27 @@ function html_title($title) {
 	context('html_title', $title);
 }
 
+function post_redirect($url, $params = array(), $title = 'redirecting') {
+	if(strpos($url, '://') === false) { // If it is not external link
+		$url = site_url($url);
+	}
+
+	$data = array();
+	$fields = array();
+
+	foreach($params as $k => $v) {
+		$fields []= array(
+			'name' => $k,
+			'value' => $v
+		);
+	}
+
+	$data['fields'] = $fields;
+	$data['url'] = $url;
+
+	return clips_out('autopost_form', $data, false);
+}
+
 /**
  * This is the helper function for ul and ol smarty plugin.
  * Will take the template loated in the literal tag for the list.
@@ -36,7 +57,7 @@ function process_list_items($params, $content, $template) {
 		// We do have items
 		if(trim($content)) {
 			// Use the content as the template
-			$tmp = $content;
+			$tmp = trim($content);
 		}
 		else {
 			$tmp = '{li}{$item}{/li}'; // The default template
@@ -76,15 +97,15 @@ function static_url($uri) {
  * @author Jack
  * @date Sat Feb 21 11:49:30 2015
  */
-function base_url($uri) {
+function base_url($uri, $full = false) {
 	$router = context('router');
 	if($router)
-		return $router->baseUrl($uri);
+		return $router->baseUrl($uri, $full);
 	return $uri;
 }
 
-function site_url($uri) {
-	return base_url($uri);
+function site_url($uri, $full = false) {
+	return base_url($uri, $full);
 }
 
 /**

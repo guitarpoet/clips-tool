@@ -243,7 +243,14 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 	/**
 	 * Send the redirect response
 	 */
-	protected function redirect($url) {
+	protected function redirect($url, $args = array()) {
+		if($args) {
+			if(!is_array($args)) {
+				$args = array();
+			}
+
+			return $this->render(post_redirect($url, $args), array(), 'direct');
+		}
 		http_response_code(302);
 		return $this->render("", array(), 'direct', array('Location' => $url));
 	}
@@ -278,6 +285,18 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 			}
 			return call_user_func_array(array($this, $method), $args);
 		}
+	}
+
+	protected function actions() {
+		$ret = array();
+		foreach(func_get_args() as $a) {
+			$ret []= call_user_func_array(array($this, 'action'), $a);
+		}
+		return $ret;
+	}
+
+	protected function action($content, $label = '', $type = 'server') {
+		return new SimpleAction(array('content' => $content, 'label' => $label, 'type' => $type));
 	}
 
 	/**

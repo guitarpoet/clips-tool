@@ -26,10 +26,21 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 		return path_join($this->base, $url);
 	}
 
-	public function baseUrl($url = '') {
+	public function baseUrl($url = '', $full = false) {
 		$index = config('use_rewrite')? '': '/index.php';
+		$this->logger->debug('The uri is {0}', array($_SERVER['REQUEST_URI'], $_SERVER));
 		if(!isset($this->base))
 			$this->base = dirname($_SERVER['SCRIPT_NAME']);
+		if($full) {
+			$host = $_SERVER['SERVER_NAME'];
+			$port = $_SERVER['SERVER_PORT'];
+			if($port != 80) {
+				return "http://".path_join($host.':'.$port, $this->base.$index, $url);
+			}
+			else {
+				return "http://".path_join($host, $this->base.$index, $url);
+			}
+		}
 		return path_join($this->base.$index, $url);
 	}
 
@@ -121,7 +132,12 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 		// Record the breadscrumb
 		if($request->method == 'get' && $request->getType() != 'ajax' && strpos($uri, 'responsive/size') === false) {
 			$bs = $request->breadscrumb();
-			if($bs[count($bs) - 1] != $uri) {
+			if(count($bs) > 1) {
+				if($bs[count($bs) - 1] != $uri) {
+					$request->breadscrumb($uri);
+				}
+			}
+			else {
 				$request->breadscrumb($uri);
 			}
 		}
@@ -158,6 +174,8 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 			$controller_seg = $controller_seg[0][0];
 			$server_uri = strtolower(str_replace('\\', '/', $server_uri[0][0]));
 		}
+		if(!isset($server_uri))
+			$server_uri = 'error';
 		profile_end('load_controller');
 		profile_start('controller_init');
 		$cc = $result->controller;

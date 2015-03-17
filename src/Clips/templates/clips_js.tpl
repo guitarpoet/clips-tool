@@ -1,3 +1,7 @@
+
+//====================================
+// Initializing Clips JS Base
+//====================================
 if(typeof Clips == 'undefined')
 	Clips = {};
 Clips.base = '{{base}}';

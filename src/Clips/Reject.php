@@ -13,4 +13,5 @@
 class Reject {
 	public $reason;
 	public $state;
+	public $cause;
 }

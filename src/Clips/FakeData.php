@@ -9,6 +9,19 @@
 class FakeData {
 	public $fakeNames = array('Steve Jobs', 'Bill Gates', 'Bill Cliton', 'George Bush', 'Barack Obama', 'Elten Sweet', 'Drew Clayton', 'Millson Stampes', 'Melvin Goodwin', 'Dwite Harding', 'Norton Atterton', 'Lindon Atherton', 'Brian Mitchell', 'Marsdon Holton', 'Jean Barney', 'Mina Eastoft', 'Kasandra Nottley', 'Christian Prescott', 'Riley Read', 'Corinne Southey', 'Kenzie Knotley', 'Bobby Snape', 'Berthe Smithies', 'Breana Nash', 'Jazmyne Smith', 'Normal Blackwood', 'Rawson Harrington', 'Wingate Benson', 'Forbes Spaulding', 'Raleigh Foy', 'Jack Burlingame', 'Waylon Altham', 'Herbert Royston', 'Quintin Sutton', 'Abraham Harding', 'Arthur Pendragon', 'Ambrosius Aurelianus', 'Lancelot Lac', 'Frodo Baggins', 'Bilbo Baggins');
 
+
+	public function fakeMobile() {
+		$i = 8;
+		$heads = array(array(1,3,4), array(1,5,9), array(1, 8, 9));
+		$digits = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+
+		$arr = choice($heads);
+		while($i--) {
+			$arr []= choice($digits);	
+		}
+		return implode('', $arr);
+	}
+
 	/**
 	 * Generate the fake name for test
 	 *

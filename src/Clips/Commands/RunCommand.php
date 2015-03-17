@@ -2,10 +2,11 @@
 
 class RunCommand extends \Clips\Command {
 	public function execute($args) {
-		if(count($args) > 2) {
+		if(count($args) > 0) {
 			$tool = &\Clips\get_clips_tool();
-			foreach(array_splice($args, 2) as $file) {
+			foreach($args as $file) {
 				$tool->loadRule($file);
+				$tool->clips->run();
 			}
 		}
 	}
