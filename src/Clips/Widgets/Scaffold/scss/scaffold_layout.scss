@@ -1,0 +1,180 @@
+$base-navigation-bg: #50ACE2;
+
+@mixin init_scaffold_layout() {
+
+	* {
+		@include box-sizing(border-box);
+	}
+	*:before,
+	*:after {
+		@include box-sizing(border-box);
+	}
+
+	html, body {
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+	}
+
+	.container {
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		padding: 0;
+		font-size: 14px;
+
+		> .row {
+			margin: 0;
+			padding: 0;
+			display: table;
+			vertical-align: top;
+			width: 100%;
+			height: 100%;
+			&:before, &:after {
+				content: none;
+			}
+		}
+
+		#navigation {
+			min-width: 270px;
+			height: 100%;
+			display: table-cell;
+			color: #ffffff;
+			background: $base-navigation-bg;
+			vertical-align: top;
+			#brand {
+				width: 100%;
+				margin: 0;
+				padding: 0;
+				height: 75px;
+				line-height: 75px;
+				text-align: center;
+			}
+
+			#menu {
+				@if mixin-exists(multilevel-nav-pills) {
+					@include multilevel-nav-pills();
+				}
+
+				@if mixin-exists(multilevel-nav-stacked) {
+					@include multilevel-nav-stacked();
+				}
+
+				margin: 0;
+				background-color: #3A4F72;
+				text-align: center;
+				height: 100%;
+				.action {
+					width: 100%;
+					height: 65px;
+					padding: 0;
+					line-height: 65px;
+					color: #6A7B97;
+					vertical-align: middle;
+					&:hover {
+						background-color: #2C3950;
+						color: #ffffff;
+					}
+				}
+			}
+		}
+
+		#content {
+			display: table-cell;
+			width: 100%;
+			vertical-align: top;
+			height: 100%;
+			> .row {
+				margin: 0;
+				padding: 0;
+				display: table;
+				vertical-align: top;
+				width: 100%;
+				height: 100%;
+				&:before, &:after {
+					content: none;
+				}
+			}
+
+			#quickbar {
+				display: table-row;
+				float: none;
+				width: 100%;
+				height: 75px;
+				> .row {
+					width: 100%;
+					height: 100%;
+					margin: 0;
+					position: relative;
+					overflow: auto;
+					> .column {
+						position: absolute;
+						width: 100%;
+						height: 100%;
+					}
+				}
+
+				.navbar {
+					height: 100%;
+					@include content-style();
+					&-header {
+						display: inline-table;
+						vertical-align: top;
+						margin: 0;
+						height: 100%;
+						line-height: 75px;
+					}
+				}
+
+			}
+
+			#workbench {
+				position: relative;
+				display: table-row;
+				float: none;
+				width: 100%;
+				height: 100%;
+				background-color: #F2F0EE;
+				> .row {
+					width: 100%;
+					height: 100%;
+					margin: 0;
+					position: relative;
+					overflow: auto;
+					> .column {
+						position: absolute;
+						width: 100%;
+						height: 100%;
+					}
+				}
+
+				#toolbar {
+					@include content-style();
+					background-color: #FAF9F8;
+					.btn {
+						margin-right: 5px;
+						margin-top: 17px;
+						margin-bottom: 17px;
+					}
+				}
+
+				#editarea {
+					@include content-style();
+					padding-top: 23px;
+					padding-bottom: 23px;
+					.dataTables_wrapper {
+						.dataTables_length {
+							display: none;
+						}
+						.dataTables_filter {
+							display: none;
+						}
+					}
+
+				}
+			}
+
+		}
+
+	}
+}

@@ -1,0 +1,16 @@
+{
+	"author": "Andy",
+	"date": "Thu Mar 12 10:21:00 2015",
+	"version": "1.0",
+	"name": "Scaffold",
+    "depends": ["Jquery", "Navigation"],
+	"doc":"scaffold",
+    "scss": {
+        "files": [
+            "scaffold_setting",
+            "mixins/scaffold_mixin",
+            "scaffold_componet",
+            "scaffold_layout"
+        ]
+    }
+}

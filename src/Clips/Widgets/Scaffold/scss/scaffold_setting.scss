@@ -1,0 +1,64 @@
+/// color
+$fx-gray-base:          #000 !default;
+$fx-gray-darker:        lighten($gray-base, 13.5%) !default; // #222
+$fx-gray-dark:          lighten($gray-base, 20%) !default;   // #333
+$fx-gray:               lighten($gray-base, 33.5%) !default; // #555
+$fx-gray-light:         lighten($gray-base, 46.7%) !default; // #777
+$fx-gray-lighter:       lighten($gray-base, 93.5%) !default; // #eee
+
+$fx-brand-primary:         #58B7EC !default;
+$fx-brand-success:         #5cb85c !default;
+$fx-brand-info:            #5bc0de !default;
+$fx-brand-warning:         #f0ad4e !default;
+$fx-brand-danger:          #d9534f !default;
+
+/// form
+$form-control-border-color: #E1E5EC !default;
+$form-control-color: #666666 !default;
+$form-control-padding: 7px 15px !default;
+$form-input-height: 35px !default;
+$form-select-height: 35px !default;
+$form-select-padding: 0px 10px !default;
+$form-select-border-color: #E1E5EC !default;
+
+/// btn
+$btn-padding: 7px 10px !default;
+$btn-font-size: 12px !default;
+
+$btn-theme: (
+	default: (
+		border-color: $fx-gray-lighter,
+		background-color: transparent,
+		color: #666666
+	),
+	primary: (
+		border-color: darken($fx-brand-primary, 7%),
+		background-color: $fx-brand-primary,
+		color: #ffffff
+	),
+	success: (
+		border-color: darken($fx-brand-success, 7%),
+		background-color: $fx-brand-success,
+		color: #ffffff
+	),
+	info: (
+		border-color: darken($fx-brand-info, 7%),
+		background-color: $fx-brand-info,
+		color: #ffffff
+	),
+	warning: (
+		border-color: darken($fx-brand-warning, 7%),
+		background-color: $fx-brand-warning,
+		color: #ffffff
+	),
+	danger: (
+		border-color: darken($fx-brand-danger, 7%),
+		background-color: $fx-brand-danger,
+		color: #ffffff
+	),
+	link: (
+		border-color: transparent,
+		background-color: transparent,
+		color: #58B7EC
+	)
+) !default;

@@ -135,3 +135,31 @@
     visibility: visible;
   }
 }
+
+@mixin multilevel-nav-tabs() {
+	@include nav-tabs();
+	.sub-navi {
+		@include nav-tabs();
+	}
+}
+
+@mixin multilevel-nav-pills() {
+	@include nav-pills();
+	.sub-navi {
+		@include nav-pills();
+	}
+}
+
+@mixin multilevel-nav-stacked() {
+	@include nav-stacked();
+	.sub-navi {
+		@include nav-stacked();
+	}
+}
+
+@mixin multilevel-nav-justified() {
+	@include nav-justified();
+	.sub-navi {
+		@include nav-justified();
+	}
+}
