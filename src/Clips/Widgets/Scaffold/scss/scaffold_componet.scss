@@ -1,0 +1,177 @@
+.navbar {
+	margin: 0;
+	padding: 0;
+}
+
+
+input.form-control {
+	@include form-control() {
+		border-radius: 3px;
+		min-width: 240px;
+		padding: $form-control-padding;
+		border: 1px solid $form-control-border-color;
+		color: $form-control-color;
+		&:active,
+		&:focus {
+			outline: none;
+			border: 1px solid darken($form-control-border-color, 20%);
+		}
+	};
+	transition: all 0.45s ease;
+}
+
+.form-group {
+	.form-label {
+		@include form-label() {
+			padding: 5px 0px;
+		}
+	}
+
+	.selectboxit-container {
+		.selectboxit-enabled {
+			width: auto;
+			height: $form-select-height;
+			border: 1px solid $form-select-border-color;
+			padding: $form-select-padding;
+			position: relative;
+			display: inline-table;
+			> span {
+				display: table-cell;
+				float: none;
+				vertical-align: middle;
+				height: 100%;
+			}
+			&:active,
+			&:focus {
+				outline: none;
+				border: 1px solid darken($form-control-border-color, 20%);
+			}
+			transition: all 0.45s ease;
+		}
+		.selectboxit-arrow-container {
+			position: relative;
+		}
+		.selectboxit-options {
+			.selectboxit-option {
+				display: table;
+				vertical-align: middle;
+				width: 100%;
+				height: $form-select-height;
+				.selectboxit-option-anchor {
+					display: table-cell;
+					vertical-align: middle;
+					width: 100%;
+					height: 100%;
+				}
+			}
+		}
+	}
+
+	.help-block {
+//		display: inline-block;
+//		margin-left: 30px;
+		display: block;
+		> ul {
+			position: relative;
+			display: block;
+			margin: 0;
+			text-align: right;
+			list-style: none;
+			background-color: $fx-brand-warning;
+			color: #ffffff;
+			padding: 10px 20px;
+			&:before {
+				position: absolute;
+				content: " ";
+				@include arrow-top($tooltip-width - 1, $tooltip-height - 1, $fx-brand-warning);
+				left: $tooltip-left + 1;
+				right: auto;
+				top: -$tooltip-height + 1;
+				bottom: auto;
+				z-index: 1;
+			}
+			&:after {
+				position: absolute;
+				content: " ";
+				@include arrow-top($tooltip-width, $tooltip-height, $fx-brand-warning);
+				left: $tooltip-left;
+				right: auto;
+				top: -$tooltip-height;
+				bottom: auto;
+			}
+			transition: all 3ps ease;
+		}
+		transition: all 3ps ease;
+	}
+}
+
+.form-group.success {
+	input.form-control {
+		border-color: $fx-brand-success;
+	}
+}
+
+.form-group.warning {
+	input.form-control {
+		border-color: $fx-brand-warning;
+	}
+}
+
+.form-group.danger {
+	input.form-control {
+		border-color: $fx-brand-danger;
+	}
+}
+
+.btn {
+	@include btn();
+	transition: all 0.45s ease;
+}
+
+@each $name, $porperties in $btn-theme {
+	.btn-#{$name} {
+		@include btn() {
+			border-radius: 3px;
+			border: 1px solid get-btn-property($name, border-color);
+			@include get-btn-property($name, color);
+			@include get-btn-property($name, background-color);
+		}
+
+		&:active,
+		&:focus {
+			outline: none;
+			@include get-btn-property($name, color);
+		}
+
+		&:hover {
+			border: 1px solid darken(get-btn-property($name, border-color), 20%);
+			text-decoration: none;
+			@include get-btn-property($name, color);
+		}
+
+		&:active,
+		&.active {
+			outline: 0;
+			@include get-btn-property($name, color);
+			background-image: none;
+			box-shadow: inset 0 3px 5px darken(get-btn-property($name, border-color), 7%);
+		}
+
+		&.disabled,
+		&[disabled],
+		fieldset[disabled] & {
+			cursor: $cursor-disabled;
+			pointer-events: none; // Future-proof disabling of clicks
+			opacity: 0.65;
+			box-shadow: none;
+		}
+	}
+}
+
+.btn-link {
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+
