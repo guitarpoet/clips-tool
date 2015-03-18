@@ -74,21 +74,6 @@
 				height: 100%;
 			}
 
-			#menu {
-				> .action {
-					width: 100%;
-					height: 65px;
-					padding: 0;
-					line-height: 65px;
-					color: #6A7B97;
-					vertical-align: middle;
-					&:hover {
-						background-color: #2C3950;
-						color: #ffffff;
-					}
-				}
-			}
-
 		}
 
 		#content {
