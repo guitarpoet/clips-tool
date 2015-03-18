@@ -10,11 +10,17 @@ class SecurityFilter extends AbstractFilter {
 		$action = \Clips\context('action');
 		if($action) {
 			$result = $this->securityengine->test($action);
-			if($result) { // We got an reject
-				$result = array_map(function($item){
-					return $item->reason;
-				}, $result);
-				\Clips\error('Security', $result);
+			if($result) { // We got an rejects
+				$reasons = array();
+				$cause = 'security';
+
+				foreach($result as $item) {
+					$reasons []= $item->reason;
+					if(isset($item->cause)) {
+						$cause = $item->cause;
+					}
+				}
+				\Clips\error($cause, $reasons);
 				$chain->stop();
 				return false;
 			}

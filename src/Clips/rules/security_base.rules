@@ -15,6 +15,7 @@
 ;===============================================================================
 
 (deffunction reject (?reason) (assert (Clips\Reject (reason ?reason))))
+(deffunction reject-cause (?cause ?reason) (assert (Clips\Reject (cause ?cause) (reason ?reason))))
 (deffunction state (?state) (assert (Clips\Reject (state ?state))))
 (deffunction readonly () (assert (Clips\Reject (state "readonly"))))
 (deffunction none () (assert (Clips\Reject (state "none"))))
