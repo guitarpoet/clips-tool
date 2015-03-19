@@ -63,10 +63,14 @@ function process_list_items($params, $content, $template) {
 			$tmp = '{li}{$item}{/li}'; // The default template
 		}
 
+		$index = get_default($params, 'index');
 		$tmp = 'string:'.$tmp;
 		$content = array();
-		foreach($items as $item) {
+		$i = 0;
+		foreach($items as $key => $item) {
 			$params['item'] = $item;
+			if($index)
+				$params[$index] = $i++;
 			$content []= $template->fetch($tmp, $params);
 		}
 		$content = implode("\n$indent", $content);
