@@ -1,0 +1,230 @@
+@mixin init_scaffold_layout() {
+
+	* {
+		@include box-sizing(border-box);
+	}
+	*:before,
+	*:after {
+		@include box-sizing(border-box);
+	}
+
+	html, body {
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+	}
+
+	.container {
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		padding: 0;
+		font-size: 14px;
+
+		> .row {
+			margin: 0;
+			padding: 0;
+			display: table;
+			vertical-align: top;
+			width: 100%;
+			height: 100%;
+			&:before, &:after {
+				content: none;
+			}
+		}
+
+		#navigationbar {
+			min-width: 270px;
+			height: 100%;
+			display: table;
+			color: #ffffff;
+			background: $base-navigation-bg;
+			vertical-align: top;
+			&:before, &:after {
+				content: none;
+			}
+			.navbar-header {
+				width: 100%;
+				margin: 0;
+				padding: 0;
+				display: table-row;
+				#brand {
+					width: 100%;
+					margin: 0;
+					padding: 0;
+					height: 75px;
+					line-height: 75px;
+					text-align: center;
+				}
+			}
+
+			.navbar-section {
+				display: table-row;
+				@if mixin-exists(multilevel-nav-pills) {
+					@include multilevel-nav-pills();
+				}
+
+				@if mixin-exists(multilevel-nav-stacked) {
+					@include multilevel-nav-stacked();
+				}
+
+				margin: 0;
+				background-color: #3A4F72;
+				text-align: center;
+				height: 100%;
+			}
+
+		}
+
+		#content {
+			display: table-cell;
+			width: 100%;
+			vertical-align: top;
+			height: 100%;
+			> .row {
+				margin: 0;
+				padding: 0;
+				display: table;
+				vertical-align: top;
+				width: 100%;
+				height: 100%;
+				&:before, &:after {
+					content: none;
+				}
+			}
+
+			#quickbar {
+				display: table-row;
+				float: none;
+				width: 100%;
+				height: 75px;
+				> .row {
+					width: 100%;
+					height: 100%;
+					margin: 0;
+					position: relative;
+					overflow: auto;
+					> .column {
+						position: absolute;
+						width: 100%;
+						height: 100%;
+					}
+				}
+
+				.navbar {
+					height: 100%;
+					@include content-style();
+					.navbar-header {
+						h3 {
+							display: inline-table;
+							vertical-align: top;
+							margin: 0;
+							height: 100%;
+							line-height: 75px;
+						}
+					}
+				}
+
+			}
+
+			#toolbar {
+				@include content-style();
+				background-color: #FAF9F8;
+				.btn {
+					margin-right: 5px;
+					margin-top: 17px;
+					margin-bottom: 17px;
+				}
+
+				form {
+					display: inline-table;
+					.form-group {
+						//							display: inline-table;
+						position: relative;
+						display: inline-block;
+						margin-right: 10px;
+						.form-label {
+							margin-right: 10px;
+						}
+						.form-input {
+							display: inline-block;
+						}
+						.help-block {
+							display: inline-block;
+							position: absolute;
+							z-index: 1;
+							right: 0;
+							left: auto;
+							top: -165%;
+							bottom: auto;
+							> ul {
+								&:before {
+									position: absolute;
+									content: " ";
+									@include arrow-bottom($tooltip-width - 1, $tooltip-height - 1, $fx-brand-warning);
+									left: auto;
+									right: $tooltip-left + 1;
+									top: auto;
+									bottom: -$tooltip-height + 1 !important;
+									z-index: 1;
+								}
+								&:after {
+									position: absolute;
+									content: " ";
+									@include arrow-bottom($tooltip-width, $tooltip-height, $fx-brand-warning);
+									left: auto;
+									right: $tooltip-left;
+									top: auto;
+									bottom: -$tooltip-height !important;
+								}
+							}
+						}
+						//							.help-block {
+						//								position: absolute;
+						//								z-index: 1;
+						//								width: 100%;
+						//								left: 0;
+						//								> ul {
+						//									text-align: left;
+						//								}
+						//							}
+						.selectboxit-container {
+							vertical-align: middle;
+						}
+					}
+				}
+			}
+
+			#workbench {
+				position: relative;
+				display: table-row;
+				float: none;
+				width: 100%;
+				height: 100%;
+				background-color: #F2F0EE;
+				> .row {
+					width: 100%;
+					height: 100%;
+					margin: 0;
+					position: relative;
+					overflow: auto;
+					> .column {
+						position: absolute;
+						width: 100%;
+						height: 100%;
+					}
+				}
+
+				#editarea {
+					@include content-style();
+					padding-top: 23px;
+					padding-bottom: 23px;
+//					overflow: auto;
+//					height: 100%;
+				}
+			}
+
+		}
+
+	}
+}

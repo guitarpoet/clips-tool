@@ -1,0 +1,195 @@
+@mixin section_scaffold_datatable($args...) {
+	.dataTables_wrapper.no-footer {
+		overflow: hidden;
+		border: 1px solid transparent;
+		border-radius: 4px;
+
+		.dataTables_length {
+			display: none;
+		}
+
+		.dataTables_filter {
+			display: none;
+		}
+
+		.datatable {
+			border-left: none;
+			border-right: none;
+			border-top: none;
+			tbody {
+				tr {
+					td {
+						text-align: center;
+						color: #6f767e;
+						border-bottom: 1px solid $fx-gray-lighter;
+						a {
+							color: #6f767e;
+						}
+						&:first-child {
+							text-align: center;
+						}
+					}
+				}
+
+				tr.odd {
+					td {
+						color: $trodd-color;
+						background-color: $trodd-bg-color;
+						@include datatable-sorting($trodd-bg-color, $trodd-color, $trodd-children-color);
+						> * {
+							color: $trodd-children-color;
+							transition: all 0.45s ease;
+						}
+						transition: all 0.45s ease;
+					}
+					&:hover {
+						td {
+							color: $trodd-hover-color;
+							background-color: $trodd-hover-bg-color;
+							@include datatable-sorting($trodd-hover-bg-color, $trodd-hover-color, $trodd-hover-children-color);
+							> * {
+								color: $trodd-hover-children-color;
+								transition: all 0.45s ease;
+							}
+						}
+						transition: all 0.45s ease;
+					}
+				}
+				// end odd
+
+				tr.even {
+					td {
+						color: $treven-color;
+						background-color: $treven-bg-color;
+						@include datatable-sorting($treven-bg-color, $treven-color, $treven-children-color);
+						> * {
+							color: $treven-children-color;
+							transition: all 0.45s ease;
+						}
+						transition: all 0.45s ease;
+					}
+					&:hover {
+						td {
+							color: $treven-hover-color;
+							background-color: $treven-hover-bg-color;
+							@include datatable-sorting($treven-hover-bg-color, $treven-hover-color, $treven-hover-children-color);
+							> * {
+								color: $treven-hover-children-color;
+								transition: all 0.45s ease;
+							}
+						}
+						transition: all 0.45s ease;
+					}
+				}
+				// end even
+
+				tr.ui-selected {
+					td {
+						color: $tr-ui-selected-color;
+						background-color: $tr-ui-selected-bg-color;
+						@include datatable-sorting($tr-ui-selected-bg-color, $tr-ui-selected-color, $tr-ui-selected-children-color);
+						> * {
+							color: $tr-ui-selected-children-color;
+						}
+						transition: all 0.45s ease;
+					}
+					&:hover {
+						td {
+							color: $tr-ui-selected-hover-color;
+							background-color: $tr-ui-selected-hover-bg-color;
+							@include datatable-sorting($tr-ui-selected-hover-bg-color, $tr-ui-selected-hover-color, $tr-ui-selected-hover-children-color);
+							> * {
+								color: $tr-ui-selected-hover-children-color;
+								transition: all 0.45s ease;
+							}
+						}
+						transition: all 0.45s ease;
+					}
+				}
+				// end ui-selected
+				tr.ui-selecting {
+					td {
+						color: $tr-ui-selecting-color;
+						background-color: $tr-ui-selecting-bg-color;
+						@include datatable-sorting($tr-ui-selecting-bg-color, $tr-ui-selecting-color, $tr-ui-selecting-children-color);
+						> * {
+							color: $tr-ui-selecting-children-color;
+							transition: all 0.45s ease;
+						}
+						transition: all 0.45s ease;
+					}
+					&:hover {
+						td {
+							color: $tr-ui-selecting-hover-color;
+							background-color: $tr-ui-selecting-hover-bg-color;
+							@include datatable-sorting($tr-ui-selecting-hover-bg-color, $tr-ui-selecting-hover-color, $tr-ui-selecting-hover-children-color);
+							> * {
+								color: $tr-ui-selecting-hover-children-color;
+								transition: all 0.45s ease;
+							}
+						}
+						transition: all 0.45s ease;
+					}
+				}
+				// end ui-selecting
+			}
+		}
+		.dataTables_info {
+			float: left;
+			height: 45px;
+			line-height: 45px;
+			padding: 0;
+			padding-left: 10px;
+			color: $fx-gray-light;
+			//			color: #ffffff;
+		}
+		.dataTables_paginate {
+			float: right;
+			height: 45px;
+			padding: 0;
+			padding-top: 5px;
+			padding-bottom: 10px;
+			//			color: #ffffff;
+			span {
+				a.paginate_button {
+					font-size: 12px;
+					padding: 2px 8px;
+					//					color: #5c5e5f !important;
+					&:hover {
+						color: #ffffff !important;
+						border-color: transparent;
+						background-color: #9ea3a6;
+					}
+				}
+
+				a.paginate_button.current {
+					color: #ffffff !important;
+					background-color: $paginate-button-current-bg-color;
+				}
+			}
+
+			a.paginate_button {
+				padding-top: 5px;
+				padding-bottom: 5px;
+				&.previous, &.next {
+					i {
+						color: #5c5e5f;
+					}
+					&.disabled {
+						color: $paginate-button-disabled-color !important;
+						i {
+							color: $paginate-button-disabled-color !important;
+						}
+					}
+					&:hover {
+						border-color: transparent;
+						background: none;
+						i {
+							color: $paginate-button-disabled-color !important;
+						}
+					}
+				}
+			}
+		}
+	}
+}
