@@ -33,7 +33,10 @@ class Git implements LoggerAwareInterface {
 	 * Create the git repository support
 	 */
 	public function repo($path) {
-		return new \Gitonomy\Git\Repository($path, array('logger' => $this->logger));
+		if(\Clips\config('debug_git'))
+			return new \Gitonomy\Git\Repository($path, array('logger' => $this->logger));
+		else
+			return new \Gitonomy\Git\Repository($path);
 	}
 
 	public function setLogger(LoggerInterface $logger) {

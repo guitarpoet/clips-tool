@@ -28,7 +28,6 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 
 	public function baseUrl($url = '', $full = false) {
 		$index = config('use_rewrite')? '': '/index.php';
-		$this->logger->debug('The uri is {0}', array($_SERVER['REQUEST_URI'], $_SERVER));
 		if(!isset($this->base))
 			$this->base = dirname($_SERVER['SCRIPT_NAME']);
 		if($full) {
