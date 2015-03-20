@@ -14,7 +14,7 @@
 	"datasources_dir": ["DataSources"],
 	"bundle_dir": "application/messages",
 	"sass_folders": "application/static/scss",
-	"image_dir": "application/static/img",
+	"image_dir": ["application/static/img", "application/static/upload/img"],
 	"template_dir": ["templates", "application/views"],
 	"controller_dir": ["Controllers"],
 	"filter_dir": ["Filters"],
