@@ -541,6 +541,13 @@
 				}
 			}
 		}
+		
+		Api.prototype.clear = function(itemId) {
+			if(!itemId) {
+				_this.list.states.selectedItems = [];
+				saveState(_this.list, _this.list.states);
+			}
+		}
 
 		this.each(function() {
 			var list = $(this);
