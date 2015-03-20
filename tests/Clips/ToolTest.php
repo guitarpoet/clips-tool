@@ -5,6 +5,13 @@ class ToolTest extends Clips\TestCase {
 		$this->tool = &Clips\get_clips_tool();
 	}
 
+	/**
+	 * @Clips\Rules(rules = {"test.rules"})
+	 */
+	public function testRuleAnnotation() {
+		$this->assertEquals($this->clips->queryFacts(), array(array('rules', '__template__' => 'hello')));
+	}
+
 	public function testSetContext() {
 		$this->tool->context("test", 1);
 		$this->assertEquals($this->tool->context("test"), 1);

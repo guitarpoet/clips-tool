@@ -16,6 +16,22 @@ class TestCase extends \PHPUnit_Framework_TestCase {
 		foreach(array($re,$re->getMethod($func)) as $m) {
 			foreach($m->getAnnotations() as $a) {
 				switch(get_class($a)) {
+				case "Clips\\Rules": // We need to load the rules before test execution
+					$this->clips->clear(); // We should clear the clips every time
+					$rules = get_default($a, 'rules', array());
+					$templates = get_default($a, 'templates', array());
+
+					// Load the templates
+					foreach($templates as $t) {
+						$this->clips->template($t);
+					}
+
+					// Load the rules
+					foreach($rules as $r) {
+						$this->clips->load($r);
+					}
+
+					break;
 				case "Clips\\TestData":
 					$this->data = $this->tool->enhance($a);
 					break;

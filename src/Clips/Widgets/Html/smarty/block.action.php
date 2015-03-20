@@ -75,5 +75,12 @@ function smarty_block_action($params, $content = '', $template, &$repeat) {
 		$params['title'] = trim($content);
 	}
 	Clips\context_pop('indent_level');
+
+	$bundle_name = Clips\context('current_bundle');
+	$bundle = Clips\get_default($params, 'bundle', $bundle_name);
+	if($bundle !== null) {
+		$bundle = Clips\bundle($bundle);
+		$content = $bundle->message($content);
+	}
 	return Clips\create_tag_with_content('a', $content, $params, $default);
 }

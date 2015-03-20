@@ -57,16 +57,20 @@ function process_list_items($params, $content, $template) {
 		// We do have items
 		if(trim($content)) {
 			// Use the content as the template
-			$tmp = $content;
+			$tmp = trim($content);
 		}
 		else {
 			$tmp = '{li}{$item}{/li}'; // The default template
 		}
 
+		$index = get_default($params, 'index');
 		$tmp = 'string:'.$tmp;
 		$content = array();
-		foreach($items as $item) {
+		$i = 0;
+		foreach($items as $key => $item) {
 			$params['item'] = $item;
+			if($index)
+				$params[$index] = $i++;
 			$content []= $template->fetch($tmp, $params);
 		}
 		$content = implode("\n$indent", $content);
@@ -97,15 +101,15 @@ function static_url($uri) {
  * @author Jack
  * @date Sat Feb 21 11:49:30 2015
  */
-function base_url($uri) {
+function base_url($uri, $full = false) {
 	$router = context('router');
 	if($router)
-		return $router->baseUrl($uri);
+		return $router->baseUrl($uri, $full);
 	return $uri;
 }
 
-function site_url($uri) {
-	return base_url($uri);
+function site_url($uri, $full = false) {
+	return base_url($uri, $full);
 }
 
 /**

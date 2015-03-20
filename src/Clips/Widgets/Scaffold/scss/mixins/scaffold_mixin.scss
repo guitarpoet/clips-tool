@@ -1,0 +1,76 @@
+@mixin box-sizing($boxmodel) {
+	-webkit-box-sizing: $boxmodel;
+	-moz-box-sizing: $boxmodel;
+	box-sizing: $boxmodel;
+}
+
+@mixin form-control() {
+	display: inline-block;
+	border: none;
+	@content;
+}
+
+@mixin form-group() {
+	@content;
+}
+
+@mixin form-label() {
+	display: inline-block;
+	@content;
+}
+
+@mixin btn() {
+	display: inline-block;
+	padding: $btn-padding;
+	font-size: $btn-font-size;
+	min-width: 60px;
+	text-align: center;
+	cursor: pointer;
+	@content;
+}
+
+@mixin arrow-top($width, $height, $color) {
+	width: 0;
+	height: 0;
+	border-top: none;
+	border-bottom: $height solid $color;
+	border-right: $width solid transparent;
+	border-left: $width solid transparent;
+}
+
+@mixin arrow-bottom($width, $height, $color) {
+	width: 0;
+	height: 0;
+	border-bottom: none;
+	border-top: $height solid $color;
+	border-right: $width solid transparent;
+	border-left: $width solid transparent;
+}
+
+@mixin content-style() {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+@mixin datatable-sorting($bg, $color, $chcolor) {
+	@for $i from 1 through 3 {
+		&.sorting_#{$i} {
+			background-color: $bg;
+			color: $color;
+			> * {
+				color: $chcolor;
+			}
+		}
+	}
+}
+
+@mixin get-btn-property($state, $property) {
+	#{$property}: map-get(map-get($btn-theme, $state), $property);
+}
+
+@function get-btn-property($state, $property) {
+	@return map-get(map-get($btn-theme, $state), $property)
+}

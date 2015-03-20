@@ -6,7 +6,11 @@ class Widget extends \Clips\Widget {
 		if(!$current_bundle)
 			$current_bundle = '';
 		\Clips\context('jquery_init', <<<TEXT
-$.get(Clips.siteUrl('bundle/show/$current_bundle'), function(data) { Clips.bundle = data;}, 'json');
+
+	//====================================
+	// Initializing lang support
+	//====================================
+	$.get(Clips.siteUrl('bundle/show/$current_bundle'), function(data) { Clips.bundle = data;}, 'json');
 TEXT
 , true);
 	}
