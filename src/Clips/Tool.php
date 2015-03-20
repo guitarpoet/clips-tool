@@ -286,8 +286,10 @@ class Tool implements Interfaces\Initializable {
 				case "Clips\\MessageBundle": // The message bundle support
 					$this->enhance($a);
 					$obj->bundle = $a;
-					if(isset($a->name))
+					if(isset($a->name)) {
+						$this->_bundles[$a->name] = $a;
 						context('current_bundle', $a->name);
+					}
 					break;
 				case "Clips\\Object": // The clips object support
 					foreach($a->value as $c) {
