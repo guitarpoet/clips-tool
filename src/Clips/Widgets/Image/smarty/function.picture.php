@@ -72,7 +72,7 @@ function smarty_function_picture($params, $template) {
 	}
 	else {
 		$params['data-role'] = 'item-picture';
-		$params['path'] = Clips\get_default($params, 'path', 'responsive/size');
+		$params['path'] = Clips\site_url(Clips\get_default($params, 'path', 'responsive/size'));
 		$indent = '';
 		$content = array();
 	}
