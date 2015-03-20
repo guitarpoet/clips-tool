@@ -241,6 +241,13 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 	}
 
 	/**
+	 * Send the direct response
+	 */
+	protected function direct($content) {
+		return $this->render($content, array(), 'direct');
+	}
+
+	/**
 	 * Send the redirect response
 	 */
 	protected function redirect($url, $args = array()) {

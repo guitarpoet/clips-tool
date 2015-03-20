@@ -91,7 +91,7 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 		if(isset($this->config->js)) {
 			$js_config = $this->config->js;
             if(isset($js_config->depends)) {
-                foreach($js_config->depends as $j) {
+                foreach($js_config->depends as $d) {
 					clips_add_js($d);
 				}				
 			}			
