@@ -5,10 +5,10 @@ function smarty_function_picture($params, $template) {
 
 	if($src) {
 		if(preg_match('/_\\([A-Za-z0-9_]+\\)/', $src)) {
-			$template = true;
+			$is_template = true;
 		}
 	}
-	if(!isset($template)) {
+	if(!isset($is_template)) {
 		$path = Clips\get_default($params, 'path', 'responsive/size');
 		$resolutions = Clips\get_default($params, 'resolutions');
 		$medias = Clips\get_default($params, 'medias');
@@ -73,7 +73,8 @@ function smarty_function_picture($params, $template) {
 	else {
 		$params['data-role'] = 'item-picture';
 		$params['path'] = Clips\get_default($params, 'path', 'responsive/size');
-		$content = '';
+		$indent = '';
+		$content = array();
 	}
-	return Clips\create_tag_with_content('picture', $content, $params);
+	return Clips\create_tag_with_content('picture', implode("\n$indent", $content), $params);
 }
