@@ -1,0 +1,44 @@
+@mixin init_pinet_alert() {
+	.alert {
+		margin: 0;
+		width: 80%;
+		display: table;
+		padding: 1.5rem;
+		font-size: 1.5rem;
+		font-weight:300;
+		font-family: 'Lato', sans-serif;
+		-webkit-border-radius: 5px;
+		-moz-border-radius: 5px;
+		border-radius: 5px;
+		-webkit-transition: all 1s ease-out;
+		-moz-transition: all 1s ease-out;
+		-o-transition: all 1s ease-out;
+		transition: all 1s ease-out;
+		
+		&.error {
+			background: #EA6C6C;
+			color: #fff;
+		}
+		
+		.alert-message {
+			display: table-cell;
+		}
+			
+		.alert-control {  
+			padding: 10px;
+			display: table-cell;
+			border: 1px solid #a71d5d;
+			text-align: center;
+		}
+	}
+	
+	.is-visible {
+		opacity: 1;
+	}
+	.is-hidden {
+		opacity: 0;
+	}
+	.is-removed {
+		display: none;
+	}
+}
