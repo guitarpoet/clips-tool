@@ -677,7 +677,8 @@ class Tool implements Interfaces\Initializable {
 
 		$bundle = new MessageBundle();
 		$bundle->name = $name;
-		return $this->enhance($bundle);
+		$this->_bundles[$name] = $this->enhance($bundle);
+		return $bundle;
 	}
 
 	public function model($model) {
