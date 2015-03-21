@@ -7,7 +7,7 @@ class Widget extends \Clips\Widget {
 	//====================================
 	// Initializing Clips Rules
 	//====================================
-	Clips.rule = new Clips.RuleEngine('".\Clips\site_url('clips/commands')."');\n", 
+	Clips.rules = new Clips.RuleEngine('".\Clips\site_url('clips/commands')."');\n", 
 			true);
 	}
 }

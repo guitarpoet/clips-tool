@@ -21,7 +21,7 @@ Clips.RuleEngine.prototype = {
 	},
 	run: function(callback) {
 		$.post(this.server, {'commands': JSON.stringify(this.commands)}, function(data){
-			console.dir(data);
+			callback.call(Clips.rules, data);
 		}, 'json');
 	}
 }
