@@ -286,8 +286,10 @@ class Tool implements Interfaces\Initializable {
 				case "Clips\\MessageBundle": // The message bundle support
 					$this->enhance($a);
 					$obj->bundle = $a;
-					if(isset($a->name))
+					if(isset($a->name)) {
+						$this->_bundles[$a->name] = $a;
 						context('current_bundle', $a->name);
+					}
 					break;
 				case "Clips\\Object": // The clips object support
 					foreach($a->value as $c) {
@@ -356,15 +358,15 @@ class Tool implements Interfaces\Initializable {
 
 	public function enhance($obj) {
 		// Interface enhances
-		if(is_subclass_of($obj, 'Psr\\Log\\LoggerAwareInterface')) {
+		if(valid_obj($obj, 'Psr\\Log\\LoggerAwareInterface')) {
 			$obj->setLogger($this->getLogger(get_class($obj))); // Setting the logger according to the class name
 		}
 
-		if(is_subclass_of($obj, 'Clips\\Interfaces\\ClipsAware')) {
+		if(valid_obj($obj, 'Clips\\Interfaces\\ClipsAware')) {
 			$obj->setClips($this->clips);
 		}
 
-		if(is_subclass_of($obj, 'Clips\\Interfaces\\ToolAware')) {
+		if(valid_obj($obj, 'Clips\\Interfaces\\ToolAware')) {
 			$obj->setTool($this);
 		}
 
@@ -677,7 +679,8 @@ class Tool implements Interfaces\Initializable {
 
 		$bundle = new MessageBundle();
 		$bundle->name = $name;
-		return $this->enhance($bundle);
+		$this->_bundles[$name] = $this->enhance($bundle);
+		return $bundle;
 	}
 
 	public function model($model) {

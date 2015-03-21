@@ -222,7 +222,7 @@ class Pagination {
 		$this->length = $params['length'];
 
 		if(isset($params['search']))  {
-			if(isset($params['search']['value'])) {
+			if(isset($params['search']['value']) && trim($params['search']['value'])) {
 				$or = array();
 				$or_value = $params['search']['value'];
 			}

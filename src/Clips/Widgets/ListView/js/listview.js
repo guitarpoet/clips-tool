@@ -541,6 +541,13 @@
 				}
 			}
 		}
+		
+		Api.prototype.clear = function(itemId) {
+			if(!itemId) {
+				_this.list.states.selectedItems = [];
+				saveState(_this.list, _this.list.states);
+			}
+		}
 
 		this.each(function() {
 			var list = $(this);
@@ -548,7 +555,9 @@
 			list.wrap(settings.wrap); // Added the list wrap
 			requestData(list);	// Requesting the data for the listview
 			createFliterbox(list); // Create the filterbox for listview
+			list.trigger('list.createfilter', [list]);
 			createOrderbox(list);
+			list.trigger('list.createorderbox', [list]);
 			createItemlengthbox(list);	 // Create the length choice box
 			setSelectablePlugin(list); // Initilize the selectable function for listview
 			self.data('api', new Api(list));
@@ -556,6 +565,7 @@
 			// Getting the list's basic informations
 			$(window).resize(function(){ // If the size of the list has been changed, relayout the items
 				layoutItems(list);
+				self.trigger('list.resize', [list]);
 			});
 		});
 	}

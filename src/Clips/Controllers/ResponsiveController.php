@@ -22,7 +22,7 @@ class ResponsiveController extends Controller {
 			return;
 		}
 
-		$args = func_get_args();
+		$args = array_map(function($item){ return urldecode($item); }, func_get_args());
 		$size = array_shift($args);
 		$file = implode('/', $args);
 
