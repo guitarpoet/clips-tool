@@ -11,8 +11,7 @@
 	},
 	"scss": {
 		"files": [
-			"pinet_alert",
-			"pinet_notification"
+			"pinet_alert"
 		]
 	}
 }

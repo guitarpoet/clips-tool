@@ -1,44 +1,74 @@
 @mixin init_pinet_alert() {
 	.alert {
-		margin: 0;
-		width: 80%;
+		margin: 1rem;
+		width: calc(100% - 2rem);
 		display: table;
-		padding: 1.5rem;
 		font-size: 1.5rem;
-		font-weight:300;
+		font-weight: 300;
 		font-family: 'Lato', sans-serif;
-		-webkit-border-radius: 5px;
-		-moz-border-radius: 5px;
 		border-radius: 5px;
-		-webkit-transition: all 1s ease-out;
-		-moz-transition: all 1s ease-out;
-		-o-transition: all 1s ease-out;
-		transition: all 1s ease-out;
-		
+
 		&.error {
 			background: #EA6C6C;
 			color: #fff;
+			.alert-control .btn{
+				border: 1px solid darken(#EA6C6C, 10%);
+			}
+			.alert-control .btn:hover {
+				background-color: lighten(#EA6C6C, 10%);
+			}			
+		}
+
+		&.info {
+			background: #1c94c4;
+			color: #fff;
+			.alert-control .btn{
+				border: 1px solid darken(#1c94c4, 10%);
+			}
+			.alert-control .btn:hover {
+				background-color: lighten(#1c94c4, 10%);
+			}			
+		}
+
+		&.success {
+			background: #0dc5a1;
+			color: #fff;
+			.alert-control .btn{
+				border: 1px solid darken(#0dc5a1, 10%);
+			}
+			.alert-control .btn:hover {
+				background-color: lighten(#0dc5a1, 10%);
+			}			
+		}
+
+		&.warning {
+			background: #f0ad4e;
+			color: #fff;
+			.alert-control .btn{
+				border: 1px solid darken(#f0ad4e, 10%);
+			}
+			.alert-control .btn:hover {
+				background-color: lighten(#f0ad4e, 10%);
+			}			
+		}
+
+		.alert-message {
+			padding: 1.5rem 1.5rem;
+			display: table-cell;
+		}
+
+		.alert-control {
+			padding: 1.5rem 1.5rem;
+			display: table-cell;
+			text-align: center;
+			cursor: pointer;
+		}
+
+		.alert-control .btn {
+			border-radius: 3px;
+			padding: 10px;
+			margin-right: 1rem;
 		}
 		
-		.alert-message {
-			display: table-cell;
-		}
-			
-		.alert-control {  
-			padding: 10px;
-			display: table-cell;
-			border: 1px solid #a71d5d;
-			text-align: center;
-		}
-	}
-	
-	.is-visible {
-		opacity: 1;
-	}
-	.is-hidden {
-		opacity: 0;
-	}
-	.is-removed {
-		display: none;
 	}
 }
