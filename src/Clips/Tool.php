@@ -358,15 +358,15 @@ class Tool implements Interfaces\Initializable {
 
 	public function enhance($obj) {
 		// Interface enhances
-		if(is_subclass_of($obj, 'Psr\\Log\\LoggerAwareInterface')) {
+		if(valid_obj($obj, 'Psr\\Log\\LoggerAwareInterface')) {
 			$obj->setLogger($this->getLogger(get_class($obj))); // Setting the logger according to the class name
 		}
 
-		if(is_subclass_of($obj, 'Clips\\Interfaces\\ClipsAware')) {
+		if(valid_obj($obj, 'Clips\\Interfaces\\ClipsAware')) {
 			$obj->setClips($this->clips);
 		}
 
-		if(is_subclass_of($obj, 'Clips\\Interfaces\\ToolAware')) {
+		if(valid_obj($obj, 'Clips\\Interfaces\\ToolAware')) {
 			$obj->setTool($this);
 		}
 
