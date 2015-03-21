@@ -1,0 +1,27 @@
+Clips.RuleEngine = function(server) {
+	this.server = server;
+	this.commands = [];
+}
+
+Clips.Command = function(command, data) {
+	this.command = command;
+	this.data = data;
+}
+
+Clips.RuleEngine.prototype = {
+	command: function(command, data) {
+		this.commands.push(new Clips.Command(command, data));
+		return this;
+	},
+	assert: function(data) {
+		return this.command('assert', data);
+	},
+	load: function(rules) {
+		return this.command('load', rules);
+	},
+	run: function(callback) {
+		$.post(this.server, {'commands': JSON.stringify(this.commands)}, function(data){
+			console.dir(data);
+		}, 'json');
+	}
+}

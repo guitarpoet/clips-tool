@@ -1,0 +1,81 @@
+;===============================================================================
+;
+; The Rules For ListView Layout
+;
+; This rule will layout the list view
+; 
+; @version 1.0
+; @author Jack <guitarpoet@gmail.com>
+; @date Wed Mar 18 16:47:39 2015
+;
+;===============================================================================
+
+;===============================================================================
+;
+; Templates
+;
+;===============================================================================
+
+(deftemplate box
+	"The Layout Box Model"
+	(slot index (type NUMBER)) ; The layout index of this box
+	(slot x (type NUMBER)) ; X Position
+	(slot y (type NUMBER)) ; Y Position
+	(slot width (type NUMBER)) ; Box Width
+	(slot height (type NUMBER)) ; Box Height
+	(slot margin-top (type NUMBER)) ; Box Margin Top
+	(slot margin-bottom (type NUMBER)) ; Box Margin Bottom
+	(slot margin-left (type NUMBER)) ; Box Margin Left
+	(slot margin-right (type NUMBER)) ; Box Margin Right
+	(slot layout (type SYMBOL) (default FALSE)) ; Is this box needs layout?
+)
+
+(deftemplate test-box
+	"The Layout Box Model For Testing"
+	(slot index (type NUMBER)) ; The layout index of this box
+	(slot x (type NUMBER)) ; X Position
+	(slot y (type NUMBER)) ; Y Position
+	(slot width (type NUMBER)) ; Box Width
+	(slot height (type NUMBER)) ; Box Height
+	(slot margin-top (type NUMBER)) ; Box Margin Top
+	(slot margin-bottom (type NUMBER)) ; Box Margin Bottom
+	(slot margin-left (type NUMBER)) ; Box Margin Left
+	(slot margin-right (type NUMBER)) ; Box Margin Right
+	(slot layout (type SYMBOL) (default FALSE)) ; Is this box needs layout?
+)
+
+;===============================================================================
+;
+; Rules
+;
+;===============================================================================
+
+(defrule if-test-box-is-out-of-container-remove-it
+	(width ?width)
+	?box <- (test-box (index ?n&~nil) (x ?nx&~nil) (y ?n&~nil) (width ?nw&~nil) (height ?nh&~nil) 
+		(margin-left ?nml&~nil) (margin-right ?nmr&~nil) (margin-top ?nmt&~nil) (margin-bottom ?nmb&~nil))
+	(test (> (+ ?nx ?nw ?nmr) ?width))
+	=>
+	(retract ?box)
+)
+
+(defrule if-new-box-is-hitting-the-old-box-layout-it
+	(width ?width)
+	(hgap ?hgap&:(integerp ?hgap))
+	(vgap ?vgap&:(integerp ?vgap))
+	?new <- (test-box (index ?n) (x ?nx~nil) (y ?n~nil) (width ?nw) (height ?nh) (margin-left ?nml) (margin-right ?nmr) (margin-top ?nmt) (margin-bottom ?nmb))
+	?old <- (box (index ?o&(< ?o ?n)) (x ?ox) (y ?oy) (width ?ow) (height ?oh) (margin-left ?oml) (margin-right ?omr) (margin-top ?omt) (margin-bottom ?omb))
+	(test 
+		(not 
+			(and 
+				(< (+ ?nx ?nw ?nmr)) ; The box must locate in the container's width
+				(< (+ ?nx ?nw ?nmr ?vgap ?oml) ?ox) ; The box can be at old box's left part
+				(< (+ ?ox ?ow ?omr ?vgap ?nml) ?nx) ; The box can be at old box's right part
+				(< (+ ?ny ?nh ?nmb ?hgap ?omt) ?oy) ; The box can be at old box's bottom part
+				(< (+ ?oy ?oh ?omb ?hgap ?omt) ?ny) ; The box can be at old box's top part
+			)
+		)
+	)
+	=>
+	(modify ?new (layout TRUE))
+)
