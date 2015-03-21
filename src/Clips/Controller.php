@@ -112,6 +112,10 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 					}
 					$args['create'] = $this->_action($actions->value.'/create', null, 'Create');
 				}
+
+				if(get_annotation($this, 'Clips\\Timestamp', $method)) {
+					$args['timestamp'] = timestamp();
+				}
 				break;
 			}
 		}

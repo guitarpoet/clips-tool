@@ -1,0 +1,11 @@
+{
+	"author": "Jack",
+	"date": "Wed Mar 18 13:57:56 2015",
+	"version": "1.0",
+	"name": "Rules",
+	"doc":"The CLIPS Rule Engine for JavaScript",
+	"depends": ["jquery"],
+	"js": {
+		"files": ["clips.rules.js"]
+	}
+}
