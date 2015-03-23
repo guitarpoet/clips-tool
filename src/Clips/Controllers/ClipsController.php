@@ -22,6 +22,7 @@ class ClipsController extends Controller {
 				break;
 			}
 		}
+		$this->clips->run();
 		$facts = $this->clips->queryFacts();
 		return $this->json($facts);
 	}
