@@ -109,6 +109,7 @@
 					saveState(list, list.states);
 				}
 			}
+
 		}
 
 		function getState(list) {
@@ -142,7 +143,9 @@
 
 				var cols = [];
 				$.each(settings.col_objs, function(i,item) {
-					cols.push(item.to_query());
+					if(item.searchable === true || item.searchable === undefined) {
+						cols.push(item.to_query());
+					}
 				});
 
 				var orderColumn = 0;
@@ -175,7 +178,7 @@
 					listview_option.search.value = list.search_value
 				}
 
-				$.getJSON(settings.ajax, listview_option, function(data) {
+				$.post(settings.ajax, listview_option, function(data) {
 					p = calculatePagination(data.start, data.length, data.recordsFiltered);
 					list.states = listview_option;
 					makeItems(list, data);
