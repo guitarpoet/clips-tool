@@ -76,12 +76,37 @@
 			if(savedStates) {
 				list.states = savedStates;
 				list.start = savedStates.start;
+				
 				list.pageLength = savedStates.length;
+				
 				if(savedStates.search && savedStates.search.value)
 					list.search_value = savedStates.search.value;
 				if(savedStates.order && savedStates.order[0].column) {
 					list.orderColumn = savedStates.order[0].column;
 					list.orderDir = savedStates.order[0].dir;
+				}
+			}
+		}
+		
+		function restoreSettings(list) {
+			var settingsPagelengthExistInselectoptions;
+			
+			if(settings.pageLength) {
+				settingsPagelengthExistInselectoptions = settings.select_options.indexOf(settings.pageLength);
+
+				if(settingsPagelengthExistInselectoptions < 0) {
+					list.states.oldPagelength = settings.pageLength;
+					saveState(list, list.states);
+					list.pageLength = settings.pageLength;
+				}				
+			}
+			else {
+				if(list.states.oldPagelength) {
+					if(list.states.oldPagelength == list.pageLength) {
+						list.pageLength = 10;	
+					}
+					list.states.oldPagelength = false;
+					saveState(list, list.states);
 				}
 			}
 		}
@@ -109,10 +134,6 @@
 
 				if(!list.start) {
 					list.start = 0;
-				}
-
-				if(settings.pageLength) {
-					list.pageLength = settings.pageLength;
 				}
 
 				if(!list.pageLength) {
@@ -373,13 +394,21 @@
 
 		function createItemlengthbox(list) {
 			var lengthSelect = $(settings.length_select_template);
+			var listPageLengthEqualsOptions = false;
 			for (var i = 0; i < settings.select_options.length; i++) {
 				var str = '<option>'+settings.select_options[i]+'</option>';
 				if (list.pageLength == settings.select_options[i]) {
+					listPageLengthEqualsOptions = true;
 					str = '<option selected>'+settings.select_options[i]+'</option>';
 				};
+				
 				lengthSelect.find('select').append(str);
 			};
+
+			if(!listPageLengthEqualsOptions) {
+				str = '<option selected>'+list.pageLength+'</option>';
+				lengthSelect.find('select').prepend(str);
+			}
 
 			list.parent().prepend(lengthSelect);
 
@@ -552,6 +581,7 @@
 		this.each(function() {
 			var list = $(this);
 			restoreSavedStates(list); // Restore the states at first
+			restoreSettings(list);
 			list.wrap(settings.wrap); // Added the list wrap
 			requestData(list);	// Requesting the data for the listview
 			createFliterbox(list); // Create the filterbox for listview
@@ -561,7 +591,11 @@
 			createItemlengthbox(list);	 // Create the length choice box
 			setSelectablePlugin(list); // Initilize the selectable function for listview
 			self.data('api', new Api(list));
-            self.trigger('list.init', [list]);
+			
+			$(window).on('load', function(){
+				self.trigger('list.init', [list]);	
+			});
+			
 			// Getting the list's basic informations
 			$(window).resize(function(){ // If the size of the list has been changed, relayout the items
 				layoutItems(list);
