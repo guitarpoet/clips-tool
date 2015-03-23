@@ -79,6 +79,10 @@
 				
 				list.pageLength = savedStates.length;
 				
+				if(!list.states.oldPagelength) {
+					list.states.oldPagelength = false;
+				}
+				
 				if(savedStates.search && savedStates.search.value)
 					list.search_value = savedStates.search.value;
 				if(savedStates.order && savedStates.order[0].column) {
