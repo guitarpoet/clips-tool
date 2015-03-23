@@ -1,0 +1,17 @@
+{
+	"author": "Andy",
+	"date": "Fri Mar 20 14:49:03 2015",
+	"version": "1.0",
+	"name": "Alert",
+	"doc":"alert",
+	"js": {
+		"files": [
+			"pinet_alert"
+		]
+	},
+	"scss": {
+		"files": [
+			"pinet_alert"
+		]
+	}
+}
