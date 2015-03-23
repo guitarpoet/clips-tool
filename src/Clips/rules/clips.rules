@@ -60,3 +60,4 @@
 (deffunction php-require-once (?file) (php_call "Clips\\clips_php_require_once" ?file))
 (deffunction php-function-exists (?func) (php_call "function_exists" ?func))
 (deffunction current-env () (php_call "Clips\\current_env"))
+(deffunction clips-log (?message) (php_call "Clips\\log" ?message)

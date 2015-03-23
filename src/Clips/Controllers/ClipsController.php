@@ -8,12 +8,16 @@ class ClipsController extends Controller {
 		$this->clips->clear();
 		$json = $this->request->post('commands');
 		$commands = \CLips\parse_json($json);
+		$filters = array();
 
 		// Executing the commands
 		foreach($commands as $c) {
 			$command = $c->command;
 			$data = $c->data;
 			switch($command) {
+			case 'filter': 
+				$filters []= $data;
+				break;
 			case 'assert':
 				$this->clips->assertFacts($data);
 				break;
@@ -24,6 +28,18 @@ class ClipsController extends Controller {
 		}
 		$this->clips->run();
 		$facts = $this->clips->queryFacts();
+		if($filters) {
+			$tmp = array();
+			foreach($facts as $f) {
+				foreach($filters as $filter) {
+					if($f['__template__'] == $filter) {
+						$tmp []= $f;
+						break;
+					}
+				}
+			}
+			$facts = $tmp;
+		}
 		return $this->json($facts);
 	}
 }
