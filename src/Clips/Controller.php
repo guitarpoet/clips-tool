@@ -313,22 +313,33 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 	/**
 	 * Send the image file
 	 */
-	protected function image($img) {
-		if(file_exists($img)) {
-			$path_parts = \pathinfo($img);
-			$ext = $path_parts['extension'];
-
-			if($ext == 'jpg' || $ext == 'jpeg') {
-				$header = array('Content-Type' => 'image/jpg');
-			}
-			else if($ext == 'png') {
-				$header = array('Content-Type' => 'image/png');
-			}
-			else if($ext == 'gif') {
-				$header = array('Content-Type' => 'image/gif');
-			}
-			return $this->render(file_get_contents($img), array(), 'direct', $header);
+	protected function image($img, $format = null) {
+		if($format) { // If this is the image itself
+			$content = $img;
 		}
-		$this->error('Can\'t find the image ['.$img.'] to render!', 'render');
+		else {
+			// This is the image file
+			if(file_exists($img)) {
+				$path_parts = \pathinfo($img);
+				$format = $path_parts['extension'];
+				$content = file_get_contents($img);
+			}
+			else {
+				$this->error('Can\'t find the image ['.$img.'] to render!', 'render');
+				return false;
+			}
+		}
+
+		if($format == 'jpg' || $format == 'jpeg') {
+			$header = array('Content-Type' => 'image/jpg');
+		}
+		else if($format == 'png') {
+			$header = array('Content-Type' => 'image/png');
+		}
+		else if($format == 'gif') {
+			$header = array('Content-Type' => 'image/gif');
+		}
+
+		return $this->render($content, array(), 'direct', $header);
 	}
 }
