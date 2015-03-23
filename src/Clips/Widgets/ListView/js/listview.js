@@ -86,6 +86,9 @@
 					list.orderDir = savedStates.order[0].dir;
 				}
 			}
+			else {
+				list.states = {};
+			}
 		}
 		
 		function restoreSettings(list) {
