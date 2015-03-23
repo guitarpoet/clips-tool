@@ -19,6 +19,9 @@ Clips.RuleEngine.prototype = {
 	load: function(rules) {
 		return this.command('load', rules);
 	},
+	filter: function(filter) {
+		return this.command('filter', filter);
+	},
 	run: function(callback) {
 		$.post(this.server, {'commands': JSON.stringify(this.commands)}, function(data){
 			callback.call(Clips.rules, data);
