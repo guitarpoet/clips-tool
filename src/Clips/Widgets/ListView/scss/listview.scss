@@ -77,6 +77,8 @@
 				background: #d3d3d3;
 			}
 		}
+
+		@include layout-absolute('.listview_item');
 	}
 
 	.listview_pagination {
@@ -137,4 +139,3 @@
 		}
 	}
 }
-

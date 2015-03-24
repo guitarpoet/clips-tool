@@ -36,6 +36,7 @@
 			ajax: '', // The service url for the list view items
 			gap: 10, // The gap for all the list items, usefule for dynamic, default is 10px
 			vgap: 10, // The vertical gap for all the list items
+			hgap: 10,
 			min_gap: 10, // The min gap for all the list item, this is used for static list view
 			pg_ratio: 1, // The padding and gap ratio, this is work for static list view, for static list view, the padding and the gap is calculated, default is 1, the gap and the padding is the same
 			processing: true,
@@ -482,27 +483,41 @@
 			});
 
 			if(settings.listtype == 'static' || settings.columns_count == -1) { // Setting columns to -1 triggers static list view
-				// box.iw = list.children('li').width(); // Get the item width, only support all the item has the same width in current version(0.0.1)
-				// box.mg = settings.min_gap;
-				// box.r = settings.pg_ratio;
-				// // Now let's calcaulte how many columns can we have
-				// box.columns = Math.floor((box.width - 2 * box.mg * box.r + box.mg) / (box.iw + box.mg));
-				// box.gap = Math.floor((box.width - box.iw * box.columns) / (2 * box.r + box.columns - 1));
-				// box.pl = box.gap * box.r;
-				// box.pr = box.gap * box.r;
-				// list.css('padding-left', box.pl);
-				// list.css('padding-right', box.pr);
-				// list.children('li').not('.listview_item_template').each(function(index, item) {
-				// 	if((index + 1) % box.columns != 0 || box.columns == 1) { //
-				// 		$(item).css('margin-right', box.gap);
-				// 	}
-				// 	$(item).css('margin-bottom', box.vgap);
-				// });
+
+				var layoutOptions = $.extend({},  {
+					itemClass:'item',
+					excludeItemClass:'listview_item_template',
+					vgap: 0,
+					hgap: 0
+				}, settings);
+
 				var listview_items =  list.children("li").filter('.listview_item').not('.listview_item_template');
 				var mr =  parseInt(listview_items.eq(0).css("margin-right")) || 0;
-				var mb = parseInt(listview_items.eq(0).css("margin-bottom")) || 0;
-				var cols = Math.floor((list.width() + mr) /  (listview_items.eq(0).width() + mr) );
-				layout(listview_items, cols, mb, mr);
+				var mb = parseInt(listview_items.eq(0).css("margin-bottom")) || 0;				
+				
+				if(mr != 0) {
+					layoutOptions.hgap = mr;	
+				}
+				
+				if(mb != 0) {
+					layoutOptions.vgap = mb;
+				}
+				
+				
+				if(settings.layoutType) {
+					switch (settings.layoutType) {
+						case 'rowleft':
+							layoutOptions.layout = ["layout", "row", "left"];
+							break;
+						case 'flowleft':
+							layoutOptions.layout = ["layout", "flow", "left"];
+							break;
+						default:
+							break;
+					}					
+				}
+				
+				Clips.layout("#" + list.attr('id'), layoutOptions);
 			}
 			else {
 				box.w = box.width - box.pl - box.pr; // The container width
