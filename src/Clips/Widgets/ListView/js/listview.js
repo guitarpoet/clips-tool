@@ -184,6 +184,7 @@
 				$.post(settings.ajax, listview_option, function(data) {
 					p = calculatePagination(data.start, data.length, data.recordsFiltered);
 					list.states = listview_option;
+					self.trigger('list.beforeDraw', [list, data]);
 					makeItems(list, data);
 					selectItems(list, p.current);
 					layoutItems(list); // Layout the list first
