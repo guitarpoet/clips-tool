@@ -1,0 +1,354 @@
+;===============================================================================
+;
+; Templates
+;
+;===============================================================================
+
+(deftemplate box
+	"The Layout Box Model"
+	(slot index (type NUMBER)) ; The layout index of this box
+	(slot x (type NUMBER) (default -1)) ; X Position
+	(slot y (type NUMBER) (default -1)) ; Y Position
+	(slot width (type NUMBER)) ; Box Width
+	(slot height (type NUMBER)) ; Box Height
+	(slot margin-top (type NUMBER)) ; Box Margin Top
+	(slot margin-bottom (type NUMBER)) ; Box Margin Bottom
+	(slot margin-left (type NUMBER)) ; Box Margin Left
+	(slot margin-right (type NUMBER)) ; Box Margin Right
+)
+
+(deftemplate try-box
+	"The Try Layout Box Model"
+	(slot index (type NUMBER)) ; The layout index of this box
+	(slot x (type NUMBER) (default -1)) ; X Position
+	(slot y (type NUMBER) (default -1)) ; Y Position
+	(slot width (type NUMBER)) ; Box Width
+	(slot height (type NUMBER)) ; Box Height
+)
+
+(deftemplate result-box
+	"The Try Layout Box Model"
+	(slot index (type NUMBER)) ; The layout index of this box
+	(slot x (type NUMBER) (default -1)) ; X Position
+	(slot y (type NUMBER) (default -1)) ; Y Position
+)
+
+(deftemplate row
+	"The layout row"
+	(slot index (type NUMBER))
+	(slot y (type NUMBER))
+	(slot height (type NUMBER))
+	(multislot boxes)
+)
+
+;===============================================================================
+;
+; Common Rules
+;
+;===============================================================================
+
+(defrule make-box
+	"Creating the box model base on the input"
+	?b <- (b ?index ?width ?height ?ml ?mr ?mt ?mb)
+	=>
+	(assert (box (index ?index) (width ?width) (height ?height)
+		(margin-left ?ml) (margin-right ?mr) (margin-top ?mt) (margin-bottom ?mb)))
+	(retract ?b)
+)
+
+(defrule place-first-item-at-left-top
+	"This rule will insert the first item into the left top"
+	?first <- (box (index 0) (x -1) (y -1))
+	=>
+	(modify ?first (x 0) (y 0))
+)
+
+;===============================================================================
+;
+; Layout Row Left Rules
+;
+;===============================================================================
+
+(defrule layout-row-left-add-the-first-row
+	"This rule will insert the first row when the first box is layouted"
+	(layout "row" "left")
+	?first <- (box (index 0) (x 0) (y 0) (height ?h))
+	=>
+	(assert (row (index 0) (height ?h) (boxes 0) (y 0)))
+)
+
+(defrule layout-row-left-add-item-next-to-last
+	"This rule will add the item next to the last item by default in row left layout"
+    (declare (salience -100)) ; Make this lower priority
+	(layout "row" "left")
+	(hgap ?gap)
+	?row  <- (row (index ?ri) (boxes $?boxes) (height ?rh))
+	?last <- (box (index ?l&:(member$ ?l $?boxes)) (x ?lx&~-1) (y ?ly&~-1) (width ?lw))
+	?this <- (box (index ?t&:(= (+ ?l 1) ?t)) (x -1) (y -1) (height ?th))
+	=>
+	(modify ?this (x (+ ?lx ?lw ?gap)) (y ?ly))
+	(modify ?row (boxes $?boxes ?t))
+)
+
+(defrule layout-row-left-set-the-height-of-the-row-to-the-highest-item-of-this-row
+	"This rule will update the row's height to the highest item of this row in row left layout"
+	(layout "row" "left")
+	(total-width ?total)
+	?row  <- (row (boxes $?boxes) (height ?rh))
+	?box <- (box (index ?index&:(member$ ?index $?boxes)) (x ?x&~-1) (y ?y&~-1)
+		(height ?height&:(> ?height ?rh)) (width ?width&:(<= (+ ?x ?width) ?total)))
+	=>
+	(modify ?row (height ?height))
+)
+
+(defrule layout-row-left-move-the-item-to-a-new-row-if-end-is-reached
+	"This rule will move the item to another new row if the end is reached"
+	(layout "row" "left")
+	(total-width ?total)
+	(vgap ?gap)
+	?row  <- (row (index ?ri) (boxes $?boxes) (y ?ry) (height ?rh))
+	?item <- (box (index ?i&:(member$ ?i $?boxes)) (x ?x&~-1) (width ?width&:(> (+ ?x ?width) ?total)) (height ?height))
+	=>
+	(modify ?row (boxes (delete-member$ $?boxes ?i)))
+	(assert (row (index (+ ?ri 1)) (height ?height) (boxes ?i) (y (+ ?ry ?rh ?gap))))
+	(modify ?item (x 0) (y (+ ?ry ?rh ?gap)))
+)
+
+;===============================================================================
+;
+; Layout Flow Left Rules
+;
+;===============================================================================
+
+(defrule layout-flow-left-add-item-next-to-last
+	"This rule will add item next to last item by default for flow left layout"
+    (declare (salience -100)) ; Make this lower priority
+	(layout "flow" "left")
+	?last <- (box (index ?l) (x ?lx&~-1) (y ?ly&~-1) (width ?lw) (margin-right ?lmr))
+	?this <- (box (index ?t&:(= (+ ?l 1) ?t)) (x -1) (y -1) (margin-left ?tml) (height ?th))
+	=>
+	(modify ?this (x (+ ?lx ?lw ?lmr ?tml)) (y ?ly))
+)
+
+(defrule layout-flow-need-to-move-item-to-next-line-if-width-exceeded
+	"This rule will mark the item index to move to next line"
+	(total-width ?total)
+	(layout "flow" "left")
+	?box <- (box (margin-right ?mr) (index ?index) (x ?x) (width ?width&:(> (+ ?x ?width ?mr) ?total)))
+	=>
+	(assert (next-line ?index))
+	(modify ?box (x -1) (y -2))
+)
+
+(defrule layout-flow-find-the-item-to-put-next-line-item-below
+	"This rule will try to find the y location of the next line item"
+    (declare (salience 100)) ; Make this higher priority
+	(next-line ?index)
+	(layout "flow" "left")
+	(total-width ?total)
+	?this <- (box (index ?t&:(= ?t ?index)) (margin-top ?tmt) (x -1) (y -2) (width ?tw) (margin-left ?tml) (margin-right ?tmr))
+	?last <- (box (index ?l&:(< ?l ?index)) (x ?lx&~-1) (y ?ly&~-1) (margin-right ?lmr) (width ?lw&:(> (+ ?lx ?lw ?lmr ?tml ?tw ?tmr) ?total)) (height ?lh) (margin-bottom ?lmb))
+	=>
+	(assert (try-y (+ ?ly ?lh ?lmb ?tmt)))
+)
+
+(defrule layout-flow-add-the-default-try-y
+	"This rule will add default try-y fact"
+	(next-line ?index)
+	(layout "flow" "left")
+	?t <- (try-y ?try)
+	(not (y ?))
+	=>
+	(retract ?t)
+	(assert (y ?try))
+)
+
+(defrule layout-flow-find-the-largest-y-for-next-line-item
+	"This rule will replace the y to a more bigger try-y"
+	(next-line ?index)
+	(layout "flow" "left")
+	?t <- (try-y ?try)
+	?y <- (y ?oldy&:(< ?oldy ?try))
+	=>
+	(retract ?y ?t)
+	(assert (y ?try))
+)
+
+(defrule layout-flow-remove-the-useless-try-y
+	"This rull will remove the useless try-y fact"
+	(next-line ?index)
+	(layout "flow" "left")
+	?t <- (try-y ?try)
+	?y <- (y ?oldy&:(>= ?oldy ?try))
+	=>
+	(retract ?t)
+)
+
+(defrule layout-flow-set-y-of-next-line-item
+	"This rule will update item's y location when found"
+	(next-line ?index)
+	(layout "flow" "left")
+	(not (try-y ?))
+	?y <- (y ?value)
+	?this <- (box (index ?t&:(= ?t ?index)))
+	=>
+	(modify ?this (y ?value))
+	(retract ?y)
+)
+
+(defrule layout-flow-if-no-block-box-is-there-move-the-item-to-left
+	"This rule will put item to the left most if no block is found"
+	?n <- (next-line ?index)
+	(layout "flow" "left")
+	?this <- (box (index ?t&:(= ?index ?t)) (x -1) (y ?y&~-2) (width ?w) (margin-left ?ml) (margin-right ?mr))
+	(total-width ?total)
+	(not (box (index ?bi&:(< ?bi ?index)) (x ?bx) (y ?by)
+		(width ?bw) (margin-right ?bmr&:(< (+ ?bx ?bw ?bmr ?ml ?w ?mr) ?total)) (height ?bh&:(> (+ ?bh ?by) ?y))))
+	=>
+	(modify ?this (x 0))
+	(retract ?n)
+)
+
+(defrule layout-flow-if-no-block-box-is-there-move-the-item-to-left-block
+	"This rule add add the left item as block it blocks this next line item"
+    (declare (salience -100)) ; Make this lower priority
+	(not (block-item ? ?))
+	(layout "flow" "left")
+	?n <- (next-line ?index)
+	?this <- (box (index ?t&:(= ?index ?t)) (x -1) (y ?y&~-2) (width ?w) (margin-left ?ml) (margin-right ?mr))
+	(total-width ?total)
+	(box (index ?bi&:(< ?bi ?index)) (x ?bx) (y ?by)
+		(width ?bw) (margin-right ?bmr&:(<= (+ ?bx ?bw ?bmr ?ml ?w ?mr) ?total)) (height ?bh&:(> (+ ?bh ?by) ?y)))
+	=>
+	(assert (block ?bi ?bx))
+)
+
+(defrule layout-flow-add-default-block-item
+	"This rule will add the default block item"
+	(layout "flow" "left")
+	?a <- (block ?i ?x)
+	(not (block-item ? ?))
+	=>
+	(assert (block-item ?i ?x))
+	(retract ?a)
+)
+
+(defrule layout-flow-find-good-block-item
+	"This rule will try to find the right most block item"
+	(layout "flow" "left")
+	?block_item <- (block-item ?bi ?bix)
+	?block <- (block ?i ?x&:(> ?x ?bix))
+	=>
+	(retract ?block ?block_item)
+	(assert (block-item ?i ?x))
+)
+
+(defrule layout-flow-remove-useless-blocks
+	"This rule will remove the useless blocks"
+	(layout "flow" "left")
+	?block_item <- (block-item ?bi ?bix)
+	?block <- (block ?i ?x&:(<= ?x ?bix))
+	=>
+	(retract ?block)
+)
+
+(defrule layout-flow-place-item-next-to-block-item
+	"This rule will place the next line item next to the block item"
+	(not (block ? ?))
+	(layout "flow" "left")
+	?block_item <- (block-item ?i ?x)
+	?block_box <- (box (index ?bi&:(= ?bi ?i)) (x ?bx) (margin-right ?bmr) (width ?bw))
+	?n <- (next-line ?index)
+	?this <- (box (index ?t&:(= ?index ?t)) (x -1) (margin-left ?tml))
+	=>
+	(retract ?block_item ?n)
+	(modify ?this (x (+ ?bx ?bw ?bmr)))
+)
+
+;===============================================================================
+;
+; Waterfall Layout Rules
+;
+;===============================================================================
+
+(defrule layout-waterfall-assert-guess
+	(not (box (index 1) (x ?x&~-1)))
+	=>
+	(assert (guess 1))
+)
+
+(defrule layout-waterfall-place-try-boxes-left-most
+	(layout "waterfall" "left")
+	(hgap ?hgap)
+	(box (index 0) (height ?h))
+	(guess ?index)
+	?this <- (box (index ?t&:(= ?t ?index)) (x -1) (y -1) (width ?tw) (height ?th))
+	=>
+	(assert (try-box (index ?t) (x 0) (y (+ ?h ?hgap)) (width ?tw) (height ?th)))
+)
+
+(defrule layout-waterfall-place-try-boxes-next-to-every-box
+	(layout "waterfall" "left")
+	(total-width ?total)
+	(vgap ?vgap)
+	(guess ?index)
+	?this <- (box (index ?t&:(= ?t ?index)) (x -1) (y -1) (width ?tw) (height ?th))
+	?last <- (box (index ?l&:(< ?l ?t)) (width ?lw) (x ?lx&:(and (<= (+ ?lx ?lw ?vgap ?tw) ?total) (>= ?lx 0))) (y ?ly&~-1))
+	=>
+	(assert (try-box (index ?t) (x (+ ?lx ?lw ?vgap)) (y ?ly) (width ?tw) (height ?th)))
+)
+
+(defrule layout-waterfall-place-try-box-lower-if-overlap-with-another-box
+	(layout "waterfall" "left")
+	(hgap ?hgap)
+	(vgap ?vgap)
+	?try <- (try-box (index ?t) (x ?tx) (y ?ty) (width ?tw) (height ?th))
+	?box <- (box (index ?b&:(< ?b ?t)) (x ?bx&~-1) (y ?by&~-1) (width ?bw) (height ?bh))
+	(test (not (or
+		(<= (+ ?tx ?tw ?vgap) ?bx)
+		(<= (+ ?bx ?bw ?vgap) ?tx)
+		(<= (+ ?ty ?th ?hgap) ?by)
+		(<= (+ ?by ?bh ?hgap) ?ty)
+	)))
+	=>
+	(modify ?try (y (+ ?by ?bh ?hgap)))
+)
+
+(defrule layout-waterfall-add-default-result-box
+	(declare (salience -100)) ; Make this lower priority
+	(layout "waterfall" "left")
+	(try-box (index ?t) (x ?tx) (y ?ty))
+	?g <- (guess ?i&:(= ?i ?t))
+	=>
+	(retract ?g)
+	(assert (result-box (index ?t) (x ?tx) (y ?ty)))
+)
+
+(defrule layout-waterfall-update-result-box-if-there-is-better-try
+	(layout "waterfall" "left")
+	?r <- (result-box (index ?ri) (x ?rx) (y ?ry))
+	?t <- (try-box (index ?ti&:(= ?ri ?ti)) (x ?tx) (y ?ty&:(<= ?ty ?ry)))
+	=>
+	(retract ?t)
+	(modify ?r (x ?tx) (y ?ty))
+)
+
+(defrule layout-waterfall-remove-useless-try-boxes
+	(declare (salience -100)) ; Make this lower priority
+	(layout "waterfall" "left")
+	?r <- (result-box)
+	?t <- (try-box)
+	=>
+	(retract ?t)
+)
+
+(defrule layout-waterfall-update-box-y-position-use-default-try-box
+	(layout "waterfall" "left")
+	(not (try-box))
+	?result <- (result-box (index ?t) (x ?tx) (y ?ty))
+	?box <- (box (index ?b&:(= ?t ?b)) (x -1) (y -1))
+	=>
+	(modify ?box (x ?tx) (y ?ty))
+	(assert (guess (+ ?t 1)))
+	(retract ?result)
+)

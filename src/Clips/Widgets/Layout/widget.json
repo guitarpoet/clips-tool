@@ -1,0 +1,10 @@
+{
+	"author": "Jack",
+	"date": "Tue Mar 24 17:42:59 2015",
+	"version": "1.0",
+	"name": "Layout",
+	"doc":"The JavaScript layout support using rules.",
+	"js": {
+		"files": ["layout"]
+	}
+}
