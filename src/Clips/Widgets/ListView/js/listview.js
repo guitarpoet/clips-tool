@@ -56,11 +56,21 @@
 			pagination_button_template: '<a class="paginate_button" data-dt-idx="_(index)" tabindex="0" aria-controls="listview">_(index)</a>',
 			pagination_button_group_template: '<span></span>',
 			pagination_next_template: '<a class="paginate_button next" aria-controls="listview"><i class="glyphicon glyphicon-forward"></i></a>',
-			length_select_template: '<div class="listview_length">Show<label><select class="" name="listview_length" aria-controls="datatable"></select></label>entries</div>',
-			fliter_template: '<div class="listview_filter">Search<label><input class="" type="search" placeholder="" aria-controls="datatable"></input></label></div>',
+			length_select_template: '<div class="listview_length">_(length_select_before)<label><select class="" name="listview_length" aria-controls="datatable"></select></label>_(length_select_after)</div>',
+			fliter_template: '<div class="listview_filter">_(filter_label)<label><input class="" type="search" placeholder="" aria-controls="datatable"></input></label></div>',
 			wrap: '<div class="listview_wrapper"/>',
 			order_box: '<div class="listview_orderbox"><select id="listview_orderbox" class="listview_orderbox_select"></select></div>',
-			order_dir_box: '<div class="listview_orderbox"><select id="listview_order" class="listview_orderbox_select"><option id="asc">ASC</option><option id="desc">DESC</option></select></div>'
+			order_dir_box: '<div class="listview_orderbox"><select id="listview_order" class="listview_orderbox_select"><option id="asc">_(order_dir_asc)</option><option id="desc">_(order_dir_desc)</option></select></div>',
+			mask: '<div class="listview_mask"><div class="listview_mask_loading">_(loading)</div></div>',		
+			toolbar: '<div class="listview_toolbar"></div>',
+			language: {
+				filter_label: 'Search',
+				length_select_before: 'Show',
+				length_select_after: 'entries',
+				order_dir_asc: 'ASC',
+				order_dir_desc: 'DESC',
+				loading: 'loading...'
+			}
 		};
 
 		var settings = $.extend(true, {}, defaults, args);
@@ -113,7 +123,12 @@
 					saveState(list, list.states);
 				}
 			}
-
+			
+			if(Clips.lang) {
+				$.each(settings.language, function(i, item){
+					settings.language[i] = Clips.lang.message(settings.language[i]);
+				});
+			}
 		}
 
 		function getState(list) {
@@ -230,7 +245,6 @@
 			list.off('selectableselected').on('selectableselected', function(event, ui){
 				var itemId = parseInt($(ui.selected).attr('itemId'));
 				if($.isNumeric(itemId)) {
-					console.log(itemId);
 					var index = $.inArray(itemId, psl);
 					if(index < 0) {
 						list.states.selectedItems.push(itemId);
@@ -401,7 +415,8 @@
 		}
 
 		function createItemlengthbox(list) {
-			var lengthSelect = $(settings.length_select_template);
+			var length_select_tpl = template_string(settings.length_select_template, settings.language);
+			var lengthSelect = $(length_select_tpl);
 			var listPageLengthEqualsOptions = false;
 			for (var i = 0; i < settings.select_options.length; i++) {
 				var str = '<option>'+settings.select_options[i]+'</option>';
@@ -418,7 +433,7 @@
 				lengthSelect.find('select').prepend(str);
 			}
 
-			list.parent().prepend(lengthSelect);
+			list.parent().find('.listview_toolbar').prepend(lengthSelect);
 
 			lengthSelect.find('select').on('change', function(){
 				list.pageLength = parseInt(lengthSelect.find('select').val());
@@ -427,11 +442,13 @@
 		}
 
 		function createFliterbox(list) {
-			var search = $(settings.fliter_template);
+			var filter_tpl = template_string(settings.fliter_template, settings.language);
+
+			var search = $(filter_tpl);
 			if(list.search_value) {
 				search.find('input').val(list.search_value);
 			}
-			list.parent().prepend(search);
+			list.parent().find('.listview_toolbar').prepend(search);
 
 			search.find('input').on('keyup',function(){
 				list.search_value = $(this).val();
@@ -517,7 +534,9 @@
 					}					
 				}
 				
-				Clips.layout("#" + list.attr('id'), layoutOptions);
+				Clips.layout("#" + list.attr('id'), layoutOptions, function(){
+					hideMask(list);
+				});
 			}
 			else {
 				box.w = box.width - box.pl - box.pr; // The container width
@@ -535,8 +554,10 @@
 		}
 
 		function createOrderbox(list) {
-			var orderBox = $(settings.order_box);
-			var orderDirBox= $(settings.order_dir_box);
+			var order_box_tpl = template_string(settings.order_box, settings.language);
+			var order_dir_box_tpl = template_string(settings.order_dir_box, settings.language);
+			var orderBox = $(order_box_tpl);
+			var orderDirBox= $(order_dir_box_tpl);
 			var order, orderDir;
 			if(list.states && list.states.order) {
 				order = list.states.order[0].column;
@@ -545,6 +566,9 @@
 			$.each(settings.columns, function(i, col){
 				if(col.orderable) {
 					var option = $('<option></option>');
+					if(Clips.lang) {
+						col.title = Clips.lang.message(col.title);
+					}
 					option.text(col.title);
 					option.attr('value', i);
 					option.attr('data', col.data);
@@ -569,8 +593,32 @@
 				list.orderDir = orderDirBox.val();
 				requestData(list);
 			});
-			list.parent().prepend(orderDirBox);
-			list.parent().prepend(orderBox);
+			list.parent().find('.listview_toolbar').prepend(orderDirBox);
+			list.parent().find('.listview_toolbar').prepend(orderBox);
+		}
+
+		function createToolbar(list) {
+			var toolbar_tpl = template_string(settings.toolbar, settings.language);
+			list.parent().prepend($(toolbar_tpl));
+			createFliterbox(list); // Create the filterbox for listview
+			list.trigger('list.createfilter', [list]);
+			createOrderbox(list);
+			list.trigger('list.createorderbox', [list]);
+			createItemlengthbox(list);	 // Create the length choice box			
+		}
+		
+		function createMask(list) {
+			var mask_tpl = template_string(settings.mask, settings.language);
+			list.parent().append($(mask_tpl));
+			showMask(list);
+		}
+		
+		function showMask(list) {
+			list.parent().find('.listview_mask').removeClass('hide').addClass('show').fadeIn(550);
+		}
+		
+		function hideMask(list) {
+			list.parent().find('.listview_mask').removeClass('show').addClass('hide').fadeOut(550);
 		}
 
 		var Api = function(list){
@@ -580,7 +628,7 @@
 		Api.prototype.search = function(value){
 			_this.list.search_value = value;
 			requestData(this.list);
-		}
+		};
 
 		Api.prototype.save = function(itemId) {
 			var psl = _this.list.states.selectedItems;
@@ -591,26 +639,24 @@
 					saveState(_this.list, _this.list.states);
 				}
 			}
-		}
+		};
 		
 		Api.prototype.clear = function(itemId) {
 			if(!itemId) {
 				_this.list.states.selectedItems = [];
 				saveState(_this.list, _this.list.states);
 			}
-		}
-
+		};
+		
 		this.each(function() {
 			var list = $(this);
 			restoreSavedStates(list); // Restore the states at first
 			restoreSettings(list);
 			list.wrap(settings.wrap); // Added the list wrap
+			createMask(list);
 			requestData(list);	// Requesting the data for the listview
-			createFliterbox(list); // Create the filterbox for listview
-			list.trigger('list.createfilter', [list]);
-			createOrderbox(list);
-			list.trigger('list.createorderbox', [list]);
-			createItemlengthbox(list);	 // Create the length choice box
+			
+			createToolbar(list);
 			setSelectablePlugin(list); // Initilize the selectable function for listview
 			self.data('api', new Api(list));
 			

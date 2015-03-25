@@ -2,6 +2,7 @@ if(typeof Clips == 'undefined')
 	Clips = {};
 
 Clips.layout = function (container, options, callback) {
+	Clips.rules.clear();
 	// Load the layout rules first
 	Clips.rules.load('Widgets/Layout/rules/layout.rules');
 
@@ -14,9 +15,9 @@ Clips.layout = function (container, options, callback) {
 	};
 
 	// Override the options using default options
-	options = $.extend(default_options, options)
-
+	options = $.extend(default_options, options);
 	// Asserting the base informations
+	
 	Clips.rules.assert(['vgap', options.vgap]);
 	Clips.rules.assert(['hgap', options.hgap]);
 	Clips.rules.assert(['total-width', $(container).width()]);

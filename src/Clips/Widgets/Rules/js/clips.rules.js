@@ -9,12 +9,13 @@ Clips.Command = function(command, data) {
 }
 
 Clips.RuleEngine.prototype = {
+	
 	command: function(command, data) {
 		this.commands.push(new Clips.Command(command, data));
 		return this;
 	},
 	clear: function() {
-		Clips.commands = [];
+		this.commands = [];
 	},
 	assert: function(data) {
 		return this.command('assert', data);
