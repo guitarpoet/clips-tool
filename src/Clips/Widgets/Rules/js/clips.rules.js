@@ -14,7 +14,7 @@ Clips.RuleEngine.prototype = {
 		return this;
 	},
 	clear: function() {
-		Clips.commands = [];
+		this.commands = [];
 	},
 	assert: function(data) {
 		return this.command('assert', data);
