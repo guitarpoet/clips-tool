@@ -5,12 +5,18 @@ class Widget extends \Clips\Widget {
 		$current_bundle = \Clips\context('current_bundle');
 		if(!$current_bundle)
 			$current_bundle = '';
+
+		$b = json_encode($this->tool->bundle($current_bundle)->all());
+
 		\Clips\context('jquery_init', <<<TEXT
 
 	//====================================
 	// Initializing lang support
 	//====================================
-	$.get(Clips.siteUrl('bundle/show/$current_bundle'), function(data) { Clips.bundle = data;}, 'json');
+	
+	if(typeof Clips == 'undefined')
+		Clips = {};
+	Clips.bundle = $b;
 TEXT
 , true);
 	}
