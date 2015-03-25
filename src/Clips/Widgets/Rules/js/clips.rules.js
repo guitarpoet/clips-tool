@@ -13,6 +13,9 @@ Clips.RuleEngine.prototype = {
 		this.commands.push(new Clips.Command(command, data));
 		return this;
 	},
+	clear: function() {
+		Clips.commands = [];
+	},
 	assert: function(data) {
 		return this.command('assert', data);
 	},
