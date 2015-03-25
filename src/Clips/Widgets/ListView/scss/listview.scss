@@ -59,6 +59,11 @@
 			&.edge {
 				margin-right: 0;
 			}
+			border: 1px solid #2067B2;
+		}
+
+		.listview_item:not(.listview_item_template):nth-child(even) {
+			height: 450px;
 		}
 
 		.listview_item_template {
@@ -78,7 +83,9 @@
 			}
 		}
 
-		@include layout-absolute('.listview_item');
+		&.abs {
+			@include layout-absolute('.listview_item');	
+		}
 	}
 
 	.listview_pagination {
