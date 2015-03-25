@@ -550,6 +550,7 @@
 					}
 					$(item).css('margin-bottom', box.vgap);
 				});
+				hideMask(list);
 			}
 		}
 
