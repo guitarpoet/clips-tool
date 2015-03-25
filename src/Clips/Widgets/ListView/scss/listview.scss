@@ -11,7 +11,7 @@
 
 .listview_wrapper {
 	position: relative;
-
+	
 	.listview_item_template {
 		display: none;
 	}
@@ -49,6 +49,40 @@
 		margin: 0px 15px;
 	}
 
+	.listview_mask {
+		position: absolute;
+		left: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		width: 100%;
+		height: 100%;
+		background-color: transparent;
+		z-index: 1;
+		.listview_mask_loading {
+			width: 30%;
+			height: 30%;
+			min-height: 30px;
+			overflow: hidden;
+			text-align: center;
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			margin: auto;
+		}
+		transition: all 0.65s ease;
+	}
+
+	.listview_mask.show {
+		background-color: rgba(#000000, 0.3);
+	}
+
+	.listview_mask.hide {
+		background-color: transparent;
+	}
+	
 	.listview {
 		padding: 0;
 		overflow: hidden;
@@ -76,6 +110,10 @@
 			&.ui-selected {
 				background: #d3d3d3;
 			}
+		}
+		
+		&.abs {
+			@include layout-absolute('.listview_item');	
 		}
 	}
 
@@ -137,4 +175,3 @@
 		}
 	}
 }
-

@@ -5,6 +5,13 @@
 	"name": "Layout",
 	"doc":"The JavaScript layout support using rules.",
 	"js": {
-		"files": ["layout"]
+		"files": [
+			"layout"
+		]
+	},
+	"scss": {
+		"files": [
+			"pinet_layout"	
+		]
 	}
 }

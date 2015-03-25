@@ -1,0 +1,21 @@
+@mixin layout-absolute($itemselector: null) {
+	& {
+		position: relative;
+
+		@if $itemselector == null {
+			> * {
+				position: absolute !important;
+			}
+		}
+		@else {
+			> #{$itemselector} {
+				position: absolute;
+			}
+		}
+
+	}
+}
+
+//*.abs {
+//	@include layout-absolute();
+//}

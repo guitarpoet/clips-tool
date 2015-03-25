@@ -9,6 +9,7 @@ Clips.Command = function(command, data) {
 }
 
 Clips.RuleEngine.prototype = {
+	
 	command: function(command, data) {
 		this.commands.push(new Clips.Command(command, data));
 		return this;
