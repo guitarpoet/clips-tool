@@ -61,6 +61,7 @@
 			wrap: '<div class="listview_wrapper"/>',
 			order_box: '<div class="listview_orderbox"><select id="listview_orderbox" class="listview_orderbox_select"></select></div>',
 			order_dir_box: '<div class="listview_orderbox"><select id="listview_order" class="listview_orderbox_select"><option id="asc">_(order_dir_asc)</option><option id="desc">_(order_dir_desc)</option></select></div>',
+			enableMask: true,
 			mask: '<div class="listview_mask"><div class="listview_mask_loading">_(loading)</div></div>',		
 			toolbar: '<div class="listview_toolbar"></div>',
 			language: {
@@ -654,7 +655,11 @@
 			restoreSavedStates(list); // Restore the states at first
 			restoreSettings(list);
 			list.wrap(settings.wrap); // Added the list wrap
-			createMask(list);
+			
+			if(settings.enableMask && settings.listtype == 'static') {
+				createMask(list);	
+			}
+			
 			requestData(list);	// Requesting the data for the listview
 			
 			createToolbar(list);
