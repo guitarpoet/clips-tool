@@ -70,11 +70,13 @@ class MessageBundle extends Annotation implements Initializable, LoggerAwareInte
 		if(isset($this->localeData[$locale]))
 			return $this->localeData[$locale]; 
 
-		$p = path_join($this->folder, $locale.'.yml');
-		if(file_exists($p)) { // Test if the locale file is exists
-			$result = Yaml::parse($p);
-			$this->localeData[$locale] = $result; 
-			return $result;
+		if(isset($this->folder)) {
+			$p = path_join($this->folder, $locale.'.yml');
+			if(file_exists($p)) { // Test if the locale file is exists
+				$result = Yaml::parse($p);
+				$this->localeData[$locale] = $result; 
+				return $result;
+			}
 		}
 		return false;
 	}
