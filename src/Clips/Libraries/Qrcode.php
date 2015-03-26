@@ -9,10 +9,6 @@
  */
 class Qrcode extends \Endroid\QrCode\QrCode {
 	public function show($format = 'png') {
-		ob_start();
-		$this->render(null, $format);
-		$image_data = ob_get_contents();
-		ob_end_clean();
-		return $image_data;
+		return $this->get($format);
 	}
 }
