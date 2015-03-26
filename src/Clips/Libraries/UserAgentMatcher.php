@@ -209,7 +209,7 @@ function match_Name ($stack = array()) {
 }
 
 
-/* Operator: '>=' | '<=' | '>' | '<' | '~'  */
+/* Operator: '>=' | '<=' | '>' | '<' | '!='  */
 protected $match_Operator_typestack = array('Operator');
 function match_Operator ($stack = array()) {
 	$matchrule = "Operator"; $result = $this->construct($matchrule, $matchrule, null);
@@ -255,9 +255,8 @@ function match_Operator ($stack = array()) {
 					}
 					$result = $res_28;
 					$this->pos = $pos_28;
-					if (substr($this->string,$this->pos,1) == '~') {
-						$this->pos += 1;
-						$result["text"] .= '~';
+					if (( $subres = $this->literal( '!=' ) ) !== FALSE) {
+						$result["text"] .= $subres;
 						$_31 = TRUE; break;
 					}
 					$result = $res_28;
@@ -368,7 +367,7 @@ function match_Device ($stack = array()) {
 }
 
 public function Device_Name (&$result, $sub) {
-		$result['browser'] = $sub['text'];
+		$result['device'] = $sub['text'];
 	}
 
 /* VersionMatcher: Operator > VersionNumber */

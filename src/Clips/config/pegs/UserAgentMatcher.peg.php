@@ -15,7 +15,7 @@ Number: /[0-9]/
 VersionNumber: Number+ ('.' Number+ )?
 Name:  Word ( > Word ) *
 
-Operator: '>=' | '<=' | '>' | '<' | '~' 
+Operator: '>=' | '<=' | '>' | '<' | '!=' 
 Browser: Name
 	function Name(&$result, $sub) {
 		$result['browser'] = $sub['text'];
@@ -26,7 +26,7 @@ Platform: '{' > Name > '}'
 	}
 Device: '(' > Name > ')'
 	function Name(&$result, $sub) {
-		$result['browser'] = $sub['text'];
+		$result['device'] = $sub['text'];
 	}
 VersionMatcher: Operator > VersionNumber
 	function Operator(&$result, $sub) {

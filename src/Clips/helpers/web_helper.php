@@ -346,6 +346,52 @@ function field_state($field) {
 	return null;
 }
 
+function browser_match($query, $meta = null) {
+	if(!$meta)
+		$meta = get_browser();
+	$matcher = new Libraries\UserAgentMatcher($query);
+	$result = $matcher->match_Expr();
+	if($result) {
+		// Test for browser first
+		if($meta->browser != $result['browser'])
+			return false;
+
+		// Then test for platform
+		if(isset($result['platform']) && $meta->platform != $result['platform'])
+			return false;
+
+		// Then test for device type
+		if(isset($result['device']) && $meta->device_type != $result['device'])
+			return false;
+
+		// Test for version at last
+		if(isset($result['version'])) {
+			foreach($result['version']['op'] as $op) {
+				switch($op['type']) {
+				case 'version':
+					if($op['version'] == $meta->version)
+						return  true;
+					break;
+				case 'matcher':
+					$expr = 'return '.$meta->version.$op['operator'].$op['version'].';';
+					if(eval($expr))
+						return true;
+					break;
+				case 'between':
+					if((double) $meta->version >= (double) $op['versions'][0]
+						&& (double) $meta->version <= (double) $op['versions'][1])
+						return true;
+					break;
+				}
+			}
+		}
+		else {
+			return true;
+		}
+	}
+	return false;
+}
+
 function image_size($p) {
 	if(file_exists($p)) {
 		$tool = &get_clips_tool();
