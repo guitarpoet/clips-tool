@@ -59,7 +59,7 @@ class ResponsiveController extends Controller {
 		}
 
 		$name = $this->filecache->fileName($n, $folder);
-		if($this->filecache->shouldUpdate($n, $folder, $path)) {
+		if($this->filecache->shouldUpdate($n, $path, $folder)) {
 			$this->imageutils->thumbnail($path, $name, $size);
 		}
 		return $this->image($name);

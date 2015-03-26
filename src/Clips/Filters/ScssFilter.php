@@ -37,7 +37,7 @@ class ScssFilter extends AbstractFilter {
 			// Add the sass_dir into include pathes
 			$result = $this->sass->compile($scsses);
 			if($result) {
-				$this->filecache->save(\Clips\to_flat(get_class($controller).'_'.$method).'.css', \Clips\path_join($cache, 'css'), $result, true);
+				$this->filecache->save(\Clips\to_flat(get_class($controller).'_'.$method).'.css', $result, \Clips\path_join($cache, 'css'), true);
 				\Clips\add_css(\Clips\static_url($uri));
 			}
 		}

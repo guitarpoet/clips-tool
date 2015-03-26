@@ -42,7 +42,10 @@ class FileCache implements LoggerAwareInterface, ClipsAware, ToolAware {
 		), false);
 	}
 
-	public function shouldUpdate($nt, $folder, $time = -1) {
+	public function shouldUpdate($nt, $time = -1, $folder = null) {
+		if(!$folder)
+			$folder = $this->cacheDir();
+
 		if(is_string($time) && file_exists($time)) {
 			$time = filectime($time);
 		}
@@ -60,14 +63,18 @@ class FileCache implements LoggerAwareInterface, ClipsAware, ToolAware {
 	/**
 	 * Test if the file is exists.
 	 */
-	public function exists($nt, $folder) {
+	public function exists($nt, $folder = null) {
+		if(!$folder)
+			$folder = $this->cacheDir();
 		return \file_exists($this->fileName($nt, $folder));
 	}
 
 	/**
 	 * Get the filename using the filename pattern
 	 */
-	public function fileName($nt, $folder) {
+	public function fileName($nt, $folder = null) {
+		if(!$folder)
+			$folder = $this->cacheDir();
 		$filename = $this->genFileName($nt);
 		return \Clips\path_join($folder, $filename);
 	}
@@ -82,10 +89,21 @@ class FileCache implements LoggerAwareInterface, ClipsAware, ToolAware {
 		return 'application/cache';
 	}
 
+	public function contents($nt, $folder = null) {
+		if(!$folder)
+			$folder = $this->cacheDir();
+		if($this->exists($nt, $folder)) {
+			return file_get_contents($this->fileName($nt, $folder));
+		}
+	}
+
 	/**
 	 * Save the file into the folder using the name template
 	 */
-	public function save($nt, $folder, $contents, $override = true) {
+	public function save($nt, $contents, $folder = null, $override = true) {
+		if(!$folder) {
+			$folder = $this->cacheDir();
+		}
 		if(!file_exists($folder)) { // If no folder exists, make it
 			mkdir($folder, 0777, true);
 		}

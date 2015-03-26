@@ -10,6 +10,34 @@ function html_title($title) {
 	context('html_title', $title);
 }
 
+/**
+* Convert a hexa decimal color code to its RGB equivalent
+*
+* @param string $hexStr (hexadecimal color value)
+* @param boolean $returnAsString (if set true, returns the value separated by the separator character. Otherwise returns associative array)
+* @param string $seperator (to separate RGB values. Applicable only if second parameter is true.)
+* @return array or string (depending on second parameter. Returns False if invalid hex color value)
+*/                                                                                                 
+function hex2rgb($hexStr, $returnAsString = false, $seperator = ',') {
+    $hexStr = preg_replace("/[^0-9A-Fa-f]/", '', $hexStr); // Gets a proper hex string
+    $rgbArray = array();
+    if (strlen($hexStr) == 6) { //If a proper hex code, convert using bitwise operation. No overhead... faster
+        $colorVal = hexdec($hexStr);
+        $rgbArray['r'] = 0xFF & ($colorVal >> 0x10);
+        $rgbArray['g'] = 0xFF & ($colorVal >> 0x8);
+        $rgbArray['b'] = 0xFF & $colorVal;
+		$rgbArray['a'] = 0;
+    } elseif (strlen($hexStr) == 3) { //if shorthand notation, need some string manipulations
+        $rgbArray['r'] = hexdec(str_repeat(substr($hexStr, 0, 1), 2));
+        $rgbArray['g'] = hexdec(str_repeat(substr($hexStr, 1, 1), 2));
+        $rgbArray['b'] = hexdec(str_repeat(substr($hexStr, 2, 1), 2));
+		$rgbArray['a'] = 0;
+    } else {
+        return false; //Invalid hex color code
+    }
+    return $returnAsString ? implode($seperator, $rgbArray) : $rgbArray; // returns the rgb string or the associative array
+}
+
 function post_redirect($url, $params = array(), $title = 'redirecting') {
 	if(strpos($url, '://') === false) { // If it is not external link
 		$url = site_url($url);
@@ -316,6 +344,52 @@ function field_state($field) {
 		return $form->state;
 
 	return null;
+}
+
+function browser_match($query, $meta = null) {
+	if(!$meta)
+		$meta = get_browser();
+	$matcher = new Libraries\UserAgentMatcher($query);
+	$result = $matcher->match_Expr();
+	if($result) {
+		// Test for browser first
+		if($meta->browser != $result['browser'])
+			return false;
+
+		// Then test for platform
+		if(isset($result['platform']) && $meta->platform != $result['platform'])
+			return false;
+
+		// Then test for device type
+		if(isset($result['device']) && $meta->device_type != $result['device'])
+			return false;
+
+		// Test for version at last
+		if(isset($result['version'])) {
+			foreach($result['version']['op'] as $op) {
+				switch($op['type']) {
+				case 'version':
+					if($op['version'] == $meta->version)
+						return  true;
+					break;
+				case 'matcher':
+					$expr = 'return '.$meta->version.$op['operator'].$op['version'].';';
+					if(eval($expr))
+						return true;
+					break;
+				case 'between':
+					if((double) $meta->version >= (double) $op['versions'][0]
+						&& (double) $meta->version <= (double) $op['versions'][1])
+						return true;
+					break;
+				}
+			}
+		}
+		else {
+			return true;
+		}
+	}
+	return false;
 }
 
 function image_size($p) {
