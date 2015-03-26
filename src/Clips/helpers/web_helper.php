@@ -346,9 +346,22 @@ function field_state($field) {
 	return null;
 }
 
+function browser_meta() {
+	$request = context('request');
+	if($request) {
+		// If we really in a browser environment
+		return $request->browserMeta();
+	}
+	return null;
+}
+
 function browser_match($query, $meta = null) {
-	if(!$meta)
-		$meta = get_browser();
+	if(!$meta) {
+		$meta = browser_meta();
+		if(!$meta) {
+			return false;
+		}
+	}
 	$matcher = new Libraries\UserAgentMatcher($query);
 	$result = $matcher->match_Expr();
 	if($result) {

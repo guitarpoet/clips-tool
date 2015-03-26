@@ -19,7 +19,10 @@ class HttpRequest extends Request {
 	 * Get the request browser's meta data using PHP's browscap support
 	 */
 	public function browserMeta() {
-		return get_browser();
+		if(isset($this->browser))
+			return $this->browser;
+		$this->browser = get_browser();
+		return $this->browser;
 	}
 
 	/**
