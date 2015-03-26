@@ -25,8 +25,9 @@
 			ignorePixelRatio: false,
 			useLarger: false,
 			insertElement: '>a',
-			inlineDimensions: false
-
+			inlineDimensions: false,
+			pictureReady: function(){}
+			
         };
 		
 		var settings = $.extend({}, defaults, args);
@@ -213,6 +214,12 @@
 
 					element.find('img').attr('src', sizes[currentMedia]);
 
+					element.find('img').load(function(){
+						if($.isFunction(settings.pictureReady)) {
+							settings.pictureReady(sizes[currentMedia]);
+						}
+					});
+					
 				}
 
 				if(settings.inlineDimensions){
@@ -223,12 +230,12 @@
 				    });
 
 				}
-
+				
 				element.triggerHandler({
 					type: 'picture.ready',
 					src: sizes[currentMedia] 
-				});				
-
+				});
+				
 			}
 
 

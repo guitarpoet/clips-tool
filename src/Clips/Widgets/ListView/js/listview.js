@@ -650,6 +650,10 @@
 			}
 		};
 		
+		Api.prototype.layout = function(list) {
+			layoutItems(list);
+		};
+		
 		this.each(function() {
 			var list = $(this);
 			restoreSavedStates(list); // Restore the states at first
