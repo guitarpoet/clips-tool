@@ -25,9 +25,9 @@
 		var _this = this;
 		if(this.last_width == $(_this.element).parent().width())
 			return;
-		$(_this.element).attr('src', S(_this.options.pattern).template({
+		$(_this.element).attr('src', Clips.siteUrl(S(_this.options.pattern).template({
 			size: $(_this.element).parent().width(), img: _this.img
-		}, '_(', ')').toString());
+		}, '_(', ')').toString()));
 		this.last_width = $(_this.element).parent().width();
 	}
 	

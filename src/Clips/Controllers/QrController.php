@@ -18,7 +18,7 @@ class QrController extends Controller {
 	 * @Clips\Library({"fileCache", "qrcode"})
 	 */
 	public function generate($message) {
-		$message = urldecode($message); // Decode the message first
+		$message = urldecode(urldecode($message)); // Decode the message first
 		$id = md5($message);
 		$name = "clips_qr_$id.png";
 		if($this->filecache->exists($name)) {
