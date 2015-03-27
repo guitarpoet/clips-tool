@@ -6,8 +6,8 @@
 	"doc":"The basic html widgets",
     "depends": [],
 	"scss": {
-		"depends": [],
 		"files": [
+			"mixin/pinet_vendor_prefix",
             "pinet_html_std",
             "pinet_html_autos",
             "pinet_html_minvar",

@@ -12,7 +12,7 @@
 
     // COLLAPSE PUBLIC CLASS DEFINITION
     // ================================
-
+	
     if(!$.isFunction($.fn.collapse)) {
         var Collapse = function (element, options) {
             this.$element      = $(element)
@@ -155,7 +155,7 @@
                 .attr('aria-expanded', isOpen)
         }
 
-        function getTargetFromTrigger($trigger) {
+        var getTargetFromTrigger = function($trigger) {
             var href
             var target = $trigger.attr('data-target')
                 || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
@@ -167,7 +167,7 @@
         // COLLAPSE PLUGIN DEFINITION
         // ==========================
 
-        function Plugin(option) {
+        var Plugin = function(option) {
             return this.each(function () {
                 var $this   = $(this)
                 var data    = $this.data('bs.collapse')

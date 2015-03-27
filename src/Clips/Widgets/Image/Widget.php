@@ -7,7 +7,10 @@ class Widget extends \Clips\Widget {
 	//====================================
 	// Initializing Images
 	//====================================
-	setTimeout(function(){\$('figure,picture').picture()}, 450);
+	setTimeout(function(){
+		\$('figure,picture').picture();
+		\$('div.responsive > img').responsiveImage();
+	}, 450);
 TEXT
  ,true);
 	}

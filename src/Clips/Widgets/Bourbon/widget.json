@@ -1,0 +1,12 @@
+{
+	"author": "Andy",
+	"date": "Fri Mar 27 15:26:04 2015",
+	"version": "1.0",
+	"name": "Bourbon",
+	"doc":"bourbon",
+	"scss": {
+		"files": [
+			"_bourbon"
+		]
+	}
+}

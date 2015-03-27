@@ -26,6 +26,7 @@ class ResponsiveController extends Controller {
 		$size = array_shift($args);
 		$file = implode('/', $args);
 
+		$size = preg_replace('/[^0-9\.]/', '', $size);
 		if(!is_numeric($size) || $size <= 0) {
 			$this->error('Size ['.$size.'] must be positive number!', 'responsive');
 			return;
