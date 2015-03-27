@@ -314,6 +314,7 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 	 * Send the image file
 	 */
 	protected function image($img, $format = null) {
+
 		if($format) { // If this is the image itself
 			$content = $img;
 		}

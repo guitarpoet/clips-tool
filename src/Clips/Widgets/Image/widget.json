@@ -4,8 +4,11 @@
 	"version": "1.0",
 	"name": "demo.image",
 	"doc":"Image widget",
-	"depends": ["Jquery","BootstrapCommon"],
+	"depends": ["Jquery","BootstrapCommon", "JQueryResizeEnd", "StringJs"],
 	"js": {
-		"files": ["jquery-picture"]
+		"files": ["jquery-picture", "responsive"]
+	},
+	"scss": {
+		"files": ["responsive-image"]
 	}
 }

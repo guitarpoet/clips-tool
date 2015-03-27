@@ -80,7 +80,21 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 
 			// Add the scss files
 			if(isset($scss_config->files)) {
-                foreach($scss_config->files as $file) {
+                foreach($scss_config->files as $o) {
+					if(is_object($o)) {
+						foreach($o as $k => $v) {
+							// This is file => query part
+							if(!browser_match($v)) {
+								// If the browser won't match this
+								// JavaScript
+								continue;
+							}
+							$file = $k;
+							clips_add_js(path_join($this->rel_dir, 'js', $file));
+						}
+						continue;
+					}
+					$file = $o;
 					clips_add_scss(path_join($this->base_dir, 'scss', $file));
                 }
             }
@@ -98,7 +112,21 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 
 			// Add the js files
 			if(isset($js_config->files)) {
-                foreach($js_config->files as $file) {
+                foreach($js_config->files as $o) {
+					if(is_object($o)) {
+						foreach($o as $k => $v) {
+							// This is file => query part
+							if(!browser_match($v)) {
+								// If the browser won't match this
+								// JavaScript
+								continue;
+							}
+							$file = $k;
+							clips_add_js(path_join($this->rel_dir, 'js', $file));
+						}
+						continue;
+					}
+					$file = $o;
 					clips_add_js(path_join($this->rel_dir, 'js', $file));
                 }
             }
@@ -116,7 +144,21 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 
 			// Add the css files
 			if(isset($css_config->files)) {
-                foreach($css_config->files as $file) {
+                foreach($css_config->files as $o) {
+					if(is_object($o)) {
+						foreach($o as $k => $v) {
+							// This is file => query part
+							if(!browser_match($v)) {
+								// If the browser won't match this
+								// JavaScript
+								continue;
+							}
+							$file = $k;
+							clips_add_js(path_join($this->rel_dir, 'js', $file));
+						}
+						continue;
+					}
+					$file = $o;
 					clips_add_css(static_url(path_join($this->rel_dir, 'css', $file)));
                 }
             }

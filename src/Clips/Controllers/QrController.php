@@ -18,6 +18,7 @@ class QrController extends Controller {
 	 * @Clips\Library({"fileCache", "qrcode"})
 	 */
 	public function generate($message) {
+		$message = urldecode($message); // Decode the message first
 		$id = md5($message);
 		$name = "clips_qr_$id.png";
 		if($this->filecache->exists($name)) {
@@ -47,7 +48,7 @@ class QrController extends Controller {
 				}
 			}
 			$method = 'set'.$name;
-			call_user_func_array(array($qrcode, $method), array($param));
+			call_user_func_array(array($this->qrcode, $method), array($param));
 		}
 
 		$fcolor = $this->request->param('fcolor');
@@ -59,7 +60,7 @@ class QrController extends Controller {
 			$qrcode->setBackgroundColor(\Clips\hex2rgb($bcolor));
 		}
 
-		$img = $this->qrcode->setText($message)->show();
+		$img = $this->qrcode->show();
 		$this->filecache->save($name, $img);
 		return $this->image($img, 'png');
 	}

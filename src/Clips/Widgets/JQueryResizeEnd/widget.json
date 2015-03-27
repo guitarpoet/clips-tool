@@ -1,0 +1,10 @@
+{
+	"author": "Jack",
+	"date": "Fri Mar 27 12:01:42 2015",
+	"version": "1.0",
+	"name": "JQueryResizeEnd",
+	"doc":"The resize end plugin from jQuery",
+	"js": {
+		"files": [ "jQuery.resizeEnd" ]
+	}
+}
