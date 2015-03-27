@@ -1,0 +1,23 @@
+$VENDORS: webkit, moz, ms, o;
+
+@mixin vendor-prefix($property, $values...) {
+	@each $vendor in $VENDORS {
+		-#{$vendor}-#{$property}: $values;
+	}
+	#{$property}: $values;
+}
+
+@mixin v($property, $values...) {
+	@include vendor-prefix($property, $values...);
+}
+
+@mixin vendor-function($property, $func, $args...) {
+	@each $vendor in $VENDORS {
+		#{$property}: -#{$vendor}-#{$func}($args);
+	}
+	#{$property}: #{$func}($args);
+}
+
+@mixin vf($property, $func, $args...) {
+	@include vendor-function($property, $func, $args...);
+}

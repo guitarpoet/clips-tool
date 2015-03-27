@@ -87,7 +87,7 @@
             $items.eq(index).trigger('focus')
         }
 
-        function clearMenus(e) {
+        var clearMenus = function(e) {
             if (e && e.which === 3) return
             $(backdrop).remove()
             $(toggle).each(function () {
@@ -106,7 +106,7 @@
             })
         }
 
-        function getParent($this) {
+        var getParent = function($this) {
             var selector = $this.attr('data-target')
 
             if (!selector) {
@@ -123,7 +123,7 @@
         // DROPDOWN PLUGIN DEFINITION
         // ==========================
 
-        function Plugin(option) {
+        var Plugin = function(option) {
             return this.each(function () {
                 var $this = $(this)
                 var data  = $this.data('bs.dropdown')
