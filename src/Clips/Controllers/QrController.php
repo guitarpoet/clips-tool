@@ -20,9 +20,9 @@ class QrController extends Controller {
 	public function generate($message) {
 		$message = urldecode(urldecode($message)); // Decode the message first
 		$id = md5($message);
-		$name = "clips_qr_$id.png";
-		if($this->filecache->exists($name)) {
-			return $this->image($this->filecache->contents($name), 'png');
+		$file_name = "clips_qr_$id.png";
+		if($this->filecache->exists($file_name)) {
+			return $this->image($this->filecache->contents($file_name), 'png');
 		}
 
 		$qrcode = $this->qrcode->setText($message);
@@ -61,7 +61,7 @@ class QrController extends Controller {
 		}
 
 		$img = $this->qrcode->show();
-		$this->filecache->save($name, $img);
+		$this->filecache->save($file_name, $img);
 		return $this->image($img, 'png');
 	}
 }
