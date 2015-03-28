@@ -21,7 +21,15 @@ class GetCommand extends Command {
 		$path = \Clips\cache_filename(BCAP_FILENAME);
 		if($path) {
 			$file = $this->downloadmanager->download(BCAP_URL);
+			// Write the file
 			file_put_contents($path, $file);
+
+			// We already have the browscap cache
+			$b = new \phpbrowscap\Browscap(dirname($path));
+			$b->localFile = $path;
+			$this->output("Generating the browser cap cache file.\n");
+			$b->getBrowser();
+			$this->output("Done!");
 		}
 		else
 			$this->error('Can\'t download browser cap file, since there is no cache directory to download!');

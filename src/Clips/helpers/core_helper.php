@@ -1,7 +1,6 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct script access allowed");
 
-#define('BCAP_URL', 'http://browscap.org/stream?q=Lite_PHP_BrowsCapINI');
-define('BCAP_URL', 'http://localhost/~jack/lite_php_browscap.ini');
+define('BCAP_URL', 'http://browscap.org/stream?q=Lite_PHP_BrowsCapINI');
 define('BCAP_FILENAME', 'lite_php_browscap.ini');
 
 define('RANDOM_STRING', '3141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086FromfairestcreatureswedesireincreaseThattherebybeautysrosemightneverdieButastheripershouldbytimedeceaseHistenderheirmightbearhismemoryButthoucontractedtothineownbrighteyesFeedstthylightsflamewithself-substantialfuelMakingafaminewhereabundanceliesThyselfthyfoetothysweetselftoocruelThouthatartnowtheworldsfreshornamentAndonlyheraldtothegaudyspringWithinthineownbudburiestthycontentAndtenderchurlmakstwasteinniggardingPitytheworldorelsethisgluttonbeToeattheworldsduebythegraveandthee');
