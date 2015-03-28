@@ -31,20 +31,20 @@ class Command {
 	}
 
 	public function incre($value = 1) {
-		if(isset($this->tool->ProgressManager)) {
-			$this->tool->ProgressManager->incre($value);
+		if(isset($this->progressmanager)) {
+			$this->progressmanager->incre($value);
 		}
 	}
 
 	public function progress($value) {
-		if(isset($this->tool->ProgressManager)) {
-			$this->tool->ProgressManager->update($value);
+		if(isset($this->progressmanager)) {
+			$this->progressmanager->update($value);
 		}
 	}
 
 	public function start($total = 100) {
-		if(isset($this->tool->ProgressManager)) {
-			$this->tool->ProgressManager->start($total);
+		if(isset($this->progressmanager)) {
+			$this->progressmanager->start($total);
 		}
 	}
 

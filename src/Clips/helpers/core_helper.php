@@ -1,5 +1,9 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct script access allowed");
 
+#define('BCAP_URL', 'http://browscap.org/stream?q=Lite_PHP_BrowsCapINI');
+define('BCAP_URL', 'http://localhost/~jack/lite_php_browscap.ini');
+define('BCAP_FILENAME', 'lite_php_browscap.ini');
+
 define('RANDOM_STRING', '3141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086FromfairestcreatureswedesireincreaseThattherebybeautysrosemightneverdieButastheripershouldbytimedeceaseHistenderheirmightbearhismemoryButthoucontractedtothineownbrighteyesFeedstthylightsflamewithself-substantialfuelMakingafaminewhereabundanceliesThyselfthyfoetothysweetselftoocruelThouthatartnowtheworldsfreshornamentAndonlyheraldtothegaudyspringWithinthineownbudburiestthycontentAndtenderchurlmakstwasteinniggardingPitytheworldorelsethisgluttonbeToeattheworldsduebythegraveandthee');
 
 /**
@@ -15,6 +19,29 @@ function method_is_public($class, $method) {
 		return $refl->isPublic();
 	}
 	return false;
+}
+
+/**
+ * Get the filename in cache folder
+ *
+ * @author Jack
+ * @version 1.0
+ * @date Sat Mar 28 13:17:13 2015
+ */
+function cache_filename($name) {
+	$cache_dir = config('cache_dir');
+	if($cache_dir) {
+		foreach($cache_dir as $c) {
+			$path = try_path($c);
+			if($path)
+				break;
+		}
+
+		if(isset($path)) {
+			return path_join($path, $name);
+		}
+	}
+	return null;
 }
 
 /**

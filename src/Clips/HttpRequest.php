@@ -21,6 +21,20 @@ class HttpRequest extends Request {
 	public function browserMeta() {
 		if(isset($this->browser))
 			return $this->browser;
+
+		$bcap_filename = cache_filename(BCAP_FILENAME);
+		if(file_exists($bcap_filename)) {
+			// We already have the browscap cache
+			$b = new \phpbrowscap\Browscap(dirname($bcap_filename));
+			$b->localFile = $bcap_filename;
+			$b->doAutoUpdate = false;
+			$this->browser = $b->getBrowser();
+			return $this->browser;
+		}
+		else {
+			// We need to download that, log error and try the default get_browser
+			$this->logger->warn('Can\'t find the browse cap file(you can get it by using command clips get bcap), using php default get_browser instead.');
+		}
 		$this->browser = get_browser();
 		return $this->browser;
 	}

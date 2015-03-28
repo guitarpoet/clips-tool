@@ -1,5 +1,12 @@
 <?php namespace Clips\Libraries; in_array(__FILE__, get_included_files()) or exit("No direct script access allowed");
 
+/**
+ * The command line progress manager
+ *
+ * @author Jack
+ * @version 1.0
+ * @date Sat Mar 28 12:55:34 2015
+ */
 class ProgressManager {
 	public function __construct() {
 		if(class_exists('Elkuku\Console\Helper\ConsoleProgressBar') && \Clips\is_cli()) {
@@ -11,13 +18,17 @@ class ProgressManager {
 		}
 	}
 
+	public function isStarted() {
+		return isset($this->current_value);
+	}
+
 	public function start($total = 100, $width = -1) {
 		if($this->show) {
 			if(isset($this->progressbar)) { // If we have the progress bar, remove it
 				$this->progressbar->erase();
 			}
 
-			$meta = Clips\console_meta();
+			$meta = \Clips\console_meta();
 
 			if($width == -1)
 				$width = $meta['width'];
