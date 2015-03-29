@@ -27,6 +27,7 @@ class GetCommand extends Command {
 			// We already have the browscap cache
 			$b = new \phpbrowscap\Browscap(dirname($path));
 			$b->localFile = $path;
+			$b->lowercase = true;
 			$this->output("Generating the browser cap cache file.\n");
 			$b->getBrowser();
 			$this->output("Done!");

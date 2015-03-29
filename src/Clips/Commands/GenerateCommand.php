@@ -12,6 +12,16 @@ class GenerateCommand extends Command {
 		$this->output(\Clips\clips_out($type, $ret, false));
 	}
 
+	public function bcap() {
+		$this->output('Generating bcap file...'.PHP_EOL);
+		$path = \Clips\cache_filename(BCAP_FILENAME);
+		$b = new \phpbrowscap\Browscap(dirname($path));
+		$b->localFile = $path;
+		$b->lowercase = true;
+		$b->getBrowser();
+		$this->output("Done!");
+	}
+
 	public function dump_widget($ret) {
 		$this->dump($ret, 'widget');
 	}
