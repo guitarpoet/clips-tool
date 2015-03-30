@@ -29,7 +29,7 @@
 			size: $(_this.element).parent().width(), img: _this.img
 		}, '_(', ')').toString()));
 		this.last_width = $(_this.element).parent().width();
-	}
+	};
 	
 	$.fn[pluginName] = function ( options ) {
 		var result = this.each(function () {
