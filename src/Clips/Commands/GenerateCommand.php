@@ -46,6 +46,30 @@ class GenerateCommand extends Command {
 		return $path;
 	}
 
+	public function view() {
+		$config = \Clips\interactive('interactive/view', $this);
+		$data = \Clips\yaml('migrations/schemas/'.$config->schema.'.yml');
+		if($data) {
+			$this->scaffold->view($data, $config);
+		}
+		else {
+			$this->output('Can\'t find the schema configuration file for %s!'.PHP_EOL, $config->schema);
+		}
+		$this->output("Done!".PHP_EOL);
+	}
+
+	public function scaffold() {
+		$config = \Clips\interactive('interactive/scaffold', $this);
+		$data = \Clips\yaml('migrations/schemas/'.$config->schema.'.yml');
+		if($data) {
+			$this->scaffold->gen($data, $config);
+		}
+		else {
+			$this->output('Can\'t find the schema configuration file for %s!'.PHP_EOL, $config->schema);
+		}
+		$this->output("Done!".PHP_EOL);
+	}
+
 	public function form() {
 		$config = \Clips\interactive('interactive/form', $this);
 		$data = \Clips\yaml('migrations/schemas/'.$config->schema.'.yml');

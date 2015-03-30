@@ -15,6 +15,167 @@ class Scaffold extends BaseService {
 		return substr($model_name, 0, strlen($model_name) - 1);
 	}
 
+
+	private function create_index_view($table, $options, $config, $schema) {
+		$name = $this->tableName($table);
+		$view = \Clips\clips_out('index_view', array('name' => $name), false);
+		$file = 'application/views/'.$name.'/index.tpl';
+
+		if(\Clips\try_path($file)) {
+			echo "View $name exists in file $file!".PHP_EOL;
+		}
+		else {
+			echo "Creating view $name/index.tpl ...".PHP_EOL;
+			file_put_contents($file, $view, false);
+		}
+	}
+
+	private function create_create_view($table, $options, $config, $schema) {
+		$name = $this->tableName($table);
+
+		$fields = array();
+
+		foreach($options as $col => $copts) {
+			if(isset($copts['foreign_key'])) {
+				$foreign_table = $copts['foreign_key'];
+				$fto = $schema[$foreign_table];
+				foreach($fto as $c => $o) {
+					if(isset($o['refer'])) {
+						$label_field = $c;
+					}
+				}
+
+				if(!isset($label_field)) {
+					echo "No refer field is set for table $foreign_table, using name instead!".PHP_EOL;
+					$label_fields = 'name';
+				}
+				$fields []= array(
+					'field' => $col, 
+					'join_table' => $foreign_table,
+					'label_field' => $label_field
+				);
+			}
+			else {
+				$fields []= array('field' => $col);
+			}
+		}
+
+		$view = \Clips\clips_out('create_view', array('name' => $name, 'fields' => $fields), false);
+		$file = 'application/views/'.$name.'/create.tpl';
+
+		if(\Clips\try_path($file)) {
+			echo "View $name exists in file $file!".PHP_EOL;
+		}
+		else {
+			echo "Creating view $name/create.tpl ...".PHP_EOL;
+			file_put_contents($file, $view, false);
+		}
+	}
+
+	private function create_edit_view($table, $options, $config, $schema) {
+		$name = $this->tableName($table);
+
+		$fields = array();
+
+		foreach($options as $col => $copts) {
+			if(isset($copts['foreign_key'])) {
+				$foreign_table = $copts['foreign_key'];
+				$fto = $schema[$foreign_table];
+				foreach($fto as $c => $o) {
+					if(isset($o['refer'])) {
+						$label_field = $c;
+					}
+				}
+
+				if(!isset($label_field)) {
+					echo "No refer field is set for table $foreign_table, using name instead!".PHP_EOL;
+					$label_fields = 'name';
+				}
+				$fields []= array(
+					'field' => $col, 
+					'join_table' => $foreign_table,
+					'label_field' => $label_field
+				);
+			}
+			else {
+				$fields []= array('field' => $col);
+			}
+		}
+
+		$view = \Clips\clips_out('edit_view', array('name' => $name, 'fields' => $fields), false);
+		$file = 'application/views/'.$name.'/edit.tpl';
+
+		if(\Clips\try_path($file)) {
+			echo "View $name exists in file $file!".PHP_EOL;
+		}
+		else {
+			echo "Creating view $name/edit.tpl ...".PHP_EOL;
+			file_put_contents($file, $view, false);
+		}
+	}
+
+	private function create_show_view($table, $options, $config, $schema) {
+		$name = $this->tableName($table);
+
+		$fields = array();
+
+		foreach($options as $col => $copts) {
+			if(isset($copts['foreign_key'])) {
+				$foreign_table = $copts['foreign_key'];
+				$fto = $schema[$foreign_table];
+				foreach($fto as $c => $o) {
+					if(isset($o['refer'])) {
+						$label_field = $c;
+					}
+				}
+
+				if(!isset($label_field)) {
+					echo "No refer field is set for table $foreign_table, using name instead!".PHP_EOL;
+					$label_fields = 'name';
+				}
+				$fields []= array(
+					'field' => $col, 
+					'join_table' => $foreign_table,
+					'label_field' => $label_field
+				);
+			}
+			else {
+				$fields []= array('field' => $col);
+			}
+		}
+
+		$view = \Clips\clips_out('show_view', array('name' => $name, 'fields' => $fields), false);
+		$file = 'application/views/'.$name.'/show.tpl';
+
+		if(\Clips\try_path($file)) {
+			echo "View $name exists in file $file!".PHP_EOL;
+		}
+		else {
+			echo "Creating view $name/show.tpl ...".PHP_EOL;
+			file_put_contents($file, $view, false);
+		}
+	}
+
+	/**
+	 * Generate the view based on the schema
+	 */
+	public function view($schema, $config) {
+		foreach($schema as $name => $options) {
+			if(\Clips\get_default($options, 'view') !== false) {
+				$folder_name = 'application/views/'.$this->tableName($name);
+				$path = \Clips\try_path($folder_name);
+
+				if(!$path) {
+					mkdir($folder_name, 0755, true);
+				}
+				$this->create_index_view($name, $options, $config, $schema);
+				$this->create_create_view($name, $options, $config, $schema);
+				$this->create_edit_view($name, $options, $config, $schema);
+				$this->create_show_view($name, $options, $config, $schema);
+			}
+		}
+	}
+
 	/**
 	 * Generate the model based on the schema
 	 */
@@ -352,6 +513,7 @@ class Scaffold extends BaseService {
 				echo "Creating controller $controller_name...".PHP_EOL;
 				file_put_contents($file, \Clips\clips_out('controller', array(
 					'namespace' => $namespace[0],
+					'title_name' => ucfirst($model_name),
 					'controller_name' => $controller_name,
 					'refer_name' => $refer_name,
 					'refers' => $refers,
@@ -379,5 +541,13 @@ class Scaffold extends BaseService {
 				$this->tableToForm($table, $options, $form_folder, false);
 			}
 		}
+	}
+
+	public function gen($schema, $config) {
+		$this->model($schema, $config);
+		$this->form($schema, $config);
+		$this->pagination($schema, $config);
+		$this->controller($schema, $config);
+		$this->view($schema, $config);
 	}
 }

@@ -9,7 +9,7 @@ use Clips\Controller;
  * @version {{version}}
  * @date {{date}}
  *
- * @Clips\Widget({"html", "lang", "grid"})
+ * @Clips\Widget({"html", "lang", "grid", "scaffold"})
  * @Clips\Model({ {{#models}}{{^first}}, {{/first}}"{{model}}"{{/models}} });
  */
 class {{controller_name}} extends Controller {
@@ -19,6 +19,7 @@ class {{controller_name}} extends Controller {
 	 * @Clips\Actions("{{refer_name}}")
 	 */
 	public function index() {
+		$this->title("{{title_name}} List", true);
 		return $this->render('{{refer_name}}/index');
 	}
 
@@ -27,9 +28,13 @@ class {{controller_name}} extends Controller {
 	 * @Clips\Actions("{{refer_name}}")
 	 */
 	public function show($id) {
+		$this->title("{{title_name}} Details for {{refer_name}} $id", true);
 		$data = $this->{{refer_name}}->load($id);
 		$this->formData("{{table_name}}_edit", $data);
-		return $this->render('{{refer_name}}/show', array({{#refers}}{{^first}}, {{/first}}'{{key}}' => $this->{{model}}->get(){{/refers}}));
+		$args = array({{#refers}}{{^first}}, {{/first}}'{{key}}' => $this->{{model}}->get(){{/refers}});
+		$args['data'] = $data;
+		$args['id'] = $id;
+		return $this->render('{{refer_name}}/show', $args);
 	}
 
 	/**
@@ -37,6 +42,7 @@ class {{controller_name}} extends Controller {
 	 * @Clips\Actions("{{refer_name}}")
 	 */
 	public function create() {
+		$this->title("Create {{title_name}}", true);
 		return $this->render('{{refer_name}}/create', array({{#refers}}{{^first}}, {{/first}}'{{key}}' => $this->{{model}}->get(){{/refers}}));
 	}
 
@@ -44,7 +50,7 @@ class {{controller_name}} extends Controller {
 	 * @Clips\Form("{{table_name}}_create")
 	 */
 	public function create_form() {
-		$this->user->insert($this->{{refer_name}}->cleanFields('{{table}}', $this->post()));
+		$this->{{refer_name}}->insert($this->{{refer_name}}->cleanFields('{{table}}', $this->post()));
 		return $this->redirect(\Clips\site_url('{{refer_name}}/index'));
 	}
 
@@ -53,6 +59,7 @@ class {{controller_name}} extends Controller {
 	 * @Clips\Actions("{{refer_name}}")
 	 */
 	public function edit($id) {
+		$this->title("Edit {{title_name}} for {{refer_name}} $id", true);
 		$data = $this->{{refer_name}}->load($id);
 		$this->formData("{{refer_name}}_edit", $data);
 		return $this->render('{{refer_name}}/edit', array({{#refers}}{{^first}}, {{/first}}'{{key}}' => $this->{{model}}->get(){{/refers}}));
