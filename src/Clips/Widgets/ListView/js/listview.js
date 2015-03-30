@@ -204,9 +204,29 @@
 					self.trigger('list.beforeDraw', [list, data]);
 					makeItems(list, data);
 					selectItems(list, p.current);
-					layoutItems(list); // Layout the list first
-					saveState(list, listview_option);
-					self.trigger('list.loaded', [list, data]);
+					list.find('li').not('.listview_item_template').each(function(i){
+						var self = $(this);
+					});
+					
+					var responsiveImgLength = list.find('li').find('.responsive > img').length - list.find('li.listview_item_template').find('.responsive > img').length;
+					var loadImageLength = 0;
+					
+					if(responsiveImgLength > 0) {
+						list.find('li').not('.listview_item_template').find('.responsive > img').load(function(){
+							loadImageLength++;
+							if(loadImageLength == 9) {
+								list.trigger('loadend');
+							}
+						});
+					}
+					else {
+						list.trigger('loadend');
+					}
+					list.on('loadend', function(){
+						layoutItems(list); // Layout the list first
+						saveState(list, listview_option);
+						self.trigger('list.loaded', [list, data]);						
+					});
 				});
 			}
 		}
@@ -489,7 +509,7 @@
 			box.pr = list.css('padding-right').replace('px', '');
 			box.width = list.width();
 			box.vgap = settings.vgap;
-
+			
 			if(!list.hasClass('listview')) {
 				list.addClass('listview');
 			}
@@ -508,19 +528,13 @@
 					vgap: 0,
 					hgap: 0
 				}, settings);
-
-				var listview_items =  list.children("li").filter('.listview_item').not('.listview_item_template');
-				var mr =  parseInt(listview_items.eq(0).css("margin-right")) || 0;
-				var mb = parseInt(listview_items.eq(0).css("margin-bottom")) || 0;				
 				
-				if(mr != 0) {
-					layoutOptions.hgap = mr;	
-				}
+				var listview_items =  list.children("li").filter('.listview_item');
+				var mr =  parseInt(listview_items.eq(0).css("margin-right").replace(/[^-\d\.]/g, '')) || 0;
+				var mb = parseInt(listview_items.eq(0).css("margin-bottom").replace(/[^-\d\.]/g, '')) || 0;
 				
-				if(mb != 0) {
-					layoutOptions.vgap = mb;
-				}
-				
+				layoutOptions.hgap = mb;
+				layoutOptions.vgap = mr;
 				
 				if(settings.layoutType) {
 					switch (settings.layoutType) {

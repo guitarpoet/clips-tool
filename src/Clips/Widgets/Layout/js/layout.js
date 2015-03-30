@@ -23,7 +23,7 @@ Clips.layout = function (container, options, callback) {
 	Clips.rules.assert(['total-width', $(container).width()]);
 	Clips.rules.assert(options.layout);
 	Clips.rules.filter('box');
-
+	
 	var boxes = $(container + ' .' + options.itemClass).not('.' + options.excludeItemClass);
 	
 	boxes.each(function(i){
@@ -42,6 +42,7 @@ Clips.layout = function (container, options, callback) {
 	Clips.rules.run(function(data){
 		$(container).addClass('abs');
 		var height = 0;
+		
 		$(data).each(function(i){ // Iterationg boxes
 			var h = this.y + this.height + this['margin-top'] + this['margin-bottom'];
 			if(h > height)
