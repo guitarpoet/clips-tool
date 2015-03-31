@@ -14,6 +14,7 @@
 			submitError: false, // function called if there is an error when trying to submit
 			submitSuccess: false, // function called just before a successful submit event is sent to the server
             semanticallyStrict: false, // set to true to tidy up generated HTML output
+			removeSuccessClass: true,
             bindEvents: [],
 			autoAdd: {
 				helpBlocks: true
@@ -450,41 +451,43 @@
             "validation.validation",
             function (event, params) {
 
-              var value = getValue($this);
+              	var value = getValue($this);
+				var errorsFound = [];
+				
+				if (value != null) {
+				  // Get a list of the errors to apply
+					
+				  $.each(validators, function (validatorType, validatorTypeArray) {
+					  if (
+						  value || // has a truthy value
+						  value.length || // not an empty string
+						  ( // am including empty values
+						  (
+						  params &&
+						  params.includeEmpty
+						  ) ||
+						  !!settings.validatorTypes[validatorType].includeEmpty
+						  ) ||
+						  ( // validator is blocking submit
+						  !!settings.validatorTypes[validatorType].blockSubmit &&
+						  params &&
+						  !!params.submitting
+						  )
+					  )
+					  {
+						  $.each(
+							  validatorTypeArray,
+							  function (i, validator) {
+								  if (settings.validatorTypes[validatorType].validate($this, value, validator)) {
+									  errorsFound.push(validator.message);
+								  }
+							  }
+						  );
+					  }
+				  });				  
+				}
 
-              // Get a list of the errors to apply
-              var errorsFound = [];
-
-              $.each(validators, function (validatorType, validatorTypeArray) {
-                if (
-                    value || // has a truthy value
-                    value.length || // not an empty string
-                    ( // am including empty values
-                      (
-                        params && 
-                        params.includeEmpty 
-                      ) ||
-                      !!settings.validatorTypes[validatorType].includeEmpty
-                    ) ||
-                    ( // validator is blocking submit
-                      !!settings.validatorTypes[validatorType].blockSubmit &&
-                      params &&
-                      !!params.submitting
-                    )
-                  )
-                {
-                  $.each(
-                    validatorTypeArray,
-                    function (i, validator) {
-                      if (settings.validatorTypes[validatorType].validate($this, value, validator)) {
-                        errorsFound.push(validator.message);
-                      }
-                    }
-                  );
-                }
-              });
-
-              return errorsFound;
+             	return errorsFound;
             }
           );
 
@@ -558,7 +561,7 @@
               $form.find("input,select,textarea").not($this).not("[name=\"" + $this.attr("name") + "\"]").trigger("validationLostFocus.validation");
 
               errorsFound = $.unique(errorsFound.sort());
-
+				
               // Were there any errors?
               if (errorsFound.length) {
                 // Better flag it up as a warning.
@@ -576,19 +579,25 @@
                 }
               } else {
                 $controlGroup.removeClass("warning error success");
-                if (value.length > 0) {
-                  $controlGroup.addClass("success");
-                }
+				if (value != null) {
+					if (value.length > 0) {
+						$controlGroup.addClass("success");
+					}	
+				}
                 $helpBlock.html($helpBlock.data("original-contents"));
               }
 
               if (e.type === "blur") {
-                $controlGroup.removeClass("success");
+				  if(settings.options.removeSuccessClass) {
+					  $controlGroup.removeClass("success");
+				  }
               }
             }
           );
           $this.bind("validationLostFocus.validation", function () {
-            $controlGroup.removeClass("success");
+			  if(settings.options.removeSuccessClass) {
+				  $controlGroup.removeClass("success");
+			  }
           });
         });
       },
@@ -682,13 +691,13 @@
                     if (validator.lastValue === value && validator.lastFinished) {
                         return !validator.lastValid;
                     }
-
+					
                     if (validator.lastFinished === true)
                     {
                         validator.lastValue = value;
                         validator.lastValid = true;
                         validator.lastFinished = false;
-
+						
                         var rrjqbvValidator = validator;
                         var rrjqbvThis = $this;
                         executeFunctionByName(
