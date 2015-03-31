@@ -146,6 +146,8 @@
 
 		function requestData(list) {
 			if(settings.ajax != '') {
+				showMask(list);
+				
 				// data, name, orderable, regex, searchable, value
 				if(list.draw) {
 					list.draw++;
@@ -628,9 +630,10 @@
 		}
 		
 		function createMask(list) {
-			var mask_tpl = template_string(settings.mask, settings.language);
-			list.parent().append($(mask_tpl));
-			showMask(list);
+			if(settings.enableMask && settings.listtype == 'static') {
+				var mask_tpl = template_string(settings.mask, settings.language);
+				list.parent().append($(mask_tpl));
+			}				
 		}
 		
 		function showMask(list) {
@@ -678,9 +681,7 @@
 			restoreSettings(list);
 			list.wrap(settings.wrap); // Added the list wrap
 			
-			if(settings.enableMask && settings.listtype == 'static') {
-				createMask(list);	
-			}
+			createMask(list);
 			
 			requestData(list);	// Requesting the data for the listview
 			
