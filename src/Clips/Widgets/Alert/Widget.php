@@ -12,6 +12,10 @@ class Widget extends \Clips\Widget {
 	$(".alert").each(function(){
 		$(this).message();
 	});
+	
+	$('.owl-carousel[data-role="alertgroup"]').each(function(){
+		$(this).alertgroup();
+	});
 TEXT;
 		\Clips\context('jquery_init', $js, true);
 	}

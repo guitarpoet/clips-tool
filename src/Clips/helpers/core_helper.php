@@ -1019,7 +1019,7 @@ function bundle($name = '') {
  * @date Sun Mar  8 20:00:39 2015
  */
 function lang() {
-	$bundle_name = Clips\context('current_bundle');
+	$bundle_name = \Clips\context('current_bundle');
 	if(!$bundle_name)
 		$bundle_name = '';
 	$bundle = bundle($bundle);
