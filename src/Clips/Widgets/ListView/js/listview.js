@@ -212,9 +212,10 @@
 					var loadImageLength = 0;
 					
 					if(responsiveImgLength > 0) {
+						list.find('.responsive > img').responsiveImage();
 						list.find('li').not('.listview_item_template').find('.responsive > img').load(function(){
 							loadImageLength++;
-							if(loadImageLength == 9) {
+							if(loadImageLength == responsiveImgLength) {
 								list.trigger('loadend');
 							}
 						});
