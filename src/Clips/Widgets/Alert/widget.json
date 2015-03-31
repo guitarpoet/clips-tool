@@ -6,7 +6,8 @@
 	"doc":"alert",
 	"js": {
 		"files": [
-			"pinet_alert"
+			"pinet_alert",
+			"pinet_alertgroup"
 		]
 	},
 	"scss": {

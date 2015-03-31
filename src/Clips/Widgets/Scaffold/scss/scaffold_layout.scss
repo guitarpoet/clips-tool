@@ -139,7 +139,6 @@
 				form {
 					display: inline-table;
 					.form-group {
-						//							display: inline-table;
 						position: relative;
 						display: inline-block;
 						margin-right: 10px;
@@ -179,15 +178,6 @@
 								}
 							}
 						}
-						//							.help-block {
-						//								position: absolute;
-						//								z-index: 1;
-						//								width: 100%;
-						//								left: 0;
-						//								> ul {
-						//									text-align: left;
-						//								}
-						//							}
 						.selectboxit-container {
 							vertical-align: middle;
 						}
@@ -215,12 +205,21 @@
 					}
 				}
 
+				#notice {
+					@include content-style();
+					padding-left: 20px;
+					padding-right: 20px;
+					padding-bottom: 7px;
+//					#alert-group {
+//						.owl-controls {
+//							margin-top: 0;
+//						}	
+//					}
+				}
+				
 				#editarea {
 					@include content-style();
-					padding-top: 23px;
 					padding-bottom: 23px;
-//					overflow: auto;
-//					height: 100%;
 				}
 			}
 
