@@ -454,6 +454,10 @@
               	var value = getValue($this);
 				var errorsFound = [];
 				
+				if (value == null) {
+					value = '';
+				}
+				
 				if (value != null) {
 				  // Get a list of the errors to apply
 					
