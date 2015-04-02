@@ -24,9 +24,9 @@
 	}
 
 	array_remove = function(array, from, to) {
-    	var rest = array.slice((to || from) + 1 || array.length);
-    	array.length = from < 0 ? array.length + from : from;
-    	return array.push.apply(array, rest);
+		var rest = array.slice((to || from) + 1 || array.length);
+		array.length = from < 0 ? array.length + from : from;
+		return array.push.apply(array, rest);
 	};
 
 	$.fn.listview = function(args) {
@@ -62,7 +62,7 @@
 			order_box: '<div class="listview_orderbox"><select id="listview_orderbox" class="listview_orderbox_select"></select></div>',
 			order_dir_box: '<div class="listview_orderbox"><select id="listview_order" class="listview_orderbox_select"><option id="asc">_(order_dir_asc)</option><option id="desc">_(order_dir_desc)</option></select></div>',
 			enableMask: true,
-			mask: '<div class="listview_mask"><div class="listview_mask_loading">_(loading)</div></div>',		
+			mask: '<div class="listview_mask"><div class="listview_mask_loading">_(loading)</div></div>',
 			toolbar: '<div class="listview_toolbar"></div>',
 			language: {
 				filter_label: 'Search',
@@ -88,9 +88,9 @@
 			if(savedStates) {
 				list.states = savedStates;
 				list.start = savedStates.start;
-				
+
 				list.pageLength = savedStates.length;
-				
+
 				if(savedStates.search && savedStates.search.value)
 					list.search_value = savedStates.search.value;
 				if(savedStates.order && savedStates.order[0].column) {
@@ -102,10 +102,10 @@
 				list.states = {};
 			}
 		}
-		
+
 		function restoreSettings(list) {
 			var settingsPagelengthExistInselectoptions;
-			
+
 			if(settings.pageLength) {
 				settingsPagelengthExistInselectoptions = settings.select_options.indexOf(settings.pageLength);
 
@@ -113,18 +113,18 @@
 					list.states.oldPagelength = settings.pageLength;
 					saveState(list, list.states);
 					list.pageLength = settings.pageLength;
-				}				
+				}
 			}
 			else {
 				if(list.states.oldPagelength) {
 					if(list.states.oldPagelength == list.pageLength) {
-						list.pageLength = 10;	
+						list.pageLength = 10;
 					}
 					list.states.oldPagelength = false;
 					saveState(list, list.states);
 				}
 			}
-			
+
 			if(Clips.lang) {
 				$.each(settings.language, function(i, item){
 					settings.language[i] = Clips.lang.message(settings.language[i]);
@@ -207,15 +207,17 @@
 					list.find('li').not('.listview_item_template').each(function(i){
 						var self = $(this);
 					});
-					
+
 					var responsiveImgLength = list.find('li').find('.responsive > img').length - list.find('li.listview_item_template').find('.responsive > img').length;
 					var loadImageLength = 0;
-					
 					if(responsiveImgLength > 0) {
 						list.find('.responsive > img').responsiveImage();
+						list.find('li').not('.listview_item_template').find('.responsive > img').error(function(){
+							loadImageLength++;
+						});
 						list.find('li').not('.listview_item_template').find('.responsive > img').load(function(){
 							loadImageLength++;
-							if(loadImageLength == responsiveImgLength) {
+							if(loadImageLength >= responsiveImgLength) {
 								list.trigger('loadend');
 							}
 						});
@@ -226,7 +228,7 @@
 					list.on('loadend', function(){
 						layoutItems(list); // Layout the list first
 						saveState(list, listview_option);
-						self.trigger('list.loaded', [list, data]);						
+						self.trigger('list.loaded', [list, data]);
 					});
 				});
 			}
@@ -246,9 +248,9 @@
 				$.each(listData, function(i, e) {
 					var li = $(template_string(template, e)).removeClass('listview_item_template');
 					li.attr('itemId',e.users_id);
-                    li.trigger('list.item.load', [e]);
-                    li.data('itemdata', e);
-                    list.append(li);
+					li.trigger('list.item.load', [e]);
+					li.data('itemdata', e);
+					list.append(li);
 				});
 				makePagination(list, data);
 			}
@@ -446,7 +448,7 @@
 					listPageLengthEqualsOptions = true;
 					str = '<option selected>'+settings.select_options[i]+'</option>';
 				};
-				
+
 				lengthSelect.find('select').append(str);
 			};
 
@@ -510,7 +512,7 @@
 			box.pr = list.css('padding-right').replace('px', '');
 			box.width = list.width();
 			box.vgap = settings.vgap;
-			
+
 			if(!list.hasClass('listview')) {
 				list.addClass('listview');
 			}
@@ -529,14 +531,14 @@
 					vgap: 0,
 					hgap: 0
 				}, settings);
-				
+
 				var listview_items =  list.children("li").filter('.listview_item');
 				var mr =  parseInt(listview_items.eq(0).css("margin-right").replace(/[^-\d\.]/g, '')) || 0;
 				var mb = parseInt(listview_items.eq(0).css("margin-bottom").replace(/[^-\d\.]/g, '')) || 0;
-				
+
 				layoutOptions.hgap = mb;
 				layoutOptions.vgap = mr;
-				
+
 				if(settings.layoutType) {
 					switch (settings.layoutType) {
 						case 'rowleft':
@@ -547,9 +549,9 @@
 							break;
 						default:
 							break;
-					}					
+					}
 				}
-				
+
 				Clips.layout("#" + list.attr('id'), layoutOptions, function(){
 					hideMask(list);
 				});
@@ -558,7 +560,8 @@
 				box.w = box.width - box.pl - box.pr; // The container width
 				box.gap = settings.gap; // The gaps between items
 				box.columns = settings.columns_count;
-				var item_width = (box.w + box.gap) / box.columns - box.gap;
+				//var item_width = (box.w + box.gap) / box.columns - box.gap;
+				var item_width = box.w  / box.columns - box.gap;
 				list.children('li').width(item_width);
 				list.children('li').not('.listview_item_template').each(function(index, item) {
 					if((index + 1) % box.columns != 0 || box.columns == 1) { // If this is the end of the row
@@ -621,19 +624,19 @@
 			list.trigger('list.createfilter', [list]);
 			createOrderbox(list);
 			list.trigger('list.createorderbox', [list]);
-			createItemlengthbox(list);	 // Create the length choice box			
+			createItemlengthbox(list);	 // Create the length choice box
 		}
-		
+
 		function createMask(list) {
 			var mask_tpl = template_string(settings.mask, settings.language);
 			list.parent().append($(mask_tpl));
 			showMask(list);
 		}
-		
+
 		function showMask(list) {
 			list.parent().find('.listview_mask').removeClass('hide').addClass('show').fadeIn(550);
 		}
-		
+
 		function hideMask(list) {
 			list.parent().find('.listview_mask').removeClass('show').addClass('hide').fadeOut(550);
 		}
@@ -657,38 +660,38 @@
 				}
 			}
 		};
-		
+
 		Api.prototype.clear = function(itemId) {
 			if(!itemId) {
 				_this.list.states.selectedItems = [];
 				saveState(_this.list, _this.list.states);
 			}
 		};
-		
+
 		Api.prototype.layout = function(list) {
 			layoutItems(list);
 		};
-		
+
 		this.each(function() {
 			var list = $(this);
 			restoreSavedStates(list); // Restore the states at first
 			restoreSettings(list);
 			list.wrap(settings.wrap); // Added the list wrap
-			
+
 			if(settings.enableMask && settings.listtype == 'static') {
-				createMask(list);	
+				createMask(list);
 			}
-			
+
 			requestData(list);	// Requesting the data for the listview
-			
+
 			createToolbar(list);
 			setSelectablePlugin(list); // Initilize the selectable function for listview
 			self.data('api', new Api(list));
-			
+
 			$(window).on('load', function(){
-				self.trigger('list.init', [list]);	
+				self.trigger('list.init', [list]);
 			});
-			
+
 			// Getting the list's basic informations
 			$(window).resize(function(){ // If the size of the list has been changed, relayout the items
 				layoutItems(list);
