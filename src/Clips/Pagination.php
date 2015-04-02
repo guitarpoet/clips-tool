@@ -270,6 +270,9 @@ class Pagination {
 				$arr []= $col.' '.$o['dir'];
 			}
 		}
+		if(isset($this->orderBy)) {
+			$arr = array_merge($arr, $this->orderBy);
+		}
 		$this->orderBy = $arr;
 	}
 
