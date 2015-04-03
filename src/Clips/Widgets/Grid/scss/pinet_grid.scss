@@ -1,5 +1,31 @@
+%floatleft {
+	float: left;
+}
+
+%minheight {
+	min-height: 1px;
+}
+
+%colcommon {
+	padding-left: ($grid-gutter-width / 2);
+	padding-right: ($grid-gutter-width / 2);
+	position: relative;	
+}
+
 @mixin responsive_pinet_grid($args...) {
 
+	* {
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+	*:before,
+	*:after {
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+	
 	@if type-of($screen-width) == number {
 		$grid-col-rs: strip-unit($screen-width);
 		@if type-of($alias-width) == number {
@@ -11,16 +37,13 @@
 
 		@for $i from 1 through $grid-columns {
 			$grid-col-width: percentage(($i / $grid-columns));
-
+			
 			@each $sel in $grid-sel {
 				.col-#{$sel}-#{$i} {
-					width: $screen-width;
-					float: left;
-					min-height: 1px;
+					@extend %floatleft;
+					@extend %minheight;
+					@extend %colcommon;
 					width: $grid-col-width;
-					padding-left: ($grid-gutter-width / 2);
-					padding-right: ($grid-gutter-width / 2);
-					position: relative;
 				}
 
 				.col-#{$sel}-offset-#{$i} {
