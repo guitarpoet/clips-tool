@@ -687,7 +687,11 @@
 			requestData(list);	// Requesting the data for the listview
 
 			createToolbar(list);
-			setSelectablePlugin(list); // Initilize the selectable function for listview
+			
+			if($.isFunction($.fn.selectable)) {
+				setSelectablePlugin(list); // Initilize the selectable function for listview	
+			}
+			
 			self.data('api', new Api(list));
 
 			$(window).on('load', function(){
