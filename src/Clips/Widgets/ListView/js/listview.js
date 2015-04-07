@@ -638,11 +638,11 @@
 		}
 
 		function showMask(list) {
-			list.parent().find('.listview_mask').removeClass('hide').addClass('show').fadeIn(550);
+			list.parent().find('.listview_mask').removeClass('hide').addClass('show').stop().fadeIn(550);
 		}
 
 		function hideMask(list) {
-			list.parent().find('.listview_mask').removeClass('show').addClass('hide').fadeOut(550);
+			list.parent().find('.listview_mask').removeClass('show').addClass('hide').stop().fadeOut(550);
 		}
 
 		var Api = function(list){
