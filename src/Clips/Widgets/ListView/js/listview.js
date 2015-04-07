@@ -696,6 +696,7 @@
 
 			// Getting the list's basic informations
 			$(window).resize(function(){ // If the size of the list has been changed, relayout the items
+				showMask(list);
 				layoutItems(list);
 				self.trigger('list.resize', [list]);
 			});
