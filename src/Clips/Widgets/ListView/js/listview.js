@@ -562,9 +562,8 @@
 				box.w = box.width - box.pl - box.pr; // The container width
 				box.gap = settings.gap; // The gaps between items
 				box.columns = settings.columns_count;
+				var item_width = box.w / box.columns - box.gap;
 
-				//var item_width = (box.w + box.gap) / box.columns - box.gap;
-				var item_width = box.w  / box.columns - box.gap;
 				list.children('li').width(item_width);
 				list.children('li').not('.listview_item_template').each(function(index, item) {
 					if((index + 1) % box.columns != 0 || box.columns == 1) { // If this is the end of the row
@@ -681,9 +680,9 @@
 			restoreSavedStates(list); // Restore the states at first
 			restoreSettings(list);
 			list.wrap(settings.wrap); // Added the list wrap
-			if(settings.enableMask && settings.listtype == 'static') {
-				createMask(list);
-			}
+
+			createMask(list);
+			
 			requestData(list);	// Requesting the data for the listview
 
 			createToolbar(list);
