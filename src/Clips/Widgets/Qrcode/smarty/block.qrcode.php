@@ -1,5 +1,7 @@
 <?php in_array(__FILE__, get_included_files()) or exit("No direct script access allowed");
 
+Clips\require_widget_smarty_plugin('Html', 'img');	
+
 function smarty_block_qrcode($params, $content = '', $template, &$repeat) {
 	if($repeat) {
 		return;

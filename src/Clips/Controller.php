@@ -180,7 +180,7 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 			$datasource = $this->tool->library('dataSource')->first();
 
 			if(isset($pagination->join) && is_array($pagination->join) 
-				&& is_array($pagination->join[0])) {
+				&& $pagination->join && is_array($pagination->join[0])) {
 				$pagination->join = array_reverse($pagination->join);
 			}
 
