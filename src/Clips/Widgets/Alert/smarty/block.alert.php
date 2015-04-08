@@ -15,34 +15,38 @@ function smarty_block_alert($params, $content = '', $template, &$repeat) {
 		'class' => array('alert', $show)
 	);
 	
-//	$close_button = smarty_block_div(array(
-//		'class' => 'btn',
-//		'alert-for' => 'close'
-//	), 'close', $template, $repeat);
-	
-	$close_button = \Clips\create_tag('div', array(), array(
-		'class' => 'btn',
-		'alert-for' => 'close'
-	), \Clips\lang('close'));
-	
-	\Clips\clips_context('indent_level', 1, true);
-	
-//	$message = smarty_block_div(array(
-//		'class' => 'alert-message'
-//	), 'sdsds', $template, $repeat);
-	
-	$message = \Clips\create_tag('div', array(), array(
-		'class' => 'alert-message'
-	), \Clips\lang($content));
-	
-//	$controls = smarty_block_div(array(
-//		'class' => 'alert-control'
-//	), $close_button,  $template, $repeat);
-	
-	$controls = \Clips\create_tag('div', array(), array(
-		'class' => 'alert-control'
-	), $close_button);
 
+	$true = true;
+	// Add message div
+	
+	// Open message div
+	smarty_block_div(array('class' => 'alert-message'), $content, $template, $true);
+	// Close message div
+	$message = smarty_block_div(array('class' => 'alert-message'), $content, $template, $repeat);
+
+
+	// Open controls
+	smarty_block_div(array('class' => 'alert-control'), '',  $template, $true);
+
+	// Open close button
+	smarty_block_div(array('class' => 'btn', 'alert-for' => 'close'), \Clips\lang('close'), $template, $true);
+	// Close close button
+	$close_button = smarty_block_div(array('class' => 'btn', 'alert-for' => 'close'), \Clips\lang('close'), $template, $repeat);
+	
+	// Close controls
+	$controls = smarty_block_div(array('class' => 'alert-control'), $close_button,  $template, $repeat);
+
+	$level = Clips\context('indent_level');
+	if($level === null)
+		$level = 0; // Default level is 0
+	else
+		$level = count($level);
+
+	$indent = '';
+	for($i = 0; $i < $level; $i++) {
+		$indent .= "\t";
+	}
+	
 	\Clips\context_pop('indent_level');
-	return \Clips\create_tag('div', $params, $default, $message.$controls);
+	return \Clips\create_tag('div', $params, $default, $message."\n".$indent.$controls);
 }
