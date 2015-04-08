@@ -1019,10 +1019,10 @@ function bundle($name = '') {
  * @date Sun Mar  8 20:00:39 2015
  */
 function lang() {
-	$bundle_name = Clips\context('current_bundle');
+	$bundle_name = \Clips\context('current_bundle');
 	if(!$bundle_name)
 		$bundle_name = '';
-	$bundle = bundle($bundle);
+	$bundle = bundle($bundle_name);
 	return call_user_func_array(array($bundle, 'message'), func_get_args());
 }
 

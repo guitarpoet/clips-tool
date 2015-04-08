@@ -3,7 +3,7 @@
 	"date": "Thu Mar 12 10:21:00 2015",
 	"version": "1.0",
 	"name": "Scaffold",
-    "depends": ["Jquery", "Navigation"],
+    "depends": ["Jquery", "Navigation", "Alert", "owlcarousel"],
 	"doc":"scaffold",
     "scss": {
         "files": [
