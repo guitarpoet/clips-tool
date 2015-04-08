@@ -3,12 +3,12 @@
 require_once(__DIR__.'/sql_helpers.php');
 
 class Sql {
+
 	public function __construct($type = 'mysqli') {
 		$tool = &\Clips\get_clips_tool();
 
 		$this->clips = $tool->clips;
 		// Register all the template into the clips context
-		$this->clips->clear();
 		$this->clips->template(array('Clips\\Libraries\\Select', 'Clips\\Libraries\\From', 'Clips\\Libraries\\Join', 'Clips\\Libraries\\Where', 'Clips\\Libraries\\GroupBy', 'Clips\\Libraries\\OrderBy', 'Clips\\Libraries\\Limit', 'Clips\\Libraries\\SqlTable', 'Clips\\Libraries\\SqlResult'));
 
 		if(isset($type)) {
