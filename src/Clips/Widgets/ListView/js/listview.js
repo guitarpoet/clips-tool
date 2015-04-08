@@ -24,9 +24,9 @@
 	}
 
 	array_remove = function(array, from, to) {
-    	var rest = array.slice((to || from) + 1 || array.length);
-    	array.length = from < 0 ? array.length + from : from;
-    	return array.push.apply(array, rest);
+		var rest = array.slice((to || from) + 1 || array.length);
+		array.length = from < 0 ? array.length + from : from;
+		return array.push.apply(array, rest);
 	};
 
 	$.fn.listview = function(args) {
@@ -251,9 +251,9 @@
 				$.each(listData, function(i, e) {
 					var li = $(template_string(template, e)).removeClass('listview_item_template');
 					li.attr('itemId',e.users_id);
-                    li.trigger('list.item.load', [e]);
-                    li.data('itemdata', e);
-                    list.append(li);
+					li.trigger('list.item.load', [e]);
+					li.data('itemdata', e);
+					list.append(li);
 				});
 				makePagination(list, data);
 			}
