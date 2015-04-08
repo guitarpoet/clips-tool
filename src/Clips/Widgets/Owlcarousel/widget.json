@@ -1,0 +1,19 @@
+{
+	"author": "andy",
+	"date": "Mon Mar  2 11:37:47 2015",
+	"version": "1.0",
+	"name": "Owlcarousel",
+	"doc":"owlcarousel",
+    "depends": ["Jquery"],
+    "css": {
+        "files": [
+            "owl.carousel",
+            "owl.theme"
+        ]
+    },
+    "js": {
+        "files": [
+            "owl.carousel"
+        ]
+    }
+}

@@ -146,6 +146,8 @@
 
 		function requestData(list) {
 			if(settings.ajax != '') {
+				showMask(list);
+				
 				// data, name, orderable, regex, searchable, value
 				if(list.draw) {
 					list.draw++;
@@ -217,7 +219,7 @@
 						});
 						list.find('li').not('.listview_item_template').find('.responsive > img').load(function(){
 							loadImageLength++;
-							if(loadImageLength >= responsiveImgLength) {
+							if(loadImageLength > responsiveImgLength - 1) {
 								list.trigger('loadend');
 							}
 						});
@@ -560,8 +562,12 @@
 				box.w = box.width - box.pl - box.pr; // The container width
 				box.gap = settings.gap; // The gaps between items
 				box.columns = settings.columns_count;
+<<<<<<< HEAD
 				//var item_width = (box.w + box.gap) / box.columns - box.gap;
 				var item_width = box.w  / box.columns - box.gap;
+=======
+				var item_width = box.w / box.columns - box.gap;
+>>>>>>> andy
 				list.children('li').width(item_width);
 				list.children('li').not('.listview_item_template').each(function(index, item) {
 					if((index + 1) % box.columns != 0 || box.columns == 1) { // If this is the end of the row
@@ -628,9 +634,10 @@
 		}
 
 		function createMask(list) {
-			var mask_tpl = template_string(settings.mask, settings.language);
-			list.parent().append($(mask_tpl));
-			showMask(list);
+			if(settings.enableMask && settings.listtype == 'static') {
+				var mask_tpl = template_string(settings.mask, settings.language);
+				list.parent().append($(mask_tpl));
+			}				
 		}
 
 		function showMask(list) {
@@ -677,11 +684,17 @@
 			restoreSavedStates(list); // Restore the states at first
 			restoreSettings(list);
 			list.wrap(settings.wrap); // Added the list wrap
+<<<<<<< HEAD
 
 			if(settings.enableMask && settings.listtype == 'static') {
 				createMask(list);
 			}
 
+=======
+			
+			createMask(list);
+			
+>>>>>>> andy
 			requestData(list);	// Requesting the data for the listview
 
 			createToolbar(list);
