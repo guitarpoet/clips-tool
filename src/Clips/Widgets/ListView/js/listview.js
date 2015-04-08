@@ -250,6 +250,11 @@
 				$.each(listData, function(i, e) {
 					var li = $(template_string(template, e)).removeClass('listview_item_template');
 					li.attr('itemId',e.users_id);
+					
+					if (e.itemId && e.itemId != '') {
+						li.attr('itemId', e.itemId);
+					}
+					
 					li.trigger('list.item.load', [e]);
 					li.data('itemdata', e);
 					list.append(li);
