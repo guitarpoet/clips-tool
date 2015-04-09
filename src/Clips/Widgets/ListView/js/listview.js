@@ -60,7 +60,7 @@
 			fliter_template: '<div class="listview_filter">_(filter_label)<label><input class="" type="search" placeholder="" aria-controls="datatable"/></label></div>',
 			wrap: '<div class="listview_wrapper"/>',
 			order_box: '<div class="listview_orderbox"><select id="listview_orderbox" class="listview_orderbox_select"></select></div>',
-			order_dir_box: '<div class="listview_orderbox"><select id="listview_order" class="listview_orderbox_select"><option id="asc">_(order_dir_asc)</option><option id="desc">_(order_dir_desc)</option></select></div>',
+			order_dir_box: '<div class="listview_orderbox"><select id="listview_order" class="listview_orderbox_select"><option id="asc" data-order="asc">_(order_dir_asc)</option><option  id="desc" data-order="desc">_(order_dir_desc)</option></select></div>',
 			enableMask: true,
 			mask: '<div class="listview_mask"><div class="listview_mask_loading">_(loading)</div></div>',
 			toolbar: '<div class="listview_toolbar"></div>',
@@ -228,6 +228,7 @@
 						list.trigger('loadend');
 					}
 					list.on('loadend', function(){
+						loadImageLength = 0;
 						layoutItems(list); // Layout the list first
 						saveState(list, listview_option);
 						self.trigger('list.loaded', [list, data]);
@@ -250,6 +251,11 @@
 				$.each(listData, function(i, e) {
 					var li = $(template_string(template, e)).removeClass('listview_item_template');
 					li.attr('itemId',e.users_id);
+					
+					if (e.itemId && e.itemId != '') {
+						li.attr('itemId', e.itemId);
+					}
+					
 					li.trigger('list.item.load', [e]);
 					li.data('itemdata', e);
 					list.append(li);
@@ -559,7 +565,8 @@
 				});
 			}
 			else {
-				box.w = box.width - box.pl - box.pr; // The container width
+				list.children('li').css('width', '');
+				box.w = list.width() - box.pl - box.pr; // The container width
 				box.gap = settings.gap; // The gaps between items
 				box.columns = settings.columns_count;
 				var item_width = box.w / box.columns - box.gap;
@@ -604,7 +611,7 @@
 				if (orderDir && orderDir == $(dir).val()) {
 					$(dir).attr('selected','');
 				}
-			})
+			});
 			orderBox.change(function(){
 				list.orderColumn = orderBox.val();
 				list.orderDir = orderDirBox.val();
@@ -612,7 +619,7 @@
 			});
 			orderDirBox.change(function(){
 				list.orderColumn = orderBox.val();
-				list.orderDir = orderDirBox.val();
+				list.orderDir = orderDirBox.find('option:selected').attr('data-order');
 				requestData(list);
 			});
 			list.parent().find('.listview_toolbar').prepend(orderDirBox);
@@ -698,7 +705,7 @@
 			});
 
 			// Getting the list's basic informations
-			$(window).resize(function(){ // If the size of the list has been changed, relayout the items
+			$(window).resizeEnd(function(){ // If the size of the list has been changed, relayout the items
 				showMask(list);
 				layoutItems(list);
 				self.trigger('list.resize', [list]);

@@ -58,14 +58,18 @@
 			callback();	
 		}
 	};
-	
+
 	ResponsiveImage.prototype.autoSize = function() {
 		var _this = this;
 		if(this.last_width == $(_this.element).parent().width())
 			return;
-		$(_this.element).attr('src', Clips.siteUrl(S(_this.options.pattern).template({
+		var src = S(_this.options.pattern).template({
 			size: $(_this.element).parent().width(), img: _this.img
-		}, '_(', ')').toString()));
+		}, '_(', ')').toString();
+
+		if(src.indexOf('_(') < 0 && src.indexOf(')') < 0 ) {
+			$(_this.element).attr('src', Clips.siteUrl(src));
+		}
 		this.last_width = $(_this.element).parent().width();
 	};
 	
