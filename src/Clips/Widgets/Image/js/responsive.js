@@ -41,7 +41,7 @@
 				console.log('can not find default img which is ' + Clips.siteUrl(_this.options.defaultImg));
 			}
 			else {
-				throw new Error('can not find default img which is ' + Clips.siteUrl(_this.defaults.defaultImg));
+				//throw new Error('can not find default img which is ' + Clips.siteUrl(_this.defaults.defaultImg));
 			}
 		});
 
