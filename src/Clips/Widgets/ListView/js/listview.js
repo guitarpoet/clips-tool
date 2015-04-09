@@ -130,6 +130,8 @@
 					settings.language[i] = Clips.lang.message(settings.language[i]);
 				});
 			}
+			
+			list.refresh = false;
 		}
 
 		function getState(list) {
@@ -469,6 +471,7 @@
 
 			lengthSelect.find('select').on('change', function(){
 				list.pageLength = parseInt(lengthSelect.find('select').val());
+				list.start = 0;
 				requestData(list);
 			})
 		}
@@ -484,6 +487,7 @@
 
 			search.find('input').on('keyup',function(){
 				list.search_value = $(this).val();
+				list.start = 0;
 				requestData(list);
 			});
 		}
@@ -615,11 +619,13 @@
 			orderBox.change(function(){
 				list.orderColumn = orderBox.val();
 				list.orderDir = orderDirBox.val();
+				list.start = 0;
 				requestData(list);
 			});
 			orderDirBox.change(function(){
 				list.orderColumn = orderBox.val();
 				list.orderDir = orderDirBox.find('option:selected').attr('data-order');
+				list.start = 0;
 				requestData(list);
 			});
 			list.parent().find('.listview_toolbar').prepend(orderDirBox);
@@ -644,11 +650,15 @@
 		}
 
 		function showMask(list) {
-			list.parent().find('.listview_mask').removeClass('hide').addClass('show').stop().fadeIn(550);
+			if(list.parent().find('.listview_mask').length > 0) {
+				list.parent().find('.listview_mask').removeClass('hide').addClass('show').stop().fadeIn(550);	
+			}
 		}
 
 		function hideMask(list) {
-			list.parent().find('.listview_mask').removeClass('show').addClass('hide').stop().fadeOut(550);
+			if(list.parent().find('.listview_mask').length > 0) {
+				list.parent().find('.listview_mask').removeClass('show').addClass('hide').stop().fadeOut(550);	
+			}
 		}
 
 		var Api = function(list){
@@ -671,6 +681,11 @@
 			}
 		};
 
+		Api.prototype.clearAll = function() {
+			_this.list.states = [];
+			saveState(_this.list, _this.list.states);
+		};		
+		
 		Api.prototype.clear = function(itemId) {
 			if(!itemId) {
 				_this.list.states.selectedItems = [];
@@ -681,6 +696,15 @@
 		Api.prototype.layout = function(list) {
 			layoutItems(list);
 		};
+
+		Api.prototype.disable = function(list) {
+			self.off('list.loaded');
+		};
+		
+		Api.prototype.refresh = function(list) {
+			list.refresh = true;
+			requestData(list);
+		};		
 
 		this.each(function() {
 			var list = $(this);
