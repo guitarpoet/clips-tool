@@ -228,7 +228,8 @@ class Pagination {
 			}
 		}
 		foreach($this->columns() as $col) {
-			if(get_default($col, 'searchable', true)) {
+			$field_type = get_default($col, 'field_type');
+			if($field_type != 'datetime' && get_default($col, 'searchable', true)) {
 				if(isset($or)) {
 					$or[$col->data] = $or_value;
 				}

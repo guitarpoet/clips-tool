@@ -390,6 +390,7 @@ class Scaffold extends BaseService {
 			// By default the title of this columns is TableName ColumnName
 			$title = \Clips\get_default($config, 'label', \Clips\to_camel($name).' '.\Clips\to_camel($col));
 			$foreign_key = \Clips\get_default($config, 'foreign_key');
+			$type = \Clips\get_default($config, 'type');
 
 			$c = array();
 
@@ -404,6 +405,13 @@ class Scaffold extends BaseService {
 					'value' => $title
 				)
 			);
+
+			if($type) {
+				$c['fields'] []= array(
+					'key' => 'field_type',
+					'value' => $type
+				);
+			}
 
 			// Processing for foreign keys
 			if($foreign_key) {
