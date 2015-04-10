@@ -6,6 +6,22 @@
 	"doc":"The jquery javascript framework",
 	"depends": ["Html"],
 	"js": {
-		"files": ["jquery"]
+		"files":[
+			{
+				"jquery-1.11.2.min": "IE[=8]"
+			},
+			{
+				"jquery-1.11.2.min": "IE[>=9]"
+			},
+			{
+				"jquery-1.11.2.min": "Chrome"
+			},
+			{
+				"jquery-1.11.2.min": "Safari"
+			},
+			{
+				"jquery-1.11.2.min": "Firefox"
+			}			
+		]
 	}
 }

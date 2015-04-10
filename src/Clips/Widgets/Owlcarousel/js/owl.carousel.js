@@ -1376,8 +1376,8 @@ if (typeof Object.create !== "function") {
             }
             base.clearEvents();
             base.$elem.attr({
-                style: base.$elem.data("owl-originalStyles") || "",
-                class: base.$elem.data("owl-originalClasses")
+                "style": base.$elem.data("owl-originalStyles") || "",
+                "class": base.$elem.data("owl-originalClasses")
             });
         },
 

@@ -60,7 +60,7 @@
 			fliter_template: '<div class="listview_filter">_(filter_label)<label><input class="" type="search" placeholder="" aria-controls="datatable"/></label></div>',
 			wrap: '<div class="listview_wrapper"/>',
 			order_box: '<div class="listview_orderbox"><select id="listview_orderbox" class="listview_orderbox_select"></select></div>',
-			order_dir_box: '<div class="listview_orderbox"><select id="listview_order" class="listview_orderbox_select"><option id="asc">_(order_dir_asc)</option><option id="desc">_(order_dir_desc)</option></select></div>',
+			order_dir_box: '<div class="listview_orderbox"><select id="listview_order" class="listview_orderbox_select"><option id="asc" data-order="asc">_(order_dir_asc)</option><option  id="desc" data-order="desc">_(order_dir_desc)</option></select></div>',
 			enableMask: true,
 			mask: '<div class="listview_mask"><div class="listview_mask_loading">_(loading)</div></div>',
 			toolbar: '<div class="listview_toolbar"></div>',
@@ -130,6 +130,8 @@
 					settings.language[i] = Clips.lang.message(settings.language[i]);
 				});
 			}
+			
+			list.refresh = false;
 		}
 
 		function getState(list) {
@@ -206,21 +208,23 @@
 					self.trigger('list.beforeDraw', [list, data]);
 					makeItems(list, data);
 					selectItems(list, p.current);
-					list.find('li').not('.listview_item_template').each(function(i){
-						var self = $(this);
-					});
 
 					var responsiveImgLength = list.find('li').find('.responsive > img').length - list.find('li.listview_item_template').find('.responsive > img').length;
 					var loadImageLength = 0;
+
 					if(responsiveImgLength > 0) {
-						list.find('.responsive > img').responsiveImage();
-						list.find('li').not('.listview_item_template').find('.responsive > img').error(function(){
-							loadImageLength++;
-						});
-						list.find('li').not('.listview_item_template').find('.responsive > img').load(function(){
-							loadImageLength++;
-							if(loadImageLength > responsiveImgLength - 1) {
-								list.trigger('loadend');
+						list.find('.responsive > img').responsiveImage({
+							delay: 1000,
+							onload:function(){
+								loadImageLength++;
+							},
+							onerror: function() {
+								loadImageLength++;
+							},
+							oncomplete: function() {
+								if(loadImageLength > responsiveImgLength - 1) {
+									list.trigger('loadend');
+								}
 							}
 						});
 					}
@@ -228,6 +232,7 @@
 						list.trigger('loadend');
 					}
 					list.on('loadend', function(){
+						loadImageLength = 0;
 						layoutItems(list); // Layout the list first
 						saveState(list, listview_option);
 						self.trigger('list.loaded', [list, data]);
@@ -250,6 +255,11 @@
 				$.each(listData, function(i, e) {
 					var li = $(template_string(template, e)).removeClass('listview_item_template');
 					li.attr('itemId',e.users_id);
+					
+					if (e.itemId && e.itemId != '') {
+						li.attr('itemId', e.itemId);
+					}
+					
 					li.trigger('list.item.load', [e]);
 					li.data('itemdata', e);
 					list.append(li);
@@ -463,6 +473,7 @@
 
 			lengthSelect.find('select').on('change', function(){
 				list.pageLength = parseInt(lengthSelect.find('select').val());
+				list.start = 0;
 				requestData(list);
 			})
 		}
@@ -478,6 +489,7 @@
 
 			search.find('input').on('keyup',function(){
 				list.search_value = $(this).val();
+				list.start = 0;
 				requestData(list);
 			});
 		}
@@ -559,7 +571,8 @@
 				});
 			}
 			else {
-				box.w = box.width - box.pl - box.pr; // The container width
+				list.children('li').css('width', '');
+				box.w = list.width() - box.pl - box.pr; // The container width
 				box.gap = settings.gap; // The gaps between items
 				box.columns = settings.columns_count;
 				var item_width = box.w / box.columns - box.gap;
@@ -604,15 +617,17 @@
 				if (orderDir && orderDir == $(dir).val()) {
 					$(dir).attr('selected','');
 				}
-			})
+			});
 			orderBox.change(function(){
 				list.orderColumn = orderBox.val();
 				list.orderDir = orderDirBox.val();
+				list.start = 0;
 				requestData(list);
 			});
 			orderDirBox.change(function(){
 				list.orderColumn = orderBox.val();
-				list.orderDir = orderDirBox.val();
+				list.orderDir = orderDirBox.find('option:selected').attr('data-order');
+				list.start = 0;
 				requestData(list);
 			});
 			list.parent().find('.listview_toolbar').prepend(orderDirBox);
@@ -637,11 +652,21 @@
 		}
 
 		function showMask(list) {
-			list.parent().find('.listview_mask').removeClass('hide').addClass('show').stop().fadeIn(550);
+			if(list.parent().find('.listview_mask').length > 0) {
+				list.parent().find('.listview_mask').removeClass('hide').addClass('show').stop().fadeIn(550);	
+			}
 		}
 
 		function hideMask(list) {
-			list.parent().find('.listview_mask').removeClass('show').addClass('hide').stop().fadeOut(550);
+			if(list.parent().find('.listview_mask').length > 0) {
+				list.parent().find('.listview_mask').removeClass('show').addClass('hide').stop().fadeOut(550);	
+			}
+		}
+
+		function relayout(list) {
+			showMask(list);
+			layoutItems(list);
+			self.trigger('list.resize', [list]);
 		}
 
 		var Api = function(list){
@@ -664,6 +689,11 @@
 			}
 		};
 
+		Api.prototype.clearAll = function() {
+			_this.list.states = [];
+			saveState(_this.list, _this.list.states);
+		};		
+		
 		Api.prototype.clear = function(itemId) {
 			if(!itemId) {
 				_this.list.states.selectedItems = [];
@@ -674,6 +704,15 @@
 		Api.prototype.layout = function(list) {
 			layoutItems(list);
 		};
+
+		Api.prototype.disable = function(list) {
+			self.off('list.loaded');
+		};
+		
+		Api.prototype.refresh = function(list) {
+			list.refresh = true;
+			requestData(list);
+		};		
 
 		this.each(function() {
 			var list = $(this);
@@ -698,7 +737,7 @@
 			});
 
 			// Getting the list's basic informations
-			$(window).resize(function(){ // If the size of the list has been changed, relayout the items
+			$(window).resize(function(){
 				showMask(list);
 				layoutItems(list);
 				self.trigger('list.resize', [list]);
