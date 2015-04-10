@@ -208,21 +208,23 @@
 					self.trigger('list.beforeDraw', [list, data]);
 					makeItems(list, data);
 					selectItems(list, p.current);
-					list.find('li').not('.listview_item_template').each(function(i){
-						var self = $(this);
-					});
 
 					var responsiveImgLength = list.find('li').find('.responsive > img').length - list.find('li.listview_item_template').find('.responsive > img').length;
 					var loadImageLength = 0;
+
 					if(responsiveImgLength > 0) {
-						list.find('.responsive > img').responsiveImage();
-						list.find('li').not('.listview_item_template').find('.responsive > img').error(function(){
-							loadImageLength++;
-						});
-						list.find('li').not('.listview_item_template').find('.responsive > img').load(function(){
-							loadImageLength++;
-							if(loadImageLength > responsiveImgLength - 1) {
-								list.trigger('loadend');
+						list.find('.responsive > img').responsiveImage({
+							delay: 1000,
+							onload:function(){
+								loadImageLength++;
+							},
+							onerror: function() {
+								loadImageLength++;
+							},
+							oncomplete: function() {
+								if(loadImageLength > responsiveImgLength - 1) {
+									list.trigger('loadend');
+								}
 							}
 						});
 					}
@@ -661,6 +663,12 @@
 			}
 		}
 
+		function relayout(list) {
+			showMask(list);
+			layoutItems(list);
+			self.trigger('list.resize', [list]);
+		}
+
 		var Api = function(list){
 			_this = this;
 			_this.list = list;
@@ -729,7 +737,7 @@
 			});
 
 			// Getting the list's basic informations
-			$(window).resizeEnd(function(){ // If the size of the list has been changed, relayout the items
+			$(window).resize(function(){
 				showMask(list);
 				layoutItems(list);
 				self.trigger('list.resize', [list]);

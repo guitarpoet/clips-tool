@@ -3,7 +3,8 @@
 	var pluginName = 'responsiveImage';
 	var defaults = {
 		pattern: 'responsive/size/_(size)/_(img)',
-		defaultImg: 'default/img.png'
+		defaultImg: 'default/img.png',
+		delay: 1000
 	};
 	
 	function ResponsiveImage( element, options ) {
@@ -28,6 +29,9 @@
 
 		$(_this.element).load(function(){
 			_this.first = 0;
+			if($.isFunction(_this.options.onload)) {
+				_this.options.onload();
+			}
 		});
 
 		$(_this.element).error(function (e) {
@@ -43,8 +47,17 @@
 			else {
 				//throw new Error('can not find default img which is ' + Clips.siteUrl(_this.defaults.defaultImg));
 			}
+			if($.isFunction(_this.options.onerror)) {
+				_this.options.onerror();
+			}
+			// We make a new promise: we promise the string 'result' (after waiting 3s)
 		});
 
+		_this.timeout = setTimeout(function(){
+			if($.isFunction(_this.options.oncomplete)) {
+				_this.options.oncomplete();
+			}
+		}, _this.options.delay);
 	};
 
 	ResponsiveImage.prototype.restoreSettings = function(callback) {
@@ -71,6 +84,13 @@
 			$(_this.element).attr('src', Clips.siteUrl(src));
 		}
 		this.last_width = $(_this.element).parent().width();
+
+		_this.timeout = setTimeout(function(){
+			if($.isFunction(_this.options.oncomplete)) {
+				_this.options.oncomplete();
+			}
+		}, _this.options.delay);
+
 	};
 	
 	ResponsiveImage.prototype.loadDefault = function (imgpath) {
@@ -83,6 +103,9 @@
 	};
 	
 	$.fn[pluginName] = function ( options ) {
+		var _this = this;
+		_this.options = $.extend( {}, defaults, options) ;
+
 		var result = this.each(function () {
 			if (!$.data(this, 'plugin_' + pluginName)) {
 				$.data(this, 'plugin_' + pluginName,
@@ -90,12 +113,16 @@
 			}
 		});
 
-		var _this = this;
+		$(window).resize(function(){
+			clearTimeout(_this.timeout);
+		});
+
 		$(window).resizeEnd(function(){
 			_this.each(function() {
 				var plugin = $.data(this, 'plugin_' + pluginName);
-				if(plugin)
+				if(plugin){
 					plugin.autoSize();
+				}
 			});
 		});
 		return result;
