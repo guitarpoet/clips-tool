@@ -44,9 +44,9 @@ class Sql {
 		}
 		return $this;
 	}
-	public function join($table, $where = array(), $type = null) {
+	public function join($table, $where = array(), $type = "") {
 		if($where instanceof WhereOperator) {
-			$this->clips->assertFacts('fact_join', array(new Join($table, $where->toString(), $type)));
+			$this->clips->assertFacts('fact_join', array(new Join($table, $where->toString(), " ".$type)));
 		}
 		if(is_array($where)) {
 			// Using and as default

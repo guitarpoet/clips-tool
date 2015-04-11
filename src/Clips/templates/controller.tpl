@@ -20,7 +20,7 @@ class {{controller_name}} extends Controller {
 	 */
 	public function index() {
 		$this->title("{{title_name}} List", true);
-		return $this->render('{{refer_name}}/index');
+		return $this->render('{{table_name}}/index');
 	}
 
 	/**
@@ -34,7 +34,7 @@ class {{controller_name}} extends Controller {
 		$args = array({{#refers}}{{^first}}, {{/first}}'{{key}}' => $this->{{model}}->get(){{/refers}});
 		$args['data'] = $data;
 		$args['id'] = $id;
-		return $this->render('{{refer_name}}/show', $args);
+		return $this->render('{{table_name}}/show', $args);
 	}
 
 	/**
@@ -43,7 +43,7 @@ class {{controller_name}} extends Controller {
 	 */
 	public function create() {
 		$this->title("Create {{title_name}}", true);
-		return $this->render('{{refer_name}}/create', array({{#refers}}{{^first}}, {{/first}}'{{key}}' => $this->{{model}}->get(){{/refers}}));
+		return $this->render('{{table_name}}/create', array({{#refers}}{{^first}}, {{/first}}'{{key}}' => $this->{{model}}->get(){{/refers}}));
 	}
 
 	/**
@@ -62,7 +62,7 @@ class {{controller_name}} extends Controller {
 		$this->title("Edit {{title_name}} for {{refer_name}} $id", true);
 		$data = $this->{{refer_name}}->load($id);
 		$this->formData("{{refer_name}}_edit", $data);
-		return $this->render('{{refer_name}}/edit', array({{#refers}}{{^first}}, {{/first}}'{{key}}' => $this->{{model}}->get(){{/refers}}));
+		return $this->render('{{table_name}}/edit', array({{#refers}}{{^first}}, {{/first}}'{{key}}' => $this->{{model}}->get(){{/refers}}));
 	}
 
 	/**

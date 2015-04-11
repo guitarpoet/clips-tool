@@ -27,7 +27,7 @@
 	(bind ?ret (create$))
 	(do-for-all-facts ((?fact Clips\Libraries\SqlTable)) (eq ?fact:type "join")
 		(bind ?ret (insert$ ?ret (+ 1 (length$ ?ret)) 
-			(str-cat " join " ?fact:name " as " ?fact:alias
+			(str-cat ?fact:join_type " join " ?fact:name " as " ?fact:alias
 				" on " ?fact:join_condition)))
 		(retract ?fact)
 	)

@@ -18,7 +18,9 @@ class Scaffold extends BaseService {
 
 	private function create_index_view($table, $options, $config, $schema) {
 		$name = $this->tableName($table);
-		$view = \Clips\clips_out('index_view', array('name' => $name), false);
+		$refer_name = strtolower(\Clips\to_camel($name));
+		$view = \Clips\clips_out('index_view', array('name' => $name,
+			'refer_name' => $refer_name), false);
 		$file = 'application/views/'.$name.'/index.tpl';
 
 		if(\Clips\try_path($file)) {
@@ -463,7 +465,8 @@ class Scaffold extends BaseService {
 			file_put_contents($file, \Clips\clips_out('pagination', array(
 				'from' => $table,
 				'columns' => $columns,
-				'joins' => $joins
+				'joins' => $joins,
+				'joins_count' => count($joins)
 			), false));
 		}
 	}
