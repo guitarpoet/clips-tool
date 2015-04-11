@@ -238,7 +238,6 @@ class Pagination {
 		// Update the where configuration using request columns
 		$i = 0;
 		foreach($params['columns'] as $col) {
-
 			if(isset($col['search'])) {
 				$search = $col['search'];
 				if($search['value']) {
@@ -255,8 +254,8 @@ class Pagination {
 					else
 						$this->where[$f] = $search['value'];
 				}
-				$i++;
 			}
+			$i++;
 		}
 
 		if(isset($or)) {

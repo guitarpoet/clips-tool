@@ -204,6 +204,9 @@
 
 				$.post(settings.ajax, listview_option, function(data) {
 					p = calculatePagination(data.start, data.length, data.recordsFiltered);
+					$(listview_option.columns).each(function(i){
+						listview_option.columns[i].search = null;
+					});
 					list.states = listview_option;
 					self.trigger('list.beforeDraw', [list, data]);
 					makeItems(list, data);
@@ -672,7 +675,23 @@
 		var Api = function(list){
 			_this = this;
 			_this.list = list;
+			_this.settings = settings;
 		};
+
+		Api.prototype.columnSearch = function(index, value) {
+			var objs = _this.settings.col_objs;
+
+			// Update the column data
+			if(index >= 0 && objs.length > index) {
+				objs[index].search = value;
+			}
+
+			requestData(this.list);
+
+			// Change the value back to empty
+			objs[index].search = null;
+		}
+
 		Api.prototype.search = function(value){
 			_this.list.search_value = value;
 			requestData(this.list);
@@ -691,7 +710,7 @@
 
 		Api.prototype.clearAll = function() {
 			_this.list.states = [];
-			saveState(_this.list, _this.list.states);
+//			saveState(_this.list, _this.list.states);
 		};		
 		
 		Api.prototype.clear = function(itemId) {
@@ -780,14 +799,17 @@
 
 	$.fn.listview.Column.prototype = {
 		to_query: function() {
-			return {
+			var ret = {
 				regex: false,
 				data: this.data,
 				orderable: this.orderable,
 				searchable: this.searchable,
-				value: '',
-				name: name
+				name: name,
+				value: ''
 			};
+			if(this.search)
+				ret.search = {'regex': false, 'value': this.search};
+			return ret;
 		}
 	}
 })(jQuery);
