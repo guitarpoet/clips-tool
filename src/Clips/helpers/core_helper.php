@@ -373,6 +373,7 @@ function class_script_path($class) {
 function try_path($path, array $others = array()) {
 	foreach(array_merge($others, array(getcwd(), clips_path('/'))) as $pre) {
 		$p = path_join($pre, $path);
+		echo $p."\n";
 		if(file_exists($p))
 			return $p;
 	}
@@ -501,6 +502,7 @@ function smooth($str) {
 function to_flat($str) {
 	$result = array();
 	$str = str_replace('/', '\\', $str);
+	$str = str_replace(' ', '', $str);
 	foreach(explode('\\', $str) as $s) {
 		$tmp = array();
 		foreach(str_split($s) as $c) {
@@ -812,6 +814,10 @@ function clips_out($template, $args, $output = true) {
 	if($output)
 		echo $ret;
 	return $ret;
+}
+
+function out($template, $args, $output = true) {
+	return clips_out($template, $args, $output);
 }
 
 /**

@@ -204,9 +204,6 @@
 
 				$.post(settings.ajax, listview_option, function(data) {
 					p = calculatePagination(data.start, data.length, data.recordsFiltered);
-					$(listview_option.columns).each(function(i){
-						listview_option.columns[i].search = null;
-					});
 					list.states = listview_option;
 					self.trigger('list.beforeDraw', [list, data]);
 					makeItems(list, data);

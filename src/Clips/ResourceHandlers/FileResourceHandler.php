@@ -6,10 +6,16 @@ class FileResourceHandler extends \Clips\BaseResourceHandler {
 	}
 
 	public function openStream($uri) {
-		return fopen($uri, 'r');
+		$file = str_replace('file://', '', $uri);
+		if(file_exists($file))
+			return fopen($file, 'r');
+		return null;
 	}
 
 	public function contents($uri) {
-		return file_get_contents($uri);
+		$file = str_replace('file://', '', $uri);
+		if(file_exists($file))
+			return file_get_contents($file);
+		return null;
 	}
 }
