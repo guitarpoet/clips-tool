@@ -36,6 +36,11 @@ class MigrationTool {
 
 			// Add the columns
 			foreach($options as $colname => $colopts) {
+				if(array_search($colname, array('form', 'pagination', 'view', 'model', 'controller')) !== false) {
+					if($colopts === false) {
+						continue;
+					}
+				}
 				if(!is_array($colopts))
 					$colopts = (array) $colopts;
 
