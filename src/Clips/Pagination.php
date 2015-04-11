@@ -221,7 +221,7 @@ class Pagination {
 		$this->offset = $params['start'];
 		$this->length = $params['length'];
 
-		if(isset($params['search']))  {
+		if(isset($params['search']) && isset($params['search']['value']))  {
 			if(isset($params['search']['value']) && trim($params['search']['value'])) {
 				$or = array();
 				$or_value = $params['search']['value'];
@@ -240,7 +240,7 @@ class Pagination {
 		foreach($params['columns'] as $col) {
 			if(isset($col['search'])) {
 				$search = $col['search'];
-				if($search['value']) {
+				if(isset($search['value']) && $search['value']) {
 					$field = $this->columns[$i];
 					if(isset($field->refer)) {
 						$f = $field->refer;
