@@ -24,6 +24,10 @@ class Mustache extends BaseService {
 		// Get the cache file name by md5 it
 		$hash = md5($template);
 		$cacheDir = $this->filecache->cacheDir();
+
+		if(!file_exists($cacheDir)) { // Create the directory if not exists
+			mkdir($cacheDir, 0755, true);
+		}
 		$phpname = \Clips\path_join($cacheDir, 'tpl_'.$hash.'.php');
 
 		// Check if we can found the compiled php
@@ -33,7 +37,7 @@ class Mustache extends BaseService {
 			$str = $resource->contents();
 
 			if($str) {
-				$php = \LightnCandy::compile($str);
+				$php = \LightnCandy::compile($str, array('flags' => \LightnCandy::FLAG_PROPERTY));
 				// Save it to php file
 				file_put_contents($phpname, $php);
 			}
@@ -41,7 +45,7 @@ class Mustache extends BaseService {
 
 		if(file_exists($phpname)) {
 			$renderer = include($phpname);
-			return $renderer($args);
+			return $renderer((array) $args);
 		}
 
 		return '';

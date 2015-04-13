@@ -6,3 +6,4 @@ tags
 composer.lock
 .idea/
 /tests/application/cache/
+/application

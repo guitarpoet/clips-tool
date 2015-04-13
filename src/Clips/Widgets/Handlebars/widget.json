@@ -1,0 +1,10 @@
+{
+	"author": "Jack",
+	"date": "Mon Apr 13 12:48:43 2015",
+	"version": "1.0",
+	"name": "Handlebars",
+	"doc":"The handlebars js widget",
+	"js": {
+		"files": ["handlebars-v3.0.1.js"]
+	}
+}
