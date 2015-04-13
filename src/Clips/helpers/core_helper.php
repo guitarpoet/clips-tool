@@ -235,6 +235,12 @@ function context($key = null, $value = null, $append = false) {
 	return clips_context($key, $value, $append);
 }
 
+function context_set($obj, $key, $value) {
+	$c = context($obj, array());
+	$c[$key] = $value;
+	context($obj, $c);
+}
+
 function context_peek($key) {
 	$tool = &get_clips_tool();
 	return $tool->context_peek($key);
