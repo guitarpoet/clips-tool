@@ -6,13 +6,20 @@
  * @author Jack
  * @date Sun Mar  8 18:59:17 2015
  *
- * @Clips\Library({"git", "sass", "repository"})
  */
 class FrameworkMeta extends BaseService {
-
 	protected function doInit() {
-		$this->commit = $this->repository->getHeadCommit()->getShortHash();
-		$this->branch = $this->repository->getBranch();
-		$this->lastCommitterDate = $this->repository->lastCommitterDate();
+		$meta = config('framework_meta');
+		if($meta) {
+			$meta = $meta[0];
+			copy_object($meta, $this);
+		}
+		else {
+			$this->repository = $this->tool->library('repository');
+			$this->git = $this->tool->library('git');
+			$this->commit = $this->repository->getHeadCommit()->getShortHash();
+			$this->branch = $this->repository->getBranch();
+			$this->lastCommitterDate = $this->repository->lastCommitterDate();
+		}
 	}
 }

@@ -5,3 +5,5 @@ tags
 /vendor/
 composer.lock
 .idea/
+/tests/application/cache/
+/application

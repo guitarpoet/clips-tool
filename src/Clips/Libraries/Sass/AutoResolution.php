@@ -163,12 +163,11 @@ class AutoResolution extends SassPlugin {
 
 	$pinet-resolutions: (
 {{#resolutions}}
-{{#alias}}
-	({{alias}}:{{value}})
-{{/alias}}
-{{^alias}}
+{{#if alias}}
+	( {{alias}} : {{value}} )
+{{else}}
 	{{value}}
-{{/alias}},
+{{/if}},
 {{/resolutions}}
 	);
 	$pinet-alias: (
@@ -182,6 +181,7 @@ class AutoResolution extends SassPlugin {
 {{/resolutions}}
 	);
 ';
+
             $compiler->prefix .= \Clips\clips_out($str, array(
                 'min' => $min,
                 'max' => $max,
@@ -194,7 +194,7 @@ class AutoResolution extends SassPlugin {
         if (\Clips\context('resolutions') && is_array(\Clips\context('resolutions'))) {
             return \Clips\context('resolutions');
         } else {
-            foreach(array('\Clips\get_default', '\Clips\clips_config') as $func) {
+            foreach(array('\Clips\get_default', '\Clips\config') as $func) {
                 $res = null;
                 if($func == '\Clips\get_default') {
                     $res = \Clips\get_default($compiler, 'resolutions', null);

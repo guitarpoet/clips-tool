@@ -1,9 +1,11 @@
 <?php namespace Clips\Libraries; in_array(__FILE__, get_included_files()) or exit("No direct script access allowed");
 
-class Mustache {
-	public function __construct() {
-		$this->engine = new \Mustache_Engine;
-	}
+use Clips\BaseService;
+
+/**
+ * @Clips\Library("fileCache")
+ */
+class Mustache extends BaseService {
 
 	/**
 	 * Render the template using the mustache engine
@@ -19,7 +21,33 @@ class Mustache {
 			return $this->render($template, $args);
 		}
 
-		$resource = new \Clips\Resource($template);
-		return $this->engine->render($resource->contents(), $args);
+		// Get the cache file name by md5 it
+		$hash = md5($template);
+		$cacheDir = $this->filecache->cacheDir();
+
+		if(!file_exists($cacheDir)) { // Create the directory if not exists
+			mkdir($cacheDir, 0755, true);
+		}
+		$phpname = \Clips\path_join($cacheDir, 'tpl_'.$hash.'.php');
+
+		// Check if we can found the compiled php
+		if(!file_exists($phpname)) {
+			// Can't found this template in cache, read it from resource
+			$resource = new \Clips\Resource($template);
+			$str = $resource->contents();
+
+			if($str) {
+				$php = \LightnCandy::compile($str, array('flags' => \LightnCandy::FLAG_PROPERTY));
+				// Save it to php file
+				file_put_contents($phpname, $php);
+			}
+		}
+
+		if(file_exists($phpname)) {
+			$renderer = include($phpname);
+			return $renderer((array) $args);
+		}
+
+		return '';
 	}
 }
