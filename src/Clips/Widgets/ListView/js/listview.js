@@ -134,11 +134,13 @@
 			list.refresh = false;
 
 			if(settings.clearSearch) {
-				$.each(list.states.columns, function(i){
-					if(list.states.columns[i].search) {
-						list.states.columns[i].search = null;
-					}
-				});
+				if(list.states.columns) {
+					$.each(list.states.columns, function(i){
+						if(list.states.columns[i].search) {
+							list.states.columns[i].search = null;
+						}
+					});
+				}
 			}
 		}
 
@@ -223,6 +225,7 @@
 					}
 					else {
 						hideMask(list);
+						makeItems(list, data);
 						list.addClass('no-result');
 						list.find('.listview-no-result').show();
 					}
