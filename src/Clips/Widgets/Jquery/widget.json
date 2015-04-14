@@ -7,21 +7,7 @@
 	"depends": ["Html"],
 	"js": {
 		"files":[
-			{
-				"jquery-1.11.2.min": "IE[=8]"
-			},
-			{
-				"jquery-1.11.2.min": "IE[>=9]"
-			},
-			{
-				"jquery-1.11.2.min": "Chrome"
-			},
-			{
-				"jquery-1.11.2.min": "Safari"
-			},
-			{
-				"jquery-1.11.2.min": "Firefox"
-			}			
+			"jquery-1.11.2.min"
 		]
 	}
 }
