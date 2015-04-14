@@ -77,13 +77,13 @@
 		if(this.last_width == $(_this.element).parent().innerWidth())
 			return;
 		var src = S(_this.options.pattern).template({
-			size: $(_this.element).parent().width(), img: _this.img
+			size: $(_this.element).parent().innerWidth(), img: _this.img
 		}, '_(', ')').toString();
 
 		if(src.indexOf('_(') < 0 && src.indexOf(')') < 0 ) {
 			$(_this.element).attr('src', Clips.siteUrl(src));
 		}
-		this.last_width = $(_this.element).parent().width();
+		this.last_width = $(_this.element).parent().innerWidth();
 
 		_this.timeout = setTimeout(function(){
 			if($.isFunction(_this.options.oncomplete)) {
@@ -95,9 +95,9 @@
 	
 	ResponsiveImage.prototype.loadDefault = function (imgpath) {
 		var _this = this;
-		if ($(_this.element).parent().width() > 0) {
+		if ($(_this.element).parent().innerWidth() > 0) {
 			$(_this.element).attr('src', Clips.siteUrl(S(_this.options.pattern).template({
-				size: $(_this.element).parent().width(), img: imgpath
+				size: $(_this.element).parent().innerWidth(), img: imgpath
 			}, '_(', ')').toString()));			
 		}
 	};
