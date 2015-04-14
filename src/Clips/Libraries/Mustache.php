@@ -30,14 +30,38 @@ class Mustache extends BaseService {
 		}
 		$phpname = \Clips\path_join($cacheDir, 'tpl_'.$hash.'.php');
 
+		$debug = \Clips\config('debug_template');
 		// Check if we can found the compiled php
-		if(!file_exists($phpname)) {
+		if(!file_exists($phpname) || $debug) {
 			// Can't found this template in cache, read it from resource
 			$resource = new \Clips\Resource($template);
 			$str = $resource->contents();
 
+			$flags = \Clips\context('template_flags');
+			if(!$flags) {
+				$flags = \Clips\config('template_flags');
+				if($flags) {
+					$flags = $flags[0];
+				}
+				else {
+					$flags = \LightnCandy::FLAG_ERROR_EXCEPTION | \LightnCandy::FLAG_HANDLEBARS;
+				}
+			}
+
+			$opts = array('flags' => $flags);
+
+			$partials = \Clips\context('template_partials');
+			if($partials) {
+				$opts['partials'] = $partials;
+			}
+
+			$helpers = \Clips\context('template_helpers');
+			if($helpers) {
+				$opts['helpers'] = $helpers;
+			}
+
 			if($str) {
-				$php = \LightnCandy::compile($str, array('flags' => \LightnCandy::FLAG_PROPERTY));
+				$php = \LightnCandy::compile($str, $opts);
 				// Save it to php file
 				file_put_contents($phpname, $php);
 			}
