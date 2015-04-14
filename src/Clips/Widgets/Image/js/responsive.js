@@ -74,7 +74,7 @@
 
 	ResponsiveImage.prototype.autoSize = function() {
 		var _this = this;
-		if(this.last_width == $(_this.element).parent().width())
+		if(this.last_width == $(_this.element).parent().innerWidth())
 			return;
 		var src = S(_this.options.pattern).template({
 			size: $(_this.element).parent().width(), img: _this.img
