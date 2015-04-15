@@ -221,13 +221,13 @@
 					if(data.recordsTotal > 0) {
 						makeItems(list, data);
 						selectItems(list, p.current);
-						list.removeClass('no-result');
+						list.parent().removeClass('no-result');
 						list.find('.listview-no-result').hide();
 					}
 					else {
 						hideMask(list);
 						makeItems(list, data);
-						list.addClass('no-result');
+						list.parent().addClass('no-result');
 						list.find('.listview-no-result').show();
 					}
 
