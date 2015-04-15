@@ -219,9 +219,10 @@
 					self.trigger('list.beforeDraw', [list, data]);
 
 					if(data.recordsTotal > 0) {
-						list.removeClass('no-result');
 						makeItems(list, data);
 						selectItems(list, p.current);
+						list.removeClass('no-result');
+						list.find('.listview-no-result').hide();
 					}
 					else {
 						hideMask(list);
@@ -238,26 +239,7 @@
 					timeout = setTimeout(function(){
 						loadend();
 					}, 3000);
-
-					//if(responsiveImgLength > 0) {
-					//	list.find('.responsive > img').responsiveImage({
-					//		delay: 1000,
-					//		onload:function(){
-					//			loadImageLength++;
-					//		},
-					//		onerror: function() {
-					//			loadImageLength++;
-					//		},
-					//		oncomplete: function() {
-					//			if(loadImageLength > responsiveImgLength - 1) {
-					//				loadend();
-					//			}
-					//		}
-					//	});
-					//}
-					//else {
-					//	loadend();
-					//}
+					
 					function loadend() {
 						layoutItems(list); // Layout the list first
 						saveState(list, listview_option);
