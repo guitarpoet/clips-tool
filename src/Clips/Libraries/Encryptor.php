@@ -12,7 +12,7 @@ class Encryptor extends BaseService {
 	public function doInit() {
 		$this->keyPath = $this->config('encryptor_private_key', true);
 		$this->publicKeyPath = $this->config('encryptor_public_key', true);
-        $this->iv = mcrypt_create_iv(32);
+        $this->iv = mcrypt_create_iv(32, MCRYPT_DEV_URANDOM);
 
 		if($this->keyPath && file_exists($this->keyPath)) {
 			$this->privateKey = file_get_contents($this->keyPath);
