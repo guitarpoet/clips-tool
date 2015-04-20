@@ -134,11 +134,13 @@
 			list.refresh = false;
 
 			if(settings.clearSearch) {
-				$.each(list.states.columns, function(i){
-					if(list.states.columns[i].search) {
-						list.states.columns[i].search = null;
-					}
-				});
+				if(list.states.columns) {
+					$.each(list.states.columns, function(i){
+						if(list.states.columns[i].search) {
+							list.states.columns[i].search = null;
+						}
+					});
+				}
 			}
 		}
 
@@ -217,13 +219,15 @@
 					self.trigger('list.beforeDraw', [list, data]);
 
 					if(data.recordsTotal > 0) {
-						list.removeClass('no-result');
 						makeItems(list, data);
 						selectItems(list, p.current);
+						list.parent().removeClass('no-result');
+						list.find('.listview-no-result').hide();
 					}
 					else {
 						hideMask(list);
-						list.addClass('no-result');
+						makeItems(list, data);
+						list.parent().addClass('no-result');
 						list.find('.listview-no-result').show();
 					}
 
@@ -235,26 +239,7 @@
 					timeout = setTimeout(function(){
 						loadend();
 					}, 3000);
-
-					//if(responsiveImgLength > 0) {
-					//	list.find('.responsive > img').responsiveImage({
-					//		delay: 1000,
-					//		onload:function(){
-					//			loadImageLength++;
-					//		},
-					//		onerror: function() {
-					//			loadImageLength++;
-					//		},
-					//		oncomplete: function() {
-					//			if(loadImageLength > responsiveImgLength - 1) {
-					//				loadend();
-					//			}
-					//		}
-					//	});
-					//}
-					//else {
-					//	loadend();
-					//}
+					
 					function loadend() {
 						layoutItems(list); // Layout the list first
 						saveState(list, listview_option);
