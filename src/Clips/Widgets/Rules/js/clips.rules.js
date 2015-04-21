@@ -1,3 +1,6 @@
+if(typeof Clips == 'undefined')
+	Clips = {};
+
 Clips.RuleEngine = function(server) {
 	this.server = server;
 	this.commands = [];
