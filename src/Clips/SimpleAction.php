@@ -14,10 +14,18 @@ class SimpleAction extends SimpleTreeNode implements Action {
 	public $params = array();
 
 	public function __construct($data = array()) {
+		if(is_object($data)) {
+			$data = (array) $data;
+		}
+
 		if(!isset($data['type']))
 			$this->type = Action::SERVER;
 
 		parent::__construct($data);
+	}
+
+	protected function nodeClass() {
+		return "\\Clips\\SimpleAction";
 	}
 
 	public function active() {

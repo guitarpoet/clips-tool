@@ -343,4 +343,10 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 
 		return $this->render($content, array(), 'direct', $header);
 	}
+
+	protected function resource($uri) {
+		if(strpos($uri, "://") === false)
+			$uri = "app://".$uri;
+		return resource_contents($uri);
+	}
 }
