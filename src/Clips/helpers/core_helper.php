@@ -821,7 +821,7 @@ function clips_out($template, $args, $output = true) {
 	return $ret;
 }
 
-function out($template, $args, $output = true) {
+function out($template, $args = array(), $output = true) {
 	return clips_out($template, $args, $output);
 }
 

@@ -2,6 +2,28 @@
 
 use Clips\BaseService;
 
+function site_url($arr) {
+	if($arr)
+		return \Clips\site_url($arr[0]);
+	return false;
+}
+
+function php_call($arr) {
+	if($arr) {
+		$function = array_shift($arr);
+		if(function_exists($function)) {
+			return call_user_func_array($function, $arr);
+		}
+	}
+	return false;
+}
+
+function static_url($arr) {
+	if($arr)
+		return \Clips\static_url($arr[0]);
+	return false;
+}
+
 /**
  * @Clips\Library("fileCache")
  */
@@ -55,9 +77,19 @@ class Mustache extends BaseService {
 				$opts['partials'] = $partials;
 			}
 
+			$default_helpers = array(
+				'site_url' => '\\Clips\\Libraries\\site_url',
+				'static_url' => '\\Clips\\Libraries\\static_url',
+				'php' => '\\Clips\\Libraries\\php_call'
+			);
+
 			$helpers = \Clips\context('template_helpers');
+
 			if($helpers) {
-				$opts['helpers'] = $helpers;
+				$opts['helpers'] = array_merge($default_helpers, $helpers);
+			}
+			else {
+				$opts['helpers'] = $default_helpers;
 			}
 
 			if($str) {
