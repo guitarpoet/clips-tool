@@ -19,12 +19,17 @@ class SimpleTreeNode implements TreeNode {
 					$child->detach(); // Detach the child from its parent
 				}
 				else {
-					$child = new SimpleTreeNode($child);
+					$clzz = $this->nodeClass();
+					$child = new $clzz($child);
 				}
 				// Append the child
 				$this->append($child);
 			}
 		}
+	}
+
+	protected function nodeClass() {
+		return "\\Clips\\SimpleTreeNode";
 	}
 
 	public function childAt($index) {
