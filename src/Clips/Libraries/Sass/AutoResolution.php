@@ -49,6 +49,8 @@ class AutoResolution extends SassPlugin {
                 $this->_process('prepend_section', $compiler->content, $res, $prev_value['value'].'_'.$value);
                 $this->_process('append_section', $compiler->content, $res, $prev_value['value'].'_'.$value);
                 $this->_process('after_section', $compiler->content, $res, $prev_value['value'].'_'.$value);
+	            $res['sasses'] = $this->sasses;
+	            
                 $resolutions []= $res;
             }
 
@@ -120,7 +122,7 @@ class AutoResolution extends SassPlugin {
             'after' => strpos($compiler->content, 'after_responsive') !== FALSE,
             'resolutions' => $this->getSortedResolutions($compiler)
         );
-
+	    
         $compiler->suffix .= \Clips\clips_out('media', $data, false);
     }
 
