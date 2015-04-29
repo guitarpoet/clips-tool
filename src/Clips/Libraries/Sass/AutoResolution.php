@@ -208,7 +208,22 @@ class AutoResolution extends SassPlugin {
                 }
             }
             if($res) {
-                return $res;
+	            $resolutions = array();
+	            foreach ($res as $resitem) {
+		            if (is_object($resitem)) {
+			            $arritem = (array)$resitem;
+			            $key = array_keys($arritem)[0];
+			            if(!array_search($key, $resolutions)) {
+				            $resolutions = array_merge_recursive($resolutions, $arritem);   
+			            }
+		            }
+		            else {
+			            if(!array_search($resitem, $resolutions) && !array_search($resitem, array_keys($resolutions))) {
+				            array_push($resolutions, $resitem);    
+			            }
+		            }
+	            }
+                return $resolutions;
             }
         }
         trigger_error('you must need resolutions, you can put in clips_config or ci_config or complier');
