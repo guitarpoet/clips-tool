@@ -6,7 +6,7 @@
 		"state": "{{state}}",
 		{{/state}}
 		"rules": [{{#rules}}{{^ffirst}},{{/ffirst}}
-			{{#value}}{ "{{key}}":"{{value}}" }{{/value}}{{^value}}"{{key}}"{{/value}}{{/rules}}
+			{{#if value}}{ "{{key}}":"{{value}}" }{{else}}"{{key}}"{{/if}}{{/rules}}
 		]
 	}{{/.}}
 ]
