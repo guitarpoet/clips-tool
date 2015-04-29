@@ -130,6 +130,8 @@
 			#toolbar {
 				@include content-style();
 				background-color: #FAF9F8;
+				font-size: 0;
+				
 				.btn {
 					margin-right: 5px;
 					margin-top: 17px;
@@ -192,12 +194,14 @@
 				width: 100%;
 				height: 100%;
 				background-color: #F2F0EE;
+				
 				> .row {
 					width: 100%;
 					height: 100%;
 					margin: 0;
 					position: relative;
 					overflow: auto;
+					padding-top: 20px;
 					> .column {
 						position: absolute;
 						width: 100%;
@@ -210,11 +214,6 @@
 					padding-left: 20px;
 					padding-right: 20px;
 					padding-bottom: 7px;
-//					#alert-group {
-//						.owl-controls {
-//							margin-top: 0;
-//						}	
-//					}
 				}
 				
 				#editarea {
