@@ -6,9 +6,6 @@
 class Widget extends \Clips\Widget {
 	protected function doInit() {
 		$js = <<<TEXT
-
-
-
 	window.UrlManager = {};
 	
 	window.UrlManager.serialize = function(obj) {
