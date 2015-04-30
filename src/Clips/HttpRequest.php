@@ -170,7 +170,7 @@ class HttpRequest extends Request {
 			$this->_init_headers();
 		}
 		
-		return get_default($this->headers, $key, $default);
+		return get_default($this->headers, $name, $default);
 	}
 
 	public function server($key, $default = null) {
