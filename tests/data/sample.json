@@ -9,6 +9,13 @@
 		"name": "user@",
 		"real_name": "!Clips\\fake_name()"
 	},
+	"seq*": {
+		"id": "@",
+		"$start": 100,
+		"$count": "$user_count",
+		"name": "user@",
+		"real_name": "!Clips\\fake_name()"
+	},
 	"user_info*": {
 		"id": "!Clips\\sequence('info_id')",
 		"$count": "$user_count",
