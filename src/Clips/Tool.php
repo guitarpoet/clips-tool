@@ -466,7 +466,7 @@ class Tool implements Interfaces\Initializable {
 					$class_name = ucfirst($namespace.$pre.ucfirst($class).$suffix);
 
 					if(class_exists($class_name)) { // Let composer do this for me
-						$result = $this->_init_class($class_name, $init, $handle_name, $args);
+						$result = $this->_init_class($class_name, $init, $pre.$handle_name.$suffix, $args);
 						if(isset($result))
 							return $result;
 					}
