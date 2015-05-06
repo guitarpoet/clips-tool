@@ -150,7 +150,7 @@ class Sql {
 
 	public function count($p) {
 		if(isset($p->groupBy) && $p->groupBy) {
-			$q = $this->_pagi($p);
+			$q = $this->_pagi($p, true);
             if(is_string($q))
 			    $query = 'select count(*) as count from ('.$q.') as inner_query';
 			else {
