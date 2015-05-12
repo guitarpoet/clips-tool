@@ -11,21 +11,6 @@ function smarty_block_markup($params, $content = '', $template, &$repeat) {
 	$markup = $tool->library('markup');
 	$content = $markup->render($content ,$flavor);
 
-	$content = explode("\n", $content);
-
-	$level = Clips\context('indent_level');
-	if($level === null)
-		$level = 0; // Default level is 0
-	else
-		$level = count($level);
-
-	$indent = '';
-	for($i = 0; $i < $level; $i++) {
-		$indent .= "\t";
-	}
-
-	$content = implode("\n$indent", $content);
-
 	Clips\context_pop('indent_level');
 	return Clips\create_tag_with_content('div', $content, $params, array('class' => 'markup'));
 }
