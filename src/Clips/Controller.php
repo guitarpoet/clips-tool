@@ -24,6 +24,20 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 	}
 
 	/**
+	 * The cascade select support function
+	 */
+	public function cascade($form, $field, $cascade_value) {
+		context('current_form', $form); // Set the form to current form
+		$f = $this->tool->load_class('form', true);
+		$f->value = array($form);
+		$f = $f->field($field);
+		if($f) {
+			return $this->json($f->getCascadeOptions($cascade_value));
+		}
+		return $this->json(array());
+	}
+
+	/**
 	 * The shorthand method for getting the request parameters
 	 */
 	protected function param($param = null, $default = null) {

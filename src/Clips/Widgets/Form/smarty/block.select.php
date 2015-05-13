@@ -17,19 +17,7 @@ function smarty_block_select($params, $content = '', $template, &$repeat) {
 	$field = Clips\context('current_field');
 
 	if($field) {
-		if(isset($field->cascade_model)) { 
-			$tool = Clips\get_clips_tool();
-			$model = $tool->model($field->cascade_model);
-			if($model) { // We do have a cascade model
-				$cascade_field = Clips\get_default($field, 'cascade_field', null);
-				if($cascade_field) {
-					$cascade_data = Clips\get_default(Clips\context('current_form_data'), $cascade_field);
-
-					$cascade_method = Clips\get_default($field, 'cascasde_method', 'list'.ucfirst($field->field));
-					$options = $model->$cascade_method($cascade_data);
-				}
-			}
-		}
+		$options = $field->getCascadeOptions();
 	}
 
 	if($options) {
