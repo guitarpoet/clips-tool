@@ -62,6 +62,21 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 	}
 
 	/**
+	 * Reporting alert
+	 */
+	protected function alert($message) {
+		if($message) {
+			if(is_array($message)) {
+				foreach($message as $m) {
+					context('clips_alert', $m, true);
+				}
+			}
+			else
+				context('clips_alert', $message, true);
+		}
+	}
+
+	/**
 	 * Get the value from $_SERVER
 	 */
 	protected function server($key, $default = null) {
