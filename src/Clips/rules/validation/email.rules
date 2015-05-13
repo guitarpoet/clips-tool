@@ -12,23 +12,23 @@
 (load-rules "/rules/validation/domain.rules")
 
 (defrule email-address-must-have-@
-	(email ?e &: (not (str-index "@" ?e)))
+	(email ?field ?e &: (not (str-index "@" ?e)))
 	=>
-	(assert (error (str-cat "Email address " ?e " didn't have @ in it!")))
+	(assert (error (str-cat "Email address " ?e " of field " ?field " didn't have @ in it!")))
 )
 
 (defrule email-address-must-have-only-one-@
-	(email ?e &: (str-index "@" ?e))
+	(email ?field ?e &: (str-index "@" ?e))
 	(test (not (= (length$ (explode "@" ?e)) 2)))
 	=>
-	(assert (error (str-cat "Email address [" ?e "] have more than 1 @ in it!")))
+	(assert (error (str-cat "Email address [" ?e "] of field " ?field " have more than 1 @ in it!")))
 )
 
 (defrule validate-the-parts-of-the-email
-	(email ?e &: (str-index "@" ?e))
+	(email ?field ?e &: (str-index "@" ?e))
 	(test (= (length$ (explode "@" ?e)) 2))
 	=>
 	(bind ?a (explode "@" ?e))
-	(assert (name (nth$ 1 ?a))); The first part of email must be valid name
-	(assert (domain (nth$ 2 ?a))); The second part of email must be valid domain
+	(assert (name ?field (nth$ 1 ?a))); The first part of email must be valid name
+	(assert (domain ?field (nth$ 2 ?a))); The second part of email must be valid domain
 )

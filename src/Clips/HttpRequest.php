@@ -188,7 +188,7 @@ class HttpRequest extends Request {
 
 		$this->ip_address = $_SERVER['REMOTE_ADDR'];
 
-		if (count($this->validator->valid_ip(array('ip', $this->ip_address)))) {
+		if (count($this->validator->valid_ip(array('ip', 'ip', $this->ip_address)))) {
 			$this->ip_address = '0.0.0.0';
 		}
 

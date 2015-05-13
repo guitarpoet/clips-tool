@@ -25,7 +25,7 @@
 
 (defrule test-if-the-ip-address-is-ipv4
 	(not (ipv4))
-	(ip ?address)
+	(ip ?field ?address)
 	(test (match ?address ?*ipv4_pattern*))
 	=>
 	(assert (ipv4))
@@ -33,22 +33,23 @@
 
 (defrule if-address-is-ipv4-get-all-the-fields
 	(ipv4)
-	(ip ?address)
+	(ip ?field ?address)
 	=>
 	(foreach ?f (explode "." ?address) (assert (ipv4-field ?f)))
 )
 
 (defrule all-the-ipv4-field-must-little-than-255
 	(not (error ?))
+	(ip ?field ?address)
 	(ipv4-field ?f)	
 	(test (> (intval ?f) 255))
 	=>
-	(assert (error "The ip v4 address have 1 field bigger than 255!"))
+	(assert (error (str-cat "The IP v4 address of field " ?field " have 1 field bigger than 255!")))
 )
 
 (defrule test-if-the-ip-address-is-ipv6
 	(not (ipv6))
-	(ip ?address)
+	(ip ?field ?address)
 	(test (match ?address ?*ipv6_pattern*))
 	=>
 	(assert (ipv6))
@@ -57,8 +58,8 @@
 (defrule if-no-match-for-ipv4-or-ipv6-then-error
 	(not (ipv4))
 	(not (ipv6))
-	?i <- (ip ?address)	
+	?i <- (ip ?field ?address)	
 	=>
-	(assert (error "IP address is not valid v4 or v6!"))
+	(assert (error (str-cat "IP address of field " ?field " is not valid v4 or v6!")))
 	(retract ?i)
 )

@@ -45,6 +45,11 @@ class FilterChain extends AbstractFilter implements ToolAware {
 		return false;
 	}
 
+	/**
+	 * Call every filter's filter before function in the filter chain, if any of the filter failed,
+	 * will stop the filter before processing(this is very useful for form processing and security
+	 * checking....)
+	 */
 	public function filter_before($chain, $controller, $method, $args, $request) {
 		$this->run = true;
 		foreach($this->filters as $f) {
@@ -55,9 +60,10 @@ class FilterChain extends AbstractFilter implements ToolAware {
 			if($f->accept($chain, $controller, $method, $args, $request)) {
 				$this->succeed = $f->filter_before($chain, $controller, $method, $args, $request);
 			}
+
+			if(isset($this->succeed))
+				return $this->succeed;
 		}
-		if(isset($this->succeed))
-			return $this->succeed;
 		return true;
 	}
 

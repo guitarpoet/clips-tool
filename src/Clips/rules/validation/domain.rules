@@ -12,14 +12,14 @@
 (load-rules "/rules/validation/name.rules")
 
 (defrule domain-address-must-have-.
-	(domain ?e &: (not (str-index "." ?e)))
+	(domain ?field ?e &: (not (str-index "." ?e)))
 	=>
-	(assert (error (str-cat "Domain address [" ?e "] didn't have . in it!")))
+	(assert (error (str-cat "Domain address [" ?e "] of field " ?field " didn't have . in it!")))
 )
 
 (defrule domain-address-must-be-valid-name
-	(domain ?d)
-	(not (name ?n&:(eq ?d ?n)))
+	(domain ?field ?d)
+	(not (name ?field ?n&:(eq ?d ?n)))
 	=>
-	(assert (name ?d))
+	(assert (name ?field ?d))
 )

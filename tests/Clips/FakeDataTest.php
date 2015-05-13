@@ -20,12 +20,11 @@ class FakeDataTest extends Clips\TestCase {
 	public function testFakeIP() {
 		$this->assertNotNull($this->validator);
 		// The fake ip must be a validate ip address
-		$this->assertEquals($this->validator->valid_ip($this->fakedata->fakeIP()),
+		$this->assertEquals($this->validator->valid_ip(array('ip', 'test', $this->fakedata->fakeIP())),
 		   	array());
 	}
 
 	public function testFakeEmail() {
-		$this->assertEquals($this->validator->valid_ip($this->fakedata->fakeEmail()),
-		   	array());
+		$this->assertEquals($this->validator->valid_email(array('email', 'test', $this->fakedata->fakeEmail())), array());
 	}
 }
