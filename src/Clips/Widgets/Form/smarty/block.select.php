@@ -17,7 +17,9 @@ function smarty_block_select($params, $content = '', $template, &$repeat) {
 	$field = Clips\context('current_field');
 
 	if($field) {
-		$options = $field->getCascadeOptions();
+		$o = $field->getCascadeOptions();
+		if($o)
+			$options = $field->getCascadeOptions();
 	}
 
 	if($options) {
