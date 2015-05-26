@@ -405,6 +405,32 @@ function browser_match($query, $meta = null) {
 	return false;
 }
 
+function ip2mac($ip) {
+	$cmd = 'arp -a '.$ip;
+	if(PHP_OS == 'Darwin' || strpos(PHP_OS, 'BSD') !== false) {
+		$cmd = 'arp '.$ip;
+	}
+
+	exec($cmd, $out, $code);
+
+	if($code)
+		return null;
+
+	if($out) {
+		if(strpos(PHP_OS, 'WIN')) {
+			$out = trim($out[3]);
+			$out = preg_split('/\s+/', $out);
+			return str_replace('-', ':', $out[1]);
+		}
+		else {
+			$out = $out[0];
+			$out = explode(' ', $out);
+			return str_pad($out[3], 17, '0', STR_PAD_LEFT);
+		}
+	}
+	return null;
+}
+
 function image_size($p) {
 	if(file_exists($p)) {
 		$tool = &get_clips_tool();

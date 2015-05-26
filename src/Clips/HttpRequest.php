@@ -181,8 +181,8 @@ class HttpRequest extends Request {
 		return get_default($_COOKIE, $cookie, $default);
 	}
 
-	private function getIP() {
-		if ($this->ip_address !== FALSE) {
+	public function getIP() {
+		if (isset($this->ip_address)) {
 			return $this->ip_address;
 		}
 
