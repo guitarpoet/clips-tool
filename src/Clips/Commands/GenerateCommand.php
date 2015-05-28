@@ -113,6 +113,12 @@ class GenerateCommand extends Command {
 		$config = \Clips\interactive('interactive/widget', $this);
 		$config->date = strftime("%a %b %e %H:%M:%S %Y");
 		$config->widget = ucfirst($config->widget);
+
+		$namespace = \Clips\config('namespace');
+		if($namespace)
+			$config->namespace = $namespace[0];
+		else
+			$config->namespace = 'Clips\\';
 		$widget_dir = \Clips\clips_config('widget_dir');
 		foreach($widget_dir as $p) {
 			$path = \Clips\try_path($p);

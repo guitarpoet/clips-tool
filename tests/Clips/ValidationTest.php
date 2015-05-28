@@ -8,10 +8,10 @@ use Clips\TestCase;
 class ValidationTest extends TestCase {
 
 	public function testValidationIPv4() {
-		$this->assertEquals(count($this->validator->valid_ip(array('ip', '1.2.3.40'))), 0 );
-		$this->assertEquals(count($this->validator->valid_ip(array('ip', 'a1.2.3.40'))), 1);
-		$this->assertEquals(count($this->validator->valid_ip(array('ip', '1.2.3.400'))), 1);
-		$this->assertEquals(count($this->validator->valid_ip(array('ip', 'This is not an address'))), 1);
+		$this->assertEquals(count($this->validator->valid_ip(array('ip', 'test', '1.2.3.40'))), 0 );
+		$this->assertEquals(count($this->validator->valid_ip(array('ip', 'test', 'a1.2.3.40'))), 1);
+		$this->assertEquals(count($this->validator->valid_ip(array('ip', 'test', '1.2.3.400'))), 1);
+		$this->assertEquals(count($this->validator->valid_ip(array('ip', 'test', 'This is not an address'))), 1);
 	}
 
 	/**
@@ -19,23 +19,23 @@ class ValidationTest extends TestCase {
 	 */
 	public function testValidateName() {
 		$name = $this->fakedata->fakeName();
-		$this->assertEquals($this->validator->valid_name(array('name', $name->simple_name)), array());
-		$this->assertEquals(count($this->validator->valid_name(array('name', $name->name))), 1);
-		$this->assertEquals(count($this->validator->valid_name(array('name', '~SHIT !@#$'))), 7);
+		$this->assertEquals($this->validator->valid_name(array('name', 'test', $name->simple_name)), array());
+		$this->assertEquals(count($this->validator->valid_name(array('name', 'test',$name->name))), 1);
+		$this->assertEquals(count($this->validator->valid_name(array('name', 'test', '~SHIT !@#$'))), 7);
 	}
 
 	public function testValidateDomainName() {
-		$this->assertEquals($this->validator->valid_domain(array('domain', 'thinkingcloud.info')), array());
-		$this->assertEquals($this->validator->valid_domain(array('domain', 'www.w3c-school.org')), array());
-		$this->assertEquals(count($this->validator->valid_domain(array('domain', 'Oh No!'))), 3);
-		$this->assertEquals(count($this->validator->valid_domain(array('domain', '$$$.micro$oft.com'))), 2);
+		$this->assertEquals($this->validator->valid_domain(array('domain', 'test', 'thinkingcloud.info')), array());
+		$this->assertEquals($this->validator->valid_domain(array('domain', 'test', 'www.w3c-school.org')), array());
+		$this->assertEquals(count($this->validator->valid_domain(array('domain', 'test', 'Oh No!'))), 3);
+		$this->assertEquals(count($this->validator->valid_domain(array('domain', 'test', '$$$.micro$oft.com'))), 2);
 	}
 
 	public function testValidateEmail() {
-		$this->assertEquals(count($this->validator->valid_email(array('email', 'adsf'))), 1);
-		$this->assertEquals(count($this->validator->valid_email(array('email', 'adsf@a@b'))), 1);
-		$this->assertEquals(count($this->validator->valid_email(array('email', 'guitarpoet@gmail.com'))), 0);
-		$this->assertEquals(count($this->validator->valid_email(array('email', '~guitarpoet@gmail.com'))), 2);
+		$this->assertEquals(count($this->validator->valid_email(array('email', 'test', 'adsf'))), 1);
+		$this->assertEquals(count($this->validator->valid_email(array('email', 'test', 'adsf@a@b'))), 1);
+		$this->assertEquals(count($this->validator->valid_email(array('email', 'test', 'guitarpoet@gmail.com'))), 0);
+		$this->assertEquals(count($this->validator->valid_email(array('email', 'test', '~guitarpoet@gmail.com'))), 2);
 	}
 
 	public function testValidate() {

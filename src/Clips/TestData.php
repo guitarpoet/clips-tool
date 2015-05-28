@@ -100,9 +100,14 @@ class TestData extends Annotation implements Initializable, ToolAware {
 			for($i = 0; $i < $count; $i++) {
 				$data = copy_object($sequence);
 				foreach($numbers as $n) {
-					$data->$n = str_replace('@', $i + 1, $sequence->$n);
+					$tmp = $i + 1;
+					if(isset($data->{'$start'})) {
+						$tmp += $data->{'$start'} - 1;
+					}
+					$data->$n = str_replace('@', $tmp, $sequence->$n);
 				}
-				$this->_data[$name.($i + 1)] = $data;
+				unset($data->{'$start'});
+				$this->_data[$name.($tmp)] = $data;
 			}
 		}
 

@@ -170,7 +170,7 @@ class HttpRequest extends Request {
 			$this->_init_headers();
 		}
 		
-		return get_default($this->headers, $key, $default);
+		return get_default($this->headers, $name, $default);
 	}
 
 	public function server($key, $default = null) {
@@ -181,14 +181,14 @@ class HttpRequest extends Request {
 		return get_default($_COOKIE, $cookie, $default);
 	}
 
-	private function getIP() {
-		if ($this->ip_address !== FALSE) {
+	public function getIP() {
+		if (isset($this->ip_address)) {
 			return $this->ip_address;
 		}
 
 		$this->ip_address = $_SERVER['REMOTE_ADDR'];
 
-		if (count($this->validator->valid_ip(array('ip', $this->ip_address)))) {
+		if (count($this->validator->valid_ip(array('ip', 'ip', $this->ip_address)))) {
 			$this->ip_address = '0.0.0.0';
 		}
 

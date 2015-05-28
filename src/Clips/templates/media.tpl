@@ -10,8 +10,8 @@
         $alias-width: 0;
         $max-screen-wdith: 0;
         @media screen and (min-width: {{value.value}}px) {
-            $screen-width: {{value.value}};
-            $alias-width: {{value.alias}};
+            $screen-width: {{value.value}} !global;
+            $alias-width: {{value.alias}} !global;
             {{#if prepend_resolution}}
                 {{prepend_resolution}}({{value.value}});
             {{/if}}
@@ -33,9 +33,9 @@
             {{before_section}}();
         {{/if}}
         @media screen and (min-width: {{prev_value.value}}px) and (max-width: {{value.value}}px) {
-            $screen-width: {{prev_value.value}};
-            $alias-width: {{prev_value.alias}};
-            $next-screen-width: {{value.value}};
+            $screen-width: {{prev_value.value}} !global;
+            $alias-width: {{prev_value.alias}} !global;
+            $next-screen-width: {{value.value}} !global;
             {{#sasses}}
                 {{#section_con}}
                     @include {{.}}({{../../value.value}},{{../../value.alias}});

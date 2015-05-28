@@ -12,7 +12,7 @@ use Clips\Controller;
  * @author Jack
  * @date Sat Feb 21 12:56:47 2015
  *
- * @Clips\Library({"fileCache", "imageUtils"})
+ * @Clips\Library({"fileCache", "imageUtils", "curl"})
  * @Clips\Widget("html")
  */
 class ResponsiveController extends Controller {
@@ -37,10 +37,6 @@ class ResponsiveController extends Controller {
 			if($path)
 				break;
 		}
-		if(!$path) {
-			$this->error('Can\'t find image file ['.$file.'] !', 'responsive');
-			return;
-		}
 
 		$n = array_pop($args);
 		if($args) { 
@@ -57,6 +53,31 @@ class ResponsiveController extends Controller {
 
 		if(!file_exists($folder)) { // If no folder exists, make it
 			mkdir($folder, 0777, true);
+		}
+
+		if(!$path) {
+			foreach(\Clips\config('image_url_base') as $base) {
+				$url = $base.'/'.$file;
+				$f = \Clips\path_join($cache, 'img', implode('/', $args));
+				$local_file = $this->filecache->fileName($n, $f);
+
+				$path = \Clips\try_path($local_file);
+				if($path)
+					break;
+
+				$this->curl->setOpt(CURLOPT_SSL_VERIFYHOST, false);
+				$this->curl->setOpt(CURLOPT_SSL_VERIFYPEER, false);
+				if($this->curl->get($url) == 0) {
+					file_put_contents($local_file, $this->curl->response);
+					$path = \Clips\try_path($local_file);
+				}
+				break;
+			}
+
+			if(!$path) {
+				$this->error('Can\'t find image file ['.$file.'] !', 'responsive');
+				return;
+			}
 		}
 
 		$name = $this->filecache->fileName($n, $folder);

@@ -14,6 +14,14 @@ function smarty_block_select($params, $content = '', $template, &$repeat) {
 	$append = Clips\get_default($params, 'append');
 	$default = array();
 
+	$field = Clips\context('current_field');
+
+	if($field) {
+		$o = $field->getCascadeOptions();
+		if($o)
+			$options = $field->getCascadeOptions();
+	}
+
 	if($options) {
 		if($prepend) {
 			$prepend = array_reverse($prepend);

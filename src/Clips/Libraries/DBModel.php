@@ -115,7 +115,7 @@ class DBModel extends Sql implements ToolAware, Initializable, LoggerAwareInterf
 			return;
 		}
 
-		throw new Exception('Cant\'t find any datasource for this model.');
+		throw new \Exception('Cant\'t find any datasource for this model.');
 	}
 
 	/**

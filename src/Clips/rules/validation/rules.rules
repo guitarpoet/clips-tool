@@ -10,6 +10,37 @@
 ; @date Sat Feb  7 09:39:32 2015
 ;
 ;===============================================================================
+(load-rules "/rules/validation/domain.rules" "/rules/validation/email.rules"
+	"/rules/validation/ip.rules" "/rules/validation/name.rules")
+
+(defrule check-the-type-ip
+	?r <- (rule ?field "type" "ip")
+	(field ?name&:(eq ?name ?field) ?value)
+	=>
+	(assert (ip ?field ?value))
+)
+
+(defrule check-the-type-email
+	?r <- (rule ?field "type" "email")
+	(field ?name&:(eq ?name ?field) ?value)
+	=>
+	(assert (email ?field ?value))
+)
+
+(defrule check-the-type-name
+	?r <- (rule ?field "type" "name")
+	(field ?name&:(eq ?name ?field) ?value)
+	=>
+	(assert (name ?field ?value))
+)
+
+(defrule check-the-type-domain
+	?r <- (rule ?field "type" "domain")
+	(field ?name&:(eq ?name ?field) ?value)
+	=>
+	(assert (domain ?field ?value))
+)
+
 (defrule check-the-required-rule
 	?r <- (rule ?field "required")
 	(not (field ?name&:(eq ?name ?field) ?))
@@ -36,6 +67,14 @@
 
 (defrule check-for-regex-rule
 	(rule ?field "regex" ?regex)
+	(field ?name&:(eq ?name ?field) ?value)
+	(test (not (match ?value ?regex)))
+	=>
+	(assert (validate-error ?field (str-cat ?value " is not match pattern " ?regex)))
+)
+
+(defrule check-for-pattern-rule
+	(rule ?field "pattern" ?regex)
 	(field ?name&:(eq ?name ?field) ?value)
 	(test (not (match ?value ?regex)))
 	=>
