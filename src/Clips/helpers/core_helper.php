@@ -377,7 +377,7 @@ function class_script_path($class) {
  * 		The alternative pathes
  */
 function try_path($path, array $others = array()) {
-	foreach(array_merge($others, array(getcwd(), clips_path('/'))) as $pre) {
+	foreach(array_merge(array(''), $others, array(getcwd(), clips_path('/'))) as $pre) {
 		$p = path_join($pre, $path);
 		if(file_exists($p))
 			return $p;
