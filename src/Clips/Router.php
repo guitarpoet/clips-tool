@@ -3,6 +3,7 @@
 use Psr\Log\LoggerAwareInterface;
 use Clips\Interfaces\ClipsAware;
 use Clips\Interfaces\ToolAware;
+use Clips\Interfaces\Initializable;
 use Clips\Interfaces\Action;
 use Clips\Models\ViewModel;
 
@@ -16,6 +17,13 @@ use Clips\Models\ViewModel;
  */
 class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 
+	public function init() {
+		$base = config('site_url');
+		if($base) {
+			$this->base = $base[0];
+		}
+	}
+
 	public function setClips($clips) {
 		$this->clips = $clips;
 	}
@@ -28,8 +36,9 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 
 	public function baseUrl($url = '', $full = false) {
 		$index = config('use_rewrite')? '': '/index.php';
-		if(!isset($this->base))
+		if(!isset($this->base)) {
 			$this->base = dirname($_SERVER['SCRIPT_NAME']);
+		}
 		if($full) {
 			$host = $_SERVER['SERVER_NAME'];
 			$port = $_SERVER['SERVER_PORT'];
