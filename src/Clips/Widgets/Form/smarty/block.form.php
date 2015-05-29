@@ -16,6 +16,13 @@ function smarty_block_form($params, $content = '', $template, &$repeat) {
 	$content .= "\t".Clips\create_tag('input', array('type' => 'hidden', 'name' => Clips\Form::FORM_FIELD, 
 		'value' => Clips\get_default($params, 'name', 'form')));
 
+	$action = Clips\get_default($params, 'action');
+	if($action) {
+		if(strpos($action, 'http') !== 0) {
+			$params['action'] = Clips\site_url($action);
+		}
+	}
+
 	Clips\context_pop('current_form');
 	Clips\context_pop('current_form_data');
 	Clips\context_pop('indent_level');

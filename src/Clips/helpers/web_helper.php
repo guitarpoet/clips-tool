@@ -418,9 +418,12 @@ function ip2mac($ip) {
 
 	if($out) {
 		if(strpos(PHP_OS, 'WIN')) {
-			$out = trim($out[3]);
-			$out = preg_split('/\s+/', $out);
-			return str_replace('-', ':', $out[1]);
+			if(count($out) > 3) {
+				$out = trim($out[3]);
+				$out = preg_split('/\s+/', $out);
+				return str_replace('-', ':', $out[1]);
+			}
+			return null;
 		}
 		else {
 			$out = $out[0];
