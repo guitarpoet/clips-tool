@@ -171,8 +171,8 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 			$result->method = 'show';
 			$result->args = $error[0];
 			$controller_seg = 'error';
-			http_response_code(404);
-			error('RouteError', array($error[0][0]));
+			//http_response_code(404);
+			//error('RouteError', array($error[0][0]));
 		}
 		else {
 			$result = $this->clips->queryFacts("Clips\\RouteResult");
@@ -235,8 +235,15 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 		if($ret == null && $error) { // If there is no output and we can get the error, show the error
 			$default_view = config('default_view');
 			if($default_view) {
-				if(isset($error->cause)) {
-					$ret = new ViewModel('error/'.$error->cause, array('error' => $error->message), $default_view[0]);
+				if(is_array($error)) {
+					$cause = $error[0];
+					$cause = $cause->cause;
+				}
+				else {
+					$cause = $error->cause;
+				}
+				if(isset($cause)) {
+					$ret = new ViewModel('error/'.$cause, array('error' => $error), $default_view[0]);
 				}
 				else {
 					$ret = new ViewModel('error/error', array('error' => $error), $default_view[0]);

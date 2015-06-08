@@ -373,6 +373,16 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 		return $this->render($content, array(), 'direct', $header);
 	}
 
+	protected function not_found($message = 'Not Found') {
+		http_response_code(404);
+		$this->error($message, '404');
+	}
+
+	protected function internal_error($message = 'Internal Error') {
+		http_response_code(500);
+		$this->error($message, '500');
+	}
+
 	protected function resource($uri) {
 		if(strpos($uri, "://") === false)
 			$uri = "app://".$uri;

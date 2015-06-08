@@ -7,5 +7,6 @@ use Clips\Controller;
  */
 class ErrorController extends Controller {
 	public function show($error) {
+		return $this->not_found($error);
 	}
 }
