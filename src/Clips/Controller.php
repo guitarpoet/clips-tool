@@ -24,6 +24,20 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 	}
 
 	/**
+	 * The cascade select support function
+	 */
+	public function cascade($form, $field, $cascade_value) {
+		context('current_form', $form); // Set the form to current form
+		$f = $this->tool->load_class('form', true);
+		$f->value = array($form);
+		$f = $f->field($field);
+		if($f) {
+			return $this->json($f->getCascadeOptions($cascade_value));
+		}
+		return $this->json(array());
+	}
+
+	/**
 	 * The shorthand method for getting the request parameters
 	 */
 	protected function param($param = null, $default = null) {
@@ -45,6 +59,21 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 			$message = array($message);
 		}
 		\Clips\error($cause, $message);
+	}
+
+	/**
+	 * Reporting alert
+	 */
+	protected function alert($message) {
+		if($message) {
+			if(is_array($message)) {
+				foreach($message as $m) {
+					context('clips_alert', $m, true);
+				}
+			}
+			else
+				context('clips_alert', $message, true);
+		}
 	}
 
 	/**
@@ -342,5 +371,21 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 		}
 
 		return $this->render($content, array(), 'direct', $header);
+	}
+
+	protected function not_found($message = 'Not Found') {
+		http_response_code(404);
+		$this->error($message, '404');
+	}
+
+	protected function internal_error($message = 'Internal Error') {
+		http_response_code(500);
+		$this->error($message, '500');
+	}
+
+	protected function resource($uri) {
+		if(strpos($uri, "://") === false)
+			$uri = "app://".$uri;
+		return resource_contents($uri);
 	}
 }

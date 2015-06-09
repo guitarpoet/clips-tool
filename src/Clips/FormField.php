@@ -22,6 +22,25 @@ class FormField {
 			$this->placeholder = $this->label;
 	}
 
+	public function getCascadeOptions($value = null) {
+		if(isset($this->cascade_model)) { 
+			$tool = get_clips_tool();
+			$model = $tool->model($this->cascade_model);
+			if($model) { // We do have a cascade model
+				$cascade_field = get_default($this, 'cascade_field', null);
+				if($cascade_field) {
+					if($value)
+						$cascade_data = $value;
+					else
+						$cascade_data = get_default(context('current_form_data'), $cascade_field);
+					$cascade_method = get_default($this, 'cascasde_method', 'list'.ucfirst($this->field));
+					return $model->$cascade_method($cascade_data);
+				}
+			}
+		}
+		return null;
+	}
+
 	public function getId() {
 		return "field_".$this->name;
 	}
