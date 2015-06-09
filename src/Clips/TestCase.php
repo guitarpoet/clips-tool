@@ -32,6 +32,21 @@ class TestCase extends \PHPUnit_Framework_TestCase {
 					}
 
 					break;
+				case "Clips\\FakeModel":
+					$ds = $this->tool->library('dataSource');
+					$fake = $this->tool->library('fakeDataSource');
+					$ds->fake = $fake;
+					if(valid_obj($this, 'Clips\\Interfaces\\FakeDataSourceHandler')) {
+						$fake->handler = $this;
+					}
+					else {
+						if(!$a->value)
+							$a->value = 'expectFakeDataSourceHandler';
+						$fake->handler = $this->tool->library($a->value);
+						$this->fake_handler = $fake->handler;
+					}
+					$ds->_datasources = array('fake');
+					break;
 				case "Clips\\TestData":
 					$this->data = $this->tool->enhance($a);
 					break;
