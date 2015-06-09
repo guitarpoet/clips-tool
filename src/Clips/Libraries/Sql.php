@@ -7,34 +7,50 @@ class Sql {
 	public function __construct($type = 'mysqli') {
 		$tool = &\Clips\get_clips_tool();
 
+		$this->type = $type;
 		$this->clips = $tool->clips;
-		// Register all the template into the clips context
-		$this->clips->template(array('Clips\\Libraries\\Select', 'Clips\\Libraries\\From', 'Clips\\Libraries\\Join', 'Clips\\Libraries\\Where', 'Clips\\Libraries\\GroupBy', 'Clips\\Libraries\\OrderBy', 'Clips\\Libraries\\Limit', 'Clips\\Libraries\\SqlTable', 'Clips\\Libraries\\SqlResult'));
-
-		if(isset($type)) {
-			$type = strtolower($type);
-			$this->type = $type;
-			$this->clips->load('/config/rules/sql/'.$type.'.rules');
+		if(!$this->clips->isEnvExists('SQL')) {
+			$this->clips->createEnv('SQL');
 		}
+		// Register all the template into the clips context
+		$this->clips->runWithEnv('SQL', function($clips, $type) {
+			$clips->clear();
+			$clips->template(array('Clips\\Libraries\\Select', 'Clips\\Libraries\\From', 'Clips\\Libraries\\Join', 'Clips\\Libraries\\Where', 'Clips\\Libraries\\GroupBy', 'Clips\\Libraries\\OrderBy', 'Clips\\Libraries\\Limit', 'Clips\\Libraries\\SqlTable', 'Clips\\Libraries\\SqlResult'));
+
+			if(isset($type)) {
+				$type = strtolower($type);
+				$clips->load('/config/rules/sql/'.$type.'.rules');
+			}
+		}, $type);
 	}
 
 	public function limit($offset = 0, $count = 15) {
-		$this->clips->assertFacts('fact_limit', array(new Limit($offset, $count)));
+		$this->clips->runWithEnv('SQL', function($clips, $data) {
+			$offset = $data[0];
+			$count = $data[1];
+			$clips->assertFacts('fact_limit', array(new Limit($offset, $count)));
+		}, array($offset, $count));
 		return $this;
 	}
 
 	public function select() {
-		$this->clips->assertFacts('fact_select', array(new Select(func_get_args())));
+		$this->clips->runWithEnv('SQL', function($clips, $args) {
+			$clips->assertFacts('fact_select', array(new Select($args)));
+		}, func_get_args());
 		return $this;
 	}
 
 	public function from() {
-		$this->clips->assertFacts('fact_from', array(new From(func_get_args())));
+		$this->clips->runWithEnv('SQL', function($clips, $args) {
+			$clips->assertFacts('fact_from', array(new From($args)));
+		}, func_get_args());
 		return $this;
 	}
 	public function where($where = array()) {
 		if(\Clips\valid_obj($where, 'Clips\\Libraries\\WhereOperator')) {
-			$this->clips->assertFacts('fact_where', array(new Where($where->toString())));
+			$this->clips->runWithEnv('SQL', function($clips, $where) {
+				$clips->assertFacts('fact_where', array(new Where($where->toString())));
+			}, $where);
 			$this->args = $where->getArgs();
 			return $this;
 		}
@@ -46,7 +62,12 @@ class Sql {
 	}
 	public function join($table, $where = array(), $type = "") {
 		if($where instanceof WhereOperator) {
-			$this->clips->assertFacts('fact_join', array(new Join($table, $where->toString(), " ".$type)));
+			$this->clips->runWithEnv('SQL', function($clips, $data) {
+				$table = $data[0];
+				$where = $data[1];
+				$type = $data[2];
+				$clips->assertFacts('fact_join', array(new Join($table, $where->toString(), " ".$type)));
+			}, array($table, $where, $type));
 		}
 		if(is_array($where)) {
 			// Using and as default
@@ -65,7 +86,9 @@ class Sql {
 				$fields = array($fields);
 			}
 		}
-		$this->clips->assertFacts('fact_group_by', array(new GroupBy($fields)));
+		$this->clips->runWithEnv('SQL', function($clips, $fields) {
+			$clips->assertFacts('fact_group_by', array(new GroupBy($fields)));
+		}, $fields);
 		return $this;
 	}
 
@@ -78,7 +101,9 @@ class Sql {
 				$fields = array($fields);
 			}
 		}
-		$this->clips->assertFacts('fact_order_by', array(new OrderBy($fields)));
+		$this->clips->runWithEnv('SQL', function($clips, $fields) {
+			$clips->assertFacts('fact_order_by', array(new OrderBy($fields)));
+		}, $fields);
 		return $this;
 	}
 
@@ -177,13 +202,19 @@ class Sql {
 			$prefix = \Clips\clips_config('table_prefix', null);
 
 		if(isset($prefix)) {
-			$this->clips->assertFacts(array('table-prefix', $prefix[0]));
+			$this->clips->runWithEnv('SQL', function($clips, $prefix) {
+				$clips->assertFacts(array('table-prefix', $prefix[0]));
+			}, $prefix);
 		}
 
-		$this->clips->run();
-		$result = $this->clips->queryFacts('Clips\Libraries\SqlResult');
+		$result = $this->clips->runWithEnv('SQL', function($clips, $prefix) {
+			$clips->run();
+			$clips->assertFacts(array('table-prefix', $prefix[0]));
+			$result = $clips->queryFacts('Clips\Libraries\SqlResult');
+			$clips->reset();
+			return $result;
+		}, $prefix);
 
-		$this->clips->reset(); // Reset the assertions
 		if($result) {
 			if(isset($this->args)) {
 				$args = $this->args;
