@@ -101,7 +101,7 @@ class ExpectFakeDataSourceHandler implements FakeDataSourceHandler, LoggerAwareI
 			$return = \Clips\get_default($expect, 'result', null);
 			$expect = $expect['args'];
 			if($expect[0] == 'clear') {
-				return $result;
+				return $return;
 			}
 			throw new DataSourceException('Expecting a clear!');
 		}
