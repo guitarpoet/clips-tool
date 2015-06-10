@@ -1,0 +1,20 @@
+################################################################################
+#
+# The HTML Widget Configuration
+#
+################################################################################
+
+author: Jack <guitarpoet@gmail.com>
+date: Wed Jun 10 22:53:59 2015
+version: 1.0
+name: clips.html
+doc: 
+    All the basic HTML components
+scss:
+    files:
+        - mixin/pinet_vendor_prefix
+        - pinet_html_std
+        - pinet_html_autos
+        - pinet_html_minvar
+        - pinet_html_maxvar
+        - pinet_html_res
