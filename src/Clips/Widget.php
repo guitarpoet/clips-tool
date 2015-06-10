@@ -3,6 +3,7 @@
 use Clips\Interfaces\Initializable;
 use Clips\Interfaces\ToolAware;
 use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
 use Addendum\Annotation;
 
 /**
@@ -41,7 +42,7 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 		$this->tool = $tool;
 	}
 
-	public function setLogger(\Psr\Log\LoggerInterface $logger) {
+	public function setLogger(LoggerInterface $logger) {
 		$this->logger = $logger;
 	}
 

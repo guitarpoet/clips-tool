@@ -21,6 +21,21 @@ function method_is_public($class, $method) {
 }
 
 /**
+ * This method will try to read composer's autoload_psr4 to get all psr4 namespaces.
+ *
+ * @author Jack
+ * @date Wed Jun 10 22:12:27 2015
+ */
+function get_composer_namespaces() {
+	$path = try_path('vendor/composer/autoload_psr4.php');
+	if($path) {
+		$arr = include($path);
+		return array_keys($arr);
+	}
+	return array();
+}
+
+/**
  * Get the filename in cache folder
  *
  * @author Jack
