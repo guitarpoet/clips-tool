@@ -14,5 +14,6 @@ class FlowTest extends TestCase {
 		$this->assertEquals($this->flow->actions(), array('process_complete'));
 		$this->flow->action('process_complete');
 		$this->assertEquals($this->flow->actions(), array());
+		$this->assertEquals($this->flow->status(), 'processed');
 	}
 }
