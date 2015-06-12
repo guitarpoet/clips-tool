@@ -460,10 +460,13 @@ class Tool implements Interfaces\Initializable {
 		
 		// Try load the class using the application's namespace
 		foreach(array('', $loadConfig->prefix) as $pre) {
-			foreach(array_merge(array(''), clips_config('namespace', array())) as $namespace) {
+			foreach(array_merge(array(''), config('namespace', array()), get_composer_namespaces()) as $namespace) {
 				foreach(array($loadConfig->suffix, 
 					ucfirst(str_replace('_', '', $loadConfig->suffix))) as $suffix) {
 					$class_name = ucfirst($namespace.$pre.ucfirst($class).$suffix);
+
+					if($class_name == 'Clips\\Widget') // Skip Clips\Widget (Because all the widget component has the class name of widget, so skip the Clips namespace for widget
+						continue;
 
 					if(class_exists($class_name)) { // Let composer do this for me
 						$result = $this->_init_class($class_name, $init, $pre.$handle_name.$suffix, $args);

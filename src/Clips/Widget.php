@@ -3,6 +3,7 @@
 use Clips\Interfaces\Initializable;
 use Clips\Interfaces\ToolAware;
 use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
 use Addendum\Annotation;
 
 /**
@@ -41,19 +42,21 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 		$this->tool = $tool;
 	}
 
-	public function setLogger(\Psr\Log\LoggerInterface $logger) {
+	public function setLogger(LoggerInterface $logger) {
 		$this->logger = $logger;
 	}
 
 	protected function initContext() {
-		if(isset($this->config->context)) {
-			clips_context($this->config->context, null, true);
+		$context = get_default($this->config, 'context');
+		if($context) {
+			clips_context($context, null, true);
         }
 	}
 
 	protected function initDepends() {
-		if(isset($this->config->depends)) {
-			$this->tool->widget($this->config->depends);
+		$depends = get_default($this->config, 'depends');
+		if($depends) {
+			$this->tool->widget($depends);
         }
 	}
 
@@ -67,21 +70,30 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 	protected function initScss() {
 		// We should have sass in the context
 		$sass = $this->sass;
-		if($sass && isset($this->config->scss)) {
+		$scsses = get_default($this->config, 'scss');
+		if($sass && $scsses) {
 			// Add the include path, so that others can just import the scss this widget provided
 			$sass->addIncludePath(path_join($this->base_dir, 'scss'));
 
-			$scss_config = $this->config->scss;
-            if(isset($scss_config->depends)) {
-                foreach($scss_config->depends as $d) {
+			$scss_config = $scsses;
+			$depends = get_default($scss_config, 'depends');
+            if($depends) {
+				if(!is_array($depends)) {
+					$depends = array($depends);
+				}
+
+				foreach($depends as $d) {
 					clips_add_scss($d);
-				}				
+				}
 			}			
 
 			// Add the scss files
-			if(isset($scss_config->files)) {
-                foreach($scss_config->files as $o) {
-					if(is_object($o)) {
+			$files = get_default($scss_config, 'files');
+			if($files) {
+				if(!is_array($files))
+					$files = array($files);
+                foreach($files as $o) {
+					if(is_array($o)) {
 						foreach($o as $k => $v) {
 							// This is file => query part
 							if(!browser_match($v)) {
@@ -90,7 +102,7 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 								continue;
 							}
 							$file = $k;
-							clips_add_js(path_join($this->rel_dir, 'js', $file));
+							clips_add_js(path_join($this->rel_dir, 'css', $file));
 						}
 						continue;
 					}
@@ -102,18 +114,24 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 	}
 
 	protected function initJs() {
-		if(isset($this->config->js)) {
-			$js_config = $this->config->js;
-            if(isset($js_config->depends)) {
-                foreach($js_config->depends as $d) {
+		$js = get_default($this->config, 'js');
+		if($js) {
+			$depends = get_default($js, 'depends');
+            if($depends) {
+				if(!is_array($depends))
+					$depends = array($depends);
+                foreach($depends as $d) {
 					clips_add_js($d);
 				}				
 			}			
 
 			// Add the js files
-			if(isset($js_config->files)) {
-                foreach($js_config->files as $o) {
-					if(is_object($o)) {
+			$files = get_default($js, 'files');
+			if($files) {
+				if(!is_array($files))
+					$files = array($files);
+                foreach($files as $o) {
+					if(is_array($o)) {
 						foreach($o as $k => $v) {
 							// This is file => query part
 							if(!browser_match($v)) {
@@ -134,18 +152,26 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 	}
 
 	protected function initCss() {
-		if(isset($this->config->css)) {
-			$css_config = $this->config->css;
-            if(isset($css_config->depends)) {
-                foreach($css_config->depends as $c) {
+		$css = get_default($this->config, 'css');
+		if($css) {
+			$depends = get_default($css, 'depends');
+            if($depends) {
+				if(!is_array($depends))
+					$depends = array($depends);
+
+                foreach($depends as $c) {
 					clips_add_css($c);
 				}				
 			}			
 
 			// Add the css files
-			if(isset($css_config->files)) {
-                foreach($css_config->files as $o) {
-					if(is_object($o)) {
+			$files = get_default($css, 'files');
+			if($files) {
+				if(!is_array($files))
+					$files = array($files);
+
+                foreach($files as $o) {
+					if(is_array($o)) {
 						foreach($o as $k => $v) {
 							// This is file => query part
 							if(!browser_match($v)) {
@@ -154,7 +180,7 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 								continue;
 							}
 							$file = $k;
-							clips_add_js(path_join($this->rel_dir, 'js', $file));
+							clips_add_js(path_join($this->rel_dir, 'css', $file));
 						}
 						continue;
 					}
@@ -165,13 +191,22 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 		}
 	}
 
+	/**
+	 * Loading the widget configuration in yaml
+	 */
     protected function loadConfig() {
-		$config_file = path_join($this->base_dir, 'widget.json');
+		$config_file = path_join($this->base_dir, 'widget.yml');
 		if(file_exists($config_file)) {
-			$this->config = parse_json(file_get_contents($config_file));
+			$this->config = yaml($config_file);
 		}
 		else {
-			throw new WidgetException('Cant\'t find configuration file for widget ' . get_class($this));
+			$config_file = path_join($this->base_dir, 'widget.json');
+			if(file_exists($config_file)) {
+				$this->config = parse_json(file_get_contents($config_file));
+			}
+			else {
+				throw new WidgetException('Cant\'t find configuration file for widget ' . get_class($this));
+			}
 		}
 	}
 }
