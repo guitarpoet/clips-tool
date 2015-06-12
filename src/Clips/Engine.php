@@ -367,6 +367,17 @@ class Engine extends ConsoleBase {
 	}
 
 	/**
+	 * List all the rule names into an array
+	 *
+	 * @version 1.1
+	 */
+	public function rules() {
+		$arr = array();
+		clips_rules($arr);
+		return $arr;
+	}
+
+	/**
 	 * Print the rule
 	 */
 	public function printRule($name) {

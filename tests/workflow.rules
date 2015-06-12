@@ -1,0 +1,15 @@
+(defrule [process]:uploaded->processing
+	?s <- (status "uploaded")
+	?a <- (action "process")
+=>
+	(retract ?s ?a)
+	(assert (status "processing"))
+)
+
+(defrule [process_complete]:processing->processed
+	?s <- (status "processing")
+	?a <- (action "process_complete")
+=>
+	(retract ?s ?a)
+	(assert (status "processed"))
+)
