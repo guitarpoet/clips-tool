@@ -140,7 +140,7 @@ class GenerateCommand extends Command {
 		mkdir($dir, 0755, true);
 
 		// Write the widget configuration
-		\file_put_contents(\Clips\path_join($dir, 'widget.json'), \Clips\clips_out('widget', $config, false));
+		\file_put_contents(\Clips\path_join($dir, 'widget.yml'), \Clips\clips_out('widget', $config, false));
 		
 		// Write the widget class
 		\file_put_contents(\Clips\path_join($dir, 'Widget.php'), \Clips\clips_out('widget_class', $config, false));
