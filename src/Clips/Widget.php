@@ -49,7 +49,9 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 	protected function initContext() {
 		$context = get_default($this->config, 'context');
 		if($context) {
-			clips_context($context, null, true);
+			// Add this context to context
+			context('widget_context', $context, true);
+			context($context, null, true);
         }
 	}
 
@@ -102,7 +104,7 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 								continue;
 							}
 							$file = $k;
-							clips_add_js(path_join($this->rel_dir, 'css', $file));
+							clips_add_scss(path_join($this->rel_dir, 'scss', $file));
 						}
 						continue;
 					}

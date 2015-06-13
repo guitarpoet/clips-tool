@@ -660,6 +660,7 @@ class Tool implements Interfaces\Initializable {
 			$w = new $class();
 			$this->enhance($w);
 			$this->$class = $w;
+			return $w;
 		}
 		return null;
 	}

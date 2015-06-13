@@ -1,9 +1,11 @@
 <?php namespace Clips\Widgets\DataTable; in_array(__FILE__, get_included_files()) or exit("No direct script access allowed");
 
+use Clips\WidgetV2;
+
 /**
  * The datatable widget
  */
-class Widget extends \Clips\Widget {
+class Widget extends WidgetV2 {
 	protected function doInit() {
 		$js = <<<TEXT
 	window.UrlManager = {};

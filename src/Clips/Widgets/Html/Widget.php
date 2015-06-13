@@ -1,6 +1,8 @@
 <?php namespace Clips\Widgets\Html; in_array(__FILE__, get_included_files()) or exit("No direct script access allowed");
 
-class Widget extends \Clips\Widget {
+use Clips\WidgetV2;
+
+class Widget extends WidgetV2 {
 	protected function doInit() {
 		// Added the clips object to JavaScript
 		$router = \Clips\context('router');

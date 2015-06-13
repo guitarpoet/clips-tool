@@ -9,7 +9,7 @@ date: Sat Jun 13 14:13:12 2015
 version: 1.0
 name: clips-alert
 doc:
-	The Alert widget of Clips
+    The Alert widget of Clips
 js:
     files:
         - pinet_alert

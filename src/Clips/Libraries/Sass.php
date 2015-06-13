@@ -29,6 +29,10 @@ class Sass extends \Clips\Libraries\ConsoleBase implements \Psr\Log\LoggerAwareI
 
 	protected $includePathes;
 
+	public function getIncludePaths() {
+		return $this->includePathes;
+	}
+
     public function setLogger(\Psr\Log\LoggerInterface $logger) {
         $this->logger = $logger;
     }
