@@ -2,7 +2,7 @@
 use hafriedlander\Peg\Parser;
 
 class FlowStep extends Parser\Basic {
-/*!* ObjectQuery
+/*!* FlowStep
 DLR: '$'
 LB: '['
 RB: ']'
