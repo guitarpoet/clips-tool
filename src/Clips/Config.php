@@ -10,24 +10,39 @@ class Config {
 	private $config;
 
 	public function load() {
-		$arr = array();
-		$loaded = array();
-		foreach($this->files as $config) {
-			$p = realpath($config);
-			if(in_array($p, $loaded))
-				continue;
-
-			$info = pathinfo($config);
-			if($info['extension'] == 'json')
-				$c = parse_json(file_get_contents($config));
-			else if($info['extension'] == 'yml')
-				$c = yaml($config);
-			if(isset($c)) {
-				$loaded []= $p;
-				$arr []= (array) $c;
-			}
+		$cache = try_path('config.cache');
+		if($cache && file_newer($cache, $this->files)) {
+			$cache = unserialize(file_get_contents($cache));
+			$this->config = $cache['config'];
+			$this->loaded = $cache['loaded'];
 		}
-		$this->config = $arr;
+		else {
+			$arr = array();
+			$loaded = array();
+			foreach($this->files as $config) {
+				$p = realpath($config);
+				if(in_array($p, $loaded))
+					continue;
+
+				$info = pathinfo($config);
+				if($info['extension'] == 'json')
+					$c = parse_json(file_get_contents($config));
+				else if($info['extension'] == 'yml')
+					$c = yaml($config);
+				if(isset($c)) {
+					$loaded []= $p;
+					$arr []= (array) $c;
+				}
+			}
+
+			$fn = getcwd().'/config.cache';
+			if(is_writeable($fn)) { // Test if the cache is writable
+				$cache = array('config' => $arr, 'loaded' => $loaded);
+				file_put_contents(getcwd().'/config.cache', serialize($cache));
+			}
+			$this->loaded = $loaded;
+			$this->config = $arr;
+		}
 	}
 
 	public function getLoadConfig() {
