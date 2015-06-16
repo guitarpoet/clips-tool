@@ -23,8 +23,10 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 		foreach($config as $k => $v) {
 			$this->$k = $v;
 		}
-		if(isset($config->table_prefix) && isset($config->context)) {
-			$this->context = $config->table_prefix.$config->context;
+		$table_prefix = \Clips\get_default($config, 'table_prefix');
+		$context = \Clips\get_default($config, 'context');
+		if($table_prefix !== null && $context) {
+			$this->context = $table_prefix.$context;
 		}
 		$this->db = new \mysqli($this->host, 
 			$this->username, $this->password, $this->database, $this->port);
@@ -37,9 +39,9 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 
 		$tool = &\Clips\get_clips_tool();
 		$this->sql = new \Clips\Libraries\Sql(); // Should we have a better idea?
-		if(isset($config->table_prefix)) {
-			$this->sql->table_prefix = $config->table_prefix;
-			$this->table_prefix = $config->table_prefix;
+		if($table_prefix !== null) {
+			$this->sql->table_prefix = $table_prefix;
+			$this->table_prefix = $table_prefix;
 		}
 	}
 

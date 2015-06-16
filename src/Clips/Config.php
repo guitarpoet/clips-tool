@@ -16,7 +16,12 @@ class Config {
 			$p = realpath($config);
 			if(in_array($p, $loaded))
 				continue;
-			$c = parse_json(file_get_contents($config));
+
+			$info = pathinfo($config);
+			if($info['extension'] == 'json')
+				$c = parse_json(file_get_contents($config));
+			else if($info['extension'] == 'yml')
+				$c = yaml($config);
 			if(isset($c)) {
 				$loaded []= $p;
 				$arr []= (array) $c;

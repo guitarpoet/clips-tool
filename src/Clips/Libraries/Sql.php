@@ -199,7 +199,7 @@ class Sql {
 		if(isset($this->table_prefix)) // Honor the prefix in sql
 			$prefix = array($this->table_prefix);
 		else
-			$prefix = \Clips\clips_config('table_prefix', null);
+			$prefix = \Clips\config('table_prefix', null);
 
 		if(isset($prefix)) {
 			$this->clips->runWithEnv('SQL', function($clips, $prefix) {

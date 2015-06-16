@@ -15,11 +15,20 @@
 ;===============================================================================
 
 (defglobal ?*config* = "clips_tool.json")
+(defglobal ?*new_config* = "config.yml")
 
 (defrule generate-config-file-names-to-test
 	(Clips\Config)
 	(not (config file name generated))
 	=>
+	(assert (config-file (clips-path (str-cat "/../config/" ?*new_config*)))) ; For clips tools's config
+	(assert (config-file (clips-path (str-cat "/config/" ?*new_config*)))) ; For clips's config
+	(assert (config-file (str-cat "/etc/clips/" ?*new_config*))) ; For /etc/clips/
+	(assert (config-file (str-cat "/etc/" ?*new_config*))) ; For /etc/ 
+	(assert (config-file (str-cat (cwd) "/config/" ?*new_config*))) ; For $cwd/config/rules
+	(assert (config-file (str-cat (cwd) "/rules/" ?*new_config*))) ; For $cwd/rules
+	(assert (config-file (str-cat (cwd) "/" ?*new_config*))) ; For $cwd
+
 	(assert (config-file (clips-path (str-cat "/../config/" ?*config*)))) ; For clips tools's config
 	(assert (config-file (clips-path (str-cat "/config/" ?*config*)))) ; For clips's config
 	(assert (config-file (str-cat "/etc/clips/" ?*config*))) ; For /etc/clips/

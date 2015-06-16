@@ -40,8 +40,16 @@ class DataSource implements ToolAware {
 			return $this->_datasources;
 
 		$ret = array();
-		foreach(\Clips\config('datasources') as $d) {
-			foreach($d as $k => $v) {
+		$ds = \Clips\config('datasources');
+		if(isset($ds[0])) {
+			foreach($ds as $d) {
+				foreach($d as $k => $v) {
+					$ret []= $k;
+				}
+			}
+		}
+		else {
+			foreach($ds as $k => $v) {
 				$ret []= $k;
 			}
 		}
@@ -69,17 +77,18 @@ class DataSource implements ToolAware {
 
 		$tool = $this->tool;
 		$ds = \Clips\config('datasources');
-		foreach($ds as $d) {
-			if(isset($d->$name)) {
-				$config = $d->$name;
-				break;
+		$config = \Clips\get_default($ds, $name);
+		if(!$config) { // For supporting json configuration
+			foreach($ds as $d) {
+				$config = \Clips\get_default($d, $name);
+				if($config)
+					break;
 			}
 		}
-
-		if(isset($config) && isset($config->type)) {
+		$type = \Clips\get_default($config, 'type');
+		if($type) {
 			$tool = $this->tool;
-			$type = $tool->library($config->type, false, 'DataSource');
-			$type = $tool->load_class($config->type, false, new \Clips\LoadConfig($tool->config->datasources_dir, "DataSource", "DataSources\\"));
+			$type = $tool->load_class($type, false, new \Clips\LoadConfig($tool->config->datasources_dir, "DataSource", "DataSources\\"));
 			$this->$name = new $type($config);
 			$this->tool->enhance($this->$name);
 			return $this->$name;

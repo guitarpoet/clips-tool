@@ -86,10 +86,12 @@ class WidgetFilter extends AbstractFilter implements ToolAware {
 				$js = $this->tool->context('js');
 				$css = $this->tool->context('css');
 				$scss = $this->tool->context('scss');
+				$jquery_init = $this->tool->context('jquery_init');
 
 				$this->tool->context_clear('js');
 				$this->tool->context_clear('css');
 				$this->tool->context_clear('scss');
+				$this->tool->context_clear('jquery_init');
 
 				foreach($widgets as $w) {
 					$w->init_v2();
@@ -145,6 +147,12 @@ class WidgetFilter extends AbstractFilter implements ToolAware {
 					}
 					foreach($js as $j) {
 						$this->tool->context('js', $j, true);
+					}
+				}
+
+				if($jquery_init) {
+					foreach($jquery_init as $j) {
+						$this->tool->context('jquery_init', $j, true);
 					}
 				}
 

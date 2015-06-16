@@ -1,0 +1,32 @@
+table_prefix: demo_
+test_data_dir: data
+models:
+    clips_demo:
+        datasource: mysql
+helpers:
+    - html
+    - web
+    - core
+logger:
+    handlers:
+        Stream: 
+            - php://stdin
+            - debug
+        FirePHP:
+            - debug
+        RotatingFile:
+            - /tmp/clips.log
+            - 4
+            - debug
+    processors:
+        - Git
+        - PsrLogMessage
+        - Introspection
+sass_plugins:
+    - Sass\AutoConstruct
+datasources:
+    mysql:
+        table_prefix: ""
+        context: user
+        type: MySQLi
+        database: mysql
