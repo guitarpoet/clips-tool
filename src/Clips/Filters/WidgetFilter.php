@@ -41,11 +41,10 @@ class WidgetFilter extends AbstractFilter implements ToolAware {
 					$jquery = $cache['jquery'];
 					if(!is_array($jquery)) {
 						$jquery = array($jquery);
-						foreach($jquery as $j) {
-							$this->tool->context('jquery_init', $j, true);
-						}
 					}
-					$this->tool->context('js', $cache['js']);
+					foreach($jquery as $j) {
+						$this->tool->context('jquery_init', $j, true);
+					}
 				}
 				if(isset($cache['css']))
 					$this->tool->context('css', $cache['css']);
@@ -125,8 +124,8 @@ class WidgetFilter extends AbstractFilter implements ToolAware {
 				}
 
 				$jquery = \Clips\context('jquery_init');
-				if($css) {
-					$cache['jquery'] = $css;
+				if($jquery) {
+					$cache['jquery'] = $jquery;
 				}
 
 				$cache['sass_include'] = $this->sass->getIncludePaths();
