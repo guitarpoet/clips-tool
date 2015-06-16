@@ -35,8 +35,13 @@ class WidgetFilter extends AbstractFilter implements ToolAware {
 				// Let's use this widget cache
 				$cache = unserialize($this->filecache->contents($name));
 
-				if(isset($cache['js']))
+				if(isset($cache['js'])) {
+					$origin = $this->tool->context('js');
+					if($origin) {
+						$cache['js'] = array_merge($cache['js'], $origin);
+					}
 					$this->tool->context('js', $cache['js']);
+				}
 				if(isset($cache['jquery'])) {
 					$jquery = $cache['jquery'];
 					if(!is_array($jquery)) {
@@ -46,10 +51,20 @@ class WidgetFilter extends AbstractFilter implements ToolAware {
 						$this->tool->context('jquery_init', $j, true);
 					}
 				}
-				if(isset($cache['css']))
+				if(isset($cache['css'])) {
+					$origin = $this->tool->context('css');
+					if($origin) {
+						$cache['css'] = array_merge($cache['css'], $origin);
+					}
 					$this->tool->context('css', $cache['css']);
-				if(isset($cache['scss']))
+				}
+				if(isset($cache['scss'])) {
+					$origin = $this->tool->context('scss');
+					if($origin) {
+						$cache['scss'] = array_merge($cache['scss'], $origin);
+					}
 					$this->tool->context('scss', $cache['scss']);
+				}
 				if(isset($cache['sass_include']))
 					$this->sass->addIncludePath($cache['sass_include']);
 				if(isset($cache['context'])) {
@@ -80,6 +95,50 @@ class WidgetFilter extends AbstractFilter implements ToolAware {
 					$w->init_v2();
 				}
 
+				// Caching js, css and scss configurations
+				
+				$cache = array();
+				// Caching smarty's plugins dir
+				if($smarty) {
+					$cache['smarty'] = $smarty->getPluginsDir();
+				}
+
+				$js_widget = \Clips\context('js');
+				if($js_widget) {
+					$cache['js'] = $js_widget;
+				}
+
+				$css_widget = \Clips\context('css');
+				if($css_widget) {
+					$cache['css'] = $css_widget;
+				}
+
+				$jquery = \Clips\context('jquery_init');
+				if($jquery) {
+					$cache['jquery'] = $jquery;
+				}
+
+				$cache['sass_include'] = $this->sass->getIncludePaths();
+
+				$scss_widget = \Clips\context('scss');
+				if($scss_widget)
+					$cache['scss'] = $scss_widget;
+
+				$context = \Clips\context('widget_context');
+				if($context) {
+					if(!is_array($context)) {
+						$context = array($context);
+					}
+					$cache['context'] = array();
+					foreach($context as $c) {
+						$cache['context'] []= $c;
+					}
+				}
+
+				// Save the cache
+				$this->filecache->save($name, serialize($cache));
+
+				// Append other js, css and scss to the end
 				if($js) {
 					if(!is_array($js)) {
 						$js = array($js);
@@ -107,46 +166,6 @@ class WidgetFilter extends AbstractFilter implements ToolAware {
 					}
 				}
 
-				$cache = array();
-				// Caching smarty's plugins dir
-				if($smarty) {
-					$cache['smarty'] = $smarty->getPluginsDir();
-				}
-
-				$js = \Clips\context('js');
-				if($js) {
-					$cache['js'] = $js;
-				}
-
-				$css = \Clips\context('css');
-				if($css) {
-					$cache['css'] = $css;
-				}
-
-				$jquery = \Clips\context('jquery_init');
-				if($jquery) {
-					$cache['jquery'] = $jquery;
-				}
-
-				$cache['sass_include'] = $this->sass->getIncludePaths();
-
-				$scss = \Clips\context('scss');
-				if($scss)
-					$cache['scss'] = $scss;
-
-				$context = \Clips\context('widget_context');
-				if($context) {
-					if(!is_array($context)) {
-						$context = array($context);
-					}
-					$cache['context'] = array();
-					foreach($context as $c) {
-						$cache['context'] []= $c;
-					}
-				}
-
-				// Save the cache
-				$this->filecache->save($name, serialize($cache));
 			}
 		}
 	}
