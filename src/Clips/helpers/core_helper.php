@@ -400,6 +400,30 @@ function try_path($path, array $others = array()) {
 	return false;
 }
 
+/**
+ * Test if the first file is newer than the other files
+ *
+ * @author Jack
+ * @version 1.1
+ * @date Tue Jun 16 22:20:47 2015
+ */
+function file_newer($f, $files) {
+	if($files) {
+		if(file_exists($f)) {
+			$time = filemtime($f);
+			if($files) {
+				foreach($files as $file) {
+					if(file_exists($file) && filemtime($file) > $time)
+						return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+	return true;
+}
+
 function clips_context($key = null, $value = null, $append = false) {
 	if(is_object($key) || is_array($key)) {
 		foreach($key as $k => $v) {
