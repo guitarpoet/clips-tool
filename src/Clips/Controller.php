@@ -325,6 +325,7 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 				$this->tool->annotationEnhance($a, $this);
 			}
 			context_pop('must_init_v2');
+			$this->context('forward_method', $method);
 			return call_user_func_array(array($this, $method), $args);
 		}
 	}

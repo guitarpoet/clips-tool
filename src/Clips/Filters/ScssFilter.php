@@ -29,6 +29,11 @@ class ScssFilter extends AbstractFilter {
 			$full_name = \Clips\to_flat(get_class($controller)).'_'.$method;
 			$uri = \Clips\path_join(\Clips\path_join($cache, 'css'), $full_name);
 
+			$forward_method = \Clips\context('forward_method');
+			if($forward_method) {
+				$method = $forward_method;
+			}
+
 			$cache_filename = \Clips\path_join($cache, 'css', \Clips\to_flat(get_class($controller).'_'.$method).'.css');
 			if(file_exists($cache_filename) && !\Clips\config('debug_sass')) {
 				\Clips\add_css(\Clips\static_url($uri));
