@@ -341,7 +341,11 @@ class Tool implements Interfaces\Initializable {
 					context('form', $a);
 					break;
 				case "Clips\\Widget":
-					$this->widget($a->value);
+					$w = $this->widget($a->value);
+					if(context('must_init_v2') &&
+						valid_obj($w, 'Clips\\WidgetV2')) {
+						$w->init_v2();
+					}
 					break;
 				case "Clips\\Widgets\\DataTable":
 					$this->enhance($a);
