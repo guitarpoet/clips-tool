@@ -30,3 +30,10 @@ datasources:
         context: user
         type: MySQLi
         database: mysql
+    clips: # Since the old DBModel will use the first datasource by default, not recommanded to set this datasource at the first place
+        type: clips
+        datasource: mysql
+        table_prefix: test_
+        filters:
+            - sample
+            - prefix
