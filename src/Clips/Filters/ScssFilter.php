@@ -26,13 +26,14 @@ class ScssFilter extends AbstractFilter {
 		$scsses = \Clips\context('scss');
 		if($scsses) {
 			$cache = $this->filecache->cacheDir();
-			$full_name = \Clips\to_flat(get_class($controller)).'_'.$method;
-			$uri = \Clips\path_join(\Clips\path_join($cache, 'css'), $full_name);
 
 			$forward_method = \Clips\context('forward_method');
 			if($forward_method) {
 				$method = $forward_method;
 			}
+
+			$full_name = \Clips\to_flat(get_class($controller)).'_'.$method;
+			$uri = \Clips\path_join(\Clips\path_join($cache, 'css'), $full_name);
 
 			$cache_filename = \Clips\path_join($cache, 'css', \Clips\to_flat(get_class($controller).'_'.$method).'.css');
 			if(file_exists($cache_filename) && !\Clips\config('debug_sass')) {

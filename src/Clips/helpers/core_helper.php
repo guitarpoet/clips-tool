@@ -659,7 +659,7 @@ function clips_stacktrace($message, $level = 3) {
 
 /**
  * Log using clips tool's LoggerInterface, only used for test or helper function.
- * For objects, the LoggerAware interface is more appriciated
+ * For objects, the LoggerAwareInterface interface is more appriciated
  *
  * @author Jack
  * @date Sat Feb 21 10:49:09 2015
