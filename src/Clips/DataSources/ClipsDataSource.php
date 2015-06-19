@@ -119,20 +119,41 @@ class ClipsDataSource extends DataSource implements LoggerAwareInterface {
 	}
 
 	protected function doUpdate($id, $args) {
-		throw new DataSourceException('Only support prepared statement!');
+		if($this->ds) {
+			$orig = $this->ds->context;
+			$ret = $this->ds->update($id, $args);
+			$this->ds->context = $orig;
+			return $ret;
+		}
+		return null;
 	}
 
 	protected function doDelete($id) {
-		throw new DataSourceException('Only support prepared statement!');
+		if($this->ds) {
+			$orig = $this->ds->context;
+			$ret = $this->ds->delete($id);
+			$this->ds->context = $orig;
+			return $ret;
+		}
+		return null;
 	}
 
 	protected function doFetch($args) {
-		throw new DataSourceException('Only support prepared statement!');
+		if($this->ds) {
+			$orig = $this->ds->context;
+			$ret = $this->ds->fetch($args);
+			$this->ds->context = $orig;
+			return $ret;
+		}
+		return null;
 	}
 
 	protected function doClear() {
 		if($this->ds) {
-			return $this->ds->doClear();
+			$orig = $this->ds->context;
+			$ret = $this->ds->doClear();
+			$this->ds->context = $orig;
+			return $ret;
 		}
 		return null;
 	}
@@ -142,6 +163,12 @@ class ClipsDataSource extends DataSource implements LoggerAwareInterface {
 	}
 
 	protected function doInsert($args) {
-		throw new DataSourceException('Only support prepared statement!');
+		if($this->ds) {
+			$orig = $this->ds->context;
+			$ret = $this->ds->insert($args);
+			$this->ds->context = $orig;
+			return $ret;
+		}
+		return null;
 	}
 }
