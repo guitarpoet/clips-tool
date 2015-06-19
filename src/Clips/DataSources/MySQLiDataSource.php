@@ -37,7 +37,6 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 			throw new \Clips\DataSourceException($this->db->connect_error);
 		}
 
-		$tool = &\Clips\get_clips_tool();
 		$this->sql = new \Clips\Libraries\Sql(); // Should we have a better idea?
 		if($table_prefix !== null) {
 			$this->sql->table_prefix = $table_prefix;
