@@ -24,12 +24,25 @@ logger:
         - Introspection
 sass_plugins:
     - Sass\AutoConstruct
+models:
+    test_model:
+        datasource: clips
 datasources:
     mysql:
         table_prefix: ""
         context: user
         type: MySQLi
         database: mysql
+    information_schema:
+        table_prefix: ""
+        context: user
+        type: MySQLi
+        database: information_schema
+    tables:
+        table_prefix: ""
+        context: tables
+        datasource: information_schema
+        type: clips
     clips: # Since the old DBModel will use the first datasource by default, not recommanded to set this datasource at the first place
         type: clips
         datasource: mysql

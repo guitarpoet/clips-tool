@@ -67,22 +67,27 @@ class WhereBuilder {
 		return $this;
 	}
 
-	public function wand($args) {
-		return $this->expression($args);
+	public function wand($args = null) {
+		if($args)
+			return $this->expression($args);
+		$this->ops []= 'and';
+		return $this;
 	}
 
-	public function wor($args) {
-		return $this->expression($args, ' or ');
+	public function wor($args = null) {
+		if($args)
+			return $this->expression($args, ' or ');
+		$this->ops []= 'or';
+		return $this;
 	}
 
 	public function compile() {
 		if($this->ops) {
-			$this->model->where []= implode(' and ', $this->ops);
+			$this->model->where []= implode(' ', $this->ops);
 			$this->model->args = array_merge($this->model->args, $this->args);
 			$this->ops = array();
 			$this->args = array();
-			return $this->model;
 		}
-		return array();
+		return $this->model;
 	}
 }

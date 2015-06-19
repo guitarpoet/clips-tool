@@ -13,7 +13,7 @@ class DBModelV2Test extends TestCase {
 
 	public function testWhere() {
 		$this->assertNotNull($this->dbmodelv2);
-		$this->dbmodelv2->where(array(
+		$this->dbmodelv2->w(array(
 			'name is not null' => '__yield__',
 			'length(?)' => array('name', 3),
 			'date between ? and ?' => array('today', 'tomorrow'),
@@ -23,12 +23,19 @@ class DBModelV2Test extends TestCase {
 			'(select count(*) from users) > ?' => 3,
 			'age >= ?' => 30,
 			'name' => null
-		))->compile()->where()->wor(array(
+		))->wor()->wor(array(
 			'name like ?' => '%rex%',
-			'name like ?' => '%jake%'
-		))->compile();
-		print_r($this->dbmodelv2->where);
-		print_r($this->dbmodelv2->args);
-		exit;
+			'name' => 'jake'
+		))->wand()->wand(array('name' => 'hello'))->compile();
+		$this->assertEquals($this->dbmodelv2->where, array('((name is not null) and (length(?) = ?) and (date between ? and ?) and (name like ?) and (name in (?, ?, ?)) and (name is null) and ((select count(*) from users) > ?) and (age >= ?)) or ((name like ?) or (name = ?)) and ((name = ?))'));
+	}
+
+	public function testSql() {
+		$q = $this->dbmodelv2->from('users')->w(array(
+			'name is not null' => '__yield__',
+			'length(?)' => array('name', 3)))->compile()->limit()->orderBy('username')->groupBy('id')->sql();
+		$this->assertEquals($q[0], 'select * from users where ((name is not null) and (length(?) = ?)) group by id order by username limit 0, 15');
+		$q = $this->dbmodelv2->from('users as u')->join('groups as g', 'u.gid = g.id')->join('roles as r', 'u.rid = r.id', 'left')->w(array('u.id' => 1))->compile()->sql();
+		$this->assertEquals($q[0], 'select * from users as u join groups as g on u.gid = g.id left join roles as r on u.rid = r.id where ((u.id = ?))');
 	}
 }

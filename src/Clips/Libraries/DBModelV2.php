@@ -23,6 +23,59 @@ class DBModelV2 extends BaseService {
 	public function __construct() {
 		$this->where = array();
 		$this->args = array();
+		$this->joins = array();
+	}
+
+	public function init() {
+		$name = get_class($this);
+
+		// Remove the prefixes
+		$name = explode('\\', $name);
+		$name = $name[count($name) - 1];
+
+		if(!isset($this->table)) {
+			$this->table = \Clips\to_flat(str_replace('Model', '', $name)).'s'; // If no table is set for this model, just guess for its table
+		}
+
+		if(!isset($this->name)) { // If there is no name from the annotation, will use the default table name as the name
+			$this->name = $name;
+		}
+		// Check for models config first
+		$models = \Clips\config('models');
+		if($models) {
+			foreach($models as $mc) {
+				$config = \Clips\get_default($mc, $this->name, null);
+				if($config) {
+					// If found the model's configuration, try using it to find datasource
+					$ds = \Clips\get_default($config, 'datasource');
+					if($ds) {
+						$datasource = $ds;
+						break;
+					}
+				}
+				else {
+					// If not found for model itself, try the common one
+					$ds = \Clips\get_default($mc, 'datasource');
+					if($ds) {
+						$datasource = $ds;
+						break;
+					}
+				}
+			}
+		}
+
+		$ds = $this->tool->library('DataSource'); // Load the datasource library
+		if(!isset($datasource)) {
+			// There is still no datasource information, let's try using first one of the datasource
+			$this->db = $ds->first();
+		}
+		else {
+			$this->db = $ds->get($datasource);
+		}
+
+		if(!isset($this->db)) {
+			throw new \Exception('Cant\'t find any datasource for this model.');
+		}
 	}
 
 	/**
@@ -220,6 +273,64 @@ class DBModelV2 extends BaseService {
 	}
 
 	public function sql() {
+		$select = isset($this->select)? $this->select : '*';
+		$from = $this->from;
+		if($from) {
+			$from = ' from '.$from;
+
+			if($this->joins) {
+				$join = implode(' ', $this->joins);
+			}
+			else {
+				$join = '';
+			}
+			$this->joins = array();
+
+			if($this->where) {
+				$where = ' where '.implode(' and ', $this->where);
+			}
+			else {
+				$where = '';
+			}
+			$this->where = array();
+
+			if(isset($this->groupBy)) {
+				if(is_array($this->groupBy)) {
+					$this->groupBy = implode(', ', $this->groupBy);
+				}
+				$groupBy = ' group by '.$this->groupBy;
+			}
+			else {
+				$groupBy = '';
+			}
+			$this->groupBy = null;
+
+			if(isset($this->orderBy)) {
+				if(is_array($this->orderBy)) {
+					$this->orderBy = implode(', ', $this->orderBy);
+				}
+				$orderBy = ' order by '.$this->orderBy;
+			}
+			else {
+				$orderBy = '';
+			}
+			$this->orderBy = null;
+
+			if(isset($this->limit)) {
+				$limit = ' limit '.implode(', ', $this->limit);
+			}
+			else {
+				$limit = '';
+			}
+			$this->limit = null;
+
+			$q = 'select '.$select.$from.$join.$where.$groupBy.$orderBy.$limit;
+			if($this->args)
+				return array($q, $this->args);
+			else
+				return array($q);
+		}
+		return null;
 	}
 
 	public function select() {
@@ -249,22 +360,55 @@ class DBModelV2 extends BaseService {
 	}
 
 	public function where($args = null) {
+		$wb = new WhereBuilder($this, $args);
+		return $wb->compile();
+	}
+
+	/**
+	 * This is a little like where, but will return the where build other than
+	 * the model itself, you can build the where using the compile function of
+	 * the where builder so you can build the where conditions like this:
+	 *
+	 * <code>
+	 * 		$model->from('users')->w(array('username like ?', '%jack%'))->wor(array('username like ?', '%jim%'))->compile()->sql();
+	 * </code>
+	 */
+	public function w($args = null) {
 		return new WhereBuilder($this, $args);
 	}
 
-	public function join($table, $where = array(), $type = "") {
+	public function join($table, $where, $type = "") {
+		if(is_array($where) || is_object($where)) {
+			$w = array();
+			foreach($where as $k => $v) {
+				$w []= $k.' = '.$v;
+			}
+			$where = implode(' and ', $w);
+		}
+		$this->joins []= $type.' join '.$table.' on '.$where;
+		return $this;
 	}
 
 	public function limit($offset = 0, $count = 15) {
+		$this->limit = array($offset, $count);
+		return $this;
 	}
 
 	public function groupBy($fields) {
+		$this->groupBy = $fields;
+		return $this;
 	}
 
 	public function orderBy($fields) {
+		$this->orderBy = $fields;
+		return $this;
 	}
 
 	public function result() {
+		$sql = $this->sql();
+		if($sql) {
+		}
+		return null;
 	}
 
 	protected function _pagi($p, $count = false) {

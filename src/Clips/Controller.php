@@ -203,7 +203,7 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 
 	protected function processPagination($pagination) {
 		if($pagination) {
-			$sql = $this->tool->library('sql');
+			$sql = $this->tool->library('dbModelV2');
 
 			// Get the first datasource
 			$datasource = $this->tool->library('dataSource')->first();

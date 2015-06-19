@@ -304,7 +304,8 @@ class Tool implements Interfaces\Initializable {
 					}
 					break;
 				case "Clips\\Model": // The clips library support
-					if(valid_obj($obj, "Clips\\Libraries\\DBModel")) {
+					if(valid_obj($obj, "Clips\\Libraries\\DBModel")
+						|| valid_obj($obj, "Clips\\Libraries\\DBModelV2")) {
 						// If this is model itself, set the table field and append it to model context
 						if(isset($a->table)) {
 							$obj->table = $a->table;

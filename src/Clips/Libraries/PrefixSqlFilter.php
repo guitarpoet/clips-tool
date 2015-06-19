@@ -20,16 +20,34 @@ class PrefixSqlFilter implements SqlFilter, LoggerAwareInterface {
 		if(is_array($sql)) {
 			$this->tables = array();
 			$this->aliases = array();
-			return $this->prefix($sql, \Clips\get_default($config, 'table_prefix', ''));
+			$this->scan($sql);
+			$prefix = \Clips\get_default($config, 'table_prefix', '');
+			return $this->prefix($sql, $prefix);
 		}
 		return $sql;
+	}
+
+	protected function scan($model) {
+		if(is_array($model)) {
+			if(isset($model['table'])) {
+				$this->tables []= $model['table'];
+
+				if(isset($model['alias'])) {
+					if(isset($model['alias']['name'])) {
+						$this->aliases []= $model['alias']['name'];
+					}
+				}
+			}
+			foreach($model as $k => $v) {
+				$this->scan($v);
+			}
+		}
 	}
 
 	protected function prefix($model, $prefix) {
 		if(is_array($model)) {
 			// Yes, we need to prefix the model
 			if(isset($model['table'])) {
-				$this->tables []= $model['table'];
 				$model['table'] = $prefix.$model['table'];
 
 				if(isset($model['alias'])) {
@@ -37,7 +55,6 @@ class PrefixSqlFilter implements SqlFilter, LoggerAwareInterface {
 						$this->aliases []= $model['alias']['name'];
 					}
 				}
-				return $model;
 			}
 
 			// OK, let's try the children to find table
@@ -58,6 +75,7 @@ class PrefixSqlFilter implements SqlFilter, LoggerAwareInterface {
 								$model['base_expr'] = implode('.', $model['no_quotes']['parts']);
 							}
 						}
+
 					}
 				}
 			}

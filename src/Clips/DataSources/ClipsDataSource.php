@@ -40,7 +40,7 @@ class ClipsDataSource extends DataSource implements LoggerAwareInterface {
 		// Sql Creator will use MySQL as default.
 		$sqlCreator = \Clips\get_default($config, 'sql_creator',  'PHPSQLParser\\PHPSQLCreator');
 		if(!class_exists($sqlCreator)) {
-			throw new DataSourceException('No datasource configured for this datasource!');
+			throw new DataSourceException('No sql creator found!');
 		}
 
 		// Setting the sql creator
