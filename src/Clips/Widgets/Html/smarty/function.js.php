@@ -49,6 +49,17 @@ function smarty_function_js($params, $template) {
 		}
 
 		$output []= '<script type="text/javascript">'."\n\t\t".implode("\n\t\t", $init)."\n\t\t".'</script>';
+		// Added the jsx support for ReactJs
+		$jsx = \Clips\context('jsx');
+		if($jsx) {
+			foreach($jsx as $item) {
+				$output []= '<script type="text/jsx" src="'.Clips\static_url(Clips\safe_add_extension($item, 'jsx')).'"></script>';
+			}
+		}
+		$jsx = \Clips\context('jsx_script');
+		if($jsx) {
+			$output []= '<script type="text/jsx">'.implode("\n\t\t", $jsx).'</script>';
+		}
 		return implode("\n\t\t", $output);
 	}
 	else {

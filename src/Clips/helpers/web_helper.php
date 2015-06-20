@@ -155,6 +155,24 @@ function clips_add_init_js($js) {
 }
 
 /**
+ * Add the React's JSX script
+ *
+ * @author Jack
+ * @version 1.1
+ * @date Sat Jun 20 18:02:49 2015
+ */
+function add_jsx($jsx, $index = true) {
+	$jsxes = context('jsx');
+	if(!is_array($jsxes)) {
+		$jsxes = array($jsxes);
+	}
+	// Only add this when jsxes is empty or the jsx is not in jsxes (in order to stop the double import)
+	if(!$jsxes || array_search($jsx, $jsxes) === false) {
+		context('jsx', $jsx, $index);
+	}
+}
+
+/**
  * Add the JavaScript file at index.
  *
  * @author Jack
@@ -432,6 +450,16 @@ function ip2mac($ip) {
 		}
 	}
 	return null;
+}
+
+function render_jsx($jsx, $id = null) {
+	if(!$id) {
+		$id = 'jsx-'.sequence('jsx');
+	}
+
+	$content = "\n\t\t\t".implode("\n\t\t\t", array_map(function($item){ return trim($item); }, explode("\n", trim($jsx))));
+	context('jsx_script', "React.render($content\n\t\t\t, document.getElementById('$id'));", true);
+	return $id;
 }
 
 function image_size($p) {

@@ -326,6 +326,11 @@ class Tool implements Interfaces\Initializable {
 						add_js($j);
 					}
 					break;
+				case "Clips\\Jsx":
+					foreach($a->value as $j) {
+						add_jsx($j);
+					}
+					break;
 				case "Clips\\Css":
 					foreach($a->value as $j) {
 						add_css($j);

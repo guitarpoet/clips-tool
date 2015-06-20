@@ -9,6 +9,6 @@
 author: {{author}}
 date: {{date}}
 version: {{version}}
-name: {{name}}
+name: {{widget}}
 doc:
-	{{doc}}
+    {{doc}}

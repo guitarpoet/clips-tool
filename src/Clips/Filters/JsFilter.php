@@ -58,6 +58,14 @@ class JsFilter extends AbstractFilter {
 					return '<script type="text/javascript" src="'.$path.'"></script>';
 				}
 			} ,$js);
+
+			// Added the jsx support for ReactJs
+			$jsx = \Clips\context('jsx');
+			if($jsx) {
+				foreach($jsx as $item) {
+					$js []= '<script type="text/jsx" src="'.\Clips\static_url(\Clips\safe_add_extension($item, 'jsx')).'"></script>';
+				}
+			}
 			\Clips\context('js', implode("\n\t\t", $js), false);
 		}
 		else {
