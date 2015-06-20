@@ -1,6 +1,6 @@
 <?php namespace {{namespace}}Models; in_array(__FILE__, get_included_files()) or exit("No direct script access allowed");
 
-use Clips\Libraries\DBModel;
+use Clips\Libraries\DBModelV2;
 
 /**
  * {{doc}}
@@ -11,5 +11,5 @@ use Clips\Libraries\DBModel;
  *
  * @Clips\Model
  */
-class {{name}} extends DBModel {
+class {{name}} extends DBModelV2 {
 }

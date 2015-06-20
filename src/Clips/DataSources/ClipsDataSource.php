@@ -6,7 +6,7 @@ use Psr\Log\LoggerAwareInterface;
 use Clips\DataSourceException;
 
 /**
- * @Clips\Library("sqlParser")
+ * @Clips\Library({"sqlParser", "fileCache"})
  */
 class ClipsDataSource extends DataSource implements LoggerAwareInterface {
 
@@ -102,11 +102,19 @@ class ClipsDataSource extends DataSource implements LoggerAwareInterface {
 	}
 
 	protected function filter($sql) {
-		$model = $this->sqlparser->parse($sql);
-		foreach($this->filters as $f) {
-			$model = $f->filter($model, $this->config);
+		$cache = 'sql_'.md5($sql).'.sql';
+		if(!$this->filecache->exists($cache)) {
+			$model = $this->sqlparser->parse($sql);
+			foreach($this->filters as $f) {
+				$model = $f->filter($model, $this->config);
+			}
+			$sql = $this->creator->create($model);
+			$this->filecache->save($cache, $sql);
+			return $sql;
 		}
-		return $this->creator->create($model);
+		else {
+			return $this ->filecache->contents($cache);
+		}
 	}
 
 	protected function doQuery($query, $args = array()) {
