@@ -110,7 +110,7 @@ class DBModelV2 extends BaseService {
 		$ret = call_user_func_array(array($this, 'get'), func_get_args());
 		if($ret)
 			return $ret[0];
-		return null;
+		return array();
 	}
 
 	/**
@@ -406,9 +406,16 @@ class DBModelV2 extends BaseService {
 
 	public function result() {
 		$sql = $this->sql();
-		if($sql) {
+		if($sql && $this->ds) {
+			$query = array_shift($sql);
+			if($sql) {
+				return $this->ds->query($query, $sql);
+			}
+			else {
+				return $this->ds->query($query);
+			}
 		}
-		return null;
+		return array();
 	}
 
 	protected function _pagi($p, $count = false) {
