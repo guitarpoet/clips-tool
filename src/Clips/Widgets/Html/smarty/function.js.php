@@ -53,12 +53,12 @@ function smarty_function_js($params, $template) {
 		$jsx = \Clips\context('jsx');
 		if($jsx) {
 			foreach($jsx as $item) {
-				$output []= '<script type="text/jsx" src="'.Clips\static_url(Clips\safe_add_extension($item, 'jsx')).'"></script>';
+				$output []= '<script type="text/babel" src="'.Clips\static_url(Clips\safe_add_extension($item, 'jsx')).'"></script>';
 			}
 		}
 		$jsx = \Clips\context('jsx_script');
 		if($jsx) {
-			$output []= '<script type="text/jsx">'.implode("\n\t\t", $jsx).'</script>';
+			$output []= '<script type="text/babel">'.implode("\n\t\t", $jsx).'</script>';
 		}
 		return implode("\n\t\t", $output);
 	}
