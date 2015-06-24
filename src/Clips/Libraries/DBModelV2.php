@@ -406,13 +406,13 @@ class DBModelV2 extends BaseService {
 
 	public function result() {
 		$sql = $this->sql();
-		if($sql && $this->ds) {
+		if($sql && $this->db) {
 			$query = array_shift($sql);
 			if($sql) {
-				return $this->ds->query($query, $sql);
+				return $this->db->query($query, $sql);
 			}
 			else {
-				return $this->ds->query($query);
+				return $this->db->query($query);
 			}
 		}
 		return array();
