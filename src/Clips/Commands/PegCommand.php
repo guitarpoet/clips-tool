@@ -14,7 +14,7 @@ class PegCommand extends Command {
 		if(count($args) >= 2) {
 			$name = ucfirst($args[1]);
 		    foreach(Clips\config('peg_dir') as $peg_dir) {
-				$file = Clips\try_path(Clips\path_join($peg_dir, $name.'.peg.php'));
+				$file = Clips\try_path(Clips\path_join($peg_dir, $name.'.peg'));
 				if($file)
 					break;
 			}
