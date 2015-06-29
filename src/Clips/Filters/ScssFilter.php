@@ -26,6 +26,12 @@ class ScssFilter extends AbstractFilter {
 		$scsses = \Clips\context('scss');
 		if($scsses) {
 			$cache = $this->filecache->cacheDir();
+
+			$forward_method = \Clips\context('forward_method');
+			if($forward_method) {
+				$method = $forward_method;
+			}
+
 			$full_name = \Clips\to_flat(get_class($controller)).'_'.$method;
 			$uri = \Clips\path_join(\Clips\path_join($cache, 'css'), $full_name);
 
@@ -33,6 +39,12 @@ class ScssFilter extends AbstractFilter {
 			if(file_exists($cache_filename) && !\Clips\config('debug_sass')) {
 				\Clips\add_css(\Clips\static_url($uri));
 				return;
+			}
+			if(\Clips\config('debug_sass')) {
+				$this->sass->source_map_file = $cache_filename.'.map';
+				$this->sass->source_comments = true;
+				$this->sass->source_map_embed = true;
+				$this->sass->source_map_contents = true;
 			}
 			// Add the sass_dir into include pathes
 			$result = $this->sass->compile($scsses);
