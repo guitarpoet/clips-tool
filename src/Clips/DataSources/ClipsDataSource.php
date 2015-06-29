@@ -121,6 +121,9 @@ class ClipsDataSource extends DataSource implements LoggerAwareInterface {
 		if($this->ds) {
 			$q = $this->prepare($query, $args);
 			$query = array_shift($q);
+			if($q) {
+				$q = $q[0];
+			}
 			return $this->ds->doQuery($query, $q);
 		}
 		return null;
@@ -129,6 +132,7 @@ class ClipsDataSource extends DataSource implements LoggerAwareInterface {
 	protected function doUpdate($id, $args) {
 		if($this->ds) {
 			$orig = $this->ds->context;
+			$this->ds->context = $this->context;
 			$ret = $this->ds->update($id, $args);
 			$this->ds->context = $orig;
 			return $ret;
@@ -139,6 +143,7 @@ class ClipsDataSource extends DataSource implements LoggerAwareInterface {
 	protected function doDelete($id) {
 		if($this->ds) {
 			$orig = $this->ds->context;
+			$this->ds->context = $this->context;
 			$ret = $this->ds->delete($id);
 			$this->ds->context = $orig;
 			return $ret;
@@ -149,6 +154,7 @@ class ClipsDataSource extends DataSource implements LoggerAwareInterface {
 	protected function doFetch($args) {
 		if($this->ds) {
 			$orig = $this->ds->context;
+			$this->ds->context = $this->context;
 			$ret = $this->ds->fetch($args);
 			$this->ds->context = $orig;
 			return $ret;
@@ -159,6 +165,7 @@ class ClipsDataSource extends DataSource implements LoggerAwareInterface {
 	protected function doClear() {
 		if($this->ds) {
 			$orig = $this->ds->context;
+			$this->ds->context = $this->context;
 			$ret = $this->ds->doClear();
 			$this->ds->context = $orig;
 			return $ret;
