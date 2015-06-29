@@ -7,16 +7,16 @@ function web_error_handler($errno, $errstr, $errfile, $errline) {
 
     switch ($errno) {
     case E_USER_ERROR:
-		error('PHP_ERROR', array('Level: Error', $errstr));
+		error('PHP_ERROR', array('Level: Error', $errstr, $errfile, $errline));
         break;
     case E_USER_WARNING:
-		error('PHP_ERROR', array('Level: Warning', $errstr));
+		error('PHP_ERROR', array('Level: Warning', $errstr, $errfile, $errline));
         break;
     case E_USER_NOTICE:
-		error('PHP_ERROR', array('Level: Notice', $errstr));
+		error('PHP_ERROR', array('Level: Notice', $errstr, $errfile, $errline));
         break;
     default:
-		error('PHP_ERROR', array('Level: Error', $errstr));
+		error('PHP_ERROR', array('Level: Error', $errstr, $errfile, $errline));
         break;
     }
 

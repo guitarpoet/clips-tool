@@ -130,8 +130,18 @@
 					settings.language[i] = Clips.lang.message(settings.language[i]);
 				});
 			}
-			
+
 			list.refresh = false;
+
+			if(settings.clearSearch) {
+				if(list.states.columns) {
+					$.each(list.states.columns, function(i){
+						if(list.states.columns[i].search) {
+							list.states.columns[i].search = null;
+						}
+					});
+				}
+			}
 		}
 
 		function getState(list) {
@@ -149,7 +159,7 @@
 		function requestData(list) {
 			if(settings.ajax != '') {
 				showMask(list);
-				
+
 				// data, name, orderable, regex, searchable, value
 				if(list.draw) {
 					list.draw++;
@@ -203,40 +213,38 @@
 				}
 
 				$.post(settings.ajax, listview_option, function(data) {
+
 					p = calculatePagination(data.start, data.length, data.recordsFiltered);
 					list.states = listview_option;
 					self.trigger('list.beforeDraw', [list, data]);
-					makeItems(list, data);
-					selectItems(list, p.current);
+
+					if(data.recordsTotal > 0) {
+						makeItems(list, data);
+						selectItems(list, p.current);
+						list.parent().removeClass('no-result');
+						list.find('.listview-no-result').hide();
+					}
+					else {
+						hideMask(list);
+						makeItems(list, data);
+						list.parent().addClass('no-result');
+						list.find('.listview-no-result').show();
+					}
 
 					var responsiveImgLength = list.find('li').find('.responsive > img').length - list.find('li.listview_item_template').find('.responsive > img').length;
 					var loadImageLength = 0;
 
-					if(responsiveImgLength > 0) {
-						list.find('.responsive > img').responsiveImage({
-							delay: 1000,
-							onload:function(){
-								loadImageLength++;
-							},
-							onerror: function() {
-								loadImageLength++;
-							},
-							oncomplete: function() {
-								if(loadImageLength > responsiveImgLength - 1) {
-									list.trigger('loadend');
-								}
-							}
-						});
-					}
-					else {
-						list.trigger('loadend');
-					}
-					list.on('loadend', function(){
-						loadImageLength = 0;
+					list.find('.responsive > img').responsiveImage();
+
+					timeout = setTimeout(function(){
+						loadend();
+					}, 3000);
+					
+					function loadend() {
 						layoutItems(list); // Layout the list first
 						saveState(list, listview_option);
 						self.trigger('list.loaded', [list, data]);
-					});
+					}
 				});
 			}
 		}
@@ -255,11 +263,11 @@
 				$.each(listData, function(i, e) {
 					var li = $(template_string(template, e)).removeClass('listview_item_template');
 					li.attr('itemId',e.users_id);
-					
+
 					if (e.itemId && e.itemId != '') {
 						li.attr('itemId', e.itemId);
 					}
-					
+
 					li.trigger('list.item.load', [e]);
 					li.data('itemdata', e);
 					list.append(li);
@@ -530,7 +538,7 @@
 			if(!list.hasClass('listview')) {
 				list.addClass('listview');
 			}
-			
+
 			list.children('li').each(function(index,item) { // Add the list view item class to every li
 				if(!$(item).hasClass('listview_item')) {
 					$(item).addClass('listview_item');
@@ -648,18 +656,18 @@
 			if(settings.enableMask && settings.listtype == 'static') {
 				var mask_tpl = template_string(settings.mask, settings.language);
 				list.parent().append($(mask_tpl));
-			}				
+			}
 		}
 
 		function showMask(list) {
 			if(list.parent().find('.listview_mask').length > 0) {
-				list.parent().find('.listview_mask').removeClass('hide').addClass('show').stop().fadeIn(550);	
+				list.parent().find('.listview_mask').removeClass('hide').addClass('show').stop().fadeIn(550);
 			}
 		}
 
 		function hideMask(list) {
 			if(list.parent().find('.listview_mask').length > 0) {
-				list.parent().find('.listview_mask').removeClass('show').addClass('hide').stop().fadeOut(550);	
+				list.parent().find('.listview_mask').removeClass('show').addClass('hide').stop().fadeOut(550);
 			}
 		}
 
@@ -708,13 +716,38 @@
 		Api.prototype.clearAll = function() {
 			_this.list.states = [];
 //			saveState(_this.list, _this.list.states);
-		};		
-		
+		};
+
 		Api.prototype.clear = function(itemId) {
 			if(!itemId) {
 				_this.list.states.selectedItems = [];
 				saveState(_this.list, _this.list.states);
 			}
+		};
+
+		Api.prototype.clearSearch = function(list, columnindex) {
+			var _this = this;
+			if(columnindex || columnindex == 0) {
+				if($.isArray(columnindex)) {
+					$.each(columnindex, function(i){
+						var colindex = columnindex[i];
+						if(list.states.columns[colindex] && list.states.columns[colindex].search) {
+							list.states.column[colindex] == null;
+						}
+					});
+				}
+				else {
+					if(list.states.columns[columnindex] && list.states.columns[columnindex].search) {
+						list.states.columns[columnindex] == null;
+					}
+				}
+			}
+
+			$.each(list.states.columns, function(i){
+				if(list.states.columns[i] && list.states.columns[i].search) {
+					list.states.columns[i].search = null;
+				}
+			});
 		};
 
 		Api.prototype.layout = function(list) {
@@ -724,28 +757,26 @@
 		Api.prototype.disable = function(list) {
 			self.off('list.loaded');
 		};
-		
+
 		Api.prototype.refresh = function(list) {
 			list.refresh = true;
 			requestData(list);
-		};		
+		};
 
 		this.each(function() {
 			var list = $(this);
 			restoreSavedStates(list); // Restore the states at first
 			restoreSettings(list);
+
 			list.wrap(settings.wrap); // Added the list wrap
-
 			createMask(list);
-			
 			requestData(list);	// Requesting the data for the listview
-
 			createToolbar(list);
-			
+
 			if($.isFunction($.fn.selectable)) {
-				setSelectablePlugin(list); // Initilize the selectable function for listview	
+				setSelectablePlugin(list); // Initilize the selectable function for listview
 			}
-			
+
 			self.data('api', new Api(list));
 
 			$(window).on('load', function(){

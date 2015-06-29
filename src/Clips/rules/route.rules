@@ -93,6 +93,33 @@
 	(assert (method (str-cat ?m "_pagination")))
 )
 
+(defrule if-is-cascade-prefer-cascade-suffix-method
+	(RequestType "ajax")
+	(Parameter "form" ?)
+	(Parameter "field" ?)
+	(Parameter "cascade_value" ?)
+	?method <- (method ?m&:(not (str-index "_cascade" ?m)))
+	?r <- (Clips\RouteResult (controller ?c&~nil) (method nil))
+	(test (method-exists ?c (str-cat ?m "_cascade")))
+	=>
+	(retract ?method)
+	(assert (method (str-cat ?m "_cascade")))
+)
+
+(defrule if-is-cascade-and-no-cascade-suffix-method-use-default-cascade-method
+	(segments $?segs)
+	(RequestType "ajax")
+	(Parameter "form" ?form)
+	(Parameter "field" ?field)
+	(Parameter "cascade_value" ?value)
+	?method <- (method ?m&:(and (not (eq "cascade" ?m)) (not (str-index "_cascade" ?m))))
+	?r <- (Clips\RouteResult (controller ?c&~nil) (method nil))
+	=>
+	(retract ?method)
+	(assert (method "cascade"))
+	(modify ?r (args (create$ ?form ?field ?value)))
+)
+
 (defrule if-is-pagination-and-no-pagination-suffix-method-use-default-pagination-method
 	(segments $?segs)
 	(RequestType "ajax")
