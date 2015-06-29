@@ -100,7 +100,7 @@ class DBModelV2 extends BaseService {
 	 * List all the field names in table
 	 */
 	public function listFields($table) {
-		return array_map(function($i){return $i->COLUMN_NAME;}, $this->get('INFORMATION_SCHEMA.COLUMNS as COLUMNS', 'TABLE_NAME', $table));
+		return array_map(function($i){return $i->COLUMN_NAME;}, $this->get('INFORMATION_SCHEMA.COLUMNS as COLUMNS', 'TABLE_NAME', isset($this->db->table_prefix)? $this->db->table_prefix.$table : $table));
 	}
 
 	/**

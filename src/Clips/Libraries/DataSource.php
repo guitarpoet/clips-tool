@@ -248,7 +248,7 @@ class DataSource implements ToolAware {
 			}
 			return $this->doInsert($args);
 		}
-		throw new Exception('No context set for this datasource');
+		throw new \Clips\DataSourceException('No context set for this datasource');
 	}
 
 	public function delete($id) {

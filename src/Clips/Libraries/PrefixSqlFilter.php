@@ -48,7 +48,8 @@ class PrefixSqlFilter implements SqlFilter, LoggerAwareInterface {
 		if(is_array($model)) {
 			// Yes, we need to prefix the model
 			if(isset($model['table'])) {
-				$model['table'] = $prefix.$model['table'];
+				if($model['no_quotes']['parts'][0] !== 'INFORMATION_SCHEMA')
+					$model['table'] = $prefix.$model['table'];
 
 				if(isset($model['alias'])) {
 					if(isset($model['alias']['name'])) {
