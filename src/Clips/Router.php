@@ -242,7 +242,10 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 				else {
 					$cause = $error->cause;
 				}
-				if(isset($cause)) {
+
+				$r = new Resource('tpl://error/'.$cause);
+				$r = $r->contents();
+				if(isset($cause) && $r) {
 					$ret = new ViewModel('error/'.$cause, array('error' => $error), $default_view[0]);
 				}
 				else {

@@ -100,7 +100,7 @@ class DBModelV2 extends BaseService {
 	 * List all the field names in table
 	 */
 	public function listFields($table) {
-		return array_map(function($i){return $i->COLUMN_NAME;}, $this->get('INFORMATION_SCHEMA.COLUMNS as COLUMNS', 'TABLE_NAME', $table));
+		return array_map(function($i){return $i->COLUMN_NAME;}, $this->get('INFORMATION_SCHEMA.COLUMNS as COLUMNS', 'TABLE_NAME', isset($this->db->table_prefix)? $this->db->table_prefix.$table : $table));
 	}
 
 	/**
@@ -172,6 +172,83 @@ class DBModelV2 extends BaseService {
 		$this->db->context = $orig;
 		return $ret;
 	}
+
+		public function get() {
+		switch(func_num_args()) {
+		case 0: // No argument is set, let's check if we have table set
+			if(isset($this->table))
+				return $this->get($this->table, array(), 0, DEFAULT_COUNT);
+			return array(); // No way to get
+		case 1:
+			$table = func_get_arg(0);
+			if(is_string($table)) { // It must be the table name
+				return $this->get($table, array(), 0, DEFAULT_COUNT);
+			}
+
+			if(is_int($table) && isset($this->table)) { // It must be the offset
+				return $this->get($this->table, array(), $table, DEFAULT_COUNT);
+			}
+
+			if($this->isWhereOper($table) && isset($this->table)) { // It must be the where args
+				return $this->get($this->table, $table, 0, DEFAULT_COUNT);
+			}
+
+			return array(); // No way to get
+		case 2:
+			$table = func_get_arg(0);
+			if(is_string($table)) {
+				if(isset($this->table)) { // It must be name and arg
+					return $this->get($this->table, 
+						array($table => func_get_arg(1)), 
+						0, DEFAULT_COUNT);
+				}
+				else {
+					if($this->isWhereOper(func_get_arg(1))) { // It must be table name and the where args
+						return $this->get($table, func_get_arg(1), 0, DEFAULT_COUNT);
+					}
+					// It should be table and offset
+					return $this->get($table, array(), func_get_arg(1), DEFAULT_COUNT);
+				}
+			}
+
+			if(is_int($table) && isset($this->table)) { // It must be the offset and limit
+				return $this->get($this->table, array(), $table, func_get_arg(1));
+			}
+
+			if($this->isWhereOper($table) && isset($this->table)) { // It must be the where args and the offset
+				return $this->get($this->table, $table, func_get_arg(1), DEFAULT_COUNT);
+			}
+			break;
+		case 3:
+			$table = func_get_arg(0);
+			if(is_string($table)) { // It must be the table name
+				$offset = func_get_arg(1);
+				if(is_string($offset)) { // Must be name and arg
+					return $this->get($table, array(
+						$offset => func_get_arg(2)
+					), 0, DEFAULT_COUNT);
+				}
+
+				if($this->isWhereOper($offset)) { // It must be table name and the where args with offset
+					return $this->get($table, func_get_arg(1), func_get_arg(2), DEFAULT_COUNT);
+				}
+
+				if(is_int($offset)) { // It must be table name with offsets
+					return $this->get($table, array(), $offset, func_get_arg(2));
+				}
+			}
+			return array(); // No way to get
+		case 4:
+			$table = func_get_arg(0);
+			$db = $this->select('*')->from($table)->where(func_get_arg(1));
+			$offset = func_get_arg(2);
+			if($offset > 0)
+				$db->limit($offset, func_get_arg(3));
+			return $db->result();
+		}
+		return array();
+	}
+
 
 	protected function doClear($table) {
 		$orig = $this->db->context;
@@ -409,7 +486,7 @@ class DBModelV2 extends BaseService {
 		if($sql && $this->db) {
 			$query = array_shift($sql);
 			if($sql) {
-				return $this->db->query($query, $sql);
+				return $this->db->query($query, $sql[0]);
 			}
 			else {
 				return $this->db->query($query);

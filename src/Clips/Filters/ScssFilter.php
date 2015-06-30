@@ -40,6 +40,12 @@ class ScssFilter extends AbstractFilter {
 				\Clips\add_css(\Clips\static_url($uri));
 				return;
 			}
+			if(\Clips\config('debug_sass')) {
+				$this->sass->source_map_file = $cache_filename.'.map';
+				$this->sass->source_comments = true;
+				$this->sass->source_map_embed = true;
+				$this->sass->source_map_contents = true;
+			}
 			// Add the sass_dir into include pathes
 			$result = $this->sass->compile($scsses);
 			if($result) {

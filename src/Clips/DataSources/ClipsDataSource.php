@@ -21,6 +21,8 @@ class ClipsDataSource extends DataSource implements LoggerAwareInterface {
 	protected function init($config) {
 		// Fixed the bug that when initializing this datasource, didn't run the enhance
 		$this->tool = \Clips\get_clips_tool();
+		$this->config = $config;
+		$this->table_prefix = \Clips\get_default($config, 'table_prefix', '');
 		// Get the underlying datasource
 		$ds = \Clips\get_default($config, 'datasource');
 		// Since this datasource will use an underlying datasource as the delegate, so must have
@@ -121,6 +123,9 @@ class ClipsDataSource extends DataSource implements LoggerAwareInterface {
 		if($this->ds) {
 			$q = $this->prepare($query, $args);
 			$query = array_shift($q);
+			if($q) {
+				$q = $q[0];
+			}
 			return $this->ds->doQuery($query, $q);
 		}
 		return null;
@@ -129,6 +134,7 @@ class ClipsDataSource extends DataSource implements LoggerAwareInterface {
 	protected function doUpdate($id, $args) {
 		if($this->ds) {
 			$orig = $this->ds->context;
+			$this->ds->context = $this->context;
 			$ret = $this->ds->update($id, $args);
 			$this->ds->context = $orig;
 			return $ret;
@@ -139,6 +145,7 @@ class ClipsDataSource extends DataSource implements LoggerAwareInterface {
 	protected function doDelete($id) {
 		if($this->ds) {
 			$orig = $this->ds->context;
+			$this->ds->context = $this->context;
 			$ret = $this->ds->delete($id);
 			$this->ds->context = $orig;
 			return $ret;
@@ -149,6 +156,7 @@ class ClipsDataSource extends DataSource implements LoggerAwareInterface {
 	protected function doFetch($args) {
 		if($this->ds) {
 			$orig = $this->ds->context;
+			$this->ds->context = $this->context;
 			$ret = $this->ds->fetch($args);
 			$this->ds->context = $orig;
 			return $ret;
@@ -159,6 +167,7 @@ class ClipsDataSource extends DataSource implements LoggerAwareInterface {
 	protected function doClear() {
 		if($this->ds) {
 			$orig = $this->ds->context;
+			$this->ds->context = $this->context;
 			$ret = $this->ds->doClear();
 			$this->ds->context = $orig;
 			return $ret;
@@ -173,6 +182,7 @@ class ClipsDataSource extends DataSource implements LoggerAwareInterface {
 	protected function doInsert($args) {
 		if($this->ds) {
 			$orig = $this->ds->context;
+			$this->ds->context = $this->context;
 			$ret = $this->ds->insert($args);
 			$this->ds->context = $orig;
 			return $ret;
