@@ -424,9 +424,15 @@ function browser_match($query, $meta = null) {
 }
 
 function ip2mac($ip) {
-	$cmd = 'arp -a '.$ip;
+
+	if(strpos(PHP_OS, 'WIN')) {
+		$cmd = 'arp -a '.$ip;
+	}
+	else
+		$cmd = '/usr/sbin/arp -a '.$ip;
+
 	if(PHP_OS == 'Darwin' || strpos(PHP_OS, 'BSD') !== false) {
-		$cmd = 'arp '.$ip;
+		$cmd = '/usr/sbin/arp '.$ip;
 	}
 
 	exec($cmd, $out, $code);
