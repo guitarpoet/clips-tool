@@ -31,6 +31,7 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 		$this->initScss();
 		$this->initCss();
 		$this->initJs();
+		$this->initJsx();
 		$this->initContext();
 		$this->doInit();
 	}
@@ -114,6 +115,45 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
             }
 		}
 	}
+
+	protected function initJsx() {
+		$jsx = get_default($this->config, 'jsx');
+		if($jsx) {
+			$depends = get_default($jsx, 'depends');
+            if($depends) {
+				if(!is_array($depends))
+					$depends = array($depends);
+                foreach($depends as $d) {
+					add_jsx($d);
+				}				
+			}			
+
+			// Add the js files
+			$files = get_default($jsx, 'files');
+			if($files) {
+				if(!is_array($files))
+					$files = array($files);
+					foreach($files as $o) {
+						if(is_array($o)) {
+							foreach($o as $k => $v) {
+								// This is file => query part
+								if(!browser_match($v)) {
+									// If the browser won't match this
+									// JavaScript
+									continue;
+								}
+								$file = $k;
+								add_jsx(path_join($this->rel_dir, 'jsx', $file));
+							}
+							continue;
+						}
+						$file = $o;
+						add_jsx(path_join($this->rel_dir, 'jsx', $file));
+					}
+				}
+		}
+	}
+
 
 	protected function initJs() {
 		$js = get_default($this->config, 'js');
