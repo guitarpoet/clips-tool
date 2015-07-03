@@ -73,6 +73,11 @@ class CoreHelperTest extends Clips\TestCase {
 		$this->assertFalse(Clips\str_end_with("asdf.js", "css"));
 	}
 
+	public function testPharContents() {
+		$this->assertNull(Clips\phar_contents(__DIR__.'/../../data/test', 'tree1.json'));
+		$this->assertNotNull(Clips\phar_contents(__DIR__.'/../../data/test', 'tree.json'));
+	}
+
 	public function testValidObj() {
 		$obj = new Clips\Commands\VersionCommand();
 		$this->assertTrue(Clips\valid_obj($obj, "Clips\\Commands\\VersionCommand"));

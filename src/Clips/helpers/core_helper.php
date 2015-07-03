@@ -5,6 +5,18 @@ define('BCAP_FILENAME', 'lite_php_browscap.ini');
 
 define('RANDOM_STRING', '3141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086FromfairestcreatureswedesireincreaseThattherebybeautysrosemightneverdieButastheripershouldbytimedeceaseHistenderheirmightbearhismemoryButthoucontractedtothineownbrighteyesFeedstthylightsflamewithself-substantialfuelMakingafaminewhereabundanceliesThyselfthyfoetothysweetselftoocruelThouthatartnowtheworldsfreshornamentAndonlyheraldtothegaudyspringWithinthineownbudburiestthycontentAndtenderchurlmakstwasteinniggardingPitytheworldorelsethisgluttonbeToeattheworldsduebythegraveandthee');
 
+function phar_contents($file, $path) {
+	$file = safe_add_extension($file, 'phar');
+	if(file_exists($file)) {
+		$phar = new \Phar($file);
+		if(isset($phar[$path])) {
+			$p = 'phar://'.path_join($file, $path);
+			return file_get_contents($p);
+		}
+	}
+	return null;
+}
+
 /**
  * Test if the method's modifier is public
  *
