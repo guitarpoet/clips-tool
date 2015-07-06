@@ -6,7 +6,7 @@ class NotOperator extends WhereOperator {
 	}
 
 	public function toString() {
-		 return 'not '.implode('', $this->toArray());
+		return 'not '.implode('', $this->toArray());
 	}
 }
 
