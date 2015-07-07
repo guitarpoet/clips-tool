@@ -241,6 +241,7 @@
 					}, 3000);
 					
 					function loadend() {
+						console.log('sdsdsdsdsds');
 						layoutItems(list); // Layout the list first
 						saveState(list, listview_option);
 						self.trigger('list.loaded', [list, data]);
@@ -695,7 +696,22 @@
 
 			// Change the value back to empty
 			objs[index].search = null;
-		}
+		};
+
+		Api.prototype.sort = function(index, value) {
+			var objs = _this.settings.col_objs;
+//console.log(_this.list)
+			if(index >= 0 && objs.length > index) {
+				_this.list.orderColumn = index;
+				_this.list.orderDir = value;
+			}
+			console.log(this.list)
+			requestData(this.list);
+		};
+
+		Api.prototype.clearSort = function() {
+			this.sort(0, 'ASC');
+		};
 
 		Api.prototype.search = function(value){
 			_this.list.search_value = value;
