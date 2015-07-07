@@ -1,0 +1,10 @@
+# The template for all the objects
+user_count: &user_count {{php "rand" 1 3}}
+
+{{#randtimes 2 10}}
+user{{this}}:
+    id: {{this}}
+    name: user{{this}}
+    real_name: {{php "Clips\fake_simple_name"}}
+{{/randtimes}}
+

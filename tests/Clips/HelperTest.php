@@ -10,4 +10,9 @@ class HelperTest extends Clips\TestCase {
 		$this->assertEquals(Clips\path_join("/a/", "/b/"), '/a/b/');
 		$this->assertEquals(Clips\path_join("a", "b"), 'a/b');
 	}
+
+	public function testHandleBar() {
+		$i = Clips\str_template('{{php "rand" 1 10}}');
+		$this->assertTrue($i <= 10 && $i >= 1);
+	}
 }

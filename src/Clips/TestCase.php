@@ -48,6 +48,7 @@ class TestCase extends \PHPUnit_Framework_TestCase {
 					$ds->_datasources = array('fake');
 					break;
 				case "Clips\\TestData":
+				case "Clips\\DataGenerator":
 					$this->data = $this->tool->enhance($a);
 					break;
 				case "Clips\\TestValue":

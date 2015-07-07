@@ -63,13 +63,16 @@ class DataSource implements ToolAware {
 	 */
 	public function first() {
 		$ds = \Clips\config('datasources');
-		$default = \Clips\get_default($ds, 'default', null);
-		if($default) {
-			return $this->get($default);
+		foreach($ds as $d) {
+			$default = \Clips\get_default($d, 'default', null);
+			if($default) {
+				return $this->get($default);
+			}
 		}
 		foreach($this->datasources() as $ds) {
 			return $this->get($ds);
 		}
+
 		return null;
 	}
 

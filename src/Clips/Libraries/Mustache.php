@@ -8,6 +8,23 @@ function site_url($arr) {
 	return false;
 }
 
+function randtimes($s, $e, $options) {
+	$ret = '';
+	$n = rand($s, $e);
+	for($i = 1; $i <= $n; $i++) {
+		$ret .= $options['fn']($i);
+	}
+	return $ret;
+}
+
+function times($n, $options) {
+	$ret = '';
+	for($i = 0; $i < $n; $i++) {
+		$ret .= $options['fn']($i);
+	}
+	return $ret;
+}
+
 function php_call($arr) {
 	if($arr) {
 		$function = array_shift($arr);
@@ -66,7 +83,7 @@ class Mustache extends BaseService {
 					$flags = $flags[0];
 				}
 				else {
-					$flags = \LightnCandy::FLAG_ERROR_EXCEPTION | \LightnCandy::FLAG_HANDLEBARS;
+					$flags = \LightnCandy::FLAG_ERROR_EXCEPTION | \LightnCandy::FLAG_HANDLEBARS | \LightnCandy::FLAG_HANDLEBARSJS;
 				}
 			}
 
@@ -83,6 +100,11 @@ class Mustache extends BaseService {
 				'php' => '\\Clips\\Libraries\\php_call'
 			);
 
+			$default_block_helpers = array(
+				'times' => '\\Clips\\Libraries\\times',
+				'randtimes' => '\\Clips\\Libraries\\randtimes'
+			);
+
 			$helpers = \Clips\context('template_helpers');
 
 			if($helpers) {
@@ -90,6 +112,15 @@ class Mustache extends BaseService {
 			}
 			else {
 				$opts['helpers'] = $default_helpers;
+			}
+
+			$block_helpers = \Clips\context('template_block_helpers');
+
+			if($block_helpers) {
+				$opts['hbhelpers'] = array_merge($default_block_helpers, $block_helpers);
+			}
+			else {
+				$opts['hbhelpers'] = $default_block_helpers;
 			}
 
 			if($str) {

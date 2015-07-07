@@ -843,7 +843,7 @@ function clips_library($library, $init = true, $suffix = "") {
 	return $tool->library($library, $init, $suffix);
 }
 
-function str_template($template, $args) {
+function str_template($template, $args = array()) {
 	return clips_out('string://'.$template, $args, false);
 }
 
@@ -1226,6 +1226,10 @@ function yaml($path) {
 		return \Symfony\Component\Yaml\Yaml::parse(file_get_contents($path));
 	}
 	return false;
+}
+
+function parse_yaml($yaml) {
+	return \Symfony\Component\Yaml\Yaml::parse($yaml);
 }
 
 function current_env() {

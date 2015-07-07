@@ -5,6 +5,11 @@ function fake_name($name = null) {
 	return $f->fakeName($name);
 }
 
+function fake_simple_name($name = null) {
+	$f = new FakeData();
+	return $f->fakeName($name)->simple_name;
+}
+
 function fake_mobile() {
 	$f = new FakeData();
 	return $f->fakeMobile();
