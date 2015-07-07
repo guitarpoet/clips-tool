@@ -565,6 +565,10 @@ class DBModelV2 extends BaseService {
 		return $this->_pagi($p);
 	}
 
+	public function query($query, $args = array()) {
+		return $this->db->query($query, $args);
+	}
+
 	public function count($p) {
 		if(isset($p->groupBy) && $p->groupBy) {
 			$q = $this->_pagi($p, true);
