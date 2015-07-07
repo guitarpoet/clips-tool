@@ -206,6 +206,10 @@ class Sass extends \Clips\Libraries\ConsoleBase implements \Psr\Log\LoggerAwareI
 			}
 		}
 
+		if(\Clips\config('debug_sass')) {
+			$this->logger->debug('Sasses files to compile is ', array($this->sasses));
+		}
+
 		$content = $this->precompile();
 
 		$this->include_path = (implode(PATH_SEPARATOR, $this->includePathes));
