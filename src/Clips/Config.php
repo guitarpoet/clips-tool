@@ -63,7 +63,7 @@ class Config {
 			$ret = array();
 			foreach($this->config as $c) {
 				if(isset($c[$property])) {
-					if(is_array($c[$property])) {
+					if(is_array($c[$property]) && isset($c[$property][0])) {
 						$ret = array_merge($ret, $c[$property]);
 					}
 					else
