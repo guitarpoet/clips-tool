@@ -14,6 +14,7 @@ doc:
     The ReactJS widget.
 depends:
     - babeljs
+    - lilium
 js:
     files:
         - react-with-addons

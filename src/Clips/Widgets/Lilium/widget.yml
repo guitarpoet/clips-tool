@@ -16,3 +16,4 @@ doc:
 js:
     files:
         - lilium.js
+        - lilium_init.js

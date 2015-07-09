@@ -8,11 +8,11 @@
 //
 //==============================================================================
 
-'use strict';
+"use strict";
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 +(function () {
 	var Lilium = (function () {
@@ -21,37 +21,44 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 		}
 
 		_createClass(Lilium, [{
-			key: 'sourceMap',
+			key: "sourceMap",
 			value: function sourceMap() {
 				if (this.inNode()) {
-					require('source-map-support').install();
+					require("source-map-support").install();
 				}
 			}
 		}, {
-			key: 'split',
+			key: "getCookie",
+			value: function getCookie(name) {
+				var value = "; " + document.cookie;
+				var parts = this.split(value, "; " + name + "=");
+				if (parts.length == 2) return this.split(parts.pop(), ";").shift();
+			}
+		}, {
+			key: "split",
 			value: function split(s, sep) {
-				return s.split(sep || ' ');
+				return s.split(sep || " ");
 			}
 		}, {
-			key: 'isString',
+			key: "isString",
 			value: function isString(o) {
-				return typeof o === 'string' || o instanceof String;
+				return typeof o === "string" || o instanceof String;
 			}
 		}, {
-			key: 'isObject',
+			key: "isObject",
 			value: function isObject(o) {
-				return o && typeof o === 'object';
+				return o && typeof o === "object";
 			}
 		}, {
-			key: 'inNode',
+			key: "inNode",
 			value: function inNode() {
-				return typeof GLOBAL == 'object';
+				return typeof GLOBAL == "object";
 			}
 		}, {
-			key: 'global',
+			key: "global",
 			value: function global(name, value) {
 				var w = null;
-				if (typeof window === 'undefined') {
+				if (typeof window === "undefined") {
 					// Add global support for nodejs
 					w = GLOBAL;
 				} else {
@@ -59,7 +66,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				}
 
 				if (name) {
-					if (typeof value === 'undefined') {
+					if (typeof value === "undefined") {
 						return w[name];
 					} else {
 						w[name] = value;
@@ -68,10 +75,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				return w;
 			}
 		}, {
-			key: 'local',
+			key: "local",
 			value: function local(name, func) {
 				var f = this.global(name);
-				if (typeof f === 'function') {
+				if (typeof f === "function") {
 					f.alias = name;
 					return f;
 				}
@@ -79,7 +86,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				return func;
 			}
 		}, {
-			key: 'defineIfNotExists',
+			key: "defineIfNotExists",
 
 			/**
     * Test if the function is exists, if not exists then define it
@@ -87,7 +94,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     */
 			value: function defineIfNotExists(name, func) {
 				var f = this.global(name);
-				if (typeof f === 'function') {
+				if (typeof f === "function") {
 					f.alias = name;
 					return f;
 				}
@@ -96,7 +103,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				return func;
 			}
 		}, {
-			key: 'removeElement',
+			key: "removeElement",
 			value: function removeElement(a, e) {
 				if (this.isArray(a)) {
 					var index = a.indexOf(e);
@@ -105,7 +112,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				return [];
 			}
 		}, {
-			key: 'clone',
+			key: "clone",
 			value: function clone(a) {
 				if (this.isArray(a)) return a.slice(0);
 				if (this.isObject(a)) {
@@ -118,23 +125,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				return null;
 			}
 		}, {
-			key: 'isArray',
+			key: "isArray",
 			value: function isArray(o) {
-				return Object.prototype.toString.call(o) === '[object Array]';
+				return Object.prototype.toString.call(o) === "[object Array]";
 			}
 		}, {
-			key: 'getName',
+			key: "getName",
 			value: function getName(o) {
 				if (o) {
-					if (typeof o.alias !== 'undefined') {
+					if (typeof o.alias !== "undefined") {
 						return o.alias;
 					}
-					if (typeof o.name !== 'undefined') {
+					if (typeof o.name !== "undefined") {
 						return o.name;
 					}
 					var ret = o.toString();
-					ret = ret.substr('function '.length);
-					ret = ret.substr(0, ret.indexOf('('));
+					ret = ret.substr("function ".length);
+					ret = ret.substr(0, ret.indexOf("("));
 					return ret;
 				}
 				return null;
@@ -148,13 +155,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 	lilium.sourceMap(); // Map the source codes to ease the debug process.
 
-	lilium.defineIfNotExists('def', function (name, func) {
+	lilium.defineIfNotExists("def", function (name, func) {
 		return lilium.defineIfNotExists(name, func);
 	});
 
-	def('lilium', lilium);
-	def('require', function () {}); // TODO: Define require if no require is defined
-	def('embed', function (module) {
+	def("lilium", lilium);
+	def("require", function () {}); // TODO: Define require if no require is defined
+	def("embed", function (module) {
 		if (lilium[module]) {
 			return lilium[module];
 		}
@@ -170,16 +177,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   * Provide the widget and functions for module. This function will direct provide the Classes to the global lilium namespace
   * And if in browser context, won't provide any access to these exports other than global lilium namespace.
   */
-	def('provides', function (widgets, module, global) {
+	def("provides", function (widgets, module, global) {
 		var e = null;
 
 		if (!module) // lilium widgets are the default module
-			module = 'widgets';
+			module = "widgets";
 
-		if (typeof exports !== 'undefined') {
+		if (typeof exports !== "undefined") {
 			// Prefer nodejs environment
 			e = exports;
-		} else if (typeof window !== 'undefined') {
+		} else if (typeof window !== "undefined") {
 			e = {};
 		}
 
@@ -199,8 +206,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				_iteratorError = err;
 			} finally {
 				try {
-					if (!_iteratorNormalCompletion && _iterator['return']) {
-						_iterator['return']();
+					if (!_iteratorNormalCompletion && _iterator["return"]) {
+						_iterator["return"]();
 					}
 				} finally {
 					if (_didIteratorError) {
@@ -230,7 +237,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 		}
 	});
 
-	provides([Lilium, def], 'core');
+	provides([Lilium, def], "core");
 })();
 //==============================================================================
 //

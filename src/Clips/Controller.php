@@ -127,6 +127,19 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 			}
 		}
 
+		// Adding the datastore values
+		$ds_names = context('ds_names');
+		if($ds_names) {
+			$out = array();
+			foreach($ds_names as $n) {
+				$v = get_default($args, $n);
+				if($v)
+					$out[$n] = $v;
+			}
+			setcookie('clips-datastore', json_encode($out));
+		}
+
+		// Adding the form actions to the args
 		$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
 		foreach($trace as $t) {
 			if($t['class'] == get_class($this)) {

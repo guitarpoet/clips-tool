@@ -19,6 +19,12 @@ class Lilium {
 		}
 	}
 
+	getCookie(name) {
+	  var value = "; " + document.cookie;
+	  var parts = this.split(value, "; " + name + "=");
+	  if (parts.length == 2) return this.split(parts.pop(), ";").shift();
+	}
+
 	split(s, sep) {
 		return s.split(sep || ' ');
 	}
