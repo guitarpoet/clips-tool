@@ -6,5 +6,8 @@
 			ds = JSON.parse(ds);
 			window.datastore = new lilium.ds.DataStore(ds);
 		}
+		else {
+			window.datastore = new lilium.ds.DataStore();
+		}
 	});
 })();
