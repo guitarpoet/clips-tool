@@ -402,8 +402,11 @@ class DBModelV2 extends BaseService {
 			$this->limit = null;
 
 			$q = 'select '.$select.$from.$join.$where.$groupBy.$orderBy.$limit;
-			if($this->args)
-				return array($q, $this->args);
+			if($this->args) {
+				$a = $this->args;
+				$this->args = null;
+				return array($q, $a);
+			}
 			else
 				return array($q);
 		}
