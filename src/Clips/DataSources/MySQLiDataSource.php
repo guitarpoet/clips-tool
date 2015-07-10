@@ -58,6 +58,8 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 		if(method_exists($stmt, 'get_result')) {
 			$stmt->execute();
 			$result = $stmt->get_result();
+			if(!$result)
+				return array();
 			while($obj = $result->fetch_object()) {
 				if(!$callback) {
 					$array []= $obj;
@@ -71,6 +73,8 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 			$variables = array();
 			$data = array();
 			$meta = $stmt->result_metadata();
+			if(!$meta)
+				return array();
 
 			while($field = $meta->fetch_field()) {
 				$variables[] = &$data[$field->name];
