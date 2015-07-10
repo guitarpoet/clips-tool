@@ -187,10 +187,11 @@ class Sass extends \Clips\Libraries\ConsoleBase implements \Psr\Log\LoggerAwareI
 				$arr = array();
 				$line = 1;
 				foreach(explode("\n", $c) as $l) {
-					if($line++ % 5 == 1)
-						$arr []= $l." // $name:".$line++;
+					if($line % 5 == 1)
+						$arr []= $l." // $name:".$line;
 					else
 						$arr [] = $l;
+					$line++;
 				}
 				$this->content .= implode("\n", $arr);
 				$this->content .= "\n".str_pad("/* = End $sass ", 77, "=")." */\n\n";
