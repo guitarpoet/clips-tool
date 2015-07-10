@@ -136,7 +136,7 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 				if($v)
 					$out[$n] = $v;
 			}
-			setcookie('clips-datastore', json_encode($out));
+			add_init_js('window.data = '. json_encode($out));
 		}
 
 		// Adding the form actions to the args
