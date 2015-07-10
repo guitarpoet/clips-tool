@@ -297,6 +297,9 @@ class Tool implements Interfaces\Initializable {
 						$obj->$h = $this->load_class($c, true, null, $a->args);
 					}
 					break;
+				case "Clips\\DataGenerator": // The clips library support
+					$obj->data = $this->enhance($a);
+					break;
 				case "Clips\\Library": // The clips library support
 					foreach($a->value as $c) {
 						$h = strtolower($this->getHandleName($c));
