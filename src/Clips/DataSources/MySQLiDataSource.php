@@ -56,7 +56,6 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 			$array = array();
 
 		if(method_exists($stmt, 'get_result')) {
-			$stmt->execute();
 			$result = $stmt->get_result();
 			if(!$result)
 				return array();
