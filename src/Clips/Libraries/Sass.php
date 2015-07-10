@@ -167,7 +167,7 @@ class Sass extends \Clips\Libraries\ConsoleBase implements \Psr\Log\LoggerAwareI
 		$this->prefix = '';
 		$this->suffix = '';
 
-		foreach(\Clips\clips_config('sass_preload', array()) as $load) {
+		foreach(\Clips\config('sass_preload', array()) as $load) {
 			$this->addSass($load, 0); // Auto added the scsses before compile
 		}
 
@@ -179,7 +179,24 @@ class Sass extends \Clips\Libraries\ConsoleBase implements \Psr\Log\LoggerAwareI
 
 		$this->content = $this->prefix."\n";
 		foreach($this->sasses as $sass) {
-			$this->content .= $this->readFile($sass)."\n";
+			if(\Clips\config('debug_sass')) {
+				$this->content .= "\n".str_pad("/* = Start $sass ", 77, "=")." */\n";
+				$name = explode('Widgets/', $sass);
+				$name = $name[1];
+				$c = $this->readFile($sass);
+				$arr = array();
+				$line = 1;
+				foreach(explode("\n", $c) as $l) {
+					if($line++ % 5 == 1)
+						$arr []= $l." // $name:".$line++;
+					else
+						$arr [] = $l;
+				}
+				$this->content .= implode("\n", $arr);
+				$this->content .= "\n".str_pad("/* = End $sass ", 77, "=")." */\n\n";
+			}
+			else
+				$this->content .= $this->readFile($sass)."\n";
 		}
 
 
