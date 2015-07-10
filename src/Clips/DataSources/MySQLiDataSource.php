@@ -171,6 +171,8 @@ class MySQLiDataSource extends \Clips\Libraries\DataSource implements \Psr\Log\L
 	}
 
 	public function processResult($result) {
+		if(!$result)
+			return array();
 		$ret = array();
 		foreach($result as $obj) {
 			$ret [] = (object) $obj;
