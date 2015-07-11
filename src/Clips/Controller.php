@@ -136,7 +136,23 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 				if($v)
 					$out[$n] = $v;
 			}
-			add_init_js('window.data = '. json_encode($out));
+			$out = json_encode($out);
+			add_init_js(
+<<<JS
+if(typeof lilium !== 'undefined') {
+	window.datastore = new lilium.ds.DataStore($out);
+}
+JS
+			);
+		}
+		else {
+			add_init_js(
+<<<JS
+if(typeof lilium !== 'undefined') {
+	window.datastore = new lilium.ds.DataStore();
+}
+JS
+			);
 		}
 
 		// Adding the form actions to the args
