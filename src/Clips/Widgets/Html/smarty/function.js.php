@@ -76,9 +76,17 @@ function smarty_function_js($params, $template) {
 				$c = \Clips\context('controller');
 				$cm = \Clips\context('controller_method');
 				$name = $c.'_'.$cm.'.jsx';
-				$cache->save($name, $jsx, \Clips\path_join($cache->cacheDir(), 'js'));
-				
-				$output []= '<script type="text/javascript" src="'.Clips\static_url($babel->compile($cache->cacheDir().'/js/'.$name)).'"></script>';
+
+				$cache_file = $cache->cacheDir().'/js/cache/'.$c.'_'.$cm.'.js';
+				if(\Clips\try_path($cache_file) && !\Clips\config('debug_jsx')) {
+
+					$output []= '<script type="text/javascript" src="'.Clips\static_url($cache_file).'"></script>';
+				}
+				else {
+					$cache->save($name, $jsx, \Clips\path_join($cache->cacheDir(), 'js'));
+					
+					$output []= '<script type="text/javascript" src="'.Clips\static_url($babel->compile($cache->cacheDir().'/js/'.$name)).'"></script>';
+				}
 			}
 			else {
 				$output []= '<script type="text/babel">'.implode("\n\t\t", $jsx).'</script>';

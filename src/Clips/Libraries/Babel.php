@@ -31,7 +31,7 @@ class Babel extends BaseService {
 					'-s' => \Clips\path_join($folder, $name.'.js.map'), $file));
 			}
 
-			return 'application/cache/'.$folder_name.'/'.$name.'.js';
+			return $this->filecache->cacheDir().'/'.$folder_name.'/'.$name.'.js';
 		}
 		return false;
 	}
