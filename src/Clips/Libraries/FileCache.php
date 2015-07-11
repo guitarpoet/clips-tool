@@ -79,6 +79,15 @@ class FileCache implements LoggerAwareInterface, ClipsAware, ToolAware {
 		return \Clips\path_join($folder, $filename);
 	}
 
+	public function mkdir($folder) {
+		$cache = $this->cacheDir();
+		$f = \Clips\path_join($cache, $folder);
+		if(!file_exists($f)) { // If no folder exists, make it
+			mkdir($f, 0777, true);
+		}
+		return \Clips\try_path($f);
+	}
+
 	/**
 	 * Get the configured cache directory
 	 */

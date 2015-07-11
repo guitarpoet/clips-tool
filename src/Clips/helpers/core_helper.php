@@ -71,6 +71,29 @@ function cache_filename($name) {
 }
 
 /**
+ * Exectue the command in shell
+ *
+ * @author Jack
+ * @date Sat Jul 11 12:34:14 2015
+ * @return The return code of the command
+ * @version 1.1
+ */
+function run($cmd, $options, &$output = array()) {
+	$ops = array();
+	foreach($options as $k => $v) {
+		if(is_string($k)) {
+			$ops []= $k;
+		}
+		if($v)
+			$ops []= $v;
+	}
+	$command = $cmd.' '.implode(' ', $ops);
+	$status = 0;
+	exec($command, $output, $status);
+	return $status;
+}
+
+/**
  * Try to guess the locale.
  *
  * For command line, try to get the locale from intl extension or locale command.
