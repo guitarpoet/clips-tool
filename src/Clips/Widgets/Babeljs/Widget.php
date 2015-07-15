@@ -4,7 +4,7 @@ class Widget extends \Clips\Widget {
 	protected function loadConfig() {
 		parent::loadConfig();
 		if(\Clips\config('babel')) {
-			$this->config['js']['files'] = array();
+			$this->config['js']['files'] = array('browser-polyfill.js');
 		}
 	}
 }

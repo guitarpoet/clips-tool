@@ -15,4 +15,5 @@ doc:
 js:
     files:
         - browser
+        - browser-polyfill
         - clips_fix
