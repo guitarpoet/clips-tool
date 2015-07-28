@@ -222,7 +222,7 @@ class Widget extends Annotation implements Initializable, ToolAware, LoggerAware
 								continue;
 							}
 							$file = $k;
-							clips_add_js(path_join($this->rel_dir, 'css', $file));
+							add_css(path_join($this->rel_dir, 'css', $file));
 						}
 						continue;
 					}
