@@ -18,6 +18,41 @@ function phar_contents($file, $path) {
 }
 
 /**
+ * The same is_writable logic like codeigniter
+ *
+ * @author Jack
+ * @date Sat Aug  8 12:25:19 2015
+ * @version 1.1
+ */
+function is_writable($file) {
+	// If we're on a Unix server with safe_mode off we call is_writable
+	if (DIRECTORY_SEPARATOR == '/' and @ini_get("safe_mode") == false) {
+		return \is_writable($file);
+	}
+
+	// For windows servers and safe_mode "on" installations we'll actually
+	// write a file then read it.  Bah...
+	if (is_dir($file)) {
+		$file = rtrim($file, '/').'/'.md5(mt_rand(1,100).mt_rand(1,100));
+
+		if (($fp = @fopen($file, FOPEN_WRITE_CREATE)) === false) {
+			return false;
+		}
+
+		fclose($fp);
+		@chmod($file, DIR_WRITE_MODE);
+		@unlink($file);
+		return true;
+	}
+	elseif ( ! is_file($file) or ($fp = @fopen($file, FOPEN_WRITE_CREATE)) === false) {
+		return false;
+	}
+
+	fclose($fp);
+	return TRUE;
+}
+
+/**
  * Test if the method's modifier is public
  *
  * @author Jack

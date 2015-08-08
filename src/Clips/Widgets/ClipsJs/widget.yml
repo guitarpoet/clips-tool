@@ -11,7 +11,7 @@ date: Sat Jun 13 13:33:56 2015
 version: 1.0
 name: clips-js
 doc:
-	The JavaScript version of CLIPS
+    The JavaScript version of CLIPS
 js:
     files:
         - clips

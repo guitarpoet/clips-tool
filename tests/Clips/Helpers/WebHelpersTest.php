@@ -17,4 +17,8 @@ class WebHelpersTest extends Clips\TestCase {
 	public function testWidgetUri() {
 		echo Clips\widget_uri('html');
 	}
+
+	public function testMimeType() {
+		$this->assertEquals(Clips\mime_types('jpg'), array('image/jpeg', 'image/pjpeg'));
+	}
 }

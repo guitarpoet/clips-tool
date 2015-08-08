@@ -23,6 +23,11 @@ function smarty_block_form($params, $content = '', $template, &$repeat) {
 		}
 	}
 
+	if(Clips\get_default($params, 'upload')) {
+		unset($params['upload']);
+		$params['enctype'] = 'multipart/form-data';
+	}
+
 	Clips\context_pop('current_form');
 	Clips\context_pop('current_form_data');
 	Clips\context_pop('indent_level');
