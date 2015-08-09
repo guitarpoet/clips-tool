@@ -5,6 +5,60 @@ define('BCAP_FILENAME', 'lite_php_browscap.ini');
 
 define('RANDOM_STRING', '3141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086FromfairestcreatureswedesireincreaseThattherebybeautysrosemightneverdieButastheripershouldbytimedeceaseHistenderheirmightbearhismemoryButthoucontractedtothineownbrighteyesFeedstthylightsflamewithself-substantialfuelMakingafaminewhereabundanceliesThyselfthyfoetothysweetselftoocruelThouthatartnowtheworldsfreshornamentAndonlyheraldtothegaudyspringWithinthineownbudburiestthycontentAndtenderchurlmakstwasteinniggardingPitytheworldorelsethisgluttonbeToeattheworldsduebythegraveandthee');
 
+
+/**
+ * Getting the mime type based on apache's mime.types
+ *
+ * @author Jack
+ * @date Sun Aug  9 17:37:34 2015
+ * @version 1.1
+ */
+function get_mime_type($filename) { 
+	$info = pathinfo($filename);
+
+	$ext = $info['extension'];
+
+	if(!$ext)
+		return false;
+
+	$regex = "/^([\w\+\-\.\/]+)\s+(\w+\s)*($ext\s)/i"; 
+	$lines = file(try_path("config/mime.types"));
+
+	foreach($lines as $line) { 
+		if (substr($line, 0, 1) == '#') continue; // skip comments 
+		$line = rtrim($line) . " "; 
+		if (!preg_match($regex, $line, $matches)) continue; // no match to the extension 
+		return ($matches[1]); 
+	} 
+	return (false); // no match at all 
+} 
+
+/**
+ * Test if a file is phar
+ *
+ * @author Jack
+ * @date Sun Aug  9 17:40:47 2015
+ * @version 1.1
+ */
+function is_phar($filename) {
+	$info = pathinfo($filename);
+	$ext = $info['extension'];
+	return $ext === 'phar';
+}
+
+/**
+ * Test if the file is a video file, according to its file extension
+ *
+ * @author Jack
+ * @date Sun Aug  9 17:37:19 2015
+ * @version 1.1
+ */
+function is_video($filename) {
+	$type = get_mime_type($filename);
+	$types = explode('/', $type);
+	return $types && $types[0] === 'video';
+}
+
 function phar_contents($file, $path) {
 	$file = safe_add_extension($file, 'phar');
 	if(file_exists($file)) {

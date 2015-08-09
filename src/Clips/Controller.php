@@ -371,6 +371,14 @@ JS
 		return new SimpleAction(array('content' => $content, 'label' => $label, 'type' => $type));
 	}
 
+	protected function output_file($filename, $contents = null) {
+		header("Content-Type: ".get_mime_type($filename));
+		if($contents) {
+			return $this->direct($contents);
+		}
+		return $this->direct(file_get_contents($filename));
+	}
+
 	/**
 	 * Send the image file
 	 */
