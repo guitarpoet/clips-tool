@@ -37,6 +37,11 @@ class Sling extends BaseService {
 		if(!isset($data['_charset_'])) {
 			$data['_charset_'] = 'UTF-8';
 		}
+
+		if(isset($data['attachments'])) {
+			unset($data['attachments']);
+		}
+
 		$this->curl->setHeader('Content-Type', "application/x-www-form-urlencoded; 
 charset=".$data['_charset_']);
 		
