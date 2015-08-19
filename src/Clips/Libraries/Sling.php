@@ -33,6 +33,10 @@ class Sling extends BaseService {
 		return "http://$this->host:$this->port$path";
 	}
 
+	public function remove($path) {
+		$this->curl->delete($path);
+	}
+
 	public function update($path, $data) {
 		if(!isset($data['_charset_'])) {
 			$data['_charset_'] = 'UTF-8';

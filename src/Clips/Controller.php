@@ -37,6 +37,12 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 		return $this->json(array());
 	}
 
+	protected function jsonp($data) {
+		$json = json_encode($data);
+		$method = $this->request->param('callback', 'callback');
+		return $this->direct("$method($json);");
+	}
+
 	/**
 	 * The shorthand method for getting the request parameters
 	 */

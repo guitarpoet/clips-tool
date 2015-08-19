@@ -12,7 +12,12 @@ Clips.siteUrl = function(url) {
 	return Clips.site + url;
 }
 Clips.staticUrl = function(url) {
-	if(url.indexOf('/') == 0)
-		url = url.substring(1);
+	if(url) {
+		if(url.indexOf('/') == 0)
+			url = url.substring(1);
+	}
+	else {
+		url = '';
+	}
 	return Clips.base + '' + url;
 }
