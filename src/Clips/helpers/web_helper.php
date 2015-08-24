@@ -546,6 +546,8 @@ function mime_types($mime) {
 				'log'	=>	array('text/plain', 'text/x-log'),
 				'rtx'	=>	'text/richtext',
 				'rtf'	=>	'text/rtf',
+				'rmvb'	=>	'application/vnd.rn-realmedia-vbr',
+				'rm'	=>	'application/vnd.rn-realmedia',
 				'xml'	=>	'text/xml',
 				'xsl'	=>	'text/xml',
 				'mpeg'	=>	'video/mpeg',

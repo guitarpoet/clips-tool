@@ -78,6 +78,12 @@ class CoreHelperTest extends Clips\TestCase {
 		$this->assertNotNull(Clips\phar_contents(__DIR__.'/../../data/test', 'tree.json'));
 	}
 
+	public function testIsVideo() {
+		$this->assertTrue(Clips\is_video('a.rmvb'));
+		$this->assertTrue(Clips\is_video('a.rm'));
+		$this->assertTrue(Clips\is_video('a.ifox'));
+	}
+
 	public function testValidObj() {
 		$obj = new Clips\Commands\VersionCommand();
 		$this->assertTrue(Clips\valid_obj($obj, "Clips\\Commands\\VersionCommand"));

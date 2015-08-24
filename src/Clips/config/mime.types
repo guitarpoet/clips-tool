@@ -739,7 +739,7 @@ video/jpeg					jpgv
 video/jpm					jpm jpgm
 video/mj2					mj2 mjp2
 video/mp2t					ts
-video/mp4					mp4 mp4v mpg4 m4v
+video/mp4					mp4 mp4v mpg4 m4v ifox
 video/mpeg					mpeg mpg mpe m1v m2v
 video/ogg					ogv
 video/quicktime					qt mov

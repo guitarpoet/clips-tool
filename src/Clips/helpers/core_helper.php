@@ -56,7 +56,7 @@ function is_phar($filename) {
 function is_video($filename) {
 	$type = get_mime_type($filename);
 	$types = explode('/', $type);
-	return $types && $types[0] === 'video';
+	return $types && ($types[0] === 'video' || strpos($types[1], 'realmedia') !== false);
 }
 
 function phar_contents($file, $path) {
