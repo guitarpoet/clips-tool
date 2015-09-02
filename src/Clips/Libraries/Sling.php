@@ -52,8 +52,19 @@ charset=".$data['_charset_']);
 		$this->curl->post($this->buildUrl($path), $data);
 	}
 
-	public function data($path) {
-		$this->curl->get($this->buildUrl($path).'.json');
+	public function data($path, $params = array()) {
+
+		$url = $this->buildUrl($path).'.json';
+
+		if($params) {
+			$q = array();
+			foreach($params as $k => $v) {
+				$q []= urlencode($k) . '=' . urlencode($v);
+			}
+
+			$url .= '?'.implode('&', $q);
+		}
+		$this->curl->get($url);
 		if($this->curl->http_status_code == 200) {
 			return json_decode($this->curl->response);
 		}
