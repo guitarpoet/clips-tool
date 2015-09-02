@@ -173,7 +173,11 @@ class DBModelV2 extends BaseService {
 		return $ret;
 	}
 
-		public function get() {
+	public function isWhereOper($arr) {
+		return is_array($arr);
+	}
+
+	public function get() {
 		switch(func_num_args()) {
 		case 0: // No argument is set, let's check if we have table set
 			if(isset($this->table))
