@@ -42,7 +42,8 @@ class DataGenerator extends Annotation implements Initializable, ToolAware {
 
 				foreach($this->value as $config) {
 					$p = path_join($test_data_dir, $config.'.yml');
-					if(\file_exists($p)) {
+					$p = \Clips\try_path($p);
+					if($p) {
 						$content = file_get_contents($p);
 						$args = context('test_args');
 						if(!$args) {
