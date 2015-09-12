@@ -21,6 +21,7 @@ class Sling extends BaseService {
 			$this->port = \Clips\get_default($sling_config, 'port');
 			$this->username = \Clips\get_default($sling_config, 'username');
 			$this->password = \Clips\get_default($sling_config, 'password');
+			$this->base = \Clips\get_default($sling_config, 'base', '');
 
 			$this->curl->setBasicAuthentication($this->username, $this->password);
 		}
@@ -30,7 +31,7 @@ class Sling extends BaseService {
 	}
 
 	protected function buildUrl($path) {
-		return "http://$this->host:$this->port$path";
+		return "http://$this->host:$this->port$this->base$path";
 	}
 
 	public function remove($path) {
