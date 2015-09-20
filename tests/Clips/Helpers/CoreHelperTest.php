@@ -89,4 +89,11 @@ class CoreHelperTest extends Clips\TestCase {
 		$this->assertTrue(Clips\valid_obj($obj, "Clips\\Commands\\VersionCommand"));
 		$this->assertTrue(Clips\valid_obj($obj, "Clips\\Command"));
 	}
+
+	public function testZipContents() {
+		$path = Clips\try_path('test.zip');
+		if($path) {
+			$this->assertNotNull(Clips\zip_contents($path, 'config.yml'));
+		}
+	}
 }

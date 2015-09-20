@@ -34,6 +34,18 @@ function get_mime_type($filename) {
 } 
 
 /**
+ * Get the file extension for the filename
+ *
+ * @author Jack
+ * @date Sun Sep 13 11:25:27 2015
+ * @version 1.1
+ */
+function get_file_extension($filename) {
+	$info = pathinfo($filename);
+	return $info['extension'];
+}
+
+/**
  * Test if a file is phar
  *
  * @author Jack
@@ -44,6 +56,19 @@ function is_phar($filename) {
 	$info = pathinfo($filename);
 	$ext = $info['extension'];
 	return $ext === 'phar';
+}
+
+/**
+ * Test if a file is Zip
+ *
+ * @author Jack
+ * @date Sun Sep 13 11:24:22 2015
+ * @version 1.1
+ */
+function is_zip($filename) {
+	$info = pathinfo($filename);
+	$ext = $info['extension'];
+	return $ext === 'zip';
 }
 
 /**
@@ -66,6 +91,26 @@ function phar_contents($file, $path) {
 		if(isset($phar[$path])) {
 			$p = 'phar://'.path_join($file, $path);
 			return file_get_contents($p);
+		}
+	}
+	return null;
+}
+
+/**
+ * @author Jack
+ * @date Sun Sep 20 21:57:13 2015
+ * @version 1.1
+ */
+function zip_contents($file, $path) {
+	$file = safe_add_extension($file, 'zip');
+	if(file_exists($file)) {
+		if(file_exists($file)) {
+			$zip = new \ZipArchive();
+			if($zip->open($file)) {
+				if($zip->statName($path)) {
+					return file_get_contents('zip://'.$file.'#'.$path);
+				}
+			}
 		}
 	}
 	return null;
