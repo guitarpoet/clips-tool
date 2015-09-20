@@ -67,6 +67,8 @@ class ResponsiveController extends Controller {
 
 				$this->curl->setOpt(CURLOPT_SSL_VERIFYHOST, false);
 				$this->curl->setOpt(CURLOPT_SSL_VERIFYPEER, false);
+				$this->curl->setOpt(CURLOPT_HEADER, false);
+				$this->curl->setOpt(CURLOPT_FOLLOWLOCATION, true);
 				if($this->curl->get($url) == 0) {
 					file_put_contents($local_file, $this->curl->response);
 					$path = \Clips\try_path($local_file);
