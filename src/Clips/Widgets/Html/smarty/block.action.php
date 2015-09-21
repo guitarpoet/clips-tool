@@ -13,10 +13,28 @@ function smarty_block_action($params, $content = '', $template, &$repeat) {
 
 	if($action && Clips\valid_obj($action, 'Clips\\Interfaces\\Action')) {
 		$ps = $action->params();
+
+		$icon = $action->icon();
+
+		$caption = array();
+		if($icon) {
+			$caption []= Clips\create_tag_with_content('i', '', array('class' => $icon));
+			$caption []= Clips\create_tag_with_content('span', $action->label());
+			if($action->children())
+				$caption []= Clips\create_tag_with_content('i', '', array('class' => array('fa', 'fa-angle-left', 'pull-right')));
+			$caption = implode('', $caption);
+		}
+		else {
+			$caption = $action->label();
+		}
+
+		if(!isset($params['title'])) // Add tooltip
+			$params['title'] = $action->label();
+
 		// This is valid action object
 		switch($action->type()) {
 		case Action::CLIENT:
-			$params['caption'] = $action->label();
+			$params['caption'] = $caption;
 			if($ps) {
 				foreach($ps as $k => $v) {
 					$params['data-'.$k] = $v;
@@ -24,8 +42,10 @@ function smarty_block_action($params, $content = '', $template, &$repeat) {
 			}
 			$content = $action->content();
 			break;
+		case Action::HEADER:
+			return $caption;
 		case Action::SERVER:
-			$content = $action->label();
+			$content = $caption;
 			if($ps) {
 				$suffix = implode('/', array_map(function($item){ return urlencode($item); }, $ps));
 				$params['uri'] = \Clips\path_join($action->content(), $suffix);
@@ -34,7 +54,7 @@ function smarty_block_action($params, $content = '', $template, &$repeat) {
 				$params['uri'] = $action->content();
 			break;
 		case Action::EXTERNAL:
-			$content = $action->label();
+			$content = $caption;
 			$suffix = array();
 			foreach($ps as $k => $v) {
 				$suffix []= urlencode($k).'='.urlencode($v);
@@ -59,8 +79,6 @@ function smarty_block_action($params, $content = '', $template, &$repeat) {
 		$content = $template->fetch('string:'.$value);
 		unset($params['caption']);
 		$params['id'] = $id;
-		if(!isset($params['title'])) // Add tooltip
-			$params['title'] = $value;
 		$params['href'] = 'javascript:void(0)';
 		Clips\context('jquery_init', $js, true);
 	}
@@ -82,5 +100,6 @@ function smarty_block_action($params, $content = '', $template, &$repeat) {
 		$bundle = Clips\bundle($bundle);
 		$content = $bundle->message($content);
 	}
+
 	return Clips\create_tag_with_content('a', $content, $params, $default);
 }

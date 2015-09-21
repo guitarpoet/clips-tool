@@ -15,6 +15,7 @@ interface Action extends TreeNode {
 	const CLIENT = 'client';
 	const SERVER = 'server';
 	const EXTERNAL = 'external';
+	const HEADER = 'header';
 
 	/**
 	 * The type of the action, can be client ,server or external.
@@ -43,4 +44,11 @@ interface Action extends TreeNode {
 	 * server / external => The request parameters
 	 */
 	public function params();
+
+	/**
+	 * The icon for this action, added for button and navigation items
+	 *
+	 * @version 1.1
+	 */
+	public function icon();
 }

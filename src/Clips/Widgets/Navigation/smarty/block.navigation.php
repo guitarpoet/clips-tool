@@ -25,12 +25,13 @@ function _smarty_block_navigation_tree_node($action, $indent, $template, $repeat
 
 	$children = $action->children();
 	if($children) {
+		$class []= 'treeview';
 		$sub = array();
-		smarty_block_ul(array('class' => 'sub-navi'), '', $template, $f);
+		smarty_block_ul(array('class' => array('treeview', 'sub-navi')), '', $template, $f);
 		foreach($children as $c) {
 			$sub []= _smarty_block_navigation_tree_node($c, $indent."\t\t", $template, $repeat, $li_class);
 		}
-		$a .= "\n$indent\t".smarty_block_ul(array('class' => 'sub-navi'), implode("", $sub), $template, $repeat);
+		$a .= "\n$indent\t".smarty_block_ul(array('class' => array('sub-navi', 'treeview-menu')), implode("", $sub), $template, $repeat);
 	}
 
 	$class = array();
@@ -41,6 +42,10 @@ function _smarty_block_navigation_tree_node($action, $indent, $template, $repeat
 	}
 	if($action->active()) {
 		$class []= 'active';
+	}
+
+	if($action->type() == 'header') {
+		$class []= 'header';
 	}
 	// Close the li
  	return "\n$indent".smarty_block_li(array('class' => $class), $a, $template, $repeat);

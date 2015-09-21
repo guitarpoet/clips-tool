@@ -83,4 +83,11 @@ class SimpleAction extends SimpleTreeNode implements Action {
 		return get_default($this, 'params', array());
 	}
 
+	public function isHeader() {
+		return get_default($this, 'header', false);
+	}
+
+	public function icon() {
+		return get_default($this, 'icon', null);
+	}
 }
