@@ -12,6 +12,7 @@
 	.dataTables_wrapper.no-footer {
 		border-radius: res(7px);
 		background: #ffffff;
+		padding: 10px;
 		%datatable_select {
 			display: inline-block;
 			border: 1px solid #ebebeb;
