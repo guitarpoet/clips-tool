@@ -23,16 +23,12 @@
 	=>
 	(assert (config-file (clips-path (str-cat "/../config/" ?*new_config*)))) ; For clips tools's config
 	(assert (config-file (clips-path (str-cat "/config/" ?*new_config*)))) ; For clips's config
-	(assert (config-file (str-cat "/etc/clips/" ?*new_config*))) ; For /etc/clips/
-	(assert (config-file (str-cat "/etc/" ?*new_config*))) ; For /etc/ 
 	(assert (config-file (str-cat (cwd) "/config/" ?*new_config*))) ; For $cwd/config/rules
 	(assert (config-file (str-cat (cwd) "/rules/" ?*new_config*))) ; For $cwd/rules
 	(assert (config-file (str-cat (cwd) "/" ?*new_config*))) ; For $cwd
 
 	(assert (config-file (clips-path (str-cat "/../config/" ?*config*)))) ; For clips tools's config
 	(assert (config-file (clips-path (str-cat "/config/" ?*config*)))) ; For clips's config
-	(assert (config-file (str-cat "/etc/clips/" ?*config*))) ; For /etc/clips/
-	(assert (config-file (str-cat "/etc/" ?*config*))) ; For /etc/ 
 	(assert (config-file (str-cat (cwd) "/config/" ?*config*))) ; For $cwd/config/rules
 	(assert (config-file (str-cat (cwd) "/rules/" ?*config*))) ; For $cwd/rules
 	(assert (config-file (str-cat (cwd) "/" ?*config*))) ; For $cwd
