@@ -124,6 +124,7 @@ class DBModelV2 extends BaseService {
 			$ret = $this->db->insert($obj);
 		}
 		catch(Exception $e) {
+			\Clips\error("database_update", $e->getMessage());
 		}
 		$this->db->context = $orig;
 		return $ret;
@@ -138,9 +139,13 @@ class DBModelV2 extends BaseService {
 				$ret = $this->db->update($obj->id, $obj);
 			}
 			catch(Exception $e) {
+				\Clips\error("database_update", $e->getMessage());
 			}
 			$this->db->context = $orig;
 			return $ret;
+		}
+		else {
+			\Clips\error("database_update", "No id setting for update table $table.");
 		}
 	}
 

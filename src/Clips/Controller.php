@@ -171,10 +171,16 @@ JS
 					$f = get_annotation($this, 'Clips\\Form', $method);
 					if($f) {
 						$data = $this->formData($f->value);
+						$args['update'] = $this->_action($actions->value.'/edit', null, 'Update');
 						$args['edit'] = $this->_action($actions->value.'/edit', $data, 'Edit');
 						$args['delete'] = $this->_action($actions->value.'/delete', $data, 'Delete');
 					}
+					else {
+						$args['edit'] = $this->_action($actions->value.'/edit', null, 'Edit');
+						$args['delete'] = $this->_action($actions->value.'/delete', null, 'Delete');
+					}
 					$args['create'] = $this->_action($actions->value.'/create', null, 'Create');
+					$args['show'] = $this->_action($actions->value.'/show', null, 'Show');
 				}
 
 				if(get_annotation($this, 'Clips\\Timestamp', $method)) {
