@@ -10,7 +10,7 @@ class Widget extends WidgetV2 {
 	//====================================
 	$('input,select,textarea').not('[type=submit]').jqBootstrapValidation();
 	if($.isFunction($.fn.selectBoxIt)){
-		$('form select:not([data-no-selectBoxIt])').each(function(){
+		$('form select:not([data-no-select-box-it])').each(function(){
 			$(this).selectBoxIt({
 				autoWidth: false
 			});
