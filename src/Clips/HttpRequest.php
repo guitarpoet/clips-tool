@@ -16,7 +16,8 @@ class HttpRequest extends Request {
 	}
 
 	public function isMobile() {
-		return $this->browserMeta()->Device_Type == 'Mobile Phone';
+		$meta = $this->browserMeta();
+		return try_fields($meta, ['device_type', 'Device_Type']) == 'Mobile Phone';
 	}
 
 	/**

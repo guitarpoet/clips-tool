@@ -35,11 +35,11 @@ function smarty_block_field($params, $content = '', $template, &$repeat) {
 			// Put the field to context
 			Clips\context('current_field', $f);
 
-
 			// Processing the form data
 			$data = Clips\get_default(Clips\context('current_form_data'), $field);
+
 			if($data) {
-				Clips\context('current_form_field_data', $data);
+				Clips\context('current_form_field_data', $data, true);
 				// Update the field's value to data 
 				$f->value = $data;
 			}

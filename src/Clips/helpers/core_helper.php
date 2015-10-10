@@ -1389,6 +1389,21 @@ function parse_yaml($yaml) {
 	return \Symfony\Component\Yaml\Yaml::parse($yaml);
 }
 
+/**
+ * Trying to get the fields from the object or array, if found, then return the value
+ *
+ * @author Jack
+ * @version 1.1
+ */
+function try_fields($obj, $fields) {
+	$arr = (array) $obj;
+	foreach($fields as $f) {
+		if(isset($arr[$f]))
+			return $arr[$f];
+	}
+	return null;
+}
+
 function current_env() {
 	$tool = &get_clips_tool();
 	return $tool->clips->current_env;
