@@ -1177,6 +1177,16 @@ function yaml($path) {
 	return false;
 }
 
+function try_fields($obj, $fields) { 
+       $arr = (array) $obj; 
+       foreach($fields as $f) { 
+		   if(isset($arr[$f])) 
+				   return $arr[$f]; 
+       } 
+       return null; 
+}
+
+
 function current_env() {
 	$tool = &get_clips_tool();
 	return $tool->clips->current_env;
