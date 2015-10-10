@@ -15,6 +15,11 @@ class HttpRequest extends Request {
 		$this->validator = $this->tool->validator;
 	}
 
+	public function isMobile() {
+		return $this->browserMeta()->Device_Type == 'Mobile Phone';
+	}
+
+
 	/**
 	 * Get the request browser's meta data using PHP's browscap support
 	 */
