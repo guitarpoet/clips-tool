@@ -1,18 +1,25 @@
 <?php namespace Clips; in_array(__FILE__, get_included_files()) or exit("No direct script access allowed");
 
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
+
 /**
  * The http request wrapper same as CI's CI_Input, but nicer api
  *
  * @author Jack
  * @date Mon Feb 23 15:57:53 2015
  */
-class HttpRequest extends Request {
+class HttpRequest extends Request implements LoggerAwareInterface {
 	public function __construct() {
 		// Getting the method as the lower case
 		$this->method = strtolower(get_default($_SERVER, 'REQUEST_METHOD', 'GET'));
 		$this->tool = &get_clips_tool();
 		$this->tool->load_class("validator", true);
 		$this->validator = $this->tool->validator;
+	}
+
+	public function setLogger(LoggerInterface $logger) {
+		$this->logger = $logger;
 	}
 
 	public function isMobile() {
