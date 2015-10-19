@@ -85,6 +85,8 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 				// Update the columns configuration to the filtered columns configuration
 				$config->columns = $config->columns();
 
+				$replaces = array();
+
 				foreach($config->columns as $col) {
 					if(isset($col->title)) {
 						$col->title = $bundle->message($col->title);
@@ -104,9 +106,16 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 						$col->refer = \Clips\smooth($col->refer);
 					}
 
+					if(isset($col->render)) {
+						if(array_search($col->render, $replaces) === false)
+							$replaces []= $col->render;
+					}
+
 					if(isset($col->action)) {
 						// If has action, use action render
 						$col->render = 'datatable_action_column';
+						if(array_search($col->render, $replaces) === false)
+							$replaces []= $col->render;
 					}
 				}
 
@@ -115,9 +124,12 @@ class DataTable extends Annotation implements Initializable, ToolAware, LoggerAw
 				if($controller) {
 					$controller->request->session($name, null);
 				}
-				
+				$json = $config->toJson();
+				foreach($replaces as $r) {
+					$json = str_replace('"'.$r.'"', $r, $json);
+				}
 				// Adding the initialize script to jquery init
-				\Clips\context('jquery_init', 'if(window[\'DatatableSettings\'] == undefined ) { DatatableSettings = {}; } DatatableSettings["'.$name.'"] = '.str_replace('"datatable_action_column"', 'datatable_action_column', ($config->toJson())).';$("table[name='.\Clips\to_flat($name).']").DataTable(DatatableSettings["'.$name.'"]);', true);
+				\Clips\context('jquery_init', 'if(window[\'DatatableSettings\'] == undefined ) { DatatableSettings = {}; } DatatableSettings["'.$name.'"] = '.$json.';$("table[name='.\Clips\to_flat($name).']").DataTable(DatatableSettings["'.$name.'"]);', true);
 			}
 		}
 	}
