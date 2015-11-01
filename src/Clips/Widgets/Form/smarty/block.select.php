@@ -84,8 +84,17 @@ function smarty_block_select($params, $content = '', $template, &$repeat) {
 			else {
 				if(is_string($key) && !is_string($option)) {
 					$l = $key;
-					if($data && $data == $option) {
-						$default = array('selected');
+					if($data) {
+						if(is_array($data)) {
+							if(array_search($option, $data) !== false) {
+								$default = array('selected');
+							}
+						}
+						else {
+							if($data == $option) {
+								$default = array('selected');
+							}
+						}
 					}
 					else
 						$default = array();
@@ -95,11 +104,21 @@ function smarty_block_select($params, $content = '', $template, &$repeat) {
 				}
 				else if(is_string($option)) {
 					$l = $option;
-					if($data && $data == $option) {
-						$default = array('selected');
+					if($data) {
+						if(is_array($data)) {
+							if(array_search($option, $data) !== false) {
+								$default = array('selected');
+							}
+						}
+						else {
+							if($data == $option) {
+								$default = array('selected');
+							}
+						}
 					}
 					else
 						$default = array();
+
 					if(is_string($key)) {
 						$default['value'] = $key;
 					}
@@ -107,15 +126,33 @@ function smarty_block_select($params, $content = '', $template, &$repeat) {
 				else if(is_array($option)) {
 					$l = $option[$label];
 					$default = array('value' => $option[$value]);
-					if($data && $data == $option[$value]) {
-						$default []= 'selected';
+					if($data) {
+						if(is_array($data)) {
+							if(array_search($option[$value], $data) !== false) {
+								$default []= ('selected');
+							}
+						}
+						else {
+							if($data == $option[$value]) {
+								$default []= ('selected');
+							}
+						}
 					}
 				}
 				else if(is_object($option)) {
 					$l = $option->$label;
 					$default = array('value' => $option->$value);
-					if($data && $data == $option->$value) {
-						$default []= 'selected';
+					if($data) {
+						if(is_array($data)) {
+							if(array_search($option->$value, $data) !== false) {
+								$default []= ('selected');
+							}
+						}
+						else {
+							if($data == $option->$value) {
+								$default []= ('selected');
+							}
+						}
 					}
 				}
 				$content []= Clips\create_tag_with_content('option', $l, $default);
