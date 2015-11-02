@@ -65,6 +65,16 @@ class HttpRequest extends Request implements LoggerAwareInterface {
 		return $this->_param($_GET, $param, $default);
 	}
 
+	/**
+	 * Get the post payload
+	 *
+	 * @version 1.1
+	 * @date Mon Nov  2 11:33:05 2015
+	 */
+	public function payload() {
+		return file_get_contents('php://input');
+	}
+
 	public function breadscrumb($uri = null) {
 		if($uri) {
 			$breadscrumb = $this->session('breadscrumb');
