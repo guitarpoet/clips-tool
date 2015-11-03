@@ -1,42 +1,42 @@
-{{#if before}}
+{{#before}}
     @include before_responsive();
-{{/if}}
+{{/before}}
 {{#resolutions}}
-    {{#if resolution}}
-        {{#if before_resolution}}
+    {{#resolution}}
+        {{#before_resolution}}
             {{before_resolution}}();
-        {{/if}}
+        {{/before_resolution}}
         $screen-width: 0;
         $alias-width: 0;
         $max-screen-wdith: 0;
         @media screen and (min-width: {{value.value}}px) {
-            $screen-width: {{value.value}} !global;
-            $alias-width: {{value.alias}} !global;
-            {{#if prepend_resolution}}
+            $screen-width: {{value.value}};
+            $alias-width: {{value.alias}};
+            {{#prepend_resolution}}
                 {{prepend_resolution}}({{value.value}});
-            {{/if}}
+            {{/prepend_resolution}}
             {{#sasses}}
                 {{#responsive_con}}
-                    @include {{.}}({{../../value.value}},{{../../value.alias}});
+                    @include {{.}}({{value.value}},{{value.alias}});
                 {{/responsive_con}}
             {{/sasses}}
-            {{#if append_resolution}}
+            {{#append_resolution}}
                 {{append_resolution}}({{value.value}});
-            {{/if}}
+            {{/append_resolution}}
         }
-        {{#if after_resolution}}
+        {{#after_resolution}}
             {{after_resolution}}();
-        {{/if}}
-    {{/if}}
-    {{#if section}}
-        {{#if before_section}}
+        {{/after_resolution}}
+    {{/resolution}}
+    {{#section}}
+        {{#before_section}}
             {{before_section}}();
-        {{/if}}
+        {{/before_section}}
         @media screen and (min-width: {{prev_value.value}}px) and (max-width: {{value.value}}px) {
-            $screen-width: {{prev_value.value}} !global;
-            $alias-width: {{prev_value.alias}} !global;
-            $next-screen-width: {{value.value}} !global;
-			 {{#sasses}}
+            $screen-width: {{prev_value.value}};
+            $alias-width: {{prev_value.alias}};
+            $next-screen-width: {{value.value}};
+            {{#sasses}}
                 {{#section_con}}
                     @include {{.}}({{value.value}},{{value.alias}},{{prev_value.value}},{{prev_value.alias}});
                 {{/section_con}}
@@ -45,11 +45,11 @@
                 {{/module_con}}
             {{/sasses}}
         }
-        {{#if after_section}}
+        {{#after_section}}
             {{after_section}}();
-        {{/if}}
-    {{/if}}
+        {{/after_section}}
+    {{/section}}
 {{/resolutions}}
-{{#if after}}
+{{#after}}
     @include after_responsive();
-{{/if}}
+{{/after}}
