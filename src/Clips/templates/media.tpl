@@ -36,12 +36,12 @@
             $screen-width: {{prev_value.value}} !global;
             $alias-width: {{prev_value.alias}} !global;
             $next-screen-width: {{value.value}} !global;
-            {{#sasses}}
+			 {{#sasses}}
                 {{#section_con}}
-                    @include {{.}}({{../../value.value}},{{../../value.alias}});
+                    @include {{.}}({{value.value}},{{value.alias}},{{prev_value.value}},{{prev_value.alias}});
                 {{/section_con}}
                 {{#module_con}}
-                    @include {{.}}({{../../value.value}},{{../../value.alias}});
+                    @include {{.}}({{value.value}},{{value.alias}},{{prev_value.value}},{{prev_value.alias}});
                 {{/module_con}}
             {{/sasses}}
         }
