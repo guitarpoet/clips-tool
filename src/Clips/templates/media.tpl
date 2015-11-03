@@ -1,55 +1,55 @@
-{{#before}}
+{{#if before}}
     @include before_responsive();
-{{/before}}
+{{/if}}
 {{#resolutions}}
-    {{#resolution}}
-        {{#before_resolution}}
+    {{#if resolution}}
+        {{#if before_resolution}}
             {{before_resolution}}();
-        {{/before_resolution}}
+        {{/if}}
         $screen-width: 0;
         $alias-width: 0;
         $max-screen-wdith: 0;
         @media screen and (min-width: {{value.value}}px) {
-            $screen-width: {{value.value}};
-            $alias-width: {{value.alias}};
-            {{#prepend_resolution}}
+            $screen-width: {{value.value}} !global;
+            $alias-width: {{value.alias}} !global;
+            {{#if prepend_resolution}}
                 {{prepend_resolution}}({{value.value}});
-            {{/prepend_resolution}}
+            {{/if}}
             {{#sasses}}
                 {{#responsive_con}}
-                    @include {{.}}({{value.value}},{{value.alias}});
+                    @include {{.}}({{../../value.value}},{{../../value.alias}});
                 {{/responsive_con}}
             {{/sasses}}
-            {{#append_resolution}}
+            {{#if append_resolution}}
                 {{append_resolution}}({{value.value}});
-            {{/append_resolution}}
+            {{/if}}
         }
-        {{#after_resolution}}
+        {{#if after_resolution}}
             {{after_resolution}}();
-        {{/after_resolution}}
-    {{/resolution}}
-    {{#section}}
-        {{#before_section}}
+        {{/if}}
+    {{/if}}
+    {{#if section}}
+        {{#if before_section}}
             {{before_section}}();
-        {{/before_section}}
+        {{/if}}
         @media screen and (min-width: {{prev_value.value}}px) and (max-width: {{value.value}}px) {
-            $screen-width: {{prev_value.value}};
-            $alias-width: {{prev_value.alias}};
-            $next-screen-width: {{value.value}};
-            {{#sasses}}
+            $screen-width: {{prev_value.value}} !global;
+            $alias-width: {{prev_value.alias}} !global;
+            $next-screen-width: {{value.value}} !global;
+			 {{#sasses}}
                 {{#section_con}}
-                    @include {{.}}({{value.value}},{{value.alias}});
+                    @include {{.}}({{value.value}},{{value.alias}},{{prev_value.value}},{{prev_value.alias}});
                 {{/section_con}}
                 {{#module_con}}
-                    @include {{.}}({{value.value}},{{value.alias}});
+                    @include {{.}}({{value.value}},{{value.alias}},{{prev_value.value}},{{prev_value.alias}});
                 {{/module_con}}
             {{/sasses}}
         }
-        {{#after_section}}
+        {{#if after_section}}
             {{after_section}}();
-        {{/after_section}}
-    {{/section}}
+        {{/if}}
+    {{/if}}
 {{/resolutions}}
-{{#after}}
+{{#if after}}
     @include after_responsive();
-{{/after}}
+{{/if}}
