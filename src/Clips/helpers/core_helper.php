@@ -115,7 +115,7 @@ function zip_contents($file, $path) {
 				2 => array("file", "/dev/null", "a") // stderr is a file to write to
 			);
 
-			$p = proc_open("$p7zip x -so test.zip 'test/hello/a'", $spec, $pipes);
+			$p = proc_open("$p7zip x -so $file '$path'", $spec, $pipes);
 
 			if(is_resource($p)) {
 				$data = stream_get_contents($pipes[1]);
