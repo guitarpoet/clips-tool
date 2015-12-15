@@ -47,8 +47,7 @@ class Sling extends BaseService {
 			unset($data['attachments']);
 		}
 
-		$this->curl->setHeader('Content-Type', "application/x-www-form-urlencoded; 
-charset=".$data['_charset_']);
+		$this->curl->setHeader('Content-Type', "application/x-www-form-urlencoded; charset=".$data['_charset_']);
 		
 		$this->curl->post($this->buildUrl($path), $data);
 	}
