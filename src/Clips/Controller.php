@@ -23,6 +23,42 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 		html_title($title);
 	}
 
+	protected function etag($args = array(), $callback = null) {
+		$lastModified = \Clips\get_default($args, 'last-modified', time());
+		$etagFile = \Clips\get_default($args, 'etag', 'nothing');
+		$expires = \Clips\get_default($args, 'expires', '2 weeks');
+
+		//get the HTTP_IF_MODIFIED_SINCE header if set
+		$ifModifiedSince =  $this->server('HTTP_IF_MODIFIED_SINCE', false);
+		//get the HTTP_IF_NONE_MATCH header if set (etag: unique file hash)
+		$etagHeader = trim($this->server('HTTP_IF_NONE_MATCH'));
+
+		$headers = array();
+
+		//set last-modified header
+		$headers ['Last-Modified']= gmdate("D, d M Y H:i:s", $lastModified)." GMT";
+		//set etag-header
+		$headers ['Etag']= $etagFile;
+
+		if(is_string($expires)) {
+			$expires = gmdate("D, d M Y H:i:s", strtotime($expires));
+		}
+
+		$headers ['Expires']= $expires;
+		//make sure caching is turned on
+		$headers ['Cache-Control']= 'public';
+
+		//check if page has changed. If not, send 304 and exit
+		if (($ifModifiedSince && @strtotime($ifModifiedSince) == $lastModified) && $etagHeader == $etagFile) {
+			return $this->not_modified($headers);
+		}
+
+		if($callback)
+			return $callback($this, $headers);
+
+		return false;
+	}
+
 	/**
 	 * The cascade select support function
 	 */
@@ -165,6 +201,9 @@ JS
 		$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
 		foreach($trace as $t) {
 			if($t['class'] == get_class($this)) {
+				if(strpos($t['function'], '{closure}') !== false) { // Skip the closure
+					break;
+				}
 				$method = $t['function'];
 				$actions = get_annotation($this, 'Clips\\Actions', $method);
 				if($actions) {
@@ -317,8 +356,8 @@ JS
 	/**
 	 * Send the direct response
 	 */
-	protected function direct($content) {
-		return $this->render($content, array(), 'direct');
+	protected function direct($content, $headers = array()) {
+		return $this->render($content, array(), 'direct', $headers);
 	}
 
 	/**
@@ -423,6 +462,11 @@ JS
 		}
 
 		return $this->render($content, array(), 'direct', $header);
+	}
+
+	protected function not_modified($headers) {
+		http_response_code(304);
+		return $this->render("", array(), 'direct', $headers);
 	}
 
 	protected function not_found($message = 'Not Found') {

@@ -138,15 +138,17 @@ class Router implements LoggerAwareInterface, ClipsAware, ToolAware {
 		$uri = $this->getRequestURI();
 
 		// Record the breadscrumb
-		if($request->method == 'get' && $request->getType() != 'ajax' && strpos($uri, 'responsive/size') === false) {
-			$bs = $request->breadscrumb();
-			if(count($bs) > 1) {
-				if($bs[count($bs) - 1] != $uri) {
+		if(\Clips\config('breadscrum')) {
+			if($request->method == 'get' && $request->getType() != 'ajax' && strpos($uri, 'responsive/size') === false) {
+				$bs = $request->breadscrumb();
+				if(count($bs) > 1) {
+					if($bs[count($bs) - 1] != $uri) {
+						$request->breadscrumb($uri);
+					}
+				}
+				else {
 					$request->breadscrumb($uri);
 				}
-			}
-			else {
-				$request->breadscrumb($uri);
 			}
 		}
 	
