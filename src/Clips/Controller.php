@@ -54,7 +54,7 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 		}
 
 		if($callback)
-			return $callback($this, $headers);
+			return $callback($this, $headers, $args);
 
 		return false;
 	}
@@ -363,7 +363,7 @@ JS
 	/**
 	 * Send the redirect response
 	 */
-	protected function redirect($url, $args = array()) {
+	protected function redirect($url, $args = array(), $headers = array()) {
 		if($args) {
 			if(!is_array($args)) {
 				$args = array();
@@ -372,7 +372,8 @@ JS
 			return $this->render(post_redirect($url, $args), array(), 'direct');
 		}
 		http_response_code(302);
-		return $this->render("", array(), 'direct', array('Location' => $url));
+		$headers['Location'] = $url;
+		return $this->render("", array(), 'direct', $headers);
 	}
 
 	protected function json($data) {
@@ -422,25 +423,16 @@ JS
 		return new SimpleAction(array('content' => $content, 'label' => $label, 'type' => $type));
 	}
 
-	protected function stream($stream) {
-		if($stream && is_resource($stream)) {
-			$s = fopen('php://output', 'wb');
-			stream_copy_to_stream($stream, $s);
-			fclose($stream);
-			fclose($s);
-		}
-		else {
-			$this->error('No stream to output!');
-		}
-		return null;
+	protected function stream($stream, $headers = array()) {
+		return $this->render($stream, array(), 'stream', $headers);
 	}
 
-	protected function output_stream($filename, $stream = null) {
+	protected function output_stream($filename, $stream = null, $headers = array()) {
 		header("Content-Type: ".get_mime_type($filename));
 		if(!$stream) {
 			$stream = fopen($filename, 'rb');
 		}
-		return $this->stream($stream);
+		return $this->stream($stream, $headers);
 	}
 
 	protected function output_file($filename, $contents = null) {
