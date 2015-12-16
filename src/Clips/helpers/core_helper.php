@@ -98,6 +98,47 @@ function phar_contents($file, $path) {
 
 /**
  * @author Jack
+ * @date Tue Dec 15 15:38:43 2015
+ */
+function zip_stream($file, $path) {
+	$file = safe_add_extension($file, 'zip');
+	if(file_exists($file)) {
+		if(filesize($file) >= 0) { // If the file is bigger than 4G, we can't use PHP's zip for now
+			$p7zip = config('p7zip', '/opt/local/bin/7z');
+			if(!file_exists($p7zip)) {
+				$p7zip = '/usr/bin/7za';
+			}
+			$spec = array(
+				0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
+				1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
+				2 => array("file", "/dev/null", "a") // stderr is a file to write to
+			);
+
+			$p = proc_open("$p7zip x -so $file '$path'", $spec, $pipes);
+
+			if(is_resource($p)) {
+				$mem = fopen('php://memory', 'wb');
+				stream_copy_to_stream($pipes[1], $mem);
+				fclose($pipes[1]);
+				proc_close($p);
+				rewind($mem);
+				return $mem;
+			}
+		}
+		else {
+			$zip = new \ZipArchive();
+			if($zip->open($file)) {
+				if($zip->statName($path)) {
+					return fopen('zip://'.$file.'#'.$path, 'rb');
+				}
+			}
+		}
+	}
+	return null;
+}
+
+/**
+ * @author Jack
  * @date Sun Sep 20 21:57:13 2015
  * @version 1.1
  */

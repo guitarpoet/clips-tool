@@ -422,6 +422,27 @@ JS
 		return new SimpleAction(array('content' => $content, 'label' => $label, 'type' => $type));
 	}
 
+	protected function stream($stream) {
+		if($stream && is_resource($stream)) {
+			$s = fopen('php://output', 'wb');
+			stream_copy_to_stream($stream, $s);
+			fclose($stream);
+			fclose($s);
+		}
+		else {
+			$this->error('No stream to output!');
+		}
+		return null;
+	}
+
+	protected function output_stream($filename, $stream = null) {
+		header("Content-Type: ".get_mime_type($filename));
+		if(!$stream) {
+			$stream = fopen($filename, 'rb');
+		}
+		return $this->stream($stream);
+	}
+
 	protected function output_file($filename, $contents = null) {
 		header("Content-Type: ".get_mime_type($filename));
 		if($contents) {
