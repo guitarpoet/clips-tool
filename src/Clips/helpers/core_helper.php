@@ -103,7 +103,7 @@ function phar_contents($file, $path) {
 function zip_stream($file, $path) {
 	$file = safe_add_extension($file, 'zip');
 	if(file_exists($file)) {
-		if(filesize($file) >= 0) { // If the file is bigger than 4G, we can't use PHP's zip for now
+		if(filesize($file) >= 4294967296) { // If the file is bigger than 4G, we can't use PHP's zip for now
 			$p7zip = config('p7zip', '/opt/local/bin/7z');
 			if(!file_exists($p7zip)) {
 				$p7zip = '/usr/bin/7za';
