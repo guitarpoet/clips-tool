@@ -27,6 +27,7 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 		$lastModified = \Clips\get_default($args, 'last-modified', time());
 		$etagFile = \Clips\get_default($args, 'etag', 'nothing');
 		$expires = \Clips\get_default($args, 'expires', '2 weeks');
+		$contentLengh = \Clips\get_default($args, 'content-length');
 
 		//get the HTTP_IF_MODIFIED_SINCE header if set
 		$ifModifiedSince =  $this->server('HTTP_IF_MODIFIED_SINCE', false);
@@ -42,6 +43,10 @@ class Controller extends Annotation implements ClipsAware, LoggerAwareInterface,
 
 		if(is_string($expires)) {
 			$expires = gmdate("D, d M Y H:i:s", strtotime($expires));
+		}
+
+		if($contentLengh) {
+			$headers['Content-Length'] = $contentLengh;
 		}
 
 		$headers ['Expires']= $expires;
