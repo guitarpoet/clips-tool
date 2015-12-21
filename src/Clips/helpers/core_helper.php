@@ -2,6 +2,7 @@
 
 define('BCAP_URL', 'http://browscap.org/stream?q=Lite_PHP_BrowsCapINI');
 define('BCAP_FILENAME', 'lite_php_browscap.ini');
+define('ZIP_FILE_MAX', 4294967296);
 
 define('RANDOM_STRING', '3141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086FromfairestcreatureswedesireincreaseThattherebybeautysrosemightneverdieButastheripershouldbytimedeceaseHistenderheirmightbearhismemoryButthoucontractedtothineownbrighteyesFeedstthylightsflamewithself-substantialfuelMakingafaminewhereabundanceliesThyselfthyfoetothysweetselftoocruelThouthatartnowtheworldsfreshornamentAndonlyheraldtothegaudyspringWithinthineownbudburiestthycontentAndtenderchurlmakstwasteinniggardingPitytheworldorelsethisgluttonbeToeattheworldsduebythegraveandthee');
 
@@ -97,13 +98,62 @@ function phar_contents($file, $path) {
 }
 
 /**
+ * Get the size of the node inside the zip file
+ *
+ * @author Jack
+ * @date Mon Dec 21 15:38:17 2015
+ */
+function zip_size($file, $path = null) {
+	$file = safe_add_extension($file, 'zip');
+	if(file_exists($file)) {
+		if(!$path) {
+			return filesize($file);
+		}
+
+		if(filesize($file) >= ZIP_FILE_MAX) { // If the file is bigger than 4G, we can't use PHP's zip for now
+			$p7zip = config('p7zip', '/opt/local/bin/7z');
+			if(!file_exists($p7zip)) {
+				$p7zip = '/usr/bin/7za';
+			}
+			$spec = array(
+				0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
+				1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
+				2 => array("file", "/dev/null", "a") // stderr is a file to write to
+			);
+
+			$p = proc_open("$p7zip l -so $file '$path'", $spec, $pipes);
+
+			if(is_resource($p)) {
+				$data = stream_get_contents($pipes[1]);
+				foreach(explode("\n", $data) as $l) {
+					if(strpos($l, $path) !== false) {
+						$size = preg_split('/\\s+/', $l);
+						return $size[3];
+					}
+				}
+			}
+		}
+		else {
+			$zip = new \ZipArchive();
+			if($zip->open($file)) {
+				$stat = $zip->statName($path);
+				if($stat) {
+					return $stat['size'];
+				}
+			}
+		}
+	}
+	return -1;
+}
+
+/**
  * @author Jack
  * @date Tue Dec 15 15:38:43 2015
  */
 function zip_stream($file, $path) {
 	$file = safe_add_extension($file, 'zip');
 	if(file_exists($file)) {
-		if(filesize($file) >= 4294967296) { // If the file is bigger than 4G, we can't use PHP's zip for now
+		if(filesize($file) >= ZIP_FILE_MAX) { // If the file is bigger than 4G, we can't use PHP's zip for now
 			$p7zip = config('p7zip', '/opt/local/bin/7z');
 			if(!file_exists($p7zip)) {
 				$p7zip = '/usr/bin/7za';
