@@ -27,7 +27,8 @@
 		"cebe/markdown": "1.0.1",
 		"garetjax/phpbrowscap": "dev-master",
 		"greenlion/php-sql-parser": "dev-master",
-		"curl/curl": "dev-master"
+		"curl/curl": "dev-master",
+		"pear/archive_tar": "*"
 	},
 	"autoload": {
 		"psr-4": {

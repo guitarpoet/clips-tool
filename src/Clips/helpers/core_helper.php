@@ -147,6 +147,54 @@ function zip_size($file, $path = null) {
 }
 
 /**
+ * Add the content as the file into the zip file
+ *
+ * TODO: This is not a very good way to implmenet
+ *
+ * @param content
+ * 		The content to put into zip file
+ * @param file
+ * 		The zip file
+ * @param path
+ * 		The path to put
+ *
+ * @author Jack
+ * @date Mon Dec 28 11:16:11 2015
+ * @version 1.1
+ */
+function zip_add($content, $file, $path) {
+	$file = safe_add_extension($file, 'zip');
+	$tool = get_clips_tool();
+	$fileCache = $tool->library('fileCache');
+	if(file_exists($file)) {
+		$tmpFile = $fileCache->fileName('zip_tmp_file');
+		if(file_put_contents($tmpFile, $content)) {
+			$p7zip = config('p7zip', '/opt/local/bin/7z');
+			// Remove the origin file
+			exec("$p7zip d $file $path");
+
+			// Add the file to the zip
+			exec("$p7zip a $file $tmpFile");
+
+			// Change the name to path
+			exec("$p7zip rn $file $tmpFile $path");
+
+			// Remove the cache file
+			unlink($tmpFile);
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
+ * Get the stream of the file in the zip file
+ *
+ * @param file
+ * 		The Zip file
+ * @param path
+ * 		The path of the file inside the zip file	
+ *
  * @author Jack
  * @date Tue Dec 15 15:38:43 2015
  */

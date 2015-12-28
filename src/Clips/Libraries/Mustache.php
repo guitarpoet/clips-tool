@@ -1,6 +1,7 @@
 <?php namespace Clips\Libraries; in_array(__FILE__, get_included_files()) or exit("No direct script access allowed");
 
 use Clips\BaseService;
+use LightnCandy\LightnCandy;
 
 function site_url($arr) {
 	if($arr)
@@ -83,7 +84,7 @@ class Mustache extends BaseService {
 					$flags = $flags[0];
 				}
 				else {
-					$flags = \LightnCandy::FLAG_ERROR_EXCEPTION | \LightnCandy::FLAG_HANDLEBARS | \LightnCandy::FLAG_HANDLEBARSJS;
+					$flags = LightnCandy::FLAG_ERROR_EXCEPTION | LightnCandy::FLAG_HANDLEBARS | LightnCandy::FLAG_HANDLEBARSJS;
 				}
 			}
 
@@ -124,7 +125,7 @@ class Mustache extends BaseService {
 			}
 
 			if($str) {
-				$php = \LightnCandy::compile($str, $opts);
+				$php = "<?php ".PHP_EOL.LightnCandy::compile($str, $opts);
 				// Save it to php file
 				file_put_contents($phpname, $php);
 			}
