@@ -24,6 +24,9 @@ class Config {
 				if(in_array($p, $loaded))
 					continue;
 
+                if(!file_exists($config)) {
+                    continue;
+                }
 				$info = pathinfo($config);
 				if($info['extension'] == 'json')
 					$c = parse_json(file_get_contents($config));
